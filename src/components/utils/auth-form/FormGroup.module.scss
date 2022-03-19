@@ -1,0 +1,87 @@
+@import '../../../sass/color';
+@import '../../../sass/flexCenter';
+
+.labelGroup {
+  display: flex;
+  justify-content: space-between;
+
+  & .labelRight {
+    color: $primary-color;
+    cursor: pointer;
+  }
+
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 10px 0 10px 8px;
+  }
+}
+
+.inputWrap {
+  background: rgba(22, 24, 35, 0.06);
+  border: 1px solid rgba(22, 24, 35, 0.06);
+  border-radius: 44px;
+  display: flex;
+  height: 44px;
+  overflow: hidden;
+
+  .flagImg {
+    height: 100%;
+  }
+
+  input {
+    background-color: transparent;
+    border: none;
+    display: block;
+    flex: 1 1;
+    font-size: 14px;
+    outline: none;
+    padding: 12px 20px;
+  }
+
+  &.invalid {
+    border-color: $invalid-color;
+
+    input {
+      color: $invalid-color;
+    }
+  }
+
+  .verifyOTPButton {
+    border-radius: 44px;
+    @include flexCenter(row);
+    font-size: 14px;
+    font-weight: 600;
+    margin: 1px;
+    min-width: 140px;
+    white-space: nowrap;
+    color: #fff;
+    background-color: $primary-color;
+    cursor: pointer;
+    border: none;
+    outline: none;
+
+    &.disabled {
+      background-color: #ccc;
+      color: #757575;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.message {
+  color: $invalid-color;
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 8px 0 8px 8px;
+  text-align: left;
+}
+
+.help {
+  color: #404040;
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 8px 0 8px 8px;
+  text-align: left;
+}

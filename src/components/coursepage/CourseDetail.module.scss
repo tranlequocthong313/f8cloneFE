@@ -1,0 +1,61 @@
+@import '../../sass/color';
+
+.topicList {
+  margin: 36px 0 4px;
+  font-size: 20px;
+  font-weight: 700;
+
+  h3 {
+    margin: 36px 0 4px;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  ul {
+    margin: 10px 0;
+    padding-left: 0;
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+
+    &.column {
+      flex-direction: column !important;
+    }
+
+    li {
+      position: relative;
+      flex-basis: 50%;
+      margin-bottom: 12px;
+      padding: 0 24px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: $text-color;
+
+      i {
+        font-size: 16px;
+        position: absolute;
+        top: 2px;
+        left: 0;
+        color: $primary-color;
+      }
+
+      span {
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+@media (max-width: 739px) {
+  .topicList {
+    h3 {
+      margin-bottom: 16px;
+      margin-top: 32px;
+    }
+
+    ul {
+      flex-direction: column;
+      margin: 0;
+    }
+  }
+}

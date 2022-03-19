@@ -1,0 +1,65 @@
+@import '../../sass/color';
+
+.wrapper {
+  border-top: 3px solid $primary-color;
+  margin-top: 100px;
+  padding-top: 32px;
+
+  .heading {
+    margin: 25px 0;
+    font-size: 32px;
+  }
+
+  .post {
+    border-bottom: 1px solid #e6e6e6;
+    font-size: 16px;
+    margin-top: 48px;
+
+    .author {
+      font-size: 15px;
+    }
+    .dot {
+      color: #757575;
+      font-weight: 500;
+      padding: 0 8px;
+    }
+    .createdAt {
+      color: #757575;
+    }
+    a {
+      text-decoration: none;
+      .title {
+        color: #292929;
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 4px;
+        margin-top: 12px;
+      }
+      .thumb {
+        background: #ebebeb;
+        border-radius: 16px;
+        color: #757575;
+        display: block;
+        font-size: 16px;
+        height: 320px;
+        line-height: 1.8;
+        margin-bottom: 16px;
+        margin-top: 24px;
+        object-fit: cover;
+        overflow: hidden;
+        text-align: center;
+        width: 100%;
+      }
+    }
+
+    p {
+      font-size: 18px;
+      line-height: 2;
+      word-wrap: break-word;
+      color: #292929;
+      mask-image: linear-gradient(#fff, #fff, hsla(0, 0%, 100%, 0));
+      max-height: 420px;
+      overflow: hidden;
+    }
+  }
+}

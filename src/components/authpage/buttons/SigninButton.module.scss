@@ -1,0 +1,36 @@
+.wrapper {
+  background-color: #fff;
+  border: 2px solid #dce0e3;
+  border-radius: 44px;
+  display: inline-block;
+  padding-left: 16px;
+  position: relative;
+  text-align: center;
+  width: 320px;
+  height: 44px;
+  line-height: 44px;
+  margin-top: 14px;
+
+  &:hover {
+    background-color: #dce0e3;
+    cursor: pointer;
+  }
+
+  img {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-style: none;
+  }
+
+  span {
+    color: #35414c;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 40px;
+    outline: 0;
+    text-align: center;
+  }
+}

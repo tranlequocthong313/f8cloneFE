@@ -1,0 +1,52 @@
+@import '../../../../sass/flexCenter';
+
+.searchWrapper {
+  width: 420px;
+  height: 40px;
+  padding: 0 16px 0 8px;
+  border-radius: 20px;
+  border: 2px solid #e8e8e8;
+  transition: border-color 0.2s ease-in-out;
+  background-color: #fff;
+  margin: 0 auto;
+  @include flexCenter(row);
+  flex: 1 1;
+}
+
+.searchIcon {
+  width: 30px;
+  height: 32px;
+  opacity: 0.7;
+  border-radius: 50%;
+  background-size: 18px;
+  transition: opacity 0.2s ease-in-out;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Cpath fill='rgba(68,68,68,0)' d='M0 0h36v36H0z'/%3E%3Cpath data-name='Path 127042' d='M35.4 32.5l-8.252-8.3A14.488 14.488 0 005.451 5.107 14.478 14.478 0 0024.2 27.075l8.263 8.314A2.061 2.061 0 0035.4 32.5zM5.344 15.479a10.327 10.327 0 1110.327 10.285A10.306 10.306 0 015.344 15.479z' fill='%23444'/%3E%3C/svg%3E");
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.searchInput {
+  flex: 1 1;
+  height: 100%;
+  outline: none;
+  border: none;
+  padding: 0 4px;
+  caret-color: #444;
+  font-size: 14px;
+
+  &:focus {
+    border: transparent !important;
+    box-shadow: none !important;
+  }
+}
+
+@media (max-width: 739px) {
+  .searchWrapper {
+    display: none !important;
+  }
+}

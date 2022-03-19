@@ -1,0 +1,30 @@
+@import '../../sass/color';
+
+.lessonItem {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+  color: $text-color;
+  font-size: 14px;
+  line-height: 48px;
+  overflow: hidden;
+  padding: 0 30px 0 48px;
+  position: relative;
+  cursor: default;
+
+  .icon {
+    color: #f0502466;
+    margin-right: 4px;
+    position: absolute;
+    left: 30px;
+  }
+
+  .lessonName {
+    padding-left: 6px;
+  }
+
+  .time {
+    flex-shrink: 0;
+    margin-left: 58px;
+    min-width: 69px;
+    text-align: right;
+  }
+}

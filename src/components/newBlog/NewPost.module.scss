@@ -1,0 +1,26 @@
+.navAction {
+  // display: flex;
+  // align-items: center;
+  margin-right: 16px;
+  //   margin-right: 150px;
+  //   margin-left: 360px;
+
+  button {
+    border-radius: 20px;
+    padding: 4px 16px;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    outline: none;
+    color: white;
+    background: #f05123;
+  }
+
+  &.disabled {
+    button {
+      cursor: default !important;
+      opacity: 0.5 !important;
+      pointer-events: none !important;
+    }
+  }
+}

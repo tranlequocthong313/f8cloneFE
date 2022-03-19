@@ -1,0 +1,97 @@
+@import '../../../sass/color';
+@import '../../../sass/flexCenter';
+
+.formBody {
+  max-width: 100%;
+  width: 380px;
+
+  .labelGroup {
+    display: flex;
+    justify-content: space-between;
+
+    & .labelRight {
+      color: $primary-color;
+      cursor: pointer;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin: 10px 0 10px 8px;
+    }
+  }
+
+  .inputWrap {
+    background: rgba(22, 24, 35, 0.06);
+    border: 1px solid rgba(22, 24, 35, 0.06);
+    border-radius: 44px;
+    display: flex;
+    height: 44px;
+    overflow: hidden;
+
+    .flagImg {
+      height: 42px;
+    }
+
+    input {
+      background-color: transparent;
+      border: none;
+      display: block;
+      flex: 1 1;
+      font-size: 14px;
+      outline: none;
+      padding: 12px 20px;
+      caret-color: $primary-color;
+    }
+  }
+  .logInButton {
+    padding: 8px 16px;
+    @include flexCenter(row);
+    height: 100%;
+    background-color: #1dbfaf;
+    border-radius: 4px;
+    cursor: pointer;
+
+    span {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .verifyOTPButton {
+    border-radius: 44px;
+    @include flexCenter(row);
+    font-size: 14px;
+    font-weight: 600;
+    margin: 1px;
+    min-width: 140px;
+    white-space: nowrap;
+    color: #fff;
+    background-color: $primary-color;
+    cursor: pointer;
+    border: none;
+    outline: none;
+  }
+
+  .verifyButtonDisabled {
+    background-color: #ccc;
+    color: #757575;
+    border-radius: 44px;
+    @include flexCenter(row);
+    font-size: 14px;
+    font-weight: 600;
+    margin: 1px;
+    min-width: 140px;
+    white-space: nowrap;
+    border: none;
+    outline: none;
+    cursor: not-allowed;
+  }
+}

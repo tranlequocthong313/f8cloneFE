@@ -1,0 +1,146 @@
+@import '../../sass/color';
+
+.curriculumOfCourse {
+  .headerSticky {
+    position: sticky;
+    top: 66px;
+    z-index: 2;
+    padding-bottom: 4px;
+    background-color: #fff;
+    .headerBlock {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+
+      h3 {
+        font-weight: 700;
+        font-size: 20px;
+        margin: 20px 0;
+      }
+    }
+  }
+
+  .subHeadWrapper {
+    display: flex;
+    font-size: 14px;
+    margin-top: 4px;
+
+    ul {
+      display: flex;
+      padding-left: 0;
+      margin: 0;
+      list-style-type: none;
+      li {
+        display: inline-block;
+      }
+
+      .dot {
+        padding: 0 8px;
+        font-size: 14px;
+        opacity: 0.8;
+        margin-top: 1px;
+      }
+    }
+
+    .toggleBtn {
+      margin-left: auto;
+      color: $primary-color;
+      font-weight: 600;
+      user-select: none;
+      cursor: pointer;
+    }
+  }
+
+  .curriculumPanel {
+    margin: 12px 0 48px;
+
+    .panelGroup {
+      .panel {
+        margin-bottom: 8px;
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+        cursor: pointer;
+      }
+      .panelHeading {
+        padding: 0;
+        border: 1px solid #ebebeb;
+        border-radius: 6px;
+        background: #f5f5f5;
+        position: sticky;
+        top: 154px;
+        z-index: 1;
+      }
+      .panelTitle {
+        margin-top: 0;
+        margin-bottom: 0;
+        font-size: 16px;
+        color: inherit;
+      }
+      .headLine {
+        padding: 14px 30px 14px 48px;
+        font-weight: 400;
+        position: relative;
+        font-size: 16px;
+        color: $text-color;
+        overflow: hidden;
+
+        i {
+          position: absolute;
+          font-size: 22px;
+          font-weight: 300;
+          left: 20px;
+          top: 50%;
+          color: $primary-color;
+          transform: translateY(-50%);
+        }
+      }
+      .groupName {
+        font-size: 16px;
+      }
+      .timeOfSection {
+        min-width: 72px;
+        text-align: right;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+.floatLeft {
+  float: left;
+}
+
+.floatRight {
+  float: right;
+}
+
+@media (max-width: 739px) {
+  .subHeadWrapper {
+    ul {
+      & li:first-child,
+      .dot {
+        display: none !important;
+      }
+
+      li {
+        padding-right: 8px;
+      }
+    }
+
+    flex-direction: column;
+  }
+
+  .toggleBtn {
+    padding-bottom: 8px;
+    padding-top: 24px;
+    margin-left: unset !important;
+    // margin-left: auto;
+    // width: 100%;
+  }
+
+  .timeOfSection {
+    display: none;
+  }
+}

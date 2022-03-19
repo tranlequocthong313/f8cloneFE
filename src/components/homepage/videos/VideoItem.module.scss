@@ -1,0 +1,57 @@
+@import '../../../sass/flexCenter';
+
+.title {
+  margin: 12px 0;
+}
+
+.videoInfo {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+
+  .playWrap {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background-color: #fff;
+    @include flexCenter(row);
+  }
+
+  .duration {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 12px;
+    border: 2px solid #fff;
+    border-radius: 999px;
+    margin-left: auto;
+  }
+}
+
+.stats {
+  display: flex;
+  color: #757575;
+  font-size: 14px;
+  margin-left: -24px;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+
+  li:first-child {
+    margin-left: 0;
+  }
+
+  li {
+    margin-left: 24px;
+
+    span {
+      margin-left: 8px;
+    }
+  }
+}

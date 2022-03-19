@@ -1,0 +1,10 @@
+.contentEditable {
+  line-height: 1.4;
+  outline: none;
+
+  &:empty::before {
+    color: #b3b3b1;
+    content: attr(data-empty-text);
+    pointer-events: none;
+  }
+}

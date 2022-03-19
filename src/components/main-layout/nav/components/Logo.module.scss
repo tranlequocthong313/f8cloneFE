@@ -1,0 +1,46 @@
+@import '../../../../sass/flexCenter';
+
+.logo {
+  @include flexCenter(row);
+  flex: 1 1;
+  justify-content: flex-start !important;
+}
+
+.logoNavbar {
+  width: 38px;
+  height: 38px px;
+  flex-shrink: 0;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.backHome {
+  text-decoration: none;
+}
+
+.logoHeading {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0 0 0 16px;
+  color: #000;
+
+  span {
+    text-decoration: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 12px;
+    color: #808990;
+  }
+
+  i {
+    margin-right: 4px;
+    transition: all 0.3s ease;
+  }
+}
+
+@media (max-width: 1023px) {
+  .logo {
+    display: none !important;
+  }
+}

@@ -1,0 +1,123 @@
+@import '../../sass/color';
+@import '../../sass/flexCenter';
+
+.content {
+  display: flex;
+  margin-top: 24px;
+
+  & .wrapper:last-child {
+    margin-left: 24px;
+  }
+
+  .wrapper {
+    .body {
+      display: flex;
+      margin-bottom: 20px;
+
+      .info {
+        .title {
+          margin: 0;
+
+          a {
+            display: block;
+            color: #242424;
+            font-size: 20px;
+            font-weight: 900;
+            padding-bottom: 14px;
+            text-decoration: none;
+          }
+        }
+
+        p {
+          margin: 0;
+          font-size: 14px;
+          line-height: 1.6;
+        }
+      }
+
+      .thumbWrap {
+        display: flex;
+        align-items: center;
+        padding-left: 24px;
+
+        .thumbRound {
+          @include flexCenter(row);
+          width: 122px;
+          text-decoration: none;
+          height: 122px;
+          border-radius: 50%;
+          border: 5px solid $primary-color;
+          overflow: hidden;
+
+          .thumb {
+            img {
+              width: 98px;
+              height: 98px;
+              border-radius: 50%;
+              object-fit: cover;
+              border-style: none;
+            }
+          }
+        }
+      }
+    }
+
+    .cta {
+      display: flex;
+      margin: auto 0 28px;
+    }
+
+    .btn {
+      text-decoration: none;
+      display: inline-block;
+      -webkit-appearance: none;
+      appearance: none;
+      border-radius: 999px;
+      padding: 9px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      border: 1px solid $primary-color;
+      background-color: $primary-color;
+      white-space: nowrap;
+      outline: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      text-align: center;
+
+      &:hover {
+        opacity: 0.9;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+@media (max-width: 1023px) {
+  .content {
+    flex-direction: column;
+    & .wrapper:last-child {
+      margin-left: 0;
+    }
+  }
+}
+
+@media (max-width: 739px) {
+  .content {
+    .wrapper {
+      .thumbWrap {
+        display: none !important;
+      }
+
+      .cta {
+        display: none;
+      }
+
+      .btn {
+        width: 100% !important;
+        padding: 12px 16px !important;
+      }
+    }
+  }
+}

@@ -1,0 +1,75 @@
+@import '../../../sass/color';
+
+.headingWrap {
+  display: flex;
+  align-items: baseline;
+}
+
+.heading {
+  margin-right: auto;
+  margin-top: 16px;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 900;
+
+  a {
+    text-decoration: none;
+    color: #242424;
+  }
+
+  .viewAllIcon {
+    position: relative;
+    top: -2px;
+    font-size: 1.1rem;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px;
+    margin-left: 10px;
+    background-color: #f3f3f3;
+    display: none;
+  }
+}
+
+.label {
+  position: relative;
+  right: -8px;
+  top: -6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
+  text-transform: uppercase;
+  border-radius: 4px;
+  padding: 3px 6px;
+  background-color: $facebook-color;
+}
+
+.viewAll {
+  font-size: 15px;
+  font-weight: 600;
+  color: $primary-color;
+  background-color: transparent;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  padding: 8px 0 8px 8px;
+  margin-right: 4px;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    color: $primary-color;
+  }
+}
+
+@media (max-width: 739px) {
+  .viewAll {
+    display: none;
+  }
+
+  .viewAllIcon {
+    display: inline-block !important;
+  }
+}

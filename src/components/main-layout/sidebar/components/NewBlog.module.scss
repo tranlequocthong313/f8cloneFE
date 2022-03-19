@@ -1,0 +1,86 @@
+@import '../../../../sass/color';
+@import '../../../../sass/flexCenter';
+
+.newBlog {
+  position: relative;
+  a {
+    color: #444;
+    cursor: pointer;
+    display: block;
+    font-size: 14px;
+    padding: 12px 20px;
+    transition: 0.3s;
+    text-decoration: none;
+  }
+
+  a::after {
+    content: none;
+  }
+
+  div {
+    border-radius: 10px;
+    box-shadow: 0 4px 12px 0 rgba($color: #000000, $alpha: 0.05);
+    z-index: 9999;
+    position: absolute;
+    inset: 0px auto auto 0px;
+    margin: 0px;
+    animation: fadeIn 0.3s ease;
+  }
+}
+
+.newBlogIcon {
+  width: 44px;
+  height: 44px;
+  font-size: 34px;
+  margin: 8px 0 2px;
+  border-radius: 50%;
+  background-color: #1473e6;
+  border-color: #1473e6;
+  color: #fff;
+  @include flexCenter(row);
+  cursor: pointer;
+}
+
+.active {
+  width: 44px;
+  height: 44px;
+  font-size: 34px;
+  margin: 8px 0 2px;
+  border-radius: 50%;
+  background-color: #1473e6;
+  border-color: #1473e6;
+  color: #fff;
+  @include flexCenter(row);
+  cursor: pointer;
+}
+
+.list {
+  min-width: 200px;
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+
+  &:hover {
+    background-color: #f0f0f0;
+    color: #292929;
+  }
+
+  span {
+    margin-left: 12px;
+  }
+
+  i {
+    font-size: 16px;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -2px, 2px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 2px, 2px);
+  }
+}

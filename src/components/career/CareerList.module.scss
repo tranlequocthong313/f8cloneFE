@@ -1,0 +1,66 @@
+@import '../../sass/color';
+
+.cardWrapper {
+  position: relative;
+  h4 {
+    margin-top: 0;
+    margin-bottom: 4px;
+    transition: 0.3s;
+    font-size: 18px;
+    line-height: 1.4;
+    font-weight: 600;
+  }
+
+  .salary {
+    font-size: 13px;
+    line-height: 1.8;
+    color: #57595b;
+    font-weight: 600;
+  }
+
+  .skills {
+    display: flex;
+    margin-top: 16px;
+
+    .skillItem {
+      margin: 0 10px 0 0;
+      padding: 4px 5px;
+      background: transparent;
+      border: 1px solid #d2d3d3;
+      font-size: 12px;
+      font-weight: 400;
+      text-decoration: none;
+      line-height: 100%;
+      display: inline-block;
+      transition: 0.3s;
+      cursor: default;
+    }
+  }
+
+  &:hover {
+    cursor: pointer;
+
+    h4 {
+      color: $primary-color;
+    }
+
+    .skillItem {
+      color: $primary-color;
+    }
+  }
+
+  .createdFromNow {
+    position: absolute;
+    right: 0px;
+    bottom: -8px;
+    font-size: 14px;
+    color: #06c;
+  }
+}
+
+@media (max-width: 739px) {
+  .createdFromNow {
+    position: static !important;
+    margin-top: 16px;
+  }
+}

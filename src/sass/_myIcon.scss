@@ -1,0 +1,17 @@
+@font-face {
+  font-family: 'iconfont';
+  src: url('//at.alicdn.com/t/font_1207200_j3on8j6kuhl.ttf?t=1591723814839')
+    format('truetype');
+}
+
+/* replace a icon with another iconfont */
+.rmel-icon-font-size:before {
+  //   font-family: 'iconfont' !important;
+  content: '\ed78';
+}
+
+/* replace a icon with a image */
+.button-type-bold .rmel-iconfont:before {
+  //   display: none;
+  content: '\ed6f';
+}

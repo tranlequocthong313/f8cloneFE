@@ -1,0 +1,36 @@
+.container {
+  padding: 8px 44px 0;
+  margin: 0;
+  margin-bottom: 60px;
+
+  .containerTop {
+    margin-bottom: 80px;
+
+    h1 {
+      font-weight: 900;
+      font-size: 28px;
+      color: #242424;
+      margin: 20px 0;
+    }
+
+    p {
+      max-width: 840px;
+      font-size: 15px;
+      line-height: 1.6;
+
+      color: #292929;
+      word-wrap: break-word;
+    }
+  }
+}
+
+@media (max-width: 1023px) {
+  .container {
+    padding: 0;
+    margin-bottom: 48px;
+
+    .containerTop {
+      margin-bottom: 48px;
+    }
+  }
+}

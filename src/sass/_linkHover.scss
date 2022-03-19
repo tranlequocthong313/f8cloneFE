@@ -1,0 +1,29 @@
+@import './color';
+
+@mixin linkHover {
+  color: $footer-text-color;
+
+  text-decoration: none;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  margin: 0;
+  outline: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    background-color: $text-color;
+    height: 1px;
+    width: 0;
+    left: 0;
+    bottom: -3px;
+    transition: all 0.3s;
+  }
+
+  &:hover,
+  &:hover::after {
+    width: 100%;
+    color: $footer-text-color;
+  }
+}

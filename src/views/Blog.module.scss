@@ -1,0 +1,22 @@
+.leftLayout {
+  padding: 0 64px 44px 0;
+}
+
+.rightLayout {
+  height: 100%;
+  padding-left: 32px;
+}
+
+@media (max-width: 1023px) {
+  .layout {
+    flex-direction: column-reverse;
+  }
+
+  .leftLayout {
+    padding: 0 !important;
+  }
+
+  .rightLayout {
+    padding: 0 0 32px;
+  }
+}

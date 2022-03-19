@@ -1,0 +1,32 @@
+.title {
+  margin: 12px 0;
+}
+
+.author {
+  display: flex;
+  align-items: center;
+
+  a {
+    font-size: 14px;
+    color: #757575;
+
+    img {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      margin-right: 8px;
+    }
+
+    strong {
+      color: #292929;
+      margin-right: 16px;
+    }
+
+    span {
+      font-weight: 500;
+      font-size: 14px;
+    }
+  }
+}

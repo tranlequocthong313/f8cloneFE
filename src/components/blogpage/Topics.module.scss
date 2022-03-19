@@ -1,0 +1,41 @@
+.wrapper {
+  h3 {
+    color: #757575;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.8;
+    text-transform: uppercase;
+    margin: 14px 0;
+  }
+
+  .topics {
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 14px;
+    padding-left: 0;
+    list-style-type: none;
+
+    li {
+      display: list-item;
+
+      a {
+        color: #333;
+        font-weight: 500;
+        line-height: 1.8;
+        background-color: #f2f2f2;
+        border-radius: 30px;
+        padding: 6px 16px;
+        display: block;
+        margin: 0 8px 8px 0;
+        user-select: none;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+@media (max-width: 1023px) {
+  .rightLayout {
+    padding: 0 0 32px;
+  }
+}

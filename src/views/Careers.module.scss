@@ -1,0 +1,33 @@
+@import '../sass/color';
+
+.container {
+  padding: 8px 44px 0;
+  margin-bottom: 60px;
+}
+
+.containerTop {
+  margin-bottom: 48px;
+
+  p {
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 840px;
+    color: #292929;
+    word-wrap: break-word;
+    margin: 15px 0;
+  }
+}
+
+.containerBody {
+  h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .container {
+    padding: 0;
+    margin-bottom: 48px;
+  }
+}

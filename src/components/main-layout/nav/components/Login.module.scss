@@ -1,0 +1,17 @@
+@import '../../../../sass/color';
+
+.loginBtn {
+  font-size: 14px;
+  font-weight: 600;
+  background-color: $primary-color;
+  color: #fff;
+  padding: 9px 20px;
+  cursor: pointer;
+  border-radius: 999px;
+  text-decoration: none;
+
+  &:hover {
+    opacity: 0.9;
+    color: #fff;
+  }
+}
