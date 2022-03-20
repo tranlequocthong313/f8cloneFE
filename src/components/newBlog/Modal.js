@@ -3,6 +3,7 @@ import { Row, Col } from 'react-bootstrap'
 import { useDropzone } from 'react-dropzone'
 import ContentEditable from '../utils/content-editable/ContentEditable'
 import moment from 'moment'
+import { apiURL } from '../../context/constants'
 import styles from './Modal.module.scss'
 
 const Modal = ({ blogDataHandler, data, setShowModal }) => {
@@ -38,6 +39,7 @@ const Modal = ({ blogDataHandler, data, setShowModal }) => {
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: 'image/*',
+    name: 'thumb',
   })
 
   const showScheduleHandler = () => {
@@ -59,11 +61,6 @@ const Modal = ({ blogDataHandler, data, setShowModal }) => {
 
   return (
     <div className={styles.modal}>
-      <img
-        src={'https://f8clone.herokuapp.com/files/384337.png'}
-        width={200}
-        alt=""
-      />
       <div className={styles.close} onClick={() => setShowModal(false)}>
         x
       </div>
@@ -81,6 +78,7 @@ const Modal = ({ blogDataHandler, data, setShowModal }) => {
               type="file"
               accept="image/*"
               autoComplete="off"
+              name="thumb"
               tabIndex="-1"
               hidden
               {...getInputProps()}
@@ -95,13 +93,13 @@ const Modal = ({ blogDataHandler, data, setShowModal }) => {
             className={`${styles.contentEditable} ${styles.title}`}
             text={'Tiêu đề khi tin được hiển thị'}
             value={data.title}
-            onChange={e => setTitleDisplay(e.target.value)}
+            onKeyPress={e => setTitleDisplay(e.target.innerText)}
           />
           <ContentEditable
             className={`${styles.contentEditable} ${styles.description}`}
             text={'Mô tả khi tin được hiển thị'}
             value={data.description}
-            onChange={e => setDescription(e.target.value)}
+            onKeyPress={e => setDescription(e.target.innerText)}
           />
           <p className={styles.note}>
             <strong>Lưu ý:</strong> Chỉnh sửa tại đây sẽ thay đổi cách bài viết
@@ -157,6 +155,13 @@ const Modal = ({ blogDataHandler, data, setShowModal }) => {
               {!showSchedule ? 'Lên lịch xuất bản' : 'Hủy lên lịch'}
             </button>
           </div>
+          <img
+            width={200}
+            src={
+              'http://localhost:5000/f8-prod/blog_posts/250951029_2310653682405428_2097463697023468442_n.jpg'
+            }
+            alt=""
+          />
         </Col>
       </Row>
     </div>

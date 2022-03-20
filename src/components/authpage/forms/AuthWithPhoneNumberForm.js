@@ -4,6 +4,7 @@ import styles from './AuthWithPhoneNumberForm.module.scss'
 import { signInWithPhoneNumber, RecaptchaVerifier } from 'firebase/auth'
 import { auth } from '../../../firebase/config'
 import FormGroup from '../../utils/auth-form/FormGroup'
+import { apiURL } from '../../../context/constants'
 
 const LoginWithPhoneNumberForm = ({
   switchPhoneAndEmailHandler,
@@ -88,7 +89,7 @@ const LoginWithPhoneNumberForm = ({
       let user = result.user
 
       if (!isLogin) {
-        await fetch('https://f8clone.herokuapp.com/register', {
+        await fetch(`${apiURL}/register`, {
           method: 'POST',
           body: JSON.stringify({
             userId: user.uid,
@@ -145,7 +146,7 @@ const LoginWithPhoneNumberForm = ({
         isSendVerifyCode={isSendVerifyCode}
         onChange={{ input: e => setVerifyOTP(e.target.value) }}
         counter={counter}
-        disabled={!isSendVerifyCode}
+        disabled={isSendVerifyCode && userPhoneNumber.length !== 10}
         onClick={
           !isSendVerifyCode && userPhoneNumber.length === 10
             ? onSubmitHandler

@@ -9,7 +9,11 @@ const VideoItem = props => {
 
   return (
     <MainCard>
-      <Link to="/videos">
+      <a
+        rel="noreferrer noopener noreferrer"
+        target="_blank"
+        href={`https://www.youtube.com/watch?v=${video.videoId}`}
+      >
         <section
           title={video.title}
           style={{ backgroundImage: `url(${video.image})` }}
@@ -19,26 +23,34 @@ const VideoItem = props => {
             <div className={styles.playWrap}>
               <i className="bi bi-play-fill"></i>
             </div>
-            <div className={styles.duration}>{video.time}</div>
+            <div className={styles.duration}>
+              {video.duration.replace(/[^\d.-]/g, '')}
+            </div>
             <div></div>
           </div>
         </section>
-      </Link>
+      </a>
       <h3 className={styles.title}>
-        <Link to="/">{video.title}</Link>
+        <a
+          rel="noreferrer noopener noreferrer"
+          target="_blank"
+          href={`https://www.youtube.com/watch?v=${video.videoId}`}
+        >
+          {video.title}
+        </a>
       </h3>
       <ul className={styles.stats}>
         <li>
           <i className="bi bi-eye-fill"></i>
-          <span>{video.views}</span>
+          <span>{video.viewCount}</span>
         </li>
         <li>
           <i className="bi bi-hand-thumbs-up-fill"></i>
-          <span>{video.likes}</span>
+          <span>{video.likeCount}</span>
         </li>
         <li>
           <i className="bi bi-chat-fill"></i>
-          <span>{video.comments}</span>
+          <span>{video.commentCount}</span>
         </li>
       </ul>
     </MainCard>

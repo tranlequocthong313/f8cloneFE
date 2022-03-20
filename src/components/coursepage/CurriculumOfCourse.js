@@ -12,8 +12,6 @@ const CurriculumOfCourse = ({ episodeList }) => {
     episodeList.map(episode => setOpenAll(prev => [...prev, episode.id]))
   }, [episodeList])
 
-  console.log(open)
-
   const openHandler = id =>
     setOpen(prev => {
       const isOpen = prev.includes(id)

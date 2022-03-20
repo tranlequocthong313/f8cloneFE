@@ -10,7 +10,7 @@ const BlogItem = props => {
 
   return (
     <MainCard>
-      <Link to="/blog">
+      <Link to={`blog/${blog.slug}`}>
         <section
           title={blog.title}
           style={{ backgroundImage: `url(${blog.image})` }}
@@ -19,13 +19,13 @@ const BlogItem = props => {
         </section>
       </Link>
       <h3 className={styles.title}>
-        <Link to="/">{blog.title}</Link>
+        <Link to={`blog/${blog.slug}`}>{blog.title}</Link>
       </h3>
       <div className={styles.author}>
-        <Link to="/">
-          <Image src={blog.authorPicture} />
+        <Link to={`blog/${blog.slug}`}>
+          <Image src={blog.avatar} />
         </Link>
-        <Link to="/">
+        <Link to={`blog/${blog.slug}`}>
           <strong>{blog.author}</strong>
           <span>{blog.readingTime} phút đọc</span>
         </Link>

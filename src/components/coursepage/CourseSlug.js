@@ -9,6 +9,7 @@ import CourseEnroll from './CourseEnroll'
 import styles from './CourseSlug.module.scss'
 import CurriculumOfCourse from './CurriculumOfCourse'
 import PreviewCourse from './PreviewCourse'
+import { apiURL } from '../../context/constants'
 
 const CourseSlug = () => {
   const location = useLocation()
@@ -25,9 +26,7 @@ const CourseSlug = () => {
 
   const fetchData = async () => {
     try {
-      const res = await fetch(
-        `https://f8clone.herokuapp.com${location.pathname}`
-      )
+      const res = await fetch(`${apiURL}${location.pathname}`)
       const data = await res.json()
 
       if (data.require) {
@@ -35,7 +34,6 @@ const CourseSlug = () => {
       }
 
       setCourse(data)
-      console.log(data)
     } catch (error) {
       console.log(error.message)
     }
@@ -60,7 +58,7 @@ const CourseSlug = () => {
                   <ul>
                     <li>
                       <i className={`${styles.icon} bi bi-compass-fill`}></i>
-                      <span>Trình độ cơ bản</span>
+                      <span>Trình độ {course ? course.level : ''}</span>
                     </li>
                     <li>
                       <i className={`${styles.icon} bi bi-film`} />

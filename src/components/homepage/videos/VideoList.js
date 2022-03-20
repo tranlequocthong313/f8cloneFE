@@ -6,7 +6,7 @@ const VideoList = props => {
   return (
     <ScrollHorizontal path={'videos'}>
       {props.videos.map(video => (
-        <VideoItem key={video.id} video={video} />
+        <VideoItem key={video.videoId} video={video} />
       ))}
     </ScrollHorizontal>
   )

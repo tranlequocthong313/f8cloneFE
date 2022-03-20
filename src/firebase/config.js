@@ -8,11 +8,11 @@ import {
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-  authDomain: 'f8clone-5e065.firebaseapp.com',
-  projectId: 'f8clone-5e065',
-  storageBucket: 'f8clone-5e065.appspot.com',
-  messagingSenderId: '147367932828',
-  appId: '1:147367932828:web:657639229cdfc8d8d38e59',
+  authDomain: 'f8clone-3e404.firebaseapp.com',
+  projectId: 'f8clone-3e404',
+  storageBucket: 'f8clone-3e404.appspot.com',
+  messagingSenderId: '774351622161',
+  appId: '1:774351622161:web:2af08cf7e2cfd7b67821b0',
 }
 
 initializeApp(firebaseConfig)

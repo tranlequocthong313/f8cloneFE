@@ -10,6 +10,7 @@ import '../sass/_container.scss'
 import Header from '../components/main-layout/nav/Header'
 import SideBar from '../components/main-layout/sidebar/SideBar'
 import Footer from '../components/main-layout/footer/Footer'
+import { apiURL } from '../context/constants'
 
 const Courses = () => {
   const [courseData, setCourseData] = useState([])
@@ -20,10 +21,10 @@ const Courses = () => {
 
   const fetchData = async token => {
     try {
-      const res = await fetch('https://f8clone.herokuapp.com/')
+      const res = await fetch(`${apiURL}`)
       const data = await res.json()
 
-      setCourseData(data.COURSES_DUMMY_DATA)
+      setCourseData(data.course)
     } catch (error) {
       console.log(error.message)
     }

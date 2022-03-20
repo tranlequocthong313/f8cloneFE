@@ -1,10 +1,12 @@
 const initialState = {
+  admin: false,
   displayName: null,
   photoURL: null,
   email: null,
   accessToken: null,
   isLoading: false,
   isLoggedIn: false,
+  videoCreated: null,
 }
 
 const userReducer = (state = initialState, action) => {
@@ -17,6 +19,7 @@ const userReducer = (state = initialState, action) => {
         displayName: action.payload.displayName || action.payload.fullName,
         email: action.payload.email,
         isLoggedIn: !!action.payload.accessToken || !!action.payload.idToken,
+        admin: action.payload.admin,
       }
 
     case 'SIGN_OUT':
@@ -42,6 +45,14 @@ const userReducer = (state = initialState, action) => {
         displayName: action.payload.fullName,
         email: action.payload.email,
         isLoggedIn: !!action.payload.accessToken || !!action.payload.idToken,
+        admin: action.payload.admin,
+      }
+
+    case 'CREATE_VIDEO':
+      console.log(action.payload.isSuccess)
+      return {
+        ...state,
+        videoCreated: action.payload.videoData,
       }
 
     default:

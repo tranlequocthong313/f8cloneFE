@@ -142,6 +142,10 @@
   .carousel-indicators {
     left: 4px;
   }
+
+  .modal-backdrop {
+    display: none !important;
+  }
 }
 
 @media (max-width: 739px) {

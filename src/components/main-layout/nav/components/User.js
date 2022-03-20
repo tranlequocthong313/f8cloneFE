@@ -13,6 +13,7 @@ import { auth } from '../../../../firebase/config'
 import { useDispatch } from 'react-redux'
 import { logout } from '../../../../actions/userAction'
 import Cookies from 'js-cookie'
+import CreateVideo from '../../../homepage/videos/CreateVideo'
 
 const NOTIFICATION_DUMMY_DATA = [
   {
@@ -86,6 +87,7 @@ const User = ({ photoURL, displayName, email, currentPage }) => {
   const dispatch = useDispatch()
 
   const [show, setShow] = useState(false)
+
   const showHandler = () => setShow(prev => !prev)
 
   // Dispatch logout action and navigate user to login page after logout
@@ -116,8 +118,8 @@ const User = ({ photoURL, displayName, email, currentPage }) => {
   }, [])
 
   return (
-    // <div className={styles.userAction}>
     <>
+      <CreateVideo />
       <MyCourse />
       <Notification notifications={NOTIFICATION_DUMMY_DATA} />
       <>
@@ -139,8 +141,8 @@ const User = ({ photoURL, displayName, email, currentPage }) => {
                 <div className={styles.fullName}>{email || null}</div>
               </div>
             </div>
-            <hr></hr>
             <div className={styles.content}>
+              <hr />
               <ul className={styles.list}>
                 <li>
                   <Link to="new-blog">Viết blog</Link>
@@ -148,12 +150,15 @@ const User = ({ photoURL, displayName, email, currentPage }) => {
                 <li>
                   <Link to="me/bookmark/posts">Bài viết của tôi</Link>
                 </li>
-                <hr></hr>
+              </ul>
+              <hr />
+              <ul className={styles.list}>
                 <li>
                   <Link to="me/bookmark/posts">Bài viết đã lưu</Link>
                 </li>
-                <hr></hr>
-
+              </ul>
+              <hr />
+              <ul className={styles.list}>
                 <li>
                   <Link to="settings">Cài đặt</Link>
                 </li>
@@ -168,7 +173,6 @@ const User = ({ photoURL, displayName, email, currentPage }) => {
         )}
       </>
     </>
-    // </div>
   )
 }
 

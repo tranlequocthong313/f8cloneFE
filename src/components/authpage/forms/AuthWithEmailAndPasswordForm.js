@@ -6,6 +6,7 @@ import { auth } from '../../../firebase/config'
 import * as EmailValidator from 'email-validator'
 import { v4 as uuidv4 } from 'uuid'
 import Cookies from 'js-cookie'
+import { apiURL } from '../../../context/constants'
 
 const LoginWithEmailAndPasswordForm = ({
   switchPhoneAndEmailHandler,
@@ -53,7 +54,7 @@ const LoginWithEmailAndPasswordForm = ({
   }
 
   const sendOTPHandler = async option => {
-    await fetch('https://f8clone.herokuapp.com/register/verify', {
+    await fetch(`${apiURL}/register/verify`, {
       method: 'POST',
       body: JSON.stringify({
         email: userEmailAndPasswordInput.email,
@@ -89,28 +90,30 @@ const LoginWithEmailAndPasswordForm = ({
   const loginWithEmailAndPasswordHandler = async () => {
     try {
       if (isLogin) {
-        const res = await fetch(
-          'https://f8clone.herokuapp.com/login/email-password',
-          {
-            method: 'POST',
-            body: JSON.stringify({
-              email: userEmailAndPasswordInput.email,
-              password: userEmailAndPasswordInput.password,
-            }),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        )
+        const res = await fetch(`${apiURL}/login/email-password`, {
+          method: 'POST',
+          body: JSON.stringify({
+            email: userEmailAndPasswordInput.email,
+            password: userEmailAndPasswordInput.password,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
 
         const data = await res.json()
 
-        console.log(data.user)
-
+        console.log(data)
         Cookies.set('token', data.user.accessToken)
 
+        const obj = {
+          ...data.user,
+          admin: data.admin,
+        }
+        console.log(obj)
+
         if (data.user) {
-          dispatchAndNavigateHandler(data.user)
+          dispatchAndNavigateHandler(obj)
         }
       } else {
         if (verifyOTP.input !== verifyOTP.create) {
@@ -118,7 +121,7 @@ const LoginWithEmailAndPasswordForm = ({
           return
         }
 
-        await fetch('https://f8clone.herokuapp.com/register', {
+        await fetch(`${apiURL}/register`, {
           method: 'POST',
           body: JSON.stringify({
             userId: uuidv4(),
@@ -151,16 +154,13 @@ const LoginWithEmailAndPasswordForm = ({
   const checkUserEmailExistHandler = async e => {
     if (e.target.value) {
       if (EmailValidator.validate(e.target.value)) {
-        const res = await fetch(
-          'https://f8clone.herokuapp.com/login/check-email',
-          {
-            method: 'POST',
-            body: JSON.stringify({ email: e.target.value }),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        )
+        const res = await fetch(`${apiURL}/login/check-email`, {
+          method: 'POST',
+          body: JSON.stringify({ email: e.target.value }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
 
         const data = await res.json()
 
@@ -189,19 +189,16 @@ const LoginWithEmailAndPasswordForm = ({
       setIsValidOTP(true)
     } else {
       try {
-        const res = await fetch(
-          'https://f8clone.herokuapp.com/login/reset-password',
-          {
-            method: 'POST',
-            body: JSON.stringify({
-              email: userEmailAndPasswordInput.email,
-              password: password.pass,
-            }),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        )
+        const res = await fetch(`${apiURL}/login/reset-password`, {
+          method: 'POST',
+          body: JSON.stringify({
+            email: userEmailAndPasswordInput.email,
+            password: password.pass,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
         const data = await res.json()
         setForgotPassword(false)
         console.log(data.message)

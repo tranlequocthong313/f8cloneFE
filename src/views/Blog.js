@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import styles from './Blog.module.scss'
 import '../sass/_withSidebarContent.scss'
@@ -9,91 +9,26 @@ import Topics from '../components/blogpage/Topics'
 import Header from '../components/main-layout/nav/Header'
 import SideBar from '../components/main-layout/sidebar/SideBar'
 import Footer from '../components/main-layout/footer/Footer'
-
-const BLOGS_DUMMY_DATA = [
-  {
-    id: Math.random(),
-    image: userDefaultImage,
-    title: 'Sản phẩm react sau 2 tuần chăm chỉ học tại f8',
-    description:
-      'Mình là một học viên đang sinh sống và làm việc tại Nhật Bản , Vốn là dân trái ngành muốn quay đầu học lại IT để có thể tìm kiếm...',
-    author: '陈武',
-    createdFromNow: '4 ngày trước',
-    readingTime: 5,
-  },
-  {
-    id: Math.random(),
-    image: userDefaultImage,
-    title: 'Sản phẩm react sau 2 tuần chăm chỉ học tại f8',
-    description:
-      'Mình là một học viên đang sinh sống và làm việc tại Nhật Bản , Vốn là dân trái ngành muốn quay đầu học lại IT để có thể tìm kiếm...',
-    author: '陈武',
-    createdFromNow: '4 ngày trước',
-    readingTime: 5,
-  },
-  {
-    id: Math.random(),
-    image: userDefaultImage,
-    title: 'Sản phẩm react sau 2 tuần chăm chỉ học tại f8',
-    description:
-      'Mình là một học viên đang sinh sống và làm việc tại Nhật Bản , Vốn là dân trái ngành muốn quay đầu học lại IT để có thể tìm kiếm...',
-    author: '陈武',
-    createdFromNow: '4 ngày trước',
-    readingTime: 5,
-  },
-  {
-    id: Math.random(),
-    image: userDefaultImage,
-    title: 'Sản phẩm react sau 2 tuần chăm chỉ học tại f8',
-    description:
-      'Mình là một học viên đang sinh sống và làm việc tại Nhật Bản , Vốn là dân trái ngành muốn quay đầu học lại IT để có thể tìm kiếm...',
-    author: '陈武',
-    createdFromNow: '4 ngày trước',
-    readingTime: 5,
-  },
-  {
-    id: Math.random(),
-    image: userDefaultImage,
-    title: 'Sản phẩm react sau 2 tuần chăm chỉ học tại f8',
-    description:
-      'Mình là một học viên đang sinh sống và làm việc tại Nhật Bản , Vốn là dân trái ngành muốn quay đầu học lại IT để có thể tìm kiếm...',
-    author: '陈武',
-    createdFromNow: '4 ngày trước',
-    readingTime: 5,
-  },
-  {
-    id: Math.random(),
-    image: userDefaultImage,
-    title: 'Sản phẩm react sau 2 tuần chăm chỉ học tại f8',
-    description:
-      'Mình là một học viên đang sinh sống và làm việc tại Nhật Bản , Vốn là dân trái ngành muốn quay đầu học lại IT để có thể tìm kiếm...',
-    author: '陈武',
-    createdFromNow: '4 ngày trước',
-    readingTime: 5,
-  },
-  {
-    id: Math.random(),
-    image: userDefaultImage,
-    title: 'Sản phẩm react sau 2 tuần chăm chỉ học tại f8',
-    description:
-      'Mình là một học viên đang sinh sống và làm việc tại Nhật Bản , Vốn là dân trái ngành muốn quay đầu học lại IT để có thể tìm kiếm...',
-    author: '陈武',
-    createdFromNow: '4 ngày trước',
-    readingTime: 5,
-  },
-  {
-    id: Math.random(),
-    image: userDefaultImage,
-    title: 'Sản phẩm react sau 2 tuần chăm chỉ học tại f8',
-    description:
-      'Mình là một học viên đang sinh sống và làm việc tại Nhật Bản , Vốn là dân trái ngành muốn quay đầu học lại IT để có thể tìm kiếm...',
-    author: '陈武',
-    createdFromNow: '4 ngày trước',
-    readingTime: 5,
-  },
-]
+import { apiURL } from '../context/constants'
 
 const Blog = () => {
+  const [blogs, setBlogs] = useState(null)
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+  const fetchData = async () => {
+    try {
+      const res = await fetch(`${apiURL}`)
+      const data = await res.json()
+
+      setBlogs(data.BLOGS_DUMMY_DATA)
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
   return (
     <>
       <Header />
@@ -111,9 +46,11 @@ const Blog = () => {
               </div>
               <Container fluid style={{ padding: 0 }}>
                 <Row style={{ marginTop: 0 }} className={styles.layout}>
-                  <Col xs={12} lg={8} xl={8} className={styles.leftLayout}>
-                    <NewBlogs newBlogs={BLOGS_DUMMY_DATA} />
-                  </Col>
+                  {blogs && (
+                    <Col xs={12} lg={8} xl={8} className={styles.leftLayout}>
+                      <NewBlogs blogs={blogs} />
+                    </Col>
+                  )}
                   <Col xs={12} lg={4} xl={4} className={styles.rightLayout}>
                     <Topics />
                   </Col>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import styles from './Home.module.scss'
 import Slide from '../components/homepage/slide/Slide'
@@ -7,32 +7,34 @@ import VideoList from '../components/homepage/videos/VideoList'
 import HeadingTitleWrap from '../components/utils/title-heading/HeadingTitleWrap'
 import CourseList from '../components/homepage/courses/CourseList'
 import '../sass/_withSidebarContent.scss'
-import Tabs from '../components/homepage/tabs/Tabs'
 import Header from '../components/main-layout/nav/Header'
 import SideBar from '../components/main-layout/sidebar/SideBar'
 import Footer from '../components/main-layout/footer/Footer'
+import { apiURL } from '../context/constants'
+import { useSelector } from 'react-redux'
 
 const Home = () => {
-  const [tabActive, setTabActive] = useState('front-end')
+  const user = useSelector(state => state.user)
 
-  const tabActiveHandler = tab => setTabActive(tab)
-
-  const [courseData, setCourseData] = useState([])
+  const [courseFE, setCourseFE] = useState([])
+  const [courseBE, setCourseBE] = useState([])
   const [blogData, setBlogData] = useState([])
   const [videoData, setVideoData] = useState([])
 
   useEffect(() => {
+    console.log('use effect running!')
     fetchData()
-  }, [])
+  }, [user.videoCreated])
 
   const fetchData = async () => {
     try {
-      const res = await fetch('https://f8clone.herokuapp.com/')
+      const res = await fetch(`${apiURL}`)
       const data = await res.json()
 
-      setCourseData(data.COURSES_DUMMY_DATA)
-      setBlogData(data.BLOGS_DUMMY_DATA)
-      setVideoData(data.VIDEOS_DUMMY_DATA)
+      setCourseFE(data.courseFE)
+      setCourseBE(data.courseBE)
+      setBlogData(data.blogs)
+      setVideoData(data.videos)
     } catch (error) {
       console.log(error.message)
     }
@@ -47,19 +49,18 @@ const Home = () => {
           <div className="withSidebarContent">
             <Slide />
             <div className={styles.wrapper}>
-              <p className={styles.subHeading}>
-                <strong>167.739+</strong> người khác đã học
-              </p>
               <HeadingTitleWrap
-                title={'Lộ trình học'}
+                title={'Lộ trình học Front-end'}
                 label={'Mới'}
                 viewMode={'Xem chi tiết'}
               />
-              <Tabs
-                activeHandler={tabActiveHandler}
-                tabActiveState={tabActive}
+              <CourseList courses={courseFE} />
+              <HeadingTitleWrap
+                title={'Lộ trình học Back-end'}
+                label={'Mới'}
+                viewMode={'Xem chi tiết'}
               />
-              <CourseList courses={courseData} />
+              <CourseList courses={courseBE} />
               <HeadingTitleWrap
                 title={'Bài viết nổi bật'}
                 viewMode={'Xem tất cả'}

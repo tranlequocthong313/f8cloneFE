@@ -12,6 +12,7 @@ import AuthWithEmailAndPasswordForm from '../components/authpage/forms/AuthWithE
 import { login } from '../actions/userAction'
 import SignInButtonContainer from '../components/authpage/buttons/SignInButtonContainer'
 import NotFound from './NotFound'
+import { apiURL } from '../context/constants'
 
 const Auth = () => {
   const navigate = useNavigate()
@@ -37,28 +38,22 @@ const Auth = () => {
       const result = await signInWithPopup(auth, provider)
       const user = result.user
 
-      try {
-        await fetch('https://f8clone.herokuapp.com/register', {
-          method: 'POST',
-          body: JSON.stringify({
-            userId: user.uid,
-            fullName: user.displayName,
-            email: user.email,
-            phoneNumber: user.phoneNumber,
-            photoURL: user.photoURL,
-            activated: true,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-      } catch (error) {
-        console.log(error.message)
-      }
-
-      console.log(user)
-
       dispatchAndNavigateHandler(user)
+
+      await fetch(`${apiURL}/register`, {
+        method: 'POST',
+        body: JSON.stringify({
+          userId: user.uid,
+          fullName: user.displayName,
+          email: user.email,
+          phoneNumber: user.phoneNumber,
+          photoURL: user.photoURL,
+          activated: true,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
     } catch (error) {
       console.log(error.message)
     }

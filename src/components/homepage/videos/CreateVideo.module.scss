@@ -1,0 +1,70 @@
+@import '../../../sass/color';
+
+.videoCreate {
+  margin-right: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #333;
+  padding: 8px !important;
+
+  i {
+    margin-right: 4px;
+  }
+}
+
+.createButton {
+  background-color: $primary-color;
+  border: $primary-color;
+
+  &:hover {
+    background-color: $primary-color;
+    opacity: 0.9;
+  }
+}
+
+.createForm {
+  margin: 0 auto;
+  width: 90%;
+
+  label {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+
+  input {
+    height: 50px;
+  }
+}
+
+.toast {
+  background-color: #28a745 !important;
+
+  .toastHeader {
+    background-color: #28a745 !important;
+    color: #fff;
+  }
+  .toastBody {
+    font-size: 15px;
+    font-weight: 500;
+    color: #fff;
+  }
+
+  &.failure {
+    .toastHeader {
+      background-color: #dc3545 !important;
+    }
+    background-color: #dc3545 !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  .videoCreate {
+    display: none;
+  }
+
+  .createModal {
+    display: none !important;
+  }
+}

@@ -26,4 +26,11 @@ const setAuth = payload => {
   }
 }
 
-export { login, logout, setLoading, setAuth }
+const createVideo = payload => {
+  return {
+    type: 'CREATE_VIDEO',
+    payload,
+  }
+}
+
+export { login, logout, setLoading, setAuth, createVideo }

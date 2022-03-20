@@ -25,8 +25,11 @@ import { useLocation } from 'react-router-dom'
 import NotFound from './views/NotFound'
 import Cookies from 'js-cookie'
 import { setAuth } from './actions/userAction'
+import { apiURL } from './context/constants'
+import BlogSlug from './components/blogpage/BlogSlug'
 
 function App() {
+  console.log('NODE_ENV: ', process.env.NODE_ENV)
   const dispatch = useDispatch()
   const location = useLocation()
 
@@ -39,7 +42,7 @@ function App() {
       try {
         if (!token) return
 
-        const res = await fetch('https://f8clone.herokuapp.com/api/auth', {
+        const res = await fetch(`${apiURL}/api/auth`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
@@ -47,10 +50,14 @@ function App() {
         })
 
         const data = await res.json()
+        const obj = {
+          ...data.user,
+          admin: data.admin,
+        }
+        console.log(obj)
 
         if (data.user) {
-          dispatch(setAuth(data.user))
-        } else {
+          dispatch(setAuth(obj))
         }
       } catch (error) {
         console.log(error)
@@ -111,6 +118,7 @@ function App() {
       />
       <Route path="/courses" element={<Courses />} />
       <Route path="/courses/:slug" element={<CourseSlug />} />
+      <Route path="/blog/:slug" element={<BlogSlug />} />
       <Route path="/learning-path" element={<LearningPath />} />
       <Route path="/blog" element={<Blog />} />
       <Route path="/search" element={<Search />} />
