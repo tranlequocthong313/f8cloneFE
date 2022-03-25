@@ -5,6 +5,7 @@ export const NavContext = createContext()
 
 const NavContextProvider = ({ children }) => {
   const location = useLocation()
+
   const [active, setActive] = useState(location.pathname.split('/')[1])
 
   const activeHandler = tab => {

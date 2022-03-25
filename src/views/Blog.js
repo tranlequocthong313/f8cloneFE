@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import styles from './Blog.module.scss'
 import '../sass/_withSidebarContent.scss'
 import '../sass/_container.scss'
-import userDefaultImage from '../asset/nobody_m.256x256.jpg'
 import NewBlogs from '../components/blogpage/NewBlogs'
 import Topics from '../components/blogpage/Topics'
 import Header from '../components/main-layout/nav/Header'
 import SideBar from '../components/main-layout/sidebar/SideBar'
-import Footer from '../components/main-layout/footer/Footer'
 import { apiURL } from '../context/constants'
 
 const Blog = () => {
+  const Footer = React.lazy(() =>
+    import('../components/main-layout/footer/Footer')
+  )
+
   const [blogs, setBlogs] = useState(null)
 
   useEffect(() => {
@@ -20,10 +22,11 @@ const Blog = () => {
 
   const fetchData = async () => {
     try {
-      const res = await fetch(`${apiURL}`)
+      const res = await fetch(`${apiURL}/blog`)
       const data = await res.json()
+      console.log('🚀 ~ file: Blog.js ~ line 24 ~ fetchData ~ data', data)
 
-      setBlogs(data.BLOGS_DUMMY_DATA)
+      setBlogs(data)
     } catch (error) {
       console.log(error.message)
     }
@@ -60,7 +63,9 @@ const Blog = () => {
           </div>
         </Col>
       </Row>
-      <Footer />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Footer />
+      </Suspense>
     </>
   )
 }

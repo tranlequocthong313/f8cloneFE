@@ -4,16 +4,20 @@ import { Image } from 'react-bootstrap'
 import MainCard from '../../utils/card/MainCard'
 import styles from './BlogItem.module.scss'
 import CardButton from '../../utils/card/CardButton'
+import { apiURL } from '../../../context/constants'
+import noPhotoUser from '../../../asset/nobody_m.256x256.jpg'
 
-const BlogItem = props => {
-  const { blog } = props
-
+const BlogItem = ({ blog }) => {
   return (
     <MainCard>
       <Link to={`blog/${blog.slug}`}>
         <section
           title={blog.title}
-          style={{ backgroundImage: `url(${blog.image})` }}
+          style={{
+            backgroundImage: blog.image
+              ? `url(${apiURL}/${blog.image})`
+              : `url(https://accounts.fullstack.edu.vn/assets/icon/f8_icon.png)`,
+          }}
         >
           <CardButton>Xem bài viết</CardButton>
         </section>
@@ -23,10 +27,13 @@ const BlogItem = props => {
       </h3>
       <div className={styles.author}>
         <Link to={`blog/${blog.slug}`}>
-          <Image src={blog.avatar} />
+          <Image
+            src={!blog.postedBy.photoURL ? noPhotoUser : blog.postedBy.photoURL}
+          />
         </Link>
         <Link to={`blog/${blog.slug}`}>
-          <strong>{blog.author}</strong>
+          {blog.postedBy.fullName}
+          <span className={styles.dot}>.</span>
           <span>{blog.readingTime} phút đọc</span>
         </Link>
       </div>

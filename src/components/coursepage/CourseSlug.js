@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useContext, useMemo, memo } from 'react'
-import { useLocation } from 'react-router-dom'
+import React, { useEffect, useState, Suspense } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { Row, Col } from 'react-bootstrap'
 import Header from '../main-layout/nav/Header'
 import SideBar from '../main-layout/sidebar/SideBar'
-import Footer from '../main-layout/footer/Footer'
 import CourseDetail from './CourseDetail'
 import CourseEnroll from './CourseEnroll'
 import styles from './CourseSlug.module.scss'
@@ -12,6 +11,8 @@ import PreviewCourse from './PreviewCourse'
 import { apiURL } from '../../context/constants'
 
 const CourseSlug = () => {
+  const Footer = React.lazy(() => import('../main-layout/footer/Footer'))
+
   const location = useLocation()
 
   const [course, setCourse] = useState()
@@ -54,7 +55,12 @@ const CourseSlug = () => {
                 </div>
                 <div className={styles.purchaseBadge}>
                   <h5>Miễn phí</h5>
-                  <button className={styles.learnNowButton}>Đăng ký học</button>
+                  <Link
+                    className={styles.learnNowButton}
+                    to={`/learning/${course ? course.slug : ''}`}
+                  >
+                    Đăng ký học
+                  </Link>
                   <ul>
                     <li>
                       <i className={`${styles.icon} bi bi-compass-fill`}></i>
@@ -96,6 +102,7 @@ const CourseSlug = () => {
                 <CourseEnroll
                   image={course ? course.image : ''}
                   showHandler={showHandler}
+                  slug={course ? course.slug : ''}
                 />
               </Col>
             </Row>
@@ -105,7 +112,9 @@ const CourseSlug = () => {
       <div className={styles.mobileRegisterBtn}>
         <button>ĐĂNG KÝ MIỄN PHÍ</button>
       </div>
-      <Footer />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Footer />
+      </Suspense>
       {show && (
         <PreviewCourse
           previewVideo={course.previewVideo}

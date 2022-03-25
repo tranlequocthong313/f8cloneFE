@@ -1,7 +1,8 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import styles from './CourseEnroll.module.scss'
 
-const CourseEnroll = ({ image, showHandler }) => {
+const CourseEnroll = ({ image, showHandler, slug }) => {
   return (
     <div className={styles.purchaseBadge}>
       <div className={styles.imgPreview} onClick={showHandler}>
@@ -13,7 +14,9 @@ const CourseEnroll = ({ image, showHandler }) => {
         <p>Xem giới thiệu khóa học</p>
       </div>
       <h5>Miễn phí</h5>
-      <button className={styles.learnNowButton}>Đăng ký học</button>
+      <Link to={`/learning/${slug}`} className={styles.learnNowButton}>
+        Đăng ký học
+      </Link>
       <ul>
         <li>
           <i className={`${styles.icon} bi bi-compass-fill`}></i>

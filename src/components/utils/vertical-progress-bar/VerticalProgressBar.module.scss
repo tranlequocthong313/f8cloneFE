@@ -1,0 +1,21 @@
+@import '../../../sass/color';
+
+.wrapper {
+  background-color: #ddd;
+  border-radius: 4px;
+  height: 8px;
+  margin-top: 8px;
+  overflow: hidden;
+  position: relative;
+  &::after {
+    background-color: $primary-color;
+    bottom: 0;
+    content: '';
+    display: block;
+    left: 0;
+    position: absolute;
+    top: 0;
+    transition: width 1s ease;
+    width: 50%;
+  }
+}

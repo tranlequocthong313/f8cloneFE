@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import { Col } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import styles from './BookmarkPost.module.scss'
@@ -7,9 +7,12 @@ import '../sass/_mainHeadingTitle.scss'
 import { Row } from 'react-bootstrap'
 import Header from '../components/main-layout/nav/Header'
 import SideBar from '../components/main-layout/sidebar/SideBar'
-import Footer from '../components/main-layout/footer/Footer'
 
 const BookmarkPost = () => {
+  const Footer = React.lazy(() =>
+    import('../components/main-layout/footer/Footer')
+  )
+
   return (
     <>
       <Header />
@@ -33,7 +36,9 @@ const BookmarkPost = () => {
           </div>
         </Col>
       </Row>
-      <Footer />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Footer />
+      </Suspense>
     </>
   )
 }

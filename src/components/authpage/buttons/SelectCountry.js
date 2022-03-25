@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from 'react'
-import COUNTRY_CODE_DUMMY from '../../../storage/country-code'
+import { COUNTRY_CODE_DUMMY } from '../../../context/constants'
 import styles from './SelectCountry.module.scss'
 
 const SelectCountry = memo(({ onChange }) => {

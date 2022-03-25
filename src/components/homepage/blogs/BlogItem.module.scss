@@ -21,12 +21,22 @@
 
     strong {
       color: #292929;
-      margin-right: 16px;
+      font-weight: 600;
+    }
+
+    .dot {
+      margin: 0 8px;
     }
 
     span {
       font-weight: 500;
       font-size: 14px;
     }
+  }
+}
+
+@media (max-width: 1023px) {
+  .author {
+    display: none;
   }
 }

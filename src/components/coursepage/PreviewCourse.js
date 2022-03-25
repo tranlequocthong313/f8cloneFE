@@ -1,4 +1,5 @@
 import React from 'react'
+
 import styles from './PreviewCourse.module.scss'
 import VideoPlayer from './VideoPlayer'
 
@@ -11,7 +12,7 @@ const PreviewCourse = ({ previewVideo, showHandler }) => {
           <h2>Xây Dựng Website với ReactJS</h2>
           <i className="bi bi-x" onClick={showHandler}></i>
         </div>
-        <VideoPlayer previewVideo={previewVideo} />
+        <VideoPlayer videoId={previewVideo} page={'course-slug'} />
       </div>
     </div>
   )

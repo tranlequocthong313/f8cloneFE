@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import { NavDropdown, Image } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
 import styles from './Notification.module.scss'
 import '../../../../sass/_custom.scss'
 import BackDrop from '../../../utils/backdrop/BackDrop'

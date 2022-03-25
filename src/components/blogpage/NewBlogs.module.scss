@@ -46,13 +46,15 @@
   display: flex;
   align-items: center;
   flex: 1 1;
-  padding-right: 32px;
+  justify-content: space-between;
 
   a {
     text-decoration: none;
   }
 
   .content {
+    padding-right: 32px;
+
     h3 {
       color: #292929;
       font-size: 20px;
@@ -80,6 +82,21 @@
       .dot {
         margin: 0 8px;
       }
+    }
+  }
+
+  .image {
+    img {
+      background: #ebebeb;
+      border-radius: 15px;
+      color: #757575;
+      display: block;
+      font-size: 14px;
+      line-height: 1.8;
+      min-height: 100px;
+      overflow: hidden;
+      text-align: center;
+      width: 200px;
     }
   }
 }

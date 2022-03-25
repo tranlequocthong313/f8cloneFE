@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Form } from 'react-bootstrap'
 import styles from './AuthWithPhoneNumberForm.module.scss'
 import { signInWithPhoneNumber, RecaptchaVerifier } from 'firebase/auth'
 import { auth } from '../../../firebase/config'
 import FormGroup from '../../utils/auth-form/FormGroup'
 import { apiURL } from '../../../context/constants'
+import Cookies from 'js-cookie'
 
 const LoginWithPhoneNumberForm = ({
   switchPhoneAndEmailHandler,
@@ -88,13 +89,31 @@ const LoginWithPhoneNumberForm = ({
       const result = await window.confirmationResult.confirm(verifyOTP)
       let user = result.user
 
-      if (!isLogin) {
-        await fetch(`${apiURL}/register`, {
+      if (isLogin) {
+        const res = await fetch(`${apiURL}/login/provider`, {
           method: 'POST',
           body: JSON.stringify({
-            userId: user.uid,
+            phoneNumber: user.phoneNumber,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+
+        const data = await res.json()
+        console.log(data.user)
+        Cookies.set('token', data.accessToken)
+        dispatchAndNavigateHandler({
+          ...data.user,
+          accessToken: data.accessToken,
+        })
+      }
+
+      if (!isLogin) {
+        const res = await fetch(`${apiURL}/register`, {
+          method: 'POST',
+          body: JSON.stringify({
             fullName,
-            email: user.email,
             phoneNumber: user.phoneNumber,
             activated: true,
           }),
@@ -102,16 +121,56 @@ const LoginWithPhoneNumberForm = ({
             'Content-Type': 'application/json',
           },
         })
-      }
 
-      user = {
-        ...user,
-        displayName: fullName,
+        const data = await res.json()
+        console.log(data)
+        Cookies.set('token', data.accessToken)
+        dispatchAndNavigateHandler({
+          ...data.userRes,
+          accessToken: data.accessToken,
+        })
       }
-
-      dispatchAndNavigateHandler(user)
     } catch (error) {
       console.log(error.message)
+    }
+  }
+
+  const checkNumberPhoneHandler = async e => {
+    try {
+      const length = e.target.value.trim().length
+      console.log(e.target.value)
+      if (length === 10) {
+        const res = await fetch(`${apiURL}/login/phone-number`, {
+          method: 'POST',
+          body: JSON.stringify({ phoneNumber: e.target.value }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+
+        const data = await res.json()
+        console.log(data)
+
+        if (!isLogin && data.notUsed) {
+          setUserPhoneNumber(e.target.value)
+          return
+        }
+
+        if (!isLogin && data.used) {
+          console.log(data.used)
+          return
+        }
+
+        if (isLogin && data.notUsed) {
+          console.log(data.notUsed)
+          return
+        }
+
+        console.log(data.used)
+        setUserPhoneNumber(e.target.value)
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -135,7 +194,7 @@ const LoginWithPhoneNumberForm = ({
         onClick={() => switchPhoneAndEmailHandler('email')}
         onChange={{
           selectCountry: getCountryNameHandler,
-          input: e => setUserPhoneNumber(e.target.value),
+          input: checkNumberPhoneHandler,
         }}
         countryName={countryName}
       />
@@ -146,12 +205,8 @@ const LoginWithPhoneNumberForm = ({
         isSendVerifyCode={isSendVerifyCode}
         onChange={{ input: e => setVerifyOTP(e.target.value) }}
         counter={counter}
-        disabled={isSendVerifyCode && userPhoneNumber.length !== 10}
-        onClick={
-          !isSendVerifyCode && userPhoneNumber.length === 10
-            ? onSubmitHandler
-            : null
-        }
+        disabled={!userPhoneNumber}
+        onClick={userPhoneNumber ? onSubmitHandler : null}
       />
       <div
         className={

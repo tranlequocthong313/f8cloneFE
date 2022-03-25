@@ -1,4 +1,5 @@
 const initialState = {
+  userId: null,
   admin: false,
   displayName: null,
   photoURL: null,
@@ -15,10 +16,11 @@ const userReducer = (state = initialState, action) => {
       console.log('Login Successfully!')
       return {
         ...state,
+        userId: action.payload._id,
         photoURL: action.payload.photoURL,
-        displayName: action.payload.displayName || action.payload.fullName,
+        displayName: action.payload.fullName,
         email: action.payload.email,
-        isLoggedIn: !!action.payload.accessToken || !!action.payload.idToken,
+        isLoggedIn: !!action.payload.accessToken,
         admin: action.payload.admin,
       }
 
@@ -42,14 +44,16 @@ const userReducer = (state = initialState, action) => {
       console.log('Is Logging In!')
       return {
         ...state,
+        userId: action.payload._id,
         displayName: action.payload.fullName,
         email: action.payload.email,
-        isLoggedIn: !!action.payload.accessToken || !!action.payload.idToken,
+        photoURL: !action.payload.photoURL ? null : action.payload.photoURL,
+        isLoggedIn: !!action.payload.accessToken,
         admin: action.payload.admin,
       }
 
     case 'CREATE_VIDEO':
-      console.log(action.payload.isSuccess)
+      console.log(action.payload.videoData)
       return {
         ...state,
         videoCreated: action.payload.videoData,

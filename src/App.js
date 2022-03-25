@@ -16,10 +16,7 @@ import BookmarkPost from './views/BookmarkPost'
 import Learning from './views/Learning'
 import { Routes, Route } from 'react-router-dom'
 import { useEffect } from 'react'
-import { onAuthStateChanged } from 'firebase/auth'
 import { useDispatch, useSelector } from 'react-redux'
-import { auth } from './firebase/config'
-import { login } from './actions/userAction'
 import CourseSlug from './components/coursepage/CourseSlug'
 import { useLocation } from 'react-router-dom'
 import NotFound from './views/NotFound'
@@ -27,6 +24,7 @@ import Cookies from 'js-cookie'
 import { setAuth } from './actions/userAction'
 import { apiURL } from './context/constants'
 import BlogSlug from './components/blogpage/BlogSlug'
+import MyBlog from './views/MyBlog'
 
 function App() {
   console.log('NODE_ENV: ', process.env.NODE_ENV)
@@ -35,49 +33,42 @@ function App() {
 
   const user = useSelector(state => state.user)
 
+  // Scroll to top when routing
   useEffect(() => {
-    const getUserHandler = async () => {
-      const token = Cookies.get('token')
+    window.scrollTo(0, 0)
+  }, [location.pathname])
 
-      try {
-        if (!token) return
-
-        const res = await fetch(`${apiURL}/api/auth`, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        })
-
-        const data = await res.json()
-        const obj = {
-          ...data.user,
-          admin: data.admin,
-        }
-        console.log(obj)
-
-        if (data.user) {
-          dispatch(setAuth(obj))
-        }
-      } catch (error) {
-        console.log(error)
-      }
-    }
-
+  useEffect(() => {
     getUserHandler()
-  }, [dispatch])
-
-  useEffect(() => {
-    const unregisterAuthObserver = onAuthStateChanged(auth, async user => {
-      if (user) {
-        dispatch(login(user))
-      }
-    })
-
-    return () => {
-      unregisterAuthObserver()
-    }
   }, [])
+
+  const getUserHandler = async () => {
+    const token = Cookies.get('token')
+
+    try {
+      if (!token) return
+
+      const res = await fetch(`${apiURL}/api/auth`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      const data = await res.json()
+
+      const obj = {
+        ...data.user,
+        accessToken: token,
+        admin: data.admin,
+      }
+      console.log(obj)
+
+      dispatch(setAuth(obj))
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   // Set title of browser again after using 'Write Blog Page'
   useEffect(() => {
@@ -97,7 +88,7 @@ function App() {
         element={!user.isLoggedIn ? <Auth /> : <NotFound />}
       />
       <Route
-        path="/learning"
+        path="/learning/:slug"
         element={user.isLoggedIn ? <Learning /> : <Auth />}
       />
       <Route
@@ -113,8 +104,12 @@ function App() {
         element={user.isLoggedIn ? <Settings /> : <Auth />}
       />
       <Route
-        path="/me/bookmark/posts"
+        path="/bookmark-post"
         element={user.isLoggedIn ? <BookmarkPost /> : <Auth />}
+      />
+      <Route
+        path="/my-post"
+        element={user.isLoggedIn ? <MyBlog /> : <Auth />}
       />
       <Route path="/courses" element={<Courses />} />
       <Route path="/courses/:slug" element={<CourseSlug />} />

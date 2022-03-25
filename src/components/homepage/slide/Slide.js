@@ -5,6 +5,7 @@ import banner2 from '../../../asset/Banner_03_youtube.png'
 import banner3 from '../../../asset/Banner_04_2.png'
 import banner4 from '../../../asset/Banner_web_ReactJS.png'
 import styles from './Slide.module.scss'
+import '../../../sass/_carousel.scss'
 
 const Slide = () => {
   return (

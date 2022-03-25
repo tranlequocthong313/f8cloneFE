@@ -2,9 +2,7 @@ import React, { useState } from 'react'
 import FormGroup from '../../utils/auth-form/FormGroup'
 import { Form } from 'react-bootstrap'
 import styles from './AuthWithEmailAndPasswordForm.module.scss'
-import { auth } from '../../../firebase/config'
 import * as EmailValidator from 'email-validator'
-import { v4 as uuidv4 } from 'uuid'
 import Cookies from 'js-cookie'
 import { apiURL } from '../../../context/constants'
 
@@ -50,10 +48,12 @@ const LoginWithEmailAndPasswordForm = ({
         create: OTP,
       }
     })
+    console.log('OTP: ', OTP)
     return OTP
   }
 
   const sendOTPHandler = async option => {
+    console.log('OTP RUN')
     await fetch(`${apiURL}/register/verify`, {
       method: 'POST',
       body: JSON.stringify({
@@ -86,6 +86,9 @@ const LoginWithEmailAndPasswordForm = ({
     }, 1000)
   }
 
+  console.log(verifyOTP.create)
+  console.log(verifyOTP.input)
+
   // Sign up or Sign in with email and password
   const loginWithEmailAndPasswordHandler = async () => {
     try {
@@ -103,14 +106,13 @@ const LoginWithEmailAndPasswordForm = ({
 
         const data = await res.json()
 
-        console.log(data)
-        Cookies.set('token', data.user.accessToken)
+        Cookies.set('token', data.accessToken)
 
         const obj = {
           ...data.user,
+          accessToken: data.accessToken,
           admin: data.admin,
         }
-        console.log(obj)
 
         if (data.user) {
           dispatchAndNavigateHandler(obj)
@@ -121,10 +123,9 @@ const LoginWithEmailAndPasswordForm = ({
           return
         }
 
-        await fetch(`${apiURL}/register`, {
+        await fetch(`${apiURL}/register/`, {
           method: 'POST',
           body: JSON.stringify({
-            userId: uuidv4(),
             fullName,
             email: userEmailAndPasswordInput.email,
             password: userEmailAndPasswordInput.password,

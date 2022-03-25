@@ -1,9 +1,53 @@
-.wrapper {
-  // padding-top: 56.25%;
-  position: relative;
+@import '../../sass/color';
 
-  .player {
+.wrapper {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
+  }
+
+  .player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    .noVideo {
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center center;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-image: url(https://i.ytimg.com/vi/CyZ_O7v62h4/maxresdefault.jpg);
+      .playButton {
+        border-radius: 64px;
+        width: 64px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: $primary-color;
+        transition: 0.3s ease;
+
+        .playIcon {
+          border-style: solid;
+          border-width: 16px 0px 16px 26px;
+          border-color: transparent transparent transparent white;
+          margin-left: 7px;
+        }
+      }
+    }
   }
 }

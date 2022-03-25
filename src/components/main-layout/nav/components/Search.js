@@ -1,5 +1,3 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
 import { Form, FormControl } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './Search.module.scss'

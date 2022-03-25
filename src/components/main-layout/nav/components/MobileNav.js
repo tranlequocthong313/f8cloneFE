@@ -39,12 +39,7 @@ const MobileNav = ({ photoURL }) => {
 
   const singOutHandler = () => {
     Cookies.remove('token')
-
-    signOut(auth)
-      .then(() => {
-        dispatchAndNavigateHandler()
-      })
-      .catch(error => error)
+    dispatchAndNavigateHandler()
   }
 
   return (
@@ -133,7 +128,7 @@ const MobileNav = ({ photoURL }) => {
               className={active === 'blog' ? styles.active : styles.item}
             >
               <Link to="/blog">
-                <i className="bi bi-chat-left-quote-fill"></i>
+                <i className="bi bi-book-fill"></i>
                 <span>Blog</span>
               </Link>
             </li>
@@ -146,7 +141,7 @@ const MobileNav = ({ photoURL }) => {
               }}
               className={active === 'me' ? styles.active : styles.item}
             >
-              <Link to="me/bookmark/posts">
+              <Link to="/bookmark-post">
                 <i className="bi bi-bookmark-fill"></i>
                 <span>Bài viết đã lưu</span>
               </Link>

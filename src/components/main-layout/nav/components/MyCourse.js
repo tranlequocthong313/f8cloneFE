@@ -18,22 +18,30 @@ const MyCourse = () => {
           <div className={styles.wrapper} onClick={e => e.stopPropagation()}>
             <header className={styles.header}>
               <h6>Khóa học của tôi</h6>
-              <Link to="/blog" className={styles.viewAll} onClick={showHandler}>
+              <Link
+                to="/my-course"
+                className={styles.viewAll}
+                onClick={showHandler}
+              >
                 Xem tất cả
               </Link>
             </header>
             <div className={styles.body}>
-              <Link to="/blog" className={styles.thumb} onClick={showHandler}>
+              <Link
+                to="/my-course"
+                className={styles.thumb}
+                onClick={showHandler}
+              >
                 <Image src="https://files.fullstack.edu.vn/f8-prod/courses/7.png" />
               </Link>
               <div className={styles.info}>
                 <h3>
-                  <Link to="/blog" onClick={showHandler}>
+                  <Link to="/my-course" onClick={showHandler}>
                     Kiến Thức Nhập Môn IT
                   </Link>
                 </h3>
                 <p>Bạn chưa học khóa này</p>
-                <Link to="/blog" onClick={showHandler}>
+                <Link to="/my-course" onClick={showHandler}>
                   Bắt đầu học
                 </Link>
               </div>

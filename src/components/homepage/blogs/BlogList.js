@@ -6,7 +6,7 @@ const BlogList = props => {
   return (
     <ScrollHorizontal path={'blog'}>
       {props.blogs.map(blog => (
-        <BlogItem key={blog.blogId} blog={blog} />
+        <BlogItem key={blog._id} blog={blog} />
       ))}
     </ScrollHorizontal>
   )

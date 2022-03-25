@@ -50,7 +50,7 @@ const SideBar = () => {
                 className={active === 'blog' ? styles.active : ''}
                 onClick={() => activeHandler('blog')}
               >
-                <i className="bi bi-chat-square-quote-fill"></i>
+                <i className="bi bi-book-fill"></i>
                 <span>Blog</span>
               </Link>
             </li>

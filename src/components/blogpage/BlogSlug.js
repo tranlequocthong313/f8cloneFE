@@ -10,7 +10,7 @@ const BlogSlug = () => {
   const location = useLocation()
 
   const [scrollY, setScrollY] = useState(0)
-  const [blog, SetBlog] = useState(null)
+  const [blog, setBlog] = useState(null)
 
   useEffect(() => {
     const onScroll = () => {
@@ -29,11 +29,11 @@ const BlogSlug = () => {
 
   const fetchData = async () => {
     try {
-      const res = await fetch(`http://localhost:5000${location.pathname}`)
+      const res = await fetch(`${apiURL}${location.pathname}`)
       const data = await res.json()
       console.log(data)
 
-      SetBlog(data)
+      setBlog(data)
     } catch (error) {
       console.log(error.message)
     }

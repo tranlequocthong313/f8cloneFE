@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './User.module.scss'
 import MyCourse from './MyCourse'
 import { signOut } from 'firebase/auth'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import BackDrop from '../../../utils/backdrop/BackDrop'
 import { Link } from 'react-router-dom'
 import userDefaultImage from '../../../../asset/nobody_m.256x256.jpg'
@@ -85,6 +85,7 @@ const NOTIFICATION_DUMMY_DATA = [
 const User = ({ photoURL, displayName, email, currentPage }) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const location = useLocation()
 
   const [show, setShow] = useState(false)
 
@@ -99,12 +100,6 @@ const User = ({ photoURL, displayName, email, currentPage }) => {
   const singOutHandler = () => {
     Cookies.remove('token')
     dispatchAndNavigateHandler()
-
-    signOut(auth)
-      .then(() => {
-        dispatchAndNavigateHandler()
-      })
-      .catch(error => error)
   }
 
   // Listen window resize to hide mobile nav on computer
@@ -119,7 +114,7 @@ const User = ({ photoURL, displayName, email, currentPage }) => {
 
   return (
     <>
-      <CreateVideo />
+      {location.pathname === '/' && <CreateVideo />}
       <MyCourse />
       <Notification notifications={NOTIFICATION_DUMMY_DATA} />
       <>
@@ -148,13 +143,13 @@ const User = ({ photoURL, displayName, email, currentPage }) => {
                   <Link to="new-blog">Viết blog</Link>
                 </li>
                 <li>
-                  <Link to="me/bookmark/posts">Bài viết của tôi</Link>
+                  <Link to="/my-post">Bài viết của tôi</Link>
                 </li>
               </ul>
               <hr />
               <ul className={styles.list}>
                 <li>
-                  <Link to="me/bookmark/posts">Bài viết đã lưu</Link>
+                  <Link to="/bookmark-post">Bài viết đã lưu</Link>
                 </li>
               </ul>
               <hr />

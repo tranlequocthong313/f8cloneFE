@@ -21,7 +21,7 @@
     margin-bottom: 24px;
     padding: 12px 28px 28px;
     position: relative;
-    max-width: 1100px;
+    width: 912px;
 
     i {
       color: #333;
@@ -45,6 +45,14 @@
       font-weight: 900;
       margin-bottom: 24px;
       margin-top: 0;
+    }
+  }
+}
+
+@media (min-width: 740px) and (max-width: 1023px) {
+  .wrapper {
+    .body {
+      width: 644px;
     }
   }
 }

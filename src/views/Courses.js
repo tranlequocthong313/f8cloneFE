@@ -13,7 +13,8 @@ import Footer from '../components/main-layout/footer/Footer'
 import { apiURL } from '../context/constants'
 
 const Courses = () => {
-  const [courseData, setCourseData] = useState([])
+  const [courseFE, setCourseFE] = useState([])
+  const [courseBE, setCourseBE] = useState([])
 
   useEffect(() => {
     fetchData()
@@ -21,10 +22,12 @@ const Courses = () => {
 
   const fetchData = async token => {
     try {
-      const res = await fetch(`${apiURL}`)
+      const res = await fetch(`${apiURL}/courses`)
       const data = await res.json()
+      console.log('🚀 ~ file: Courses.js ~ line 27 ~ Courses ~ data', data)
 
-      setCourseData(data.course)
+      setCourseFE(data.courseFE)
+      setCourseBE(data.courseBE)
     } catch (error) {
       console.log(error.message)
     }
@@ -47,10 +50,10 @@ const Courses = () => {
               </div>
 
               <HeadingTitleWrap title={'Front-end'} viewMode={null} />
-              <CourseList courses={courseData} />
+              <CourseList courses={courseFE} />
 
               <HeadingTitleWrap title={'Back-end'} viewMode={null} />
-              <CourseList courses={courseData} />
+              <CourseList courses={courseBE} />
 
               <Suggestion
                 title={'Bạn đang tìm kiếm lộ trình học cho người mới?'}

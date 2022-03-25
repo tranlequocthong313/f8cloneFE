@@ -1,16 +1,15 @@
-import React, { memo } from 'react'
+import React, { memo, Suspense } from 'react'
 import { Navbar, Container } from 'react-bootstrap'
 import Logo from './components/Logo'
 import Search from './components/Search'
-import User from './components/User'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './Header.module.scss'
 import MobileNav from './components/MobileNav'
-import Login from './components/Login'
 import '../../../sass/_custom.scss'
 import { useSelector } from 'react-redux'
 import NewPost from '../../newBlog/NewPost'
 import { Link } from 'react-router-dom'
+import User from './components/User'
 
 const Header = ({
   currentPage,
@@ -20,6 +19,7 @@ const Header = ({
   scrollY,
 }) => {
   const user = useSelector(state => state.user)
+  const Login = React.lazy(() => import('./components/Login'))
 
   return (
     <Navbar
@@ -43,15 +43,18 @@ const Header = ({
           <Link to="/search" className={styles.searchMobileWrapper}>
             <div className={styles.searchMobileIcon}></div>
           </Link>
-          {user.isLoggedIn && (
-            <User
-              currentPage={currentPage}
-              photoURL={user.photoURL}
-              displayName={user.displayName}
-              email={user.email}
-            />
-          )}
-          {!user.isLoggedIn && <Login />}
+
+          <Suspense fallback={<User />}>
+            {user.isLoggedIn && (
+              <User
+                currentPage={currentPage}
+                photoURL={user.photoURL}
+                displayName={user.displayName}
+                email={user.email}
+              />
+            )}
+            {!user.isLoggedIn && <Login />}
+          </Suspense>
         </div>
       </Container>
     </Navbar>

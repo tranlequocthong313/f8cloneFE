@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import '../sass/_withSidebarContent.scss'
 import ctaImage from '../asset/fb-group-cards@2x.png'
 import Suggestion from '../components/utils/suggestion/Suggestion'
@@ -6,10 +6,13 @@ import '../sass/_container.scss'
 import { Col, Row } from 'react-bootstrap'
 import LearningList from '../components/learning-path-page/LearningList'
 import SideBar from '../components/main-layout/sidebar/SideBar'
-import Footer from '../components/main-layout/footer/Footer'
 import Header from '../components/main-layout/nav/Header'
 
 const LearningPath = () => {
+  const Footer = React.lazy(() =>
+    import('../components/main-layout/footer/Footer')
+  )
+
   return (
     <>
       <Header />
@@ -40,7 +43,9 @@ const LearningPath = () => {
           </div>
         </Col>
       </Row>
-      <Footer />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Footer />
+      </Suspense>
     </>
   )
 }

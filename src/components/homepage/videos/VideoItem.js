@@ -1,11 +1,18 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import CardButton from '../../utils/card/CardButton'
 import MainCard from '../../utils/card/MainCard'
 import styles from './VideoItem.module.scss'
+import youtubeDurationFormat from 'youtube-duration-format'
 
-const VideoItem = props => {
-  const { video } = props
+const VideoItem = ({ video }) => {
+  const formatNumber = number => {
+    return new Intl.NumberFormat(['ban', 'id']).format(number)
+  }
+
+  const formatDuration = duration => {
+    const durationFormatted = youtubeDurationFormat(duration)
+    return durationFormatted
+  }
 
   return (
     <MainCard>
@@ -24,7 +31,7 @@ const VideoItem = props => {
               <i className="bi bi-play-fill"></i>
             </div>
             <div className={styles.duration}>
-              {video.duration.replace(/[^\d.-]/g, '')}
+              {formatDuration(video.duration)}
             </div>
             <div></div>
           </div>
@@ -42,15 +49,15 @@ const VideoItem = props => {
       <ul className={styles.stats}>
         <li>
           <i className="bi bi-eye-fill"></i>
-          <span>{video.viewCount}</span>
+          <span>{formatNumber(video.viewCount)}</span>
         </li>
         <li>
           <i className="bi bi-hand-thumbs-up-fill"></i>
-          <span>{video.likeCount}</span>
+          <span>{formatNumber(video.likeCount)}</span>
         </li>
         <li>
           <i className="bi bi-chat-fill"></i>
-          <span>{video.commentCount}</span>
+          <span>{formatNumber(video.commentCount)}</span>
         </li>
       </ul>
     </MainCard>

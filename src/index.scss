@@ -1,11 +1,13 @@
 @import './sass/color';
+// @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,900&display=swap');
 
 #root {
   overflow: hidden;
 }
 
 body {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
   margin: 0 14px;
   padding: 0;
   margin: 0;
@@ -15,4 +17,26 @@ body {
 ::selection {
   color: #fff;
   background-color: $primary-color;
+}
+
+/* Scroll */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #d9d9d9;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #d9d9d9;
 }

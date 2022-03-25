@@ -13,3 +13,17 @@
     color: #666;
   }
 }
+
+.progress {
+  p {
+    color: #666;
+    font-size: 13px;
+    margin: 0 0 16px;
+  }
+}
+
+@media (max-width: 739px) {
+  .studentCount {
+    display: none;
+  }
+}

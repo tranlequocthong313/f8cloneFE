@@ -1,20 +1,40 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import Youtube from 'react-youtube'
+import { LearningContext } from '../../context/LearningContext'
 import styles from './VideoPlayer.module.scss'
 
-const VideoPlayer = ({ previewVideo }) => {
+const VideoPlayer = ({ videoId, onClick, page }) => {
+  const opts = {
+    playerVars: {
+      autoplay: 1,
+    },
+  }
+
+  const LearningCtx = useContext(LearningContext)
+
   return (
     <div className={styles.wrapper}>
-      <div className={styles.player}>
-        <iframe
-          width="760"
-          height="427"
-          src={`https://www.youtube.com/embed/${previewVideo}`}
-          title="YouTube video player"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        ></iframe>
-      </div>
+      {page !== 'course-slug' && (
+        <>
+          {LearningCtx.play && (
+            <Youtube
+              videoId={videoId || LearningCtx.videoId}
+              opts={opts}
+              onEnd={LearningCtx.onEndHandler}
+            />
+          )}
+          {!LearningCtx.play && (
+            <div className={styles.player} onClick={onClick}>
+              <div className={styles.noVideo}>
+                <div className={styles.playButton}>
+                  <div className={styles.playIcon}></div>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+      {page === 'course-slug' && <Youtube videoId={videoId} opts={opts} />}
     </div>
   )
 }

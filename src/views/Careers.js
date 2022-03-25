@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import styles from './Careers.module.scss'
 import '../sass/_mainHeadingTitle.scss'
@@ -6,7 +6,6 @@ import '../sass/_withSidebarContent.scss'
 import CareerList from '../components/career/CareerList'
 import Header from '../components/main-layout/nav/Header'
 import SideBar from '../components/main-layout/sidebar/SideBar'
-import Footer from '../components/main-layout/footer/Footer'
 
 const CAREERS_DUMMY_DATA = [
   {
@@ -26,6 +25,10 @@ const CAREERS_DUMMY_DATA = [
 ]
 
 const Careers = () => {
+  const Footer = React.lazy(() =>
+    import('../components/main-layout/footer/Footer')
+  )
+
   return (
     <>
       <Header />
@@ -54,7 +57,9 @@ const Careers = () => {
           </div>
         </Col>
       </Row>
-      <Footer />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Footer />
+      </Suspense>
     </>
   )
 }

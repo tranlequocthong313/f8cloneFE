@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Image } from 'react-bootstrap'
 import styles from './Auth.module.scss'
@@ -11,8 +11,8 @@ import AuthWithPhoneNumberForm from '../components/authpage/forms/AuthWithPhoneN
 import AuthWithEmailAndPasswordForm from '../components/authpage/forms/AuthWithEmailAndPasswordForm'
 import { login } from '../actions/userAction'
 import SignInButtonContainer from '../components/authpage/buttons/SignInButtonContainer'
-import NotFound from './NotFound'
 import { apiURL } from '../context/constants'
+import Cookies from 'js-cookie'
 
 const Auth = () => {
   const navigate = useNavigate()
@@ -35,24 +35,56 @@ const Auth = () => {
   // Google, Facebook, Github authentication
   const loginWithProviderHandler = async provider => {
     try {
-      const result = await signInWithPopup(auth, provider)
-      const user = result.user
+      const res = await signInWithPopup(auth, provider)
+      const user = res.user
 
-      dispatchAndNavigateHandler(user)
+      console.log(user)
 
-      await fetch(`${apiURL}/register`, {
+      const apiRes = await fetch(`${apiURL}/login/provider`, {
         method: 'POST',
         body: JSON.stringify({
-          userId: user.uid,
+          email: user.email,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      const apiData = await apiRes.json()
+
+      console.log('Email has been created', apiData)
+
+      if (apiData.savedUser) {
+        console.log('Email has been created')
+        Cookies.set('token', apiData.accessToken)
+        dispatchAndNavigateHandler({
+          ...apiData.savedUser,
+          accessToken: apiData.accessToken,
+        })
+
+        return
+      }
+
+      const newRes = await fetch(`${apiURL}/login/provider`, {
+        method: 'POST',
+        body: JSON.stringify({
           fullName: user.displayName,
           email: user.email,
-          phoneNumber: user.phoneNumber,
           photoURL: user.photoURL,
           activated: true,
         }),
         headers: {
           'Content-Type': 'application/json',
         },
+      })
+
+      const newData = await newRes.json()
+      console.log(newData.accessToken)
+      Cookies.set('token', newData.accessToken)
+
+      dispatchAndNavigateHandler({
+        ...newData.newUser,
+        accessToken: newData.accessToken,
       })
     } catch (error) {
       console.log(error.message)

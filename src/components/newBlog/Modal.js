@@ -1,12 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Row, Col } from 'react-bootstrap'
 import { useDropzone } from 'react-dropzone'
 import ContentEditable from '../utils/content-editable/ContentEditable'
 import moment from 'moment'
 import { apiURL } from '../../context/constants'
 import styles from './Modal.module.scss'
+import { useNavigate } from 'react-router-dom'
+import Cookies from 'js-cookie'
 
-const Modal = ({ blogDataHandler, data, setShowModal }) => {
+const Modal = ({ blogContent, setShowModal }) => {
+  const navigate = useNavigate()
   // Get city living
   const timezone = Intl.DateTimeFormat()
     .resolvedOptions()
@@ -17,11 +20,19 @@ const Modal = ({ blogDataHandler, data, setShowModal }) => {
   const [preview, setPreview] = useState(null)
   const [showSchedule, setShowSchedule] = useState(false)
   const [schedule, setSchedule] = useState(date)
-  const [tags, setTags] = useState('')
-  const [allow, setAllow] = useState(false)
+  const [tags, setTags] = useState([])
+  const [allowRecommend, setAllowRecommend] = useState(false)
   const [titleDisplay, setTitleDisplay] = useState('')
   const [description, setDescription] = useState('')
-  const [thumb, setThumb] = useState(null)
+  const [image, setImage] = useState(null)
+
+  // maxLengthContentEditable library require maxLength is string
+  const LIMIT_TITLE_DISPLAY_LENGTH = '100'
+  const LIMIT_DESCRIPTION_LENGTH = '160'
+
+  // F8 uses these number value to trigger show help text under contentEditable input
+  const SHOW_HELP_NUMBER_TITLE_DISPLAY = 67
+  const SHOW_HELP_NUMBER_DESCRIPTION = 108
 
   useEffect(() => {
     return () => {
@@ -32,31 +43,70 @@ const Modal = ({ blogDataHandler, data, setShowModal }) => {
   const onDrop = useCallback(acceptedFiles => {
     const image = URL.createObjectURL(acceptedFiles[0])
     setPreview(image)
-    setThumb(acceptedFiles[0])
-    console.log(acceptedFiles[0])
+    setImage(acceptedFiles[0])
   }, [])
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: 'image/*',
-    name: 'thumb',
+    name: 'image',
   })
 
   const showScheduleHandler = () => {
     setShowSchedule(prev => !prev)
   }
 
-  const publicHandler = () => {
-    const detail = {
-      tags: [tags],
-      titleDisplay,
-      description,
-      allow,
-      schedule,
-      thumb,
+  const readingTimeHandler = content => {
+    const WORDS_PER_MINUTE = 200 // People read 200 words/min https://infusion.media/content-marketing/how-to-calculate-reading-time/
+    const SMALLEST_READING_TIME = 1
+
+    const wordCount = content.trim().length
+    const minute = Math.floor(wordCount / WORDS_PER_MINUTE)
+
+    if (minute <= SMALLEST_READING_TIME) {
+      return 1 // readingTime default 1 minute
     }
 
-    blogDataHandler(detail)
+    return minute
+  }
+
+  const createSlugBlog = title => {
+    const slug = title.toLowerCase().replace(/\s/g, '-') + '.html'
+
+    return slug
+  }
+
+  const postBlogHandler = async () => {
+    try {
+      const token = Cookies.get('token')
+
+      if (!token) return
+
+      const formData = new FormData()
+
+      formData.append('title', blogContent.title)
+      formData.append('content', blogContent.content)
+      formData.append('image', image)
+      formData.append('titleDisplay', titleDisplay)
+      formData.append('description', description)
+      formData.append('slug', createSlugBlog(blogContent.title))
+      formData.append('readingTime', readingTimeHandler(blogContent.content))
+      formData.append('allowRecommend', allowRecommend)
+      formData.append('tags', tags)
+      formData.append('schedule', schedule)
+
+      await fetch(`${apiURL}/new-blog`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      navigate(`/blog/${formData.get('slug')}`)
+    } catch (error) {
+      console.log(error.message)
+    }
   }
 
   return (
@@ -67,7 +117,7 @@ const Modal = ({ blogDataHandler, data, setShowModal }) => {
       <Row className={styles.wrapper}>
         <Col md={12} lg={6} xl={6} className={styles.colLeft}>
           <h3>Xem trước</h3>
-          <div
+          <form
             {...getRootProps()}
             role="button"
             tabIndex="0"
@@ -78,7 +128,7 @@ const Modal = ({ blogDataHandler, data, setShowModal }) => {
               type="file"
               accept="image/*"
               autoComplete="off"
-              name="thumb"
+              name="image"
               tabIndex="-1"
               hidden
               {...getInputProps()}
@@ -88,19 +138,25 @@ const Modal = ({ blogDataHandler, data, setShowModal }) => {
               hơn với độc giả.
             </p>
             <span>Kéo thả ảnh vào đây, hoặc bấm để chọn ảnh</span>
-          </div>
+          </form>
           <ContentEditable
             className={`${styles.contentEditable} ${styles.title}`}
             text={'Tiêu đề khi tin được hiển thị'}
-            value={data.title}
-            onKeyPress={e => setTitleDisplay(e.target.innerText)}
+            onInput={e => setTitleDisplay(e.target.innerText)}
+            maxLength={LIMIT_TITLE_DISPLAY_LENGTH}
           />
+          {titleDisplay.length >= SHOW_HELP_NUMBER_TITLE_DISPLAY && (
+            <div className={styles.help}>{`${titleDisplay.length}/100`}</div>
+          )}
           <ContentEditable
             className={`${styles.contentEditable} ${styles.description}`}
             text={'Mô tả khi tin được hiển thị'}
-            value={data.description}
-            onKeyPress={e => setDescription(e.target.innerText)}
+            onInput={e => setDescription(e.target.innerText)}
+            maxLength={LIMIT_DESCRIPTION_LENGTH}
           />
+          {description.length >= SHOW_HELP_NUMBER_DESCRIPTION && (
+            <div className={styles.help}>{`${description.length}/160`}</div>
+          )}
           <p className={styles.note}>
             <strong>Lưu ý:</strong> Chỉnh sửa tại đây sẽ thay đổi cách bài viết
             được hiển thị tại trang chủ, tin nổi bật - Chứ không ảnh hưởng tới
@@ -115,14 +171,18 @@ const Modal = ({ blogDataHandler, data, setShowModal }) => {
             type="text"
             placeholder="Ví dụ: Front-end, ReactJS, UI, UX"
             className={styles.tagsInput}
-            onChange={e => setTags(e.target.value)}
+            onChange={e =>
+              setTags(prev => {
+                return [...prev, e.target.value]
+              })
+            }
           />
           <form className={styles.allow}>
             <input
               type="checkbox"
               checked
               className={styles.checkMark}
-              onChange={() => setAllow(prev => !prev)}
+              onChange={() => setAllowRecommend(prev => !prev)}
             />
             <label>
               Đề xuất bài viết của bạn đến các độc giả quan tâm tới nội dung
@@ -145,7 +205,7 @@ const Modal = ({ blogDataHandler, data, setShowModal }) => {
             </form>
           )}
           <div className={styles.actions}>
-            <button className={styles.postButton} onClick={publicHandler}>
+            <button className={styles.postButton} onClick={postBlogHandler}>
               Xuất bản ngay
             </button>
             <button

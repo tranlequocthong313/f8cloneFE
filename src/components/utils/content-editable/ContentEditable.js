@@ -1,20 +1,23 @@
 import React, { forwardRef } from 'react'
 import styles from './ContentEditable.module.scss'
+import { maxlengthContentEditable } from 'maxlength-contenteditable'
 
 const ContentEditable = (
-  { value, onKeyPress, onPaste, text, className },
+  { value, onInput, text, className, maxLength },
   ref
 ) => {
+  maxlengthContentEditable()
+
   return (
     <div
       suppressContentEditableWarning={true}
-      contentEditable
+      contentEditable={true}
       spellCheck={false}
       data-empty-text={text}
       className={`${styles.contentEditable} ${className}`}
-      onKeyPress={onKeyPress}
-      onPaste={onPaste}
+      onInput={onInput}
       ref={ref}
+      data-max-length={maxLength}
     >
       {value}
     </div>

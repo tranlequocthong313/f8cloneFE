@@ -27,14 +27,20 @@ const CreateVideo = () => {
 
       const data = await res.json()
 
+      console.log(data)
+
       const videoData = {
         videoId,
         duration: data.items[0].contentDetails.duration,
         title: data.items[0].snippet.localized.title,
-        image: data.items[0].snippet.thumbnails.standard.url,
-        viewCount: data.items[0].statistics.viewCount,
-        likeCount: data.items[0].statistics.likeCount,
-        commentCount: data.items[0].statistics.commentCount,
+        image: data.items[0].snippet.thumbnails.standard
+          ? data.items[0].snippet.thumbnails.standard.url
+          : data.items[0].snippet.thumbnails.high
+          ? data.items[0].snippet.thumbnails.high.url
+          : data.items[0].snippet.thumbnails.medium.url,
+        viewCount: +data.items[0].statistics.viewCount,
+        likeCount: +data.items[0].statistics.likeCount,
+        commentCount: +data.items[0].statistics.commentCount,
       }
 
       createVideoHandler(videoData)
@@ -48,7 +54,7 @@ const CreateVideo = () => {
         }
       })
     } catch (error) {
-      console.log(error)
+      console.log(error.message)
       setCreateStatus(prev => {
         return {
           ...prev,
@@ -60,13 +66,17 @@ const CreateVideo = () => {
   }
 
   const createVideoHandler = async videoData => {
-    await fetch(`${apiURL}/video/create`, {
-      method: 'POST',
-      body: JSON.stringify(videoData),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    try {
+      await fetch(`${apiURL}/video/create`, {
+        method: 'POST',
+        body: JSON.stringify(videoData),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+    } catch (error) {
+      console.log(error)
+    }
   }
   return (
     <>

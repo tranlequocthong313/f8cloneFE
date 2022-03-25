@@ -7,8 +7,21 @@
     padding: 4px 8px;
     user-select: none;
 
+    i {
+      font-size: 20px;
+
+      &.active {
+        color: #ed2b48;
+      }
+    }
+
     span {
       margin-left: 8px;
+    }
+
+    &:hover {
+      color: #333;
+      cursor: pointer;
     }
   }
 
