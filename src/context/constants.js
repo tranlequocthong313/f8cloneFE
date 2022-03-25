@@ -1,7 +1,7 @@
 const apiURL =
   process.env.NODE_ENV !== 'production'
     ? 'http://localhost:5000'
-    : 'https://f8clone.herokuapp.com/'
+    : 'https://f8clone.herokuapp.com'
 
 const COUNTRY_CODE_DUMMY = {
   AF: {
