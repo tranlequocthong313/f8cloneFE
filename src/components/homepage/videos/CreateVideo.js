@@ -123,7 +123,14 @@ const CreateVideo = () => {
       </Modal>
       <MainToast
         createStatus={createStatus}
-        setCreateStatus={setCreateStatus}
+        setCreateStatus={() =>
+          setCreateStatus(prev => {
+            return {
+              ...prev,
+              show: false,
+            }
+          })
+        }
         successText={'Tạo video thành công!'}
         failText={'Tạo video không thành công!'}
       />

@@ -8,6 +8,10 @@ const initialState = {
   isLoading: false,
   isLoggedIn: false,
   videoCreated: null,
+  blogCreated: {
+    isSuccess: false,
+    show: false,
+  },
 }
 
 const userReducer = (state = initialState, action) => {
@@ -57,6 +61,12 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         videoCreated: action.payload.videoData,
+      }
+
+    case 'CREATE_BLOG':
+      return {
+        ...state,
+        blogCreated: action.payload.blogCreated,
       }
 
     default:

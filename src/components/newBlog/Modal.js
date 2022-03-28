@@ -7,9 +7,15 @@ import { apiURL } from '../../context/constants'
 import styles from './Modal.module.scss'
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
+import { ref, uploadBytesResumable, getDownloadURL } from '@firebase/storage'
+import { storage } from '../../firebase/config'
+import { createBlog } from '../../actions/userAction'
+import { useDispatch } from 'react-redux'
 
 const Modal = ({ blogContent, setShowModal }) => {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+
   // Get city living
   const timezone = Intl.DateTimeFormat()
     .resolvedOptions()
@@ -71,42 +77,84 @@ const Modal = ({ blogContent, setShowModal }) => {
   }
 
   const createSlugBlog = title => {
-    const slug = title.toLowerCase().replace(/\s/g, '-') + '.html'
+    const slug = title.toLowerCase().replace(/\s/g, '-')
 
     return slug
   }
 
-  const postBlogHandler = async () => {
+  const uploadImageToStorage = () => {
+    if (image) {
+      const storageRef = ref(storage, `uploads/${image.name}`)
+      const uploadTask = uploadBytesResumable(storageRef, image)
+
+      uploadTask.on(
+        'state_changed',
+        snapshot => {
+          Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+        },
+        err => console.log(err),
+        async () => {
+          try {
+            const url = await getDownloadURL(uploadTask.snapshot.ref)
+            postBlogHandler(url)
+          } catch (error) {
+            console.log(error)
+          }
+        }
+      )
+    } else {
+      postBlogHandler()
+    }
+  }
+
+  const postBlogHandler = async image => {
     try {
       const token = Cookies.get('token')
 
       if (!token) return
 
-      const formData = new FormData()
+      const blogData = {
+        title: blogContent.title,
+        content: blogContent.content,
+        image,
+        titleDisplay,
+        description,
+        slug: createSlugBlog(blogContent.title),
+        readingTime: readingTimeHandler(blogContent.content),
+        allowRecommend,
+        tags,
+        schedule,
+      }
 
-      formData.append('title', blogContent.title)
-      formData.append('content', blogContent.content)
-      formData.append('image', image)
-      formData.append('titleDisplay', titleDisplay)
-      formData.append('description', description)
-      formData.append('slug', createSlugBlog(blogContent.title))
-      formData.append('readingTime', readingTimeHandler(blogContent.content))
-      formData.append('allowRecommend', allowRecommend)
-      formData.append('tags', tags)
-      formData.append('schedule', schedule)
-
-      await fetch(`${apiURL}/new-blog`, {
+      const res = await fetch(`${apiURL}/new-blog`, {
         method: 'POST',
-        body: formData,
+        body: JSON.stringify(blogData),
         headers: {
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
       })
 
-      navigate(`/blog/${formData.get('slug')}`)
+      const data = await res.json()
+
+      console.log(data)
+
+      if (data.success) {
+        dispatchAndNavigate(data)
+      } else {
+        return
+      }
     } catch (error) {
       console.log(error.message)
     }
+  }
+
+  const dispatchAndNavigate = data => {
+    createBlog({
+      isSuccess: true,
+      show: true,
+    })
+    navigate(`/blog/${data.blog.slug}`)
   }
 
   return (
@@ -205,7 +253,10 @@ const Modal = ({ blogContent, setShowModal }) => {
             </form>
           )}
           <div className={styles.actions}>
-            <button className={styles.postButton} onClick={postBlogHandler}>
+            <button
+              className={styles.postButton}
+              onClick={uploadImageToStorage}
+            >
               Xuất bản ngay
             </button>
             <button

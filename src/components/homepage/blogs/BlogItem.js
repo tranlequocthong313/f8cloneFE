@@ -1,10 +1,8 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 import { Image } from 'react-bootstrap'
 import MainCard from '../../utils/card/MainCard'
 import styles from './BlogItem.module.scss'
 import CardButton from '../../utils/card/CardButton'
-import { apiURL } from '../../../context/constants'
 import noPhotoUser from '../../../asset/nobody_m.256x256.jpg'
 
 const BlogItem = ({ blog }) => {
@@ -15,7 +13,7 @@ const BlogItem = ({ blog }) => {
           title={blog.title}
           style={{
             backgroundImage: blog.image
-              ? `url(${apiURL}/${blog.image})`
+              ? `url(${blog.image})`
               : `url(https://accounts.fullstack.edu.vn/assets/icon/f8_icon.png)`,
           }}
         >

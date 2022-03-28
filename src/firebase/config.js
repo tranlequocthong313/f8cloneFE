@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
+import { getStorage } from 'firebase/storage'
 import {
   FacebookAuthProvider,
   GithubAuthProvider,
@@ -15,7 +16,8 @@ const firebaseConfig = {
   appId: '1:774351622161:web:2af08cf7e2cfd7b67821b0',
 }
 
-initializeApp(firebaseConfig)
+const app = initializeApp(firebaseConfig)
+export const storage = getStorage(app)
 export const googleProvider = new GoogleAuthProvider()
 export const facebookProvider = new FacebookAuthProvider()
 export const auth = getAuth()

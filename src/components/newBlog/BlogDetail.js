@@ -11,19 +11,22 @@ import noPhotoUser from '../../asset/nobody_m.256x256.jpg'
 import timeSinceHandler from '../utils/timeSinceHandler/timeSinceHandler'
 import { apiURL } from '../../context/constants'
 import Cookies from 'js-cookie'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import Reaction from './Reaction'
 import Comment from '../utils/comment/Comment'
 import io from 'socket.io-client'
+import MainToast from '../utils/toast/MainToast'
+import { createBlog } from '../../actions/userAction'
 
 const socket = io.connect(apiURL)
 
 const BlogDetail = ({ blog }) => {
-  const userId = useSelector(state => state.user.userId)
+  const user = useSelector(state => state.user)
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const [likeCount, setLikeCount] = useState(blog.likes)
-  const [isLike, setIsLike] = useState(blog.likes.includes(userId))
+  const [isLike, setIsLike] = useState(blog.likes.includes(user.userId))
   const [showComment, setShowComment] = useState(false)
   const [commentData, setCommentData] = useState(blog.comments)
 
@@ -47,8 +50,8 @@ const BlogDetail = ({ blog }) => {
   }, [showComment])
 
   useEffect(() => {
-    setIsLike(likeCount.includes(userId))
-  }, [userId, likeCount])
+    setIsLike(likeCount.includes(user.userId))
+  }, [user.userId, likeCount])
 
   const likeHandler = async () => {
     try {
@@ -81,6 +84,18 @@ const BlogDetail = ({ blog }) => {
 
   return (
     <Row className={styles.wrapper}>
+      {/* {user && user.createBlog.isSuccess && (
+        <MainToast
+          createStatus={user.blogCreated}
+          setCreateStatus={dispatch(
+            createBlog({
+              show: false,
+              isSuccess: false,
+            })
+          )}
+          successText={'Xuất bản thành công'}
+        />
+      )} */}
       <Col xl={2} className={styles.colLeft}>
         <div className={styles.aside}>
           <h4 className={styles.fullName}>{blog.postedBy.fullName}</h4>

@@ -14,14 +14,7 @@ const MainToast = ({
         className={styles.toast}
         show={createStatus.show}
         delay={2000}
-        onClose={() =>
-          setCreateStatus(prev => {
-            return {
-              ...prev,
-              show: false,
-            }
-          })
-        }
+        onClose={setCreateStatus}
         autohide
       >
         <Toast.Body className={styles.toastBody}>

@@ -29,26 +29,22 @@ const Home = () => {
   const [videoData, setVideoData] = useState([])
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`${apiURL}`)
+        const data = await res.json()
+
+        setCourseFE(data.courseFE)
+        setCourseBE(data.courseBE)
+        setBlogData(data.blogs)
+        setVideoData(data.videos)
+      } catch (error) {
+        console.log(error.message)
+      }
+    }
+
     fetchData()
   }, [user.videoCreated])
-
-  const fetchData = async () => {
-    try {
-      const res = await fetch(`${apiURL}`)
-      const data = await res.json()
-
-      setCourseFE(data.courseFE)
-      setCourseBE(data.courseBE)
-      setBlogData(data.blogs)
-      setVideoData(data.videos)
-      console.log(
-        '🚀 ~ file: Home.js ~ line 41 ~ fetchData ~ data.videos',
-        data.videos
-      )
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
 
   return (
     <>

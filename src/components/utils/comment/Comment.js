@@ -106,7 +106,14 @@ const Comment = ({
         </div>
         <MainToast
           createStatus={reportStatus}
-          setCreateStatus={setReportStatus}
+          setCreateStatus={() =>
+            setReportStatus(prev => {
+              return {
+                ...prev,
+                show: false,
+              }
+            })
+          }
           successText={'Đã gửi báo cáo tới quản trị viên'}
           failText={'Gửi báo cáo không thành công'}
         />

@@ -93,7 +93,7 @@ const NewBlogs = ({ blogs }) => {
             {blog.image && (
               <div className={styles.image}>
                 <Link to={`${blog.slug}`}>
-                  <Image src={`${apiURL}/${blog.image}`} />
+                  <Image src={blog.image} />
                 </Link>
               </div>
             )}
