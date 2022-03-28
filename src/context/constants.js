@@ -1,3 +1,10 @@
+import likeEmoji from '../asset/likeemoji.png'
+import loveEmoji from '../asset/loveemoji.png'
+import hahaEmoji from '../asset/hahaemoji.png'
+import cryEmoji from '../asset/cryemoji.png'
+import angryEmoji from '../asset/angryemoji.png'
+import wowEmoji from '../asset/wowemoji.png'
+
 const apiURL =
   process.env.NODE_ENV !== 'production'
     ? 'http://localhost:5000'
@@ -934,6 +941,31 @@ const COUNTRY_CODE_DUMMY = {
   },
 }
 
-export default COUNTRY_CODE_DUMMY
+const emojies = [
+  {
+    title: 'Thích',
+    icon: likeEmoji,
+  },
+  {
+    title: 'Yêu Thích',
+    icon: loveEmoji,
+  },
+  {
+    title: 'Haha',
+    icon: hahaEmoji,
+  },
+  {
+    title: 'WoW',
+    icon: wowEmoji,
+  },
+  {
+    title: 'Buồn',
+    icon: cryEmoji,
+  },
+  {
+    title: 'Phẫn Nộ',
+    icon: angryEmoji,
+  },
+]
 
-export { apiURL, COUNTRY_CODE_DUMMY }
+export { apiURL, COUNTRY_CODE_DUMMY, emojies }

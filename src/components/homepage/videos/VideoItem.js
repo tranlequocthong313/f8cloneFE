@@ -17,7 +17,7 @@ const VideoItem = ({ video }) => {
   return (
     <MainCard>
       <a
-        rel="noreferrer noopener noreferrer"
+        rel="noopener noreferrer"
         target="_blank"
         href={`https://www.youtube.com/watch?v=${video.videoId}`}
       >
@@ -39,7 +39,7 @@ const VideoItem = ({ video }) => {
       </a>
       <h3 className={styles.title}>
         <a
-          rel="noreferrer noopener noreferrer"
+          rel="noopener noreferrer"
           target="_blank"
           href={`https://www.youtube.com/watch?v=${video.videoId}`}
         >

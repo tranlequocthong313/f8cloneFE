@@ -1,0 +1,48 @@
+@import '../../../sass/color';
+
+.wrapper {
+  animation-duration: 0.25s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: 1;
+  animation-name: fadeIn;
+  animation-timing-function: cubic-bezier(0, 0.2, 0.2, 1);
+  background: rgba(0, 0, 0, 0.3);
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  opacity: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 36;
+
+  .container {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    overflow: hidden;
+    padding: 24px;
+    width: 100%;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+@media (max-width: 739px) {
+  .wrapper {
+    background: #fff;
+    padding: 0;
+
+    .container {
+      padding: 0;
+    }
+  }
+}

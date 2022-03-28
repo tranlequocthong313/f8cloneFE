@@ -22,7 +22,7 @@ const Slide = () => {
           <div className={styles.sliderLeft}>
             <h2 className={styles.heading}>
               <a
-                rel="noreferrer noopener noreferrer"
+                rel="noopener noreferrer"
                 target="_blank"
                 href="https://www.youtube.com/channel/UCNSCWwgW-rwmoE3Yc4WmJhw"
               >
@@ -36,7 +36,7 @@ const Slide = () => {
             <div>
               <a
                 className={styles.button}
-                rel="noreferrer noopener noreferrer"
+                rel="noopener noreferrer"
                 target="_blank"
                 href="https://www.youtube.com/channel/UCNSCWwgW-rwmoE3Yc4WmJhw"
               >
@@ -47,7 +47,7 @@ const Slide = () => {
 
           <div className={styles.sliderRight}>
             <a
-              rel="noreferrer noopener noreferrer"
+              rel="noopener noreferrer"
               target="_blank"
               href="https://www.youtube.com/channel/UCNSCWwgW-rwmoE3Yc4WmJhw"
             >
@@ -68,7 +68,7 @@ const Slide = () => {
           <div className={styles.sliderLeft}>
             <h2 className={styles.heading}>
               <a
-                rel="noreferrer noopener noreferrer"
+                rel="noopener noreferrer"
                 target="_blank"
                 href="https://fullstack.edu.vn/blog/tong-hop-cac-san-pham-cua-hoc-vien-tai-f8.html"
               >
@@ -82,7 +82,7 @@ const Slide = () => {
             <div>
               <a
                 className={styles.button}
-                rel="noreferrer noopener noreferrer"
+                rel="noopener noreferrer"
                 target="_blank"
                 href="https://fullstack.edu.vn/blog/tong-hop-cac-san-pham-cua-hoc-vien-tai-f8.html"
               >
@@ -93,7 +93,7 @@ const Slide = () => {
 
           <div className={styles.sliderRight}>
             <a
-              rel="noreferrer noopener noreferrer"
+              rel="noopener noreferrer"
               target="_blank"
               href="https://fullstack.edu.vn/blog/tong-hop-cac-san-pham-cua-hoc-vien-tai-f8.html"
             >
@@ -114,7 +114,7 @@ const Slide = () => {
           <div className={styles.sliderLeft}>
             <h2 className={styles.heading}>
               <a
-                rel="noreferrer noopener noreferrer"
+                rel="noopener noreferrer"
                 target="_blank"
                 href="https://www.facebook.com/groups/649972919142215"
               >
@@ -128,7 +128,7 @@ const Slide = () => {
             <div>
               <a
                 className={styles.button}
-                rel="noreferrer noopener noreferrer"
+                rel="noopener noreferrer"
                 target="_blank"
                 href="https://www.facebook.com/groups/649972919142215"
               >
@@ -139,7 +139,7 @@ const Slide = () => {
 
           <div className={styles.sliderRight}>
             <a
-              rel="noreferrer noopener noreferrer"
+              rel="noopener noreferrer"
               target="_blank"
               href="https://www.facebook.com/groups/649972919142215"
             >
@@ -160,7 +160,7 @@ const Slide = () => {
           <div className={styles.sliderLeft}>
             <h2 className={styles.heading}>
               <a
-                rel="noreferrer noopener noreferrer"
+                rel="noopener noreferrer"
                 target="_blank"
                 href="https://fullstack.edu.vn/courses/reactjs?ref=banner"
               >
@@ -174,7 +174,7 @@ const Slide = () => {
             <div>
               <a
                 className={styles.button}
-                rel="noreferrer noopener noreferrer"
+                rel="noopener noreferrer"
                 target="_blank"
                 href="https://fullstack.edu.vn/courses/reactjs?ref=banner"
               >
@@ -185,7 +185,7 @@ const Slide = () => {
 
           <div className={styles.sliderRight}>
             <a
-              rel="noreferrer noopener noreferrer"
+              rel="noopener noreferrer"
               target="_blank"
               href="https://fullstack.edu.vn/courses/reactjs?ref=banner"
             >

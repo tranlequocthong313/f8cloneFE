@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { Row, Col, Image } from 'react-bootstrap'
 import styles from './BlogDetail.module.scss'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import BlogSameAuthor from './BlogSameAuthor'
 import BlogHighlights from './BlogHighlights'
 import Topics from '../blogpage/Topics'
@@ -13,25 +13,54 @@ import { apiURL } from '../../context/constants'
 import Cookies from 'js-cookie'
 import { useSelector } from 'react-redux'
 import Reaction from './Reaction'
+import Comment from '../utils/comment/Comment'
+import io from 'socket.io-client'
+
+const socket = io.connect(apiURL)
 
 const BlogDetail = ({ blog }) => {
   const userId = useSelector(state => state.user.userId)
+  const navigate = useNavigate()
 
   const [likeCount, setLikeCount] = useState(blog.likes)
   const [isLike, setIsLike] = useState(blog.likes.includes(userId))
+  const [showComment, setShowComment] = useState(false)
+  const [commentData, setCommentData] = useState(blog.comments)
+
+  useEffect(() => {
+    socket.on('comment', comment => {
+      console.log('socket on:', comment)
+      setCommentData(prev => {
+        return [comment, ...prev]
+      })
+    })
+  }, [])
+
+  useEffect(() => {
+    if (showComment) {
+      document.body.style.overflow = 'hidden'
+    }
+
+    if (!showComment) {
+      document.body.style.overflow = 'overlay'
+    }
+  }, [showComment])
 
   useEffect(() => {
     setIsLike(likeCount.includes(userId))
   }, [userId, likeCount])
 
-  const likeHandler = async blogId => {
+  const likeHandler = async () => {
     try {
       const token = Cookies.get('token')
-      if (!token) return
+      if (!token) {
+        navigate('/login')
+        return
+      }
 
       const res = await fetch(`${apiURL}/blog/like`, {
         method: 'PUT',
-        body: JSON.stringify({ blogId }),
+        body: JSON.stringify({ blogId: blog._id }),
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
@@ -50,8 +79,6 @@ const BlogDetail = ({ blog }) => {
     }
   }
 
-  const commentHandler = () => {}
-
   return (
     <Row className={styles.wrapper}>
       <Col xl={2} className={styles.colLeft}>
@@ -60,11 +87,11 @@ const BlogDetail = ({ blog }) => {
           <p className={styles.userTitle}></p>
           <hr />
           <Reaction
-            blogId={blog._id}
+            commentData={commentData}
             isLike={isLike}
             likeCount={likeCount.length}
             likeHandler={likeHandler}
-            commentHandler={commentHandler}
+            setShowComment={() => setShowComment(true)}
           />
         </div>
       </Col>
@@ -98,11 +125,11 @@ const BlogDetail = ({ blog }) => {
         </div>
         <ReactMarkdown children={blog.content} />
         <Reaction
-          blogId={blog._id}
+          commentData={commentData}
           isLike={isLike}
           likeCount={likeCount.length}
           likeHandler={likeHandler}
-          commentHandler={commentHandler}
+          setShowComment={() => setShowComment(true)}
         />
         {blog.tags && (
           <div className={styles.tags}>
@@ -117,6 +144,14 @@ const BlogDetail = ({ blog }) => {
         <BlogHighlights />
         <Topics />
       </Col>
+      {showComment && (
+        <Comment
+          setShowComment={() => setShowComment(false)}
+          commentData={commentData}
+          setCommentData={setCommentData}
+          blogId={blog._id}
+        />
+      )}
     </Row>
   )
 }

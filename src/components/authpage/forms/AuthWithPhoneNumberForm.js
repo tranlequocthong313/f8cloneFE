@@ -89,11 +89,13 @@ const LoginWithPhoneNumberForm = ({
       const result = await window.confirmationResult.confirm(verifyOTP)
       let user = result.user
 
-      if (isLogin) {
+      console.log(user)
+
+      if (user && isLogin) {
         const res = await fetch(`${apiURL}/login/provider`, {
           method: 'POST',
           body: JSON.stringify({
-            phoneNumber: user.phoneNumber,
+            phoneNumber: userPhoneNumber,
           }),
           headers: {
             'Content-Type': 'application/json',
@@ -109,12 +111,12 @@ const LoginWithPhoneNumberForm = ({
         })
       }
 
-      if (!isLogin) {
+      if (user && !isLogin) {
         const res = await fetch(`${apiURL}/register`, {
           method: 'POST',
           body: JSON.stringify({
             fullName,
-            phoneNumber: user.phoneNumber,
+            phoneNumber: userPhoneNumber,
             activated: true,
           }),
           headers: {
@@ -161,13 +163,10 @@ const LoginWithPhoneNumberForm = ({
           return
         }
 
-        if (isLogin && data.notUsed) {
-          console.log(data.notUsed)
-          return
+        if (isLogin && data.used) {
+          setUserPhoneNumber(e.target.value)
+          console.log(data.used)
         }
-
-        console.log(data.used)
-        setUserPhoneNumber(e.target.value)
       }
     } catch (error) {
       console.log(error)

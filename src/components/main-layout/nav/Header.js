@@ -11,6 +11,8 @@ import NewPost from '../../newBlog/NewPost'
 import { Link } from 'react-router-dom'
 import User from './components/User'
 
+const Login = React.lazy(() => import('./components/Login'))
+
 const Header = ({
   currentPage,
   blogDataHandler,
@@ -19,7 +21,6 @@ const Header = ({
   scrollY,
 }) => {
   const user = useSelector(state => state.user)
-  const Login = React.lazy(() => import('./components/Login'))
 
   return (
     <Navbar

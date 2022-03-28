@@ -1,13 +1,52 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import SecondaryCard from '../utils/card/SecondaryCard'
 import { Image } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import styles from './NewBlogs.module.scss'
 import { apiURL } from '../../context/constants'
 import noPhotoUser from '../../asset/nobody_m.256x256.jpg'
 import timeSinceHandler from '../utils/timeSinceHandler/timeSinceHandler'
+import Cookies from 'js-cookie'
 
 const NewBlogs = ({ blogs }) => {
+  const navigate = useNavigate()
+
+  const [isBookmark, setIsBookmark] = useState(false)
+
+  const [bookmarkData, setBookmarkData] = useState([])
+
+  useEffect(() => {
+    const blogId = blogs.map(blog => blog._id)
+    const bookmarkBlogId = bookmarkData.map(bookmark => bookmark._id)
+
+    console.log(blogId)
+    console.log(bookmarkBlogId)
+    setIsBookmark(blogId[0] === bookmarkBlogId[0])
+  }, [bookmarkData, blogs])
+
+  const bookmarkHandler = async blogId => {
+    try {
+      const token = Cookies.get('token')
+
+      if (!token) {
+        return navigate('/login')
+      }
+
+      const res = await fetch(`${apiURL}/me/bookmark-post`, {
+        method: 'PUT',
+        body: JSON.stringify({ blogId }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      const data = await res.json()
+
+      setBookmarkData(data.bookmark)
+    } catch (error) {}
+  }
+
   return (
     <>
       {blogs.map(blog => (
@@ -28,7 +67,14 @@ const NewBlogs = ({ blogs }) => {
               </Link>
             </div>
             <div className={styles.action}>
-              <i className="bi bi-bookmark"></i>
+              <i
+                className={
+                  !isBookmark
+                    ? 'bi bi-bookmark'
+                    : `${styles.bookmarkActive} bi bi-bookmark-fill`
+                }
+                onClick={() => bookmarkHandler(blog._id)}
+              ></i>
               <i className="bi bi-three-dots"></i>
             </div>
           </div>

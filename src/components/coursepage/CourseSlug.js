@@ -10,9 +10,9 @@ import CurriculumOfCourse from './CurriculumOfCourse'
 import PreviewCourse from './PreviewCourse'
 import { apiURL } from '../../context/constants'
 
-const CourseSlug = () => {
-  const Footer = React.lazy(() => import('../main-layout/footer/Footer'))
+const Footer = React.lazy(() => import('../main-layout/footer/Footer'))
 
+const CourseSlug = () => {
   const location = useLocation()
 
   const [course, setCourse] = useState()

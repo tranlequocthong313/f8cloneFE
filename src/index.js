@@ -6,18 +6,15 @@ import './index.scss'
 import NavContextProvider from './context/NavContext'
 import { Provider } from 'react-redux'
 import store from './reducers/index'
-import LoadingContextProvider from './context/LoadingContext'
 import LearningContextProvider from './context/LearningContext'
 
 ReactDOM.render(
   <BrowserRouter>
     <Provider store={store}>
       <NavContextProvider>
-        <LoadingContextProvider>
-          <LearningContextProvider>
-            <App />
-          </LearningContextProvider>
-        </LoadingContextProvider>
+        <LearningContextProvider>
+          <App />
+        </LearningContextProvider>
       </NavContextProvider>
     </Provider>
   </BrowserRouter>,

@@ -1,4 +1,5 @@
 @import '../sass/flexCenter';
+@import '../sass/color';
 
 .wrapper {
   display: flex;
@@ -25,6 +26,49 @@
 
     a {
       text-decoration: none;
+    }
+  }
+
+  .bookmarkList {
+    border: 2px solid #e8e8e8;
+    border-radius: 16px;
+    margin-top: 16px;
+    padding: 16px 24px 22px;
+    position: relative;
+    list-style-type: none;
+
+    h3 {
+      margin-top: 0;
+      padding-right: 24px;
+
+      a {
+        color: $text-color;
+        font-size: 19px;
+        line-height: 1.6;
+      }
+    }
+
+    .author {
+      color: $description-color;
+      font-size: 14px;
+
+      a {
+        color: #029e74;
+      }
+
+      .dot {
+        padding: 0 6px;
+      }
+    }
+
+    .option {
+      color: #666;
+      font-size: 16px;
+      margin-left: 4px;
+      padding: 4px 8px;
+      position: absolute;
+      right: 16px;
+      top: 8px;
     }
   }
 }

@@ -1,0 +1,25 @@
+@import '../../../sass/color';
+@import '../../../sass/flexCenter';
+
+.wrapper {
+  background-color: #fff;
+  border-radius: 50%;
+  color: $primary-color;
+  border: 2px solid $primary-color;
+  cursor: pointer;
+  height: 36px;
+  width: 36px;
+  @include flexCenter(row);
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1001;
+  font-size: 32px;
+}
+
+@media (min-width: 0px) and (max-width: 1023px) {
+  .wrapper {
+    height: 42px;
+    width: 42px;
+  }
+}

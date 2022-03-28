@@ -3,15 +3,15 @@ import React from 'react'
 import styles from './Reaction.module.scss'
 
 const Reaction = ({
-  blogId,
   isLike,
+  commentData,
   likeHandler,
-  commentHandler,
+  setShowComment,
   likeCount,
 }) => {
   return (
     <div className={styles.wrapper}>
-      <div className={styles.reactButton} onClick={() => likeHandler(blogId)}>
+      <div className={styles.reactButton} onClick={likeHandler}>
         <i
           className={
             isLike ? `${styles.active} bi bi-heart-fill` : 'bi bi-heart'
@@ -19,9 +19,9 @@ const Reaction = ({
         ></i>
         <span>{likeCount}</span>
       </div>
-      <div className={styles.reactButton} onClick={commentHandler}>
+      <div className={styles.reactButton} onClick={setShowComment}>
         <i className="bi bi-chat"></i>
-        <span>{0}</span>
+        <span>{commentData.length}</span>
       </div>
     </div>
   )

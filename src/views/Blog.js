@@ -9,11 +9,11 @@ import Header from '../components/main-layout/nav/Header'
 import SideBar from '../components/main-layout/sidebar/SideBar'
 import { apiURL } from '../context/constants'
 
-const Blog = () => {
-  const Footer = React.lazy(() =>
-    import('../components/main-layout/footer/Footer')
-  )
+const Footer = React.lazy(() =>
+  import('../components/main-layout/footer/Footer')
+)
 
+const Blog = () => {
   const [blogs, setBlogs] = useState(null)
 
   useEffect(() => {

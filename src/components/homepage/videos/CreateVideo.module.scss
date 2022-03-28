@@ -39,23 +39,12 @@
 }
 
 .toast {
-  background-color: #28a745 !important;
+  background-color: #292929 !important;
 
-  .toastHeader {
-    background-color: #28a745 !important;
-    color: #fff;
-  }
   .toastBody {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 500;
     color: #fff;
-  }
-
-  &.failure {
-    .toastHeader {
-      background-color: #dc3545 !important;
-    }
-    background-color: #dc3545 !important;
   }
 }
 

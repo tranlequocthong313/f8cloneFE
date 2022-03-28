@@ -9,11 +9,11 @@ import '../sass/_markdownEditor.scss'
 import ContentEditable from '../components/utils/content-editable/ContentEditable'
 import Modal from '../components/newBlog/Modal'
 
-const NewBlog = () => {
-  const Footer = React.lazy(() =>
-    import('../components/main-layout/footer/Footer')
-  )
+const Footer = React.lazy(() =>
+  import('../components/main-layout/footer/Footer')
+)
 
+const NewBlog = () => {
   const mdEditor = useRef(null)
   const titleRef = useRef(null)
 

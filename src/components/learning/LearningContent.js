@@ -30,7 +30,7 @@ const LearningContent = ({ show }) => {
           <p>
             Tham gia nhóm{' '}
             <a
-              rel="noreferrer noopener noreferrer"
+              rel="noopener noreferrer"
               target="_blank"
               href={'https://www.facebook.com/groups/f8official/'}
             >
@@ -41,7 +41,7 @@ const LearningContent = ({ show }) => {
           <p>
             Các bạn subscribe kênh Youtube{' '}
             <a
-              rel="noreferrer noopener noreferrer"
+              rel="noopener noreferrer"
               target="_blank"
               href={'https://url.mycv.vn/f8_youtube?ref=lesson_desc'}
             >

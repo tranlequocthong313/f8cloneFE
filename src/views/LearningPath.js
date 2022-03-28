@@ -8,11 +8,11 @@ import LearningList from '../components/learning-path-page/LearningList'
 import SideBar from '../components/main-layout/sidebar/SideBar'
 import Header from '../components/main-layout/nav/Header'
 
-const LearningPath = () => {
-  const Footer = React.lazy(() =>
-    import('../components/main-layout/footer/Footer')
-  )
+const Footer = React.lazy(() =>
+  import('../components/main-layout/footer/Footer')
+)
 
+const LearningPath = () => {
   return (
     <>
       <Header />

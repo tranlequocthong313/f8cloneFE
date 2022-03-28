@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux'
 import styles from './CreateVideo.module.scss'
 import { createVideo } from '../../../actions/userAction'
 import f8logo from '../../../asset/f8_icon.png'
+import MainToast from '../../utils/toast/MainToast'
 
 const CreateVideo = () => {
   const dispatch = useDispatch()
@@ -44,15 +45,6 @@ const CreateVideo = () => {
       }
 
       createVideoHandler(videoData)
-      dispatch(createVideo({ videoData }))
-
-      setCreateStatus(prev => {
-        return {
-          ...prev,
-          isSuccess: true,
-          show: true,
-        }
-      })
     } catch (error) {
       console.log(error.message)
       setCreateStatus(prev => {
@@ -67,13 +59,34 @@ const CreateVideo = () => {
 
   const createVideoHandler = async videoData => {
     try {
-      await fetch(`${apiURL}/video/create`, {
+      const res = await fetch(`${apiURL}/video/create`, {
         method: 'POST',
         body: JSON.stringify(videoData),
         headers: {
           'Content-Type': 'application/json',
         },
       })
+
+      const data = await res.json()
+
+      if (data.success) {
+        dispatch(createVideo({ videoData }))
+        setCreateStatus(prev => {
+          return {
+            ...prev,
+            isSuccess: true,
+            show: true,
+          }
+        })
+      } else {
+        setCreateStatus(prev => {
+          return {
+            ...prev,
+            isSuccess: false,
+            show: true,
+          }
+        })
+      }
     } catch (error) {
       console.log(error)
     }
@@ -108,36 +121,12 @@ const CreateVideo = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-      <ToastContainer className="p-3" position={'top-end'}>
-        <Toast
-          className={
-            createStatus.isSuccess
-              ? styles.toast
-              : `${styles.toast} ${styles.failure}`
-          }
-          show={createStatus.show}
-          onClose={() =>
-            setCreateStatus(prev => {
-              return {
-                ...prev,
-                show: false,
-              }
-            })
-          }
-          delay={2000}
-          autohide
-        >
-          <Toast.Header closeButton={false} className={styles.toastHeader}>
-            <img src={f8logo} width={20} className="rounded me-2" alt="" />
-            <strong className="me-auto">F8</strong>
-          </Toast.Header>
-          <Toast.Body className={styles.toastBody}>
-            {createStatus.isSuccess
-              ? 'Tạo video thành công!'
-              : 'Tạo video không thành công!'}
-          </Toast.Body>
-        </Toast>
-      </ToastContainer>
+      <MainToast
+        createStatus={createStatus}
+        setCreateStatus={setCreateStatus}
+        successText={'Tạo video thành công!'}
+        failText={'Tạo video không thành công!'}
+      />
     </>
   )
 }

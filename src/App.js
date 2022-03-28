@@ -1,9 +1,7 @@
-import Auth from './views/Auth'
+import React from 'react'
 import Blog from './views/Blog'
 import Courses from './views/Courses'
 import LearningPath from './views/LearningPath'
-import NewBlog from './views/NewBlog'
-import Settings from './views/Settings'
 import Home from './views/Home'
 import Contact from './views/Contact'
 import Search from './views/Search'
@@ -11,22 +9,37 @@ import Privacy from './views/Privacy'
 import About from './views/About'
 import Careers from './views/Careers'
 import Terms from './views/Terms'
-import MyCourse from './views/MyCourse'
-import BookmarkPost from './views/BookmarkPost'
-import Learning from './views/Learning'
 import { Routes, Route } from 'react-router-dom'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import CourseSlug from './components/coursepage/CourseSlug'
 import { useLocation } from 'react-router-dom'
-import NotFound from './views/NotFound'
 import Cookies from 'js-cookie'
 import { setAuth } from './actions/userAction'
 import { apiURL } from './context/constants'
 import BlogSlug from './components/blogpage/BlogSlug'
+import io from 'socket.io-client'
+import Auth from './views/Auth'
+import NotFound from './views/NotFound'
+import Learning from './views/Learning'
+import MyCourse from './views/MyCourse'
+import NewBlog from './views/NewBlog'
+import Settings from './views/Settings'
+import BookmarkPost from './views/BookmarkPost'
 import MyBlog from './views/MyBlog'
 
 function App() {
+  // const socket = io.connect(apiURL)
+  // useEffect(() => {
+  //   socket.on('message', ({ message }) => {
+  //     console.log(message)
+  //   })
+  // })
+
+  // useEffect(() => {
+  //   socket.emit('message', { message: 'Thong dep trai' })
+  // }, [])
+
   console.log('NODE_ENV: ', process.env.NODE_ENV)
   const dispatch = useDispatch()
   const location = useLocation()
@@ -39,36 +52,36 @@ function App() {
   }, [location.pathname])
 
   useEffect(() => {
+    const getUserHandler = async () => {
+      const token = Cookies.get('token')
+
+      try {
+        if (!token) return
+
+        const res = await fetch(`${apiURL}/api/auth`, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+        const data = await res.json()
+
+        const obj = {
+          ...data.user,
+          accessToken: token,
+          admin: data.admin,
+        }
+        console.log(obj)
+
+        dispatch(setAuth(obj))
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
     getUserHandler()
   }, [])
-
-  const getUserHandler = async () => {
-    const token = Cookies.get('token')
-
-    try {
-      if (!token) return
-
-      const res = await fetch(`${apiURL}/api/auth`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      const data = await res.json()
-
-      const obj = {
-        ...data.user,
-        accessToken: token,
-        admin: data.admin,
-      }
-      console.log(obj)
-
-      dispatch(setAuth(obj))
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
   // Set title of browser again after using 'Write Blog Page'
   useEffect(() => {

@@ -1,0 +1,32 @@
+import Cookies from 'js-cookie'
+import { apiURL } from '../../../context/constants'
+
+const reportCommentHandler = async commentId => {
+  try {
+    const token = Cookies.get('token')
+
+    if (!token) return
+
+    const res = await fetch(`${apiURL}/report/comment`, {
+      method: 'PUT',
+      body: JSON.stringify({ commentId }),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    const data = await res.json()
+
+    if (data.success) {
+      return true
+    } else {
+      return false
+    }
+  } catch (error) {
+    console.log(error)
+    return false
+  }
+}
+
+export { reportCommentHandler }

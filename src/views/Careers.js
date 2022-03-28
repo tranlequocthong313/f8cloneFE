@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import styles from './Careers.module.scss'
 import '../sass/_mainHeadingTitle.scss'
@@ -6,28 +6,27 @@ import '../sass/_withSidebarContent.scss'
 import CareerList from '../components/career/CareerList'
 import Header from '../components/main-layout/nav/Header'
 import SideBar from '../components/main-layout/sidebar/SideBar'
+import { apiURL } from '../context/constants'
 
-const CAREERS_DUMMY_DATA = [
-  {
-    id: Math.random(),
-    title: 'Mid/Senior PHP Developer',
-    salary: '15.000.000 - 30.000.000',
-    skills: ['PHP', 'Laravel', 'MySQL', 'REST API'],
-    time: '7 tháng trước',
-  },
-  {
-    id: Math.random(),
-    title: 'Mid/Senior ReactJS Developer',
-    salary: '15.000.000 - 30.000.000',
-    skills: ['JAVASCRIPT', 'ReactJS', 'HTML 5', 'CSS 3'],
-    time: '7 tháng trước',
-  },
-]
+const Footer = React.lazy(() =>
+  import('../components/main-layout/footer/Footer')
+)
 
 const Careers = () => {
-  const Footer = React.lazy(() =>
-    import('../components/main-layout/footer/Footer')
-  )
+  const [jobs, setJobs] = useState([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch(`${apiURL}/help/get-job`)
+
+      const data = await res.json()
+      console.log(data)
+
+      setJobs(data)
+    }
+
+    fetchData()
+  }, [])
 
   return (
     <>
@@ -51,7 +50,7 @@ const Careers = () => {
               <div className={styles.containerBody}>
                 <h2>2 việc làm đang mở tại F8</h2>
 
-                <CareerList careers={CAREERS_DUMMY_DATA} />
+                <CareerList jobs={jobs} />
               </div>
             </div>
           </div>

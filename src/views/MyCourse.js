@@ -5,11 +5,11 @@ import { Col, Row } from 'react-bootstrap'
 import { apiURL } from '../context/constants'
 import CourseList from '../components/homepage/courses/CourseList'
 
-const MyCourse = () => {
-  const Footer = React.lazy(() =>
-    import('../components/main-layout/footer/Footer')
-  )
+const Footer = React.lazy(() =>
+  import('../components/main-layout/footer/Footer')
+)
 
+const MyCourse = () => {
   const [courseFE, setCourseFE] = useState([])
 
   useEffect(() => {

@@ -10,17 +10,17 @@ import SideBar from '../components/main-layout/sidebar/SideBar'
 import { apiURL } from '../context/constants'
 import { useSelector } from 'react-redux'
 
-const Home = () => {
-  const BlogList = React.lazy(() =>
-    import('../components/homepage/blogs/BlogList')
-  )
-  const VideoList = React.lazy(() =>
-    import('../components/homepage/videos/VideoList')
-  )
-  const Footer = React.lazy(() =>
-    import('../components/main-layout/footer/Footer')
-  )
+const BlogList = React.lazy(() =>
+  import('../components/homepage/blogs/BlogList')
+)
+const VideoList = React.lazy(() =>
+  import('../components/homepage/videos/VideoList')
+)
+const Footer = React.lazy(() =>
+  import('../components/main-layout/footer/Footer')
+)
 
+const Home = () => {
   const user = useSelector(state => state.user)
 
   const [courseFE, setCourseFE] = useState([])
@@ -72,7 +72,7 @@ const Home = () => {
               />
               <CourseList courses={courseBE} />
 
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<div></div>}>
                 <HeadingTitleWrap
                   title={'Bài viết nổi bật'}
                   viewMode={'Xem tất cả'}

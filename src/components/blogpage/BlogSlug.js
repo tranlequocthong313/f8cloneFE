@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { apiURL } from '../../context/constants'
 import Header from '../main-layout/nav/Header'
 import BlogDetail from '../newBlog/BlogDetail'
@@ -24,20 +24,20 @@ const BlogSlug = () => {
   }, [])
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`${apiURL}${location.pathname}`)
+        const data = await res.json()
+        console.log(data)
+
+        setBlog(data)
+      } catch (error) {
+        console.log(error.message)
+      }
+    }
+
     fetchData()
   }, [])
-
-  const fetchData = async () => {
-    try {
-      const res = await fetch(`${apiURL}${location.pathname}`)
-      const data = await res.json()
-      console.log(data)
-
-      setBlog(data)
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
 
   return (
     <>
