@@ -7,22 +7,31 @@ import { apiURL } from '../../context/constants'
 import noPhotoUser from '../../asset/nobody_m.256x256.jpg'
 import timeSinceHandler from '../utils/timeSinceHandler/timeSinceHandler'
 import Cookies from 'js-cookie'
+import { useSelector } from 'react-redux'
 
 const NewBlogs = ({ blogs }) => {
   const navigate = useNavigate()
 
-  const [isBookmark, setIsBookmark] = useState(false)
-
-  const [bookmarkData, setBookmarkData] = useState([])
+  const [bookmarkData, setBookmarkData] = useState(null)
 
   useEffect(() => {
-    const blogId = blogs.map(blog => blog._id)
-    const bookmarkBlogId = bookmarkData.map(bookmark => bookmark._id)
+    const getBookmark = async () => {
+      const token = Cookies.get('token')
 
-    console.log(blogId)
-    console.log(bookmarkBlogId)
-    setIsBookmark(blogId[0] === bookmarkBlogId[0])
-  }, [bookmarkData, blogs])
+      if (!token) return
+
+      const res = await fetch(`${apiURL}/me/bookmark`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      const data = await res.json()
+      setBookmarkData(data.bookmark)
+    }
+
+    getBookmark()
+  }, [])
 
   const bookmarkHandler = async blogId => {
     try {
@@ -32,7 +41,7 @@ const NewBlogs = ({ blogs }) => {
         return navigate('/login')
       }
 
-      const res = await fetch(`${apiURL}/me/bookmark-post`, {
+      const res = await fetch(`${apiURL}/me/bookmark`, {
         method: 'PUT',
         body: JSON.stringify({ blogId }),
         headers: {
@@ -42,6 +51,7 @@ const NewBlogs = ({ blogs }) => {
       })
 
       const data = await res.json()
+      console.log('bookmark', data)
 
       setBookmarkData(data.bookmark)
     } catch (error) {}
@@ -66,14 +76,16 @@ const NewBlogs = ({ blogs }) => {
                 <span>{blog.postedBy.fullName}</span>
               </Link>
             </div>
-            <div className={styles.action}>
+            <div
+              className={styles.action}
+              onClick={() => bookmarkHandler(blog._id)}
+            >
               <i
                 className={
-                  !isBookmark
-                    ? 'bi bi-bookmark'
-                    : `${styles.bookmarkActive} bi bi-bookmark-fill`
+                  bookmarkData && bookmarkData.includes(blog._id)
+                    ? `${styles.bookmarkActive} bi bi-bookmark-fill`
+                    : 'bi bi-bookmark'
                 }
-                onClick={() => bookmarkHandler(blog._id)}
               ></i>
               <i className="bi bi-three-dots"></i>
             </div>
@@ -81,7 +93,7 @@ const NewBlogs = ({ blogs }) => {
           <div className={styles.body}>
             <div className={styles.content}>
               <Link to={`${blog.slug}`}>
-                <h3>{blog.titleDisplay ? blog.titleDisplay : blog.title}</h3>
+                <h3>{blog.titleDisplay}</h3>
                 <p>{blog.description ? blog.description : blog.content}</p>
               </Link>
               <div className={styles.info}>

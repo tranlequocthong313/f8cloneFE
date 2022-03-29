@@ -5,13 +5,19 @@ import { Link } from 'react-router-dom'
 import styles from './SideBar.module.scss'
 import { NavContext } from '../../../context/NavContext'
 
-const SideBar = () => {
+const SideBar = ({ isBlog }) => {
   const { active, activeHandler } = useContext(NavContext)
 
   return (
     <Col xs={0} sm={0} md={1} lg={1} xl={1}>
       <Navbar className={styles.wrapper}>
-        <Nav className={styles.container}>
+        <Nav
+          className={
+            isBlog
+              ? `${styles.blogSidebar} ${styles.container}}`
+              : styles.container
+          }
+        >
           <NewBlog />
           <ul className={styles.list}>
             <li className={styles.item}>

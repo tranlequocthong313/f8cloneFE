@@ -4,6 +4,7 @@
 .wrapper {
   display: flex;
   flex-direction: column;
+  margin-bottom: 120px;
 
   h1 {
     margin: 20px 0 80px 0;
@@ -29,10 +30,31 @@
     }
   }
 
+  .tabs {
+    display: flex;
+    margin-top: 16px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .tab {
+    font-size: 16px;
+    font-weight: 700;
+    padding-bottom: 8px;
+    color: #666;
+    cursor: pointer;
+    background-color: transparent;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    color: #242424;
+    border-bottom: 2px solid #242424;
+  }
+
   .bookmarkList {
     border: 2px solid #e8e8e8;
     border-radius: 16px;
-    margin-top: 16px;
+    margin: 16px 0 0 0;
     padding: 16px 24px 22px;
     position: relative;
     list-style-type: none;
@@ -45,6 +67,8 @@
         color: $text-color;
         font-size: 19px;
         line-height: 1.6;
+        text-decoration: none;
+        font-weight: 600;
       }
     }
 
@@ -54,6 +78,7 @@
 
       a {
         color: #029e74;
+        text-decoration: none;
       }
 
       .dot {
@@ -71,28 +96,6 @@
       top: 8px;
     }
   }
-}
-
-.tabs {
-  display: flex;
-  margin-top: 16px;
-  overflow-x: auto;
-  overflow-y: hidden;
-}
-
-.tab {
-  font-size: 16px;
-  font-weight: 700;
-  padding-bottom: 8px;
-  color: #666;
-  cursor: pointer;
-  background-color: transparent;
-  border-bottom: 2px solid transparent;
-  white-space: nowrap;
-
-  color: #242424;
-  cursor: default;
-  border-bottom: 2px solid #242424;
 }
 
 @media (max-width: 739px) {

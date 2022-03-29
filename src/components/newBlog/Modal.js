@@ -117,7 +117,8 @@ const Modal = ({ blogContent, setShowModal }) => {
         title: blogContent.title,
         content: blogContent.content,
         image,
-        titleDisplay,
+        titleDisplay:
+          titleDisplay.length === 0 ? blogContent.title : titleDisplay,
         description,
         slug: createSlugBlog(blogContent.title),
         readingTime: readingTimeHandler(blogContent.content),

@@ -1,3 +1,5 @@
+@import '../../sass/color';
+
 .wrapper {
   margin-top: calc(66px + 24px);
   line-height: 1.6;
@@ -83,12 +85,19 @@
       font-size: 16px;
       margin-right: -8px;
       user-select: none;
+
       .bookmark {
         color: #757575;
         padding: 4px 8px;
         cursor: pointer;
-        &:hover {
-          color: #292929;
+
+        i {
+          &.bookmarkActive {
+            color: $primary-color;
+          }
+          &:hover {
+            color: #292929;
+          }
         }
       }
       .option {

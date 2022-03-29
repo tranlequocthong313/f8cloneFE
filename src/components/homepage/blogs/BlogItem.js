@@ -21,7 +21,7 @@ const BlogItem = ({ blog }) => {
         </section>
       </Link>
       <h3 className={styles.title}>
-        <Link to={`blog/${blog.slug}`}>{blog.title}</Link>
+        <Link to={`blog/${blog.slug}`}>{blog.titleDisplay}</Link>
       </h3>
       <div className={styles.author}>
         <Link to={`blog/${blog.slug}`}>

@@ -24,7 +24,6 @@ const Blog = () => {
     try {
       const res = await fetch(`${apiURL}/blog`)
       const data = await res.json()
-      console.log('🚀 ~ file: Blog.js ~ line 24 ~ fetchData ~ data', data)
 
       setBlogs(data)
     } catch (error) {

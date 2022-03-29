@@ -24,7 +24,9 @@ const CareerList = ({ jobs }) => {
             </div>
             <div className={styles.languages}>
               {job.languages.map(language => (
-                <div className={styles.languageItem}>{language}</div>
+                <div className={styles.languageItem} key={language}>
+                  {language}
+                </div>
               ))}
             </div>
             <div className={styles.createdFromNow}>

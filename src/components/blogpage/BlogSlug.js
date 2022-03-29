@@ -43,7 +43,7 @@ const BlogSlug = () => {
     <>
       <Header scrollY={scrollY} />
       <div className={styles.sidebarWrap}>
-        <SideBar />
+        <SideBar isBlog={true} />
       </div>
       {blog && <BlogDetail blog={blog} />}
     </>

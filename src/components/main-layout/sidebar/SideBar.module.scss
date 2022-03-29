@@ -8,6 +8,13 @@
 .container {
   @include flexCenter(column);
   flex-shrink: 0;
+  position: fixed;
+  top: 60px;
+}
+
+.blogSidebar {
+  @include flexCenter(column);
+  flex-shrink: 0;
 }
 
 .list {

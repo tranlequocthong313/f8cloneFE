@@ -17,7 +17,7 @@ const Footer = React.lazy(() =>
 )
 
 const BookmarkPost = () => {
-  const [bookmarkData, setBookmarkData] = useState([])
+  const [bookmarkData, setBookmarkData] = useState(null)
 
   useEffect(() => {
     const getUserHandler = async () => {
@@ -37,7 +37,7 @@ const BookmarkPost = () => {
 
         console.log(data)
 
-        setBookmarkData(data.bookmark)
+        setBookmarkData(data)
       } catch (error) {
         console.log(error)
       }
@@ -51,13 +51,13 @@ const BookmarkPost = () => {
       <Header />
       <Row>
         <SideBar />
-        <Col xs={12} sm={12} md={12} lg={11} xl={11}>
+        <Col xs={12} sm={12} md={12} lg={8} xl={8}>
           <div className="withSidebarContent">
             <div className={styles.wrapper}>
               <h1 className="mainHeadingTitle">Bài viết đã lưu</h1>
               <div className={styles.tabs}>
                 <div className={styles.tab}>
-                  Bài viết {bookmarkData && bookmarkData.length}
+                  Bài viết {bookmarkData ? `(${bookmarkData.length})` : '(0)'}
                 </div>
               </div>
               {bookmarkData && bookmarkData.length === 0 && (
@@ -69,36 +69,30 @@ const BookmarkPost = () => {
                   </p>
                 </div>
               )}
-              <ul className={styles.bookMarkList}>
-                {bookmarkData &&
-                  bookmarkData.map(bookmark => (
-                    <SecondaryCard key={bookmark._id}>
-                      <li>
-                        <h3>
-                          <a href={`blog/${bookmark.slug}`}>
-                            <span>
-                              {bookmark.titleDisplay
-                                ? bookmark.titleDisplay
-                                : bookmark.title}
-                            </span>
-                          </a>
-                        </h3>
-                        <div className={styles.author}>
-                          <a href={`blog/${bookmark.slug}`}>
-                            Đã lưu {timeSinceHandler(bookmark.createdAt)}
-                          </a>
-                          <span className={styles.dot}>.</span>
-                          <span>
-                            Tác giả <strong>{bookmark.postedBy}</strong>
-                          </span>
-                        </div>
-                        <span className={styles.option}>
-                          <i className="bi bi-three-dots"></i>
+              {bookmarkData &&
+                bookmarkData.map(bookmark => (
+                  <ul key={bookmark._id} className={styles.bookmarkList}>
+                    <li>
+                      <h3>
+                        <a href={`blog/${bookmark.slug}`}>
+                          <span>{bookmark.titleDisplay}</span>
+                        </a>
+                      </h3>
+                      <div className={styles.author}>
+                        <a href={`blog/${bookmark.slug}`}>
+                          Đã đăng {timeSinceHandler(bookmark.createdAt)}
+                        </a>
+                        <span className={styles.dot}>.</span>
+                        <span>
+                          Tác giả <strong>{bookmark.postedBy.fullName}</strong>
                         </span>
-                      </li>
-                    </SecondaryCard>
-                  ))}
-              </ul>
+                      </div>
+                      <span className={styles.option}>
+                        <i className="bi bi-three-dots"></i>
+                      </span>
+                    </li>
+                  </ul>
+                ))}
             </div>
           </div>
         </Col>

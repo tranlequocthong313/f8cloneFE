@@ -15,20 +15,25 @@ import { useSelector, useDispatch } from 'react-redux'
 import Reaction from './Reaction'
 import Comment from '../utils/comment/Comment'
 import io from 'socket.io-client'
-import MainToast from '../utils/toast/MainToast'
-import { createBlog } from '../../actions/userAction'
 
 const socket = io.connect(apiURL)
 
 const BlogDetail = ({ blog }) => {
   const user = useSelector(state => state.user)
   const navigate = useNavigate()
-  const dispatch = useDispatch()
 
   const [likeCount, setLikeCount] = useState(blog.likes)
   const [isLike, setIsLike] = useState(blog.likes.includes(user.userId))
   const [showComment, setShowComment] = useState(false)
   const [commentData, setCommentData] = useState(blog.comments)
+  const [bookmarkData, setBookmarkData] = useState(null)
+
+  useEffect(() => {
+    console.log(blog.likes)
+    console.log(user.userId)
+    console.log(blog.likes.includes(user.userId))
+    // setIsLike(blog.likes.includes(user.userId))
+  }, [blog.likes, user.userId])
 
   useEffect(() => {
     socket.on('comment', comment => {
@@ -82,6 +87,49 @@ const BlogDetail = ({ blog }) => {
     }
   }
 
+  useEffect(() => {
+    const getBookmark = async () => {
+      const token = Cookies.get('token')
+
+      if (!token) return
+
+      const res = await fetch(`${apiURL}/me/bookmark`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      const data = await res.json()
+      console.log(data.bookmark)
+      setBookmarkData(data.bookmark)
+    }
+
+    getBookmark()
+  }, [])
+
+  const bookmarkHandler = async blogId => {
+    try {
+      const token = Cookies.get('token')
+
+      if (!token) {
+        return navigate('/login')
+      }
+
+      const res = await fetch(`${apiURL}/me/bookmark`, {
+        method: 'PUT',
+        body: JSON.stringify({ blogId }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      const data = await res.json()
+      console.log(data.bookmark)
+
+      setBookmarkData(data.bookmark)
+    } catch (error) {}
+  }
   return (
     <Row className={styles.wrapper}>
       {/* {user && user.createBlog.isSuccess && (
@@ -130,8 +178,17 @@ const BlogDetail = ({ blog }) => {
             </div>
           </div>
           <div className={styles.actions}>
-            <div className={styles.bookmark}>
-              <i className="bi bi-bookmark"></i>
+            <div
+              className={styles.bookmark}
+              onClick={() => bookmarkHandler(blog._id)}
+            >
+              <i
+                className={
+                  bookmarkData && bookmarkData.includes(blog._id)
+                    ? `${styles.bookmarkActive} bi bi-bookmark-fill`
+                    : 'bi bi-bookmark'
+                }
+              ></i>
             </div>
             <div className={styles.option}>
               <i className="bi bi-three-dots"></i>
