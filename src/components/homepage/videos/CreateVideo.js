@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import { Modal, Button, Toast, ToastContainer, Form } from 'react-bootstrap'
+import { useState } from 'react'
+import { Modal, Button, Form } from 'react-bootstrap'
 import { apiURL } from '../../../context/constants'
 import { useDispatch } from 'react-redux'
 import styles from './CreateVideo.module.scss'
 import { createVideo } from '../../../actions/userAction'
-import f8logo from '../../../asset/f8_icon.png'
 import MainToast from '../../utils/toast/MainToast'
+import removeAccents from 'vn-remove-accents'
 
 const CreateVideo = () => {
   const dispatch = useDispatch()
@@ -34,6 +34,7 @@ const CreateVideo = () => {
         videoId,
         duration: data.items[0].contentDetails.duration,
         title: data.items[0].snippet.localized.title,
+        search: removeAccents(data.items[0].snippet.localized.title),
         image: data.items[0].snippet.thumbnails.standard
           ? data.items[0].snippet.thumbnails.standard.url
           : data.items[0].snippet.thumbnails.high

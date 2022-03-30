@@ -1,86 +1,17 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Image } from 'react-bootstrap'
-import Notification from './Notification'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './User.module.scss'
 import MyCourse from './MyCourse'
-import { signOut } from 'firebase/auth'
 import { useLocation, useNavigate } from 'react-router-dom'
 import BackDrop from '../../../utils/backdrop/BackDrop'
 import { Link } from 'react-router-dom'
 import userDefaultImage from '../../../../asset/nobody_m.256x256.jpg'
-import { auth } from '../../../../firebase/config'
 import { useDispatch } from 'react-redux'
 import { logout } from '../../../../actions/userAction'
 import Cookies from 'js-cookie'
 import CreateVideo from '../../../homepage/videos/CreateVideo'
-
-const NOTIFICATION_DUMMY_DATA = [
-  {
-    id: Math.random(),
-    avatar:
-      'https://files.fullstack.edu.vn/f8-prod/user_photos/172872/621507f705718.jpg',
-    name: 'Nguyễn Văn Vinh',
-    description: 'đã nhắc tới bạn trong một bình luận',
-    time: 'một năm trước',
-  },
-  {
-    id: Math.random(),
-    avatar:
-      'https://files.fullstack.edu.vn/f8-prod/user_photos/172872/621507f705718.jpg',
-    name: 'Nguyễn Văn Vinh',
-    description: 'đã nhắc tới bạn trong một bình luận',
-    time: 'một năm trước',
-  },
-  {
-    id: Math.random(),
-    avatar:
-      'https://files.fullstack.edu.vn/f8-prod/user_photos/172872/621507f705718.jpg',
-    name: 'Nguyễn Văn Vinh',
-    description: 'đã nhắc tới bạn trong một bình luận',
-    time: 'một năm trước',
-  },
-  {
-    id: Math.random(),
-    avatar:
-      'https://files.fullstack.edu.vn/f8-prod/user_photos/172872/621507f705718.jpg',
-    name: 'Nguyễn Văn Vinh',
-    description: 'đã nhắc tới bạn trong một bình luận',
-    time: 'một năm trước',
-  },
-  {
-    id: Math.random(),
-    avatar:
-      'https://files.fullstack.edu.vn/f8-prod/user_photos/172872/621507f705718.jpg',
-    name: 'Nguyễn Văn Vinh',
-    description: 'đã nhắc tới bạn trong một bình luận',
-    time: 'một năm trước',
-  },
-  {
-    id: Math.random(),
-    avatar:
-      'https://files.fullstack.edu.vn/f8-prod/user_photos/172872/621507f705718.jpg',
-    name: 'Nguyễn Văn Vinh',
-    description: 'đã nhắc tới bạn trong một bình luận',
-    time: 'một năm trước',
-  },
-  {
-    id: Math.random(),
-    avatar:
-      'https://files.fullstack.edu.vn/f8-prod/user_photos/172872/621507f705718.jpg',
-    name: 'Nguyễn Văn Vinh',
-    description: 'đã nhắc tới bạn trong một bình luận',
-    time: 'một năm trước',
-  },
-  {
-    id: Math.random(),
-    avatar:
-      'https://files.fullstack.edu.vn/f8-prod/user_photos/172872/621507f705718.jpg',
-    name: 'Nguyễn Văn Vinh',
-    description: 'đã nhắc tới bạn trong một bình luận',
-    time: 'một năm trước',
-  },
-]
+import removeAccents from 'vn-remove-accents'
 
 const User = ({ photoURL, displayName, email, currentPage }) => {
   const navigate = useNavigate()
@@ -116,9 +47,9 @@ const User = ({ photoURL, displayName, email, currentPage }) => {
     <>
       {location.pathname === '/' && <CreateVideo />}
       <MyCourse />
-      <Notification notifications={NOTIFICATION_DUMMY_DATA} />
+      {/* <Notification notifications={NOTIFICATION_DUMMY_DATA} /> */}
       <>
-        <BackDrop onClick={showHandler} show={show} />
+        {/* <BackDrop onClick={showHandler} show={show} /> */}
         <Image
           className={styles.userPicture}
           src={photoURL || userDefaultImage}
@@ -132,8 +63,12 @@ const User = ({ photoURL, displayName, email, currentPage }) => {
                 className={styles.avatar}
               />
               <div className={styles.info}>
-                <div className={styles.name}>{displayName || null}</div>
-                <div className={styles.fullName}>{email || null}</div>
+                <div className={styles.name}>{displayName}</div>
+                <div className={styles.fullName}>
+                  {email
+                    ? `@${email.split('@gmail.com')[0].trim()}`
+                    : `@${removeAccents(displayName.replace(/\s/g, ''))}`}
+                </div>
               </div>
             </div>
             <div className={styles.content}>

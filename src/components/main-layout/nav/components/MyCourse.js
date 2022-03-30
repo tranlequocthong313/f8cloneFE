@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Image } from 'react-bootstrap'
 import styles from './MyCourse.module.scss'
-import BackDrop from '../../../utils/backdrop/BackDrop'
+// import BackDrop from '../../../utils/backdrop/BackDrop'
 
 const MyCourse = () => {
   const [show, setShow] = useState(false)
@@ -11,7 +11,7 @@ const MyCourse = () => {
 
   return (
     <>
-      <BackDrop onClick={showHandler} show={show} />
+      {/* <BackDrop onClick={showHandler} show={show} /> */}
       <span className={styles.userCourse} onClick={showHandler}>
         Khóa học của tôi
         {show && (

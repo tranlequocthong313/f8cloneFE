@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import styles from './Notification.module.scss'
 import '../../../../sass/_custom.scss'
-import BackDrop from '../../../utils/backdrop/BackDrop'
+// import BackDrop from '../../../utils/backdrop/BackDrop'
 
 const Notification = ({ notifications }) => {
   const [seen, setSeen] = useState(false)
@@ -22,7 +22,7 @@ const Notification = ({ notifications }) => {
 
   return (
     <>
-      <BackDrop show={show} onClick={showHandler} />
+      {/* <BackDrop show={show} onClick={showHandler} /> */}
       <i
         className={`${styles.userNotification} bi bi-bell-fill`}
         onClick={showHandler}

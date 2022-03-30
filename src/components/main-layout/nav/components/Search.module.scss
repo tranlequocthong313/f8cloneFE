@@ -12,6 +12,11 @@
   margin: 0 auto;
   @include flexCenter(row);
   flex: 1 1;
+  z-index: 100;
+
+  &.focus {
+    outline: #000000 solid 1px;
+  }
 
   .clearText {
     cursor: pointer;

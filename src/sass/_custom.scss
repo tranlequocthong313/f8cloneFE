@@ -10,17 +10,6 @@
     padding: 0 !important;
   }
 
-  .offcanvas {
-    width: 60% !important;
-    z-index: 9999 !important;
-    font-size: 1.6rem;
-    padding: 16px 0 0 32px;
-    display: flex;
-    flex-direction: column;
-    max-height: 100%;
-    overflow-y: auto;
-  }
-
   .row {
     padding: 0 20px;
   }
@@ -31,11 +20,6 @@
 }
 
 @media (max-width: 739px) {
-  .offcanvas {
-    width: 80% !important;
-    padding: 16px 0 0 16px !important;
-  }
-
   .row {
     padding: 0;
   }

@@ -12957,6 +12957,11 @@ vm2@^3.9.8:
     acorn "^8.7.0"
     acorn-walk "^8.2.0"
 
+vn-remove-accents@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/vn-remove-accents/-/vn-remove-accents-1.0.0.tgz#c84e220915e3a0fa2d9b9b29e542fb31419bb23f"
+  integrity sha512-apEy3PAKFes8J/HjsHy6qT0LIIJ7E+y5uVIhwi3rO1hRPhTC8WZziZtp7Lw4UNgQlQ7fuSjOfg77sjD2uni4vQ==
+
 w3c-hr-time@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/w3c-hr-time/-/w3c-hr-time-1.0.2.tgz#0a89cdf5cc15822df9c360543676963e0cc308cd"

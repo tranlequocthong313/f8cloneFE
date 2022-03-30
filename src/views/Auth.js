@@ -55,8 +55,8 @@ const Auth = () => {
       console.log('Email has been created', apiData)
 
       if (apiData.savedUser) {
-        console.log('Email has been created')
         Cookies.set('token', apiData.accessToken)
+
         dispatchAndNavigateHandler({
           ...apiData.savedUser,
           accessToken: apiData.accessToken,
@@ -79,7 +79,7 @@ const Auth = () => {
       })
 
       const newData = await newRes.json()
-      console.log(newData.accessToken)
+
       Cookies.set('token', newData.accessToken)
 
       dispatchAndNavigateHandler({

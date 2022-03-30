@@ -10,11 +10,10 @@ import Cookies from 'js-cookie'
 import { ref, uploadBytesResumable, getDownloadURL } from '@firebase/storage'
 import { storage } from '../../firebase/config'
 import { createBlog } from '../../actions/userAction'
-import { useDispatch } from 'react-redux'
+import removeAccents from 'vn-remove-accents'
 
 const Modal = ({ blogContent, setShowModal }) => {
   const navigate = useNavigate()
-  const dispatch = useDispatch()
 
   // Get city living
   const timezone = Intl.DateTimeFormat()
@@ -115,6 +114,9 @@ const Modal = ({ blogContent, setShowModal }) => {
 
       const blogData = {
         title: blogContent.title,
+        search: removeAccents(
+          titleDisplay.length === 0 ? blogContent.title : titleDisplay
+        ),
         content: blogContent.content,
         image,
         titleDisplay:

@@ -18,7 +18,7 @@ const LearningTrack = ({ showHandler, episodes }) => {
           </div>
         </div>
       </div>
-      <div className={styles.backDrop} onClick={showHandler}></div>
+      {/* <div className={styles.backDrop} onClick={showHandler}></div> */}
     </>
   )
 }

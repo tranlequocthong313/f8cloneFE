@@ -35,6 +35,7 @@ const CourseSlug = () => {
       }
 
       setCourse(data)
+      document.title = `${data.title} | by F8`
     } catch (error) {
       console.log(error.message)
     }

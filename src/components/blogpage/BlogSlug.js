@@ -31,6 +31,7 @@ const BlogSlug = () => {
         console.log(data)
 
         setBlog(data)
+        document.title = `${data.titleDisplay} | by F8`
       } catch (error) {
         console.log(error.message)
       }

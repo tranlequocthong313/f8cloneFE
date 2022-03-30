@@ -87,9 +87,7 @@ const LoginWithPhoneNumberForm = ({
 
     try {
       const result = await window.confirmationResult.confirm(verifyOTP)
-      let user = result.user
-
-      console.log(user)
+      let user = await result.user
 
       if (user && isLogin) {
         const res = await fetch(`${apiURL}/login/provider`, {
@@ -103,8 +101,11 @@ const LoginWithPhoneNumberForm = ({
         })
 
         const data = await res.json()
+
         console.log(data.user)
+
         Cookies.set('token', data.accessToken)
+
         dispatchAndNavigateHandler({
           ...data.user,
           accessToken: data.accessToken,
@@ -128,7 +129,7 @@ const LoginWithPhoneNumberForm = ({
         console.log(data)
         Cookies.set('token', data.accessToken)
         dispatchAndNavigateHandler({
-          ...data.userRes,
+          ...data.user,
           accessToken: data.accessToken,
         })
       }

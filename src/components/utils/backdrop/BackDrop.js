@@ -1,14 +1,15 @@
-import React from 'react'
-import styles from './BackDrop.module.scss'
+// import React from 'react'
+// import styles from './BackDrop.module.scss'
 
-const BackDrop = ({ children, onClick, show }) => {
-  return (
-    show && (
-      <div className={styles.backDrop} onClick={onClick}>
-        {children}
-      </div>
-    )
-  )
-}
+// const BackDrop = ({ children, className, onClick }) => {
+//   return (
+//     <div
+//       className={`${styles.backDrop} ${className && className}`}
+//       onClick={onClick}
+//     >
+//       {children}
+//     </div>
+//   )
+// }
 
-export default BackDrop
+// export default BackDrop

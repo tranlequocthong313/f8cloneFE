@@ -27,6 +27,7 @@ import NewBlog from './views/NewBlog'
 import Settings from './views/Settings'
 import BookmarkPost from './views/BookmarkPost'
 import MyBlog from './views/MyBlog'
+import removeAccents from 'vn-remove-accents'
 
 function App() {
   // const socket = io.connect(apiURL)
@@ -83,10 +84,10 @@ function App() {
     getUserHandler()
   }, [])
 
-  // Set title of browser again after using 'Write Blog Page'
   useEffect(() => {
     if (location !== 'new-blog') {
-      document.title = 'Thong Ahuhu'
+      document.title =
+        'F8 - Học Lập Trình Để Đi Làm | F8 trên Youtube | F8 trên Facebook'
     }
   }, [location])
 

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './Search.module.scss'
 import { Link } from 'react-router-dom'
@@ -7,6 +7,7 @@ import noPhotoURL from '../../../../asset/nobody_m.256x256.jpg'
 
 const Search = ({ currentPage }) => {
   const [searchInput, setSearchInput] = useState('')
+  const [isFocus, setIsFocus] = useState(false)
   const [result, setResult] = useState({
     courses: [],
     blogs: [],
@@ -17,6 +18,7 @@ const Search = ({ currentPage }) => {
     try {
       const length = e.target.value.trim().length
       let match = e.target.value.match(/^[a-zA-Z ]*/)
+
       setSearchInput(e.target.value)
 
       if (length === 0) {
@@ -31,19 +33,19 @@ const Search = ({ currentPage }) => {
       }
 
       if (length >= 2 && match[0] === e.target.value) {
-        setTimeout(async () => {
-          const res = await fetch(`${apiURL}/search/${e.target.value}`)
-          const data = await res.json()
+        // setTimeout(async () => {
+        const res = await fetch(`${apiURL}/search/${e.target.value}`)
+        const data = await res.json()
 
-          setResult(prev => {
-            return {
-              ...prev,
-              courses: [...data.courses],
-              blogs: [...data.blogs],
-              videos: [...data.videos],
-            }
-          })
-        }, 500)
+        setResult(prev => {
+          return {
+            ...prev,
+            courses: [...data.courses],
+            blogs: [...data.blogs],
+            videos: [...data.videos],
+          }
+        })
+        // }, 500)
       }
     } catch (error) {
       console.log(error)
@@ -53,7 +55,14 @@ const Search = ({ currentPage }) => {
   return (
     <>
       {currentPage !== 'new-blog' && (
-        <form className={styles.searchWrapper}>
+        <form
+          className={
+            isFocus
+              ? `${styles.searchWrapper} ${styles.focus}`
+              : styles.searchWrapper
+          }
+          tabIndex="0"
+        >
           <div className={styles.searchIcon}></div>
           <input
             value={searchInput}
@@ -61,6 +70,8 @@ const Search = ({ currentPage }) => {
             placeholder="Tìm kiếm khóa học, bài viết, video, ..."
             className={styles.searchInput}
             onChange={searchHandler}
+            onClick={() => setIsFocus(true)}
+            onBlur={() => setIsFocus(false)}
           />
           {searchInput.length >= 1 && (
             <div
@@ -71,7 +82,7 @@ const Search = ({ currentPage }) => {
             </div>
           )}
 
-          {searchInput.length >= 1 && (
+          {searchInput.length !== 0 && (
             <div className={styles.dropDown}>
               <div className={styles.resultWrapper}>
                 <div className={styles.header}>
