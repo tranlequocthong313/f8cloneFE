@@ -17,19 +17,23 @@ const Blog = () => {
   const [blogs, setBlogs] = useState(null)
 
   useEffect(() => {
-    fetchData()
+    const controller = new AbortController()
+
+    ;(async () => {
+      try {
+        const res = await fetch(`${apiURL}/blog`, {
+          signal: controller.signal,
+        })
+        const data = await res.json()
+
+        setBlogs(data)
+      } catch (error) {
+        console.log(error.message)
+      }
+    })()
+
+    return () => controller?.abort()
   }, [])
-
-  const fetchData = async () => {
-    try {
-      const res = await fetch(`${apiURL}/blog`)
-      const data = await res.json()
-
-      setBlogs(data)
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
 
   return (
     <>

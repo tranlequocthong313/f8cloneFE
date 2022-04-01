@@ -8,11 +8,7 @@ import CircularProgressBar from '../utils/circular-progress-bar/CircularProgress
 const LearningHeader = () => {
   return (
     <Navbar className={styles.navHeader}>
-      <Link
-        to="/"
-        className={styles.backHome}
-        //   onClick={() => activeHandler('')}
-      >
+      <Link to="/" className={styles.backHome}>
         <i className="bi bi-chevron-left"></i>
       </Link>
       <Navbar.Brand className={styles.logo}>

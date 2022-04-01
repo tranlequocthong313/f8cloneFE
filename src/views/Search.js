@@ -26,7 +26,7 @@ const Search = () => {
       let match = e.target.innerText.match(/^[a-zA-Z ]*/)
       setSearchInput(e.target.innerText)
 
-      if (length === 0) {
+      length === 0 &&
         setResult(prev => {
           return {
             ...prev,
@@ -35,13 +35,10 @@ const Search = () => {
             videos: [],
           }
         })
-      }
 
       if (length >= 2 && match[0] === e.target.innerText) {
         const res = await fetch(`${apiURL}/search/${e.target.innerText}`)
         const data = await res.json()
-
-        console.log(data)
 
         setResult(prev => {
           return {

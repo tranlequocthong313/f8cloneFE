@@ -15,9 +15,8 @@ const timeSinceHandler = createdAt => {
     return `${hours === 1 ? 'một' : hours} giờ trước`
   } else if (minutes > 0) {
     return `${minutes === 1 ? 'một' : minutes} phút trước`
-  } else {
-    return `vài giây trước`
   }
+  return `vài giây trước`
 }
 
 export default timeSinceHandler

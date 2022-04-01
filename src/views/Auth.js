@@ -38,8 +38,6 @@ const Auth = () => {
       const res = await signInWithPopup(auth, provider)
       const user = res.user
 
-      console.log(user)
-
       const apiRes = await fetch(`${apiURL}/login/provider`, {
         method: 'POST',
         body: JSON.stringify({
@@ -52,17 +50,13 @@ const Auth = () => {
 
       const apiData = await apiRes.json()
 
-      console.log('Email has been created', apiData)
-
       if (apiData.savedUser) {
         Cookies.set('token', apiData.accessToken)
 
-        dispatchAndNavigateHandler({
+        return dispatchAndNavigateHandler({
           ...apiData.savedUser,
           accessToken: apiData.accessToken,
         })
-
-        return
       }
 
       const newRes = await fetch(`${apiURL}/login/provider`, {
@@ -98,9 +92,7 @@ const Auth = () => {
 
   // Show authentication buttons or not when click to "Phone and Email Authentication Option"
   let isShowAuthProviderOption
-  if (loginOption === '') {
-    isShowAuthProviderOption = true
-  }
+  if (loginOption === '') isShowAuthProviderOption = true
 
   return (
     <div className={styles.wrapper}>

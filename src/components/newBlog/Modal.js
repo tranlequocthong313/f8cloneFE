@@ -10,7 +10,7 @@ import Cookies from 'js-cookie'
 import { ref, uploadBytesResumable, getDownloadURL } from '@firebase/storage'
 import { storage } from '../../firebase/config'
 import { createBlog } from '../../actions/userAction'
-import removeAccents from 'vn-remove-accents'
+import removeActions from '../utils/remove-accents/removeActions'
 
 const Modal = ({ blogContent, setShowModal }) => {
   const navigate = useNavigate()
@@ -40,9 +40,7 @@ const Modal = ({ blogContent, setShowModal }) => {
   const SHOW_HELP_NUMBER_DESCRIPTION = 108
 
   useEffect(() => {
-    return () => {
-      preview && URL.revokeObjectURL(preview)
-    }
+    return () => preview && URL.revokeObjectURL(preview)
   }, [preview])
 
   const onDrop = useCallback(acceptedFiles => {
@@ -68,25 +66,17 @@ const Modal = ({ blogContent, setShowModal }) => {
     const wordCount = content.trim().length
     const minute = Math.floor(wordCount / WORDS_PER_MINUTE)
 
-    if (minute <= SMALLEST_READING_TIME) {
-      return 1 // readingTime default 1 minute
-    }
-
-    return minute
+    return minute <= SMALLEST_READING_TIME ? SMALLEST_READING_TIME : minute
   }
 
-  const createSlugBlog = title => {
-    const slug = title.toLowerCase().replace(/\s/g, '-')
-
-    return slug
-  }
+  const createSlugBlog = title => title.toLowerCase().replace(/\s/g, '-')
 
   const uploadImageToStorage = () => {
     if (image) {
       const storageRef = ref(storage, `uploads/${image.name}`)
       const uploadTask = uploadBytesResumable(storageRef, image)
 
-      uploadTask.on(
+      return uploadTask.on(
         'state_changed',
         snapshot => {
           Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
@@ -101,37 +91,33 @@ const Modal = ({ blogContent, setShowModal }) => {
           }
         }
       )
-    } else {
-      postBlogHandler()
     }
+    postBlogHandler()
   }
 
   const postBlogHandler = async image => {
     try {
       const token = Cookies.get('token')
-
       if (!token) return
-
-      const blogData = {
-        title: blogContent.title,
-        search: removeAccents(
-          titleDisplay.length === 0 ? blogContent.title : titleDisplay
-        ),
-        content: blogContent.content,
-        image,
-        titleDisplay:
-          titleDisplay.length === 0 ? blogContent.title : titleDisplay,
-        description,
-        slug: createSlugBlog(blogContent.title),
-        readingTime: readingTimeHandler(blogContent.content),
-        allowRecommend,
-        tags,
-        schedule,
-      }
 
       const res = await fetch(`${apiURL}/new-blog`, {
         method: 'POST',
-        body: JSON.stringify(blogData),
+        body: JSON.stringify({
+          image,
+          tags,
+          schedule,
+          allowRecommend,
+          description,
+          title: blogContent.title,
+          content: blogContent.content,
+          slug: createSlugBlog(blogContent.title),
+          readingTime: readingTimeHandler(blogContent.content),
+          search: removeActions(
+            titleDisplay.length === 0 ? blogContent.title : titleDisplay
+          ),
+          titleDisplay:
+            titleDisplay.length === 0 ? blogContent.title : titleDisplay,
+        }),
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
@@ -139,14 +125,7 @@ const Modal = ({ blogContent, setShowModal }) => {
       })
 
       const data = await res.json()
-
-      console.log(data)
-
-      if (data.success) {
-        dispatchAndNavigate(data)
-      } else {
-        return
-      }
+      dispatchAndNavigate(data)
     } catch (error) {
       console.log(error.message)
     }

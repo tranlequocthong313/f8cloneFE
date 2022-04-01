@@ -44,13 +44,7 @@ const LoginWithPhoneNumberForm = ({
 
   const counterHandler = () => {
     setInterval(() => {
-      setCounter(prev => {
-        if (prev > 0) {
-          return prev - 1
-        } else {
-          setIsSentVerifyCode(false)
-        }
-      })
+      setCounter(prev => (prev > 0 ? prev - 1 : setIsSentVerifyCode(false)))
     }, 1000)
   }
 
@@ -102,17 +96,13 @@ const LoginWithPhoneNumberForm = ({
 
         const data = await res.json()
 
-        console.log(data.user)
-
         Cookies.set('token', data.accessToken)
 
         dispatchAndNavigateHandler({
           ...data.user,
           accessToken: data.accessToken,
         })
-      }
-
-      if (user && !isLogin) {
+      } else if (user && !isLogin) {
         const res = await fetch(`${apiURL}/register`, {
           method: 'POST',
           body: JSON.stringify({
@@ -126,8 +116,9 @@ const LoginWithPhoneNumberForm = ({
         })
 
         const data = await res.json()
-        console.log(data)
+
         Cookies.set('token', data.accessToken)
+
         dispatchAndNavigateHandler({
           ...data.user,
           accessToken: data.accessToken,
@@ -141,7 +132,7 @@ const LoginWithPhoneNumberForm = ({
   const checkNumberPhoneHandler = async e => {
     try {
       const length = e.target.value.trim().length
-      console.log(e.target.value)
+
       if (length === 10) {
         const res = await fetch(`${apiURL}/login/phone-number`, {
           method: 'POST',
@@ -152,22 +143,9 @@ const LoginWithPhoneNumberForm = ({
         })
 
         const data = await res.json()
-        console.log(data)
 
-        if (!isLogin && data.notUsed) {
-          setUserPhoneNumber(e.target.value)
-          return
-        }
-
-        if (!isLogin && data.used) {
-          console.log(data.used)
-          return
-        }
-
-        if (isLogin && data.used) {
-          setUserPhoneNumber(e.target.value)
-          console.log(data.used)
-        }
+        !isLogin && data.notUsed && setUserPhoneNumber(e.target.value)
+        isLogin && data.used && setUserPhoneNumber(e.target.value)
       }
     } catch (error) {
       console.log(error)

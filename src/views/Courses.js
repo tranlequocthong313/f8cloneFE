@@ -17,21 +17,25 @@ const Courses = () => {
   const [courseBE, setCourseBE] = useState([])
 
   useEffect(() => {
-    fetchData()
+    const controller = new AbortController()
+
+    ;(async () => {
+      try {
+        const res = await fetch(`${apiURL}/courses`, {
+          signal: controller.signal,
+        })
+        const data = await res.json()
+        console.log('🚀 ~ file: Courses.js ~ line 27 ~ Courses ~ data', data)
+
+        setCourseFE(data.courseFE)
+        setCourseBE(data.courseBE)
+      } catch (error) {
+        console.log(error.message)
+      }
+    })()
+
+    return () => controller?.abort()
   }, [])
-
-  const fetchData = async token => {
-    try {
-      const res = await fetch(`${apiURL}/courses`)
-      const data = await res.json()
-      console.log('🚀 ~ file: Courses.js ~ line 27 ~ Courses ~ data', data)
-
-      setCourseFE(data.courseFE)
-      setCourseBE(data.courseBE)
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
 
   return (
     <>

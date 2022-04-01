@@ -23,33 +23,25 @@ const CommentInput = ({
   const [commentInput, setCommentInput] = useState('')
 
   useEffect(() => {
-    if (commentInput.length === 0) {
-      contentEditableRef.current.innerText = ''
-    }
+    if (commentInput.length === 0) contentEditableRef.current.innerText = ''
   }, [commentInput])
 
   const submitCommentHandler = async () => {
     try {
       const token = Cookies.get('token')
-
-      if (!token) {
-        navigate('/login')
-        return
-      }
+      if (!token) return navigate('/login')
 
       setCommentInput('')
       setShowSubmit(false)
       setShowCode(false)
 
-      const obj = {
-        blogId,
-        content: commentInput,
-        isCode: showCode ? true : false,
-      }
-
       const res = await fetch(`${apiURL}/blog/comment`, {
         method: 'PUT',
-        body: JSON.stringify(obj),
+        body: JSON.stringify({
+          blogId,
+          content: commentInput,
+          isCode: showCode ? true : false,
+        }),
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,

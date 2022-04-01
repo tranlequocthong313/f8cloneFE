@@ -9,12 +9,16 @@ import timeSinceHandler from '../../utils/timeSinceHandler/timeSinceHandler'
 import CommentReactionCounter from './CommentReactionCounter'
 import noPhotoURL from '../../../asset/nobody_m.256x256.jpg'
 import styles from './CommentBody.module.scss'
+import io from 'socket.io-client'
+
+const socket = io.connect(apiURL)
 
 const CommentBody = ({
   commentData,
   showModalHandler,
   setCommentData,
   reportStatusHandler,
+  blogId,
 }) => {
   const [showOption, setShowOption] = useState(null)
   const [showEdit, setShowEdit] = useState([])
@@ -22,8 +26,14 @@ const CommentBody = ({
   const [showCodeEdit, setShowCodeEdit] = useState([])
   const [showCodeReply, setShowCodeReply] = useState([])
   const [editComment, setEditComment] = useState('')
+  const [replyComment, setReplyComment] = useState('')
   const [isCopy, setIsCopy] = useState([])
   const [extend, setExtend] = useState([])
+  const [replyCommentData, setReplyCommentData] = useState({
+    replies: [],
+    commentId: '',
+  })
+  const [showReplyBox, setShowReplyBox] = useState([])
 
   const user = useSelector(state => state.user)
 
@@ -32,12 +42,11 @@ const CommentBody = ({
   const reactCommentHandler = async (emoji, commentId) => {
     try {
       const token = Cookies.get('token')
-
       if (!token) return
 
       const res = await fetch(`${apiURL}/blog/comment/react`, {
         method: 'PUT',
-        body: JSON.stringify({ emoji, commentId }),
+        body: JSON.stringify({ emoji, commentId, blogId }),
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
@@ -52,10 +61,56 @@ const CommentBody = ({
     }
   }
 
+  const replyCommentHandler = async commentId => {
+    try {
+      const token = Cookies.get('token')
+      if (!token) return
+
+      const res = await fetch(`${apiURL}/blog/comment/reply`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          commentId,
+          content: replyComment,
+          isCode: showCodeReply.includes(commentId),
+          blogId,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      const data = await res.json()
+      console.log(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const getReplyComment = async commentId => {
+    try {
+      const token = Cookies.get('token')
+      if (!token) return
+
+      const res = await fetch(`${apiURL}/blog/comment/get-reply`, {
+        method: 'POST',
+        body: JSON.stringify({ commentId, blogId }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      const data = await res.json()
+      console.log(data.comments)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const deleteComment = async commentId => {
     try {
       const token = Cookies.get('token')
-
       if (!token) return
 
       const res = await fetch(`${apiURL}/blog/comment/delete`, {
@@ -78,18 +133,15 @@ const CommentBody = ({
   const editCommentHandler = async commentId => {
     try {
       const token = Cookies.get('token')
-
       if (!token) return
-
-      const obj = {
-        commentId: commentId,
-        content: editComment,
-        isCode: showCodeEdit.includes(commentId),
-      }
 
       const res = await fetch(`${apiURL}/blog/comment/edit`, {
         method: 'PUT',
-        body: JSON.stringify(obj),
+        body: JSON.stringify({
+          commentId: commentId,
+          content: editComment,
+          isCode: showCodeEdit.includes(commentId),
+        }),
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
@@ -109,8 +161,6 @@ const CommentBody = ({
   }
 
   const showInputHandler = (commentId, option) => {
-    if (!commentId || !option) return
-
     const isReply = showReply.includes(commentId)
     const isEdit = showEdit.includes(commentId)
 
@@ -125,11 +175,9 @@ const CommentBody = ({
       setShowEdit(prev => [...prev, commentId])
       setShowReply(prev => prev.filter(item => item !== commentId))
     } else if (option === 'edit' && !isEdit && !isReply) {
-      setShowEdit(prev => [...prev, commentId])
-      return
-    } else {
-      setShowEdit(prev => prev.filter(item => item !== commentId))
+      return setShowEdit(prev => [...prev, commentId])
     }
+    setShowEdit(prev => prev.filter(item => item !== commentId))
   }
 
   const showCodeEditReplyHandler = (commentId, option) => {
@@ -164,23 +212,13 @@ const CommentBody = ({
     }, 5000)
   }
 
-  const extendHandler = commentId => {
-    const isExtend = extend.includes(commentId)
+  const extendHandler = commentId =>
+    extend.includes(commentId)
+      ? setExtend(prev => prev.filter(item => item !== commentId))
+      : setExtend(prev => [...prev, commentId])
 
-    if (isExtend) {
-      setExtend(prev => prev.filter(item => item !== commentId))
-    } else {
-      setExtend(prev => [...prev, commentId])
-    }
-  }
-
-  const showOptionHandler = commentId => {
-    if (showOption === commentId) {
-      setShowOption(null)
-    } else {
-      setShowOption(commentId)
-    }
-  }
+  const showOptionHandler = commentId =>
+    showOption === commentId ? setShowOption(null) : setShowOption(commentId)
 
   const styleCommentContent = (commentId, commentContent) => {
     if (commentContent.length < STRING_LENGTH_EXTEND) {
@@ -190,355 +228,413 @@ const CommentBody = ({
       extend.includes(commentId)
     ) {
       return styles.commentContent
-    } else {
-      return `${styles.commentContent} ${styles.extend}`
     }
+    return `${styles.commentContent} ${styles.extend}`
   }
 
-  console.log(commentData)
-
-  return commentData.map(comment => (
-    <div key={comment._id}>
-      <div className={styles.commentList}>
-        <div className={styles.avatar}>
-          <img
-            src={
-              !comment.postedBy.photoURL
-                ? noPhotoURL
-                : comment.postedBy.photoURL
-            }
-            alt=""
-          />
-        </div>
-        <div className={styles.commentBody}>
-          <div className={styleCommentContent(comment._id, comment.content)}>
-            <div>
-              <h5>{comment.postedBy.fullName}</h5>
-              {!comment.isCode && <span>{comment.content}</span>}
-              {comment.isCode && (
-                <pre tabIndex={0}>
-                  <div
-                    className={styles.copyWrapper}
-                    onClick={() => copyHandler(comment._id, comment.content)}
-                  >
-                    <button className={styles.copyButton}>
-                      {!isCopy.includes(comment._id) ? 'Copy' : 'Copied!'}
-                    </button>
-                  </div>
-                  {comment.content}
-                </pre>
-              )}
-              {comment.content.length > STRING_LENGTH_EXTEND && (
-                <div
-                  className={styles.extendButton}
-                  onClick={() => extendHandler(comment._id)}
-                >
-                  <strong>
-                    {!extend.includes(comment._id) ? 'Mở rộng' : 'Thu nhỏ'}
-                  </strong>
-                  <i
-                    className={
-                      !extend.includes(comment._id)
-                        ? 'bi bi-chevron-down'
-                        : 'bi bi-chevron-up'
-                    }
-                  ></i>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className={styles.commentAction}>
-            <div className={styles.action}>
-              <span
-                className={styles.reactionButton}
-                onClick={() => {
-                  console.log('Onclick')
-                  reactCommentHandler('Thích', comment._id)
-                }}
-              >
-                <div className={styles.reaction}>
-                  <CommentReaction
-                    reactCommentHandler={reactCommentHandler}
-                    commentId={comment._id}
-                  />
-                </div>
-                Thích
-              </span>
-              {comment && comment.reacts.length > 0 && (
-                <CommentReactionCounter
-                  showModalHandler={showModalHandler}
-                  reactData={comment.reacts}
-                />
-              )}
-              <span className={styles.dot}>.</span>
-              <span
-                className={styles.reactionButton}
-                onClick={() => showInputHandler(comment._id, 'reply')}
-              >
-                Trả lời
-              </span>
-              <span className={styles.dot}>.</span>
-              <span className={styles.createdAt}>
-                {timeSinceHandler(comment.createdAt)}
-              </span>
-              <span
-                className={styles.optionButton}
-                onClick={() => showOptionHandler(comment._id)}
-              >
-                <span className={styles.dot}>.</span>
-                <span className={styles.optionIcon}>
-                  <i className="bi bi-three-dots"></i>
-                </span>
-                {showOption === comment._id && (
-                  <div className={styles.optionWrapper}>
-                    <ul className={styles.list}>
-                      {comment.postedBy._id === user.userId && (
-                        <>
-                          <li
-                            onClick={() => {
-                              showInputHandler(comment._id, 'edit')
-                            }}
-                          >
-                            <i className="bi bi-pencil-fill"></i>
-                            <span>Sửa bình luận</span>
-                          </li>
-                          <li onClick={() => deleteComment(comment._id)}>
-                            <i className="bi bi-trash-fill"></i>
-                            <span>Xóa bình luận</span>
-                          </li>
-                        </>
-                      )}
-                      {comment.postedBy._id !== user.userId && (
-                        <li
-                          onClick={() =>
-                            reportStatusHandler(
-                              reportCommentHandler(comment._id)
-                            )
-                          }
-                        >
-                          <i className="bi bi-flag-fill"></i>
-                          <span>Báo cáo bình luận</span>
-                        </li>
-                      )}
-                    </ul>
-                  </div>
-                )}
-              </span>
-            </div>
-          </div>
-
-          {showReply.includes(comment._id) &&
-            !showEdit.includes(comment._id) && (
-              <CommentInputSecondary
-                userPhotoURL={user.photoURL}
-                showCode={showCodeReply.includes(comment._id)}
-                setShowCodeEditReply={() =>
-                  showCodeEditReplyHandler(comment._id, 'reply')
+  return (
+    <>
+      {commentData.map(comment => (
+        <div key={comment._id}>
+          <div className={styles.commentList}>
+            <div className={styles.avatar}>
+              <img
+                src={
+                  !comment.postedBy.photoURL
+                    ? noPhotoURL
+                    : comment.postedBy.photoURL
                 }
-                showInputHandler={() => showInputHandler(comment._id, 'reply')}
-                buttonText={'Trả lời'}
-                firstString={comment.postedBy.fullName}
+                alt=""
               />
-            )}
-
-          {showEdit.includes(comment._id) &&
-            !showReply.includes(comment._id) && (
-              <CommentInputSecondary
-                userPhotoURL={user.photoURL}
-                showCode={showCodeEdit.includes(comment._id)}
-                setShowCodeEditReply={() =>
-                  showCodeEditReplyHandler(comment._id, 'edit')
-                }
-                showInputHandler={() => showInputHandler(comment._id, 'edit')}
-                buttonText={'Sửa'}
-                firstString={comment.content}
-                editCommentHandler={() => editCommentHandler(comment._id)}
-                onInput={e => setEditComment(e.target.innerText)}
-                editComment={editComment}
-              />
-            )}
-        </div>
-      </div>
-      {comment.replies.length > 0 && (
-        <div className={styles.viewReplies}>
-          <span className={styles.repliesCount}>
-            Xem {comment.replies.length} câu trả lời
-            <i className="bi bi-chevron-down"></i>
-            {/* <i className="bi bi-chevron-up"></i> */}
-          </span>
-
-          {comment.replies.map(reply => (
-            <div className={styles.commentList} key={reply._id}>
-              <div className={styles.avatar}>
-                <img
-                  src={
-                    !reply.postedBy.photoURL
-                      ? noPhotoURL
-                      : reply.postedBy.photoURL
-                  }
-                  alt=""
-                />
-              </div>
-              <div className={styles.commentBody}>
-                <div className={styleCommentContent(reply._id, reply.content)}>
-                  <div>
-                    <h5>{reply.postedBy.fullName}</h5>
-                    {!reply.isCode && <span>{reply.content}</span>}
-                    {reply.isCode && (
-                      <pre tabIndex={0}>
-                        <div
-                          className={styles.copyWrapper}
-                          onClick={() => copyHandler(reply._id, reply.content)}
-                        >
-                          <button className={styles.copyButton}>
-                            {!isCopy.includes(reply._id) ? 'Copy' : 'Copied!'}
-                          </button>
-                        </div>
-                        {reply.content}
-                      </pre>
-                    )}
-                    {reply.content.length > STRING_LENGTH_EXTEND && (
+            </div>
+            <div className={styles.commentBody}>
+              <div
+                className={styleCommentContent(comment._id, comment.content)}
+              >
+                <div>
+                  <h5>{comment.postedBy.fullName}</h5>
+                  {!comment.isCode && <span>{comment.content}</span>}
+                  {comment.isCode && (
+                    <pre tabIndex={0}>
                       <div
-                        className={styles.extendButton}
-                        onClick={() => extendHandler(reply._id)}
+                        className={styles.copyWrapper}
+                        onClick={() =>
+                          copyHandler(comment._id, comment.content)
+                        }
                       >
-                        <strong>
-                          {!extend.includes(reply._id) ? 'Mở rộng' : 'Thu nhỏ'}
-                        </strong>
-                        <i
-                          className={
-                            !extend.includes(reply._id)
-                              ? 'bi bi-chevron-down'
-                              : 'bi bi-chevron-up'
-                          }
-                        ></i>
+                        <button className={styles.copyButton}>
+                          {!isCopy.includes(comment._id) ? 'Copy' : 'Copied!'}
+                        </button>
                       </div>
-                    )}
-                  </div>
+                      {comment.content}
+                    </pre>
+                  )}
+                  {comment.content.length > STRING_LENGTH_EXTEND && (
+                    <div
+                      className={styles.extendButton}
+                      onClick={() => extendHandler(comment._id)}
+                    >
+                      <strong>
+                        {!extend.includes(comment._id) ? 'Mở rộng' : 'Thu nhỏ'}
+                      </strong>
+                      <i
+                        className={
+                          !extend.includes(comment._id)
+                            ? 'bi bi-chevron-down'
+                            : 'bi bi-chevron-up'
+                        }
+                      ></i>
+                    </div>
+                  )}
                 </div>
+              </div>
 
-                <div className={styles.commentAction}>
-                  <div className={styles.action}>
-                    <span
-                      className={styles.reactionButton}
-                      onClick={() => {
-                        console.log('Onclick')
-                        reactCommentHandler('Thích', reply._id)
-                      }}
-                    >
-                      <div className={styles.reaction}>
-                        <CommentReaction
-                          reactCommentHandler={reactCommentHandler}
-                          commentId={reply._id}
-                        />
-                      </div>
-                      Thích
-                    </span>
-                    {comment && reply.reacts.length > 0 && (
-                      <CommentReactionCounter
-                        showModalHandler={showModalHandler}
-                        reactData={reply.reacts}
+              <div className={styles.commentAction}>
+                <div className={styles.action}>
+                  <span
+                    className={styles.reactionButton}
+                    onClick={() => {
+                      console.log('Onclick')
+                      reactCommentHandler('Thích', comment._id)
+                    }}
+                  >
+                    <div className={styles.reaction}>
+                      <CommentReaction
+                        reactCommentHandler={reactCommentHandler}
+                        commentId={comment._id}
                       />
-                    )}
+                    </div>
+                    Thích
+                  </span>
+                  {comment && comment.reacts.length > 0 && (
+                    <CommentReactionCounter
+                      showModalHandler={showModalHandler}
+                      reactData={comment.reacts}
+                    />
+                  )}
+                  <span className={styles.dot}>.</span>
+                  <span
+                    className={styles.reactionButton}
+                    onClick={() => showInputHandler(comment._id, 'reply')}
+                  >
+                    Trả lời
+                  </span>
+                  <span className={styles.dot}>.</span>
+                  <span className={styles.createdAt}>
+                    {timeSinceHandler(comment.createdAt)}
+                  </span>
+                  <span
+                    className={styles.optionButton}
+                    onClick={() => showOptionHandler(comment._id)}
+                  >
                     <span className={styles.dot}>.</span>
-                    <span
-                      className={styles.reactionButton}
-                      onClick={() => showInputHandler(reply._id, 'reply')}
-                    >
-                      Trả lời
+                    <span className={styles.optionIcon}>
+                      <i className="bi bi-three-dots"></i>
                     </span>
-                    <span className={styles.dot}>.</span>
-                    <span className={styles.createdAt}>
-                      {timeSinceHandler(reply.createdAt)}
-                    </span>
-                    <span
-                      className={styles.optionButton}
-                      onClick={() => showOptionHandler(reply._id)}
-                    >
-                      <span className={styles.dot}>.</span>
-                      <span className={styles.optionIcon}>
-                        <i className="bi bi-three-dots"></i>
-                      </span>
-                      {showOption === reply._id && (
-                        <div className={styles.optionWrapper}>
-                          <ul className={styles.list}>
-                            {reply.postedBy._id === user.userId && (
-                              <>
-                                <li
-                                  onClick={() => {
-                                    showInputHandler(reply._id, 'edit')
-                                  }}
-                                >
-                                  <i className="bi bi-pencil-fill"></i>
-                                  <span>Sửa bình luận</span>
-                                </li>
-                                <li onClick={() => deleteComment(reply._id)}>
-                                  <i className="bi bi-trash-fill"></i>
-                                  <span>Xóa bình luận</span>
-                                </li>
-                              </>
-                            )}
-                            {reply.postedBy._id !== user.userId && (
+                    {showOption === comment._id && (
+                      <div className={styles.optionWrapper}>
+                        <ul className={styles.list}>
+                          {comment.postedBy._id === user.userId && (
+                            <>
                               <li
+                                onClick={() => {
+                                  showInputHandler(comment._id, 'edit')
+                                }}
+                              >
+                                <i className="bi bi-pencil-fill"></i>
+                                <span>Sửa bình luận</span>
+                              </li>
+                              <li onClick={() => deleteComment(comment._id)}>
+                                <i className="bi bi-trash-fill"></i>
+                                <span>Xóa bình luận</span>
+                              </li>
+                            </>
+                          )}
+                          {comment.postedBy._id !== user.userId && (
+                            <li
+                              onClick={() =>
+                                reportStatusHandler(
+                                  reportCommentHandler(comment._id)
+                                )
+                              }
+                            >
+                              <i className="bi bi-flag-fill"></i>
+                              <span>Báo cáo bình luận</span>
+                            </li>
+                          )}
+                        </ul>
+                      </div>
+                    )}
+                  </span>
+                </div>
+              </div>
+
+              {showReply.includes(comment._id) &&
+                !showEdit.includes(comment._id) && (
+                  <CommentInputSecondary
+                    userPhotoURL={user.photoURL}
+                    showCode={showCodeReply.includes(comment._id)}
+                    setShowCodeEditReply={() =>
+                      showCodeEditReplyHandler(comment._id, 'reply')
+                    }
+                    replyCommentHandler={() => replyCommentHandler(comment._id)}
+                    showInputHandler={() =>
+                      showInputHandler(comment._id, 'reply')
+                    }
+                    buttonText={'Trả lời'}
+                    firstString={comment.postedBy.fullName}
+                    onInput={e => setReplyComment(e.target.innerText)}
+                    commentInput={replyComment}
+                  />
+                )}
+
+              {showEdit.includes(comment._id) &&
+                !showReply.includes(comment._id) && (
+                  <CommentInputSecondary
+                    userPhotoURL={user.photoURL}
+                    showCode={showCodeEdit.includes(comment._id)}
+                    setShowCodeEditReply={() =>
+                      showCodeEditReplyHandler(comment._id, 'edit')
+                    }
+                    showInputHandler={() =>
+                      showInputHandler(comment._id, 'edit')
+                    }
+                    buttonText={'Sửa'}
+                    firstString={comment.content}
+                    editCommentHandler={() => editCommentHandler(comment._id)}
+                    onInput={e => setEditComment(e.target.innerText)}
+                    commentInput={editComment}
+                  />
+                )}
+            </div>
+          </div>
+          {comment.replies.length > 0 && (
+            <>
+              <div className={styles.viewReplies}>
+                <span
+                  className={styles.repliesCount}
+                  onClick={() => {
+                    // if (comment._id === replyCommentData.commentId) {
+                    //   console.log('RUN')
+                    //   setReplyCommentData(prev => {
+                    //     return {
+                    //       ...prev,
+                    //       commentId: null,
+                    //     }
+                    //   })
+                    // } else {
+                    // }
+                    getReplyComment(comment._id)
+                    // console.log(comment._id === replyCommentData.commentId)
+                  }}
+                >
+                  {comment._id !== replyCommentData.commentId && (
+                    <>
+                      {`Xem ${comment.replies.length} câu trả lời`}
+                      <i className="bi bi-chevron-down"></i>
+                    </>
+                  )}
+                  {comment._id === replyCommentData.commentId && (
+                    <>
+                      {`Ẩn câu trả lời`}
+                      <i className="bi bi-chevron-up"></i>
+                    </>
+                  )}
+                </span>
+              </div>
+
+              {comment._id === replyCommentData.commentId &&
+                replyCommentData.replies.map(reply => (
+                  <div
+                    className={`${styles.commentList} ${styles.replyCommentList}`}
+                    key={reply._id}
+                  >
+                    <div className={styles.avatar}>
+                      <img
+                        src={
+                          !reply.postedBy.photoURL
+                            ? noPhotoURL
+                            : reply.postedBy.photoURL
+                        }
+                        alt=""
+                      />
+                    </div>
+                    <div className={styles.commentBody}>
+                      <div
+                        className={styleCommentContent(
+                          reply._id,
+                          reply.content
+                        )}
+                      >
+                        <div>
+                          <h5>{reply.postedBy.fullName}</h5>
+                          {!reply.isCode && <span>{reply.content}</span>}
+                          {reply.isCode && (
+                            <pre tabIndex="0">
+                              <div
+                                className={styles.copyWrapper}
                                 onClick={() =>
-                                  reportStatusHandler(
-                                    reportCommentHandler(reply._id)
-                                  )
+                                  copyHandler(reply._id, reply.content)
                                 }
                               >
-                                <i className="bi bi-flag-fill"></i>
-                                <span>Báo cáo bình luận</span>
-                              </li>
-                            )}
-                          </ul>
+                                <button className={styles.copyButton}>
+                                  {!isCopy.includes(reply._id)
+                                    ? 'Copy'
+                                    : 'Copied!'}
+                                </button>
+                              </div>
+                              {reply.content}
+                            </pre>
+                          )}
+                          {reply.content.length > STRING_LENGTH_EXTEND && (
+                            <div
+                              className={styles.extendButton}
+                              onClick={() => extendHandler(reply._id)}
+                            >
+                              <strong>
+                                {!extend.includes(reply._id)
+                                  ? 'Mở rộng'
+                                  : 'Thu nhỏ'}
+                              </strong>
+                              <i
+                                className={
+                                  !extend.includes(reply._id)
+                                    ? 'bi bi-chevron-down'
+                                    : 'bi bi-chevron-up'
+                                }
+                              ></i>
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </span>
+                      </div>
+
+                      <div className={styles.commentAction}>
+                        <div className={styles.action}>
+                          <span
+                            className={styles.reactionButton}
+                            onClick={() => {
+                              console.log('Onclick')
+                              reactCommentHandler('Thích', reply._id)
+                            }}
+                          >
+                            <div className={styles.reaction}>
+                              <CommentReaction
+                                reactCommentHandler={reactCommentHandler}
+                                commentId={reply._id}
+                              />
+                            </div>
+                            Thích
+                          </span>
+                          {reply.reacts.length > 0 && (
+                            <CommentReactionCounter
+                              showModalHandler={showModalHandler}
+                              reactData={reply.reacts}
+                            />
+                          )}
+                          <span className={styles.dot}>.</span>
+                          <span
+                            className={styles.reactionButton}
+                            onClick={() => showInputHandler(reply._id, 'reply')}
+                          >
+                            Trả lời
+                          </span>
+                          <span className={styles.dot}>.</span>
+                          <span className={styles.createdAt}>
+                            {timeSinceHandler(reply.createdAt)}
+                          </span>
+                          <span
+                            className={styles.optionButton}
+                            onClick={() => showOptionHandler(reply._id)}
+                          >
+                            <span className={styles.dot}>.</span>
+                            <span className={styles.optionIcon}>
+                              <i className="bi bi-three-dots"></i>
+                            </span>
+                            {showOption === reply._id && (
+                              <div className={styles.optionWrapper}>
+                                <ul className={styles.list}>
+                                  {reply.postedBy._id === user.userId && (
+                                    <>
+                                      <li
+                                        onClick={() => {
+                                          showInputHandler(reply._id, 'edit')
+                                        }}
+                                      >
+                                        <i className="bi bi-pencil-fill"></i>
+                                        <span>Sửa bình luận</span>
+                                      </li>
+                                      <li
+                                        onClick={() => deleteComment(reply._id)}
+                                      >
+                                        <i className="bi bi-trash-fill"></i>
+                                        <span>Xóa bình luận</span>
+                                      </li>
+                                    </>
+                                  )}
+                                  {reply.postedBy._id !== user.userId && (
+                                    <li
+                                      onClick={() =>
+                                        reportStatusHandler(
+                                          reportCommentHandler(reply._id)
+                                        )
+                                      }
+                                    >
+                                      <i className="bi bi-flag-fill"></i>
+                                      <span>Báo cáo bình luận</span>
+                                    </li>
+                                  )}
+                                </ul>
+                              </div>
+                            )}
+                          </span>
+                        </div>
+                      </div>
+
+                      {showReply.includes(reply._id) &&
+                        !showEdit.includes(reply._id) && (
+                          <CommentInputSecondary
+                            userPhotoURL={user.photoURL}
+                            showCode={showCodeReply.includes(reply._id)}
+                            setShowCodeEditReply={() =>
+                              showCodeEditReplyHandler(reply._id, 'reply')
+                            }
+                            showInputHandler={() =>
+                              showInputHandler(reply._id, 'reply')
+                            }
+                            buttonText={'Trả lời'}
+                            firstString={reply.postedBy.fullName}
+                          />
+                        )}
+
+                      {showEdit.includes(reply._id) &&
+                        !showReply.includes(reply._id) && (
+                          <CommentInputSecondary
+                            userPhotoURL={user.photoURL}
+                            showCode={showCodeEdit.includes(reply._id)}
+                            setShowCodeEditReply={() =>
+                              showCodeEditReplyHandler(reply._id, 'edit')
+                            }
+                            showInputHandler={() =>
+                              showInputHandler(reply._id, 'edit')
+                            }
+                            buttonText={'Sửa'}
+                            firstString={reply.content}
+                            editCommentHandler={() =>
+                              editCommentHandler(reply._id)
+                            }
+                            onInput={e => setEditComment(e.target.innerText)}
+                            editComment={editComment}
+                          />
+                        )}
+                    </div>
                   </div>
-                </div>
-
-                {showReply.includes(reply._id) &&
-                  !showEdit.includes(reply._id) && (
-                    <CommentInputSecondary
-                      userPhotoURL={user.photoURL}
-                      showCode={showCodeReply.includes(reply._id)}
-                      setShowCodeEditReply={() =>
-                        showCodeEditReplyHandler(reply._id, 'reply')
-                      }
-                      showInputHandler={() =>
-                        showInputHandler(reply._id, 'reply')
-                      }
-                      buttonText={'Trả lời'}
-                      firstString={reply.postedBy.fullName}
-                    />
-                  )}
-
-                {showEdit.includes(reply._id) &&
-                  !showReply.includes(reply._id) && (
-                    <CommentInputSecondary
-                      userPhotoURL={user.photoURL}
-                      showCode={showCodeEdit.includes(reply._id)}
-                      setShowCodeEditReply={() =>
-                        showCodeEditReplyHandler(reply._id, 'edit')
-                      }
-                      showInputHandler={() =>
-                        showInputHandler(reply._id, 'edit')
-                      }
-                      buttonText={'Sửa'}
-                      firstString={reply.content}
-                      editCommentHandler={() => editCommentHandler(reply._id)}
-                      onInput={e => setEditComment(e.target.innerText)}
-                      editComment={editComment}
-                    />
-                  )}
-              </div>
-            </div>
-          ))}
+                ))}
+            </>
+          )}
         </div>
-      )}
-    </div>
-  ))
+      ))}
+    </>
+  )
 }
 
 export default CommentBody

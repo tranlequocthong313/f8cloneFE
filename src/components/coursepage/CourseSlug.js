@@ -22,24 +22,24 @@ const CourseSlug = () => {
   const showHandler = () => setShow(prev => !prev)
 
   useEffect(() => {
-    fetchData()
-  }, [])
+    const controller = new AbortController()
 
-  const fetchData = async () => {
-    try {
-      const res = await fetch(`${apiURL}${location.pathname}`)
-      const data = await res.json()
-
-      if (data.require) {
-        setHasRequire(true)
+    ;(async () => {
+      try {
+        const res = await fetch(`${apiURL}${location.pathname}`, {
+          signal: controller.signal,
+        })
+        const data = await res.json()
+        data.require && setHasRequire(true)
+        setCourse(data)
+        document.title = `${data.title} | by F8`
+      } catch (error) {
+        console.log(error.message)
       }
+    })()
 
-      setCourse(data)
-      document.title = `${data.title} | by F8`
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
+    return () => controller?.abort()
+  }, [])
 
   return (
     <>

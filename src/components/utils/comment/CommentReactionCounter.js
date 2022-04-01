@@ -7,29 +7,27 @@ import cryEmoji from '../../../asset/cryemoji.png'
 import angryEmoji from '../../../asset/angryemoji.png'
 
 const CommentReactionCounter = ({ showModalHandler, reactData }) => {
-  const checkEmoji = emoji => {
-    if (emoji === 'Thích') {
-      return { backgroundImage: `url(${likeEmoji})` }
-    }
+  const checkEmojiHandler = emoji => {
+    switch (emoji) {
+      case 'Thích':
+        return { backgroundImage: `url(${likeEmoji})` }
 
-    if (emoji === 'Yêu Thích') {
-      return { backgroundImage: `url(${loveEmoji})` }
-    }
+      case 'Yêu Thích':
+        return { backgroundImage: `url(${loveEmoji})` }
 
-    if (emoji === 'Haha') {
-      return { backgroundImage: `url(${Haha})` }
-    }
+      case 'Haha':
+        return { backgroundImage: `url(${Haha})` }
 
-    if (emoji === 'WoW') {
-      return { backgroundImage: `url(${wowEmoji})` }
-    }
+      case 'WoW':
+        return { backgroundImage: `url(${wowEmoji})` }
 
-    if (emoji === 'Buồn') {
-      return { backgroundImage: `url(${cryEmoji})` }
-    }
+      case 'Buồn':
+        return { backgroundImage: `url(${cryEmoji})` }
 
-    if (emoji === 'Phẫn Nộ') {
-      return { backgroundImage: `url(${angryEmoji})` }
+      case 'Phẫn':
+        return { backgroundImage: `url(${angryEmoji})` }
+      default:
+        return
     }
   }
 
@@ -41,7 +39,7 @@ const CommentReactionCounter = ({ showModalHandler, reactData }) => {
             <div
               key={item._id}
               className={styles.icon}
-              style={checkEmoji(item.emoji)}
+              style={checkEmojiHandler(item.emoji)}
             ></div>
           ))}
         <div className={styles.count}>{reactData ? reactData.length : ''}</div>

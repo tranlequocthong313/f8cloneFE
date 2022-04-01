@@ -10,17 +10,17 @@ const CommentInputSecondary = ({
   buttonText,
   firstString,
   editCommentHandler,
+  replyCommentHandler,
   onInput,
-  editComment,
+  commentInput,
   setShowCodeEditReply,
 }) => {
   const contentEditableRef = useRef()
 
   useEffect(() => {
-    if (editComment && editComment.length === 0) {
+    if (commentInput && commentInput.length === 0)
       contentEditableRef.current.innerText = ''
-    }
-  }, [editComment])
+  }, [commentInput])
 
   return (
     <div className={styles.replyComment}>
@@ -62,11 +62,13 @@ const CommentInputSecondary = ({
           </button>
           <button
             className={
-              editComment && editComment.length >= 1
+              commentInput && commentInput.length >= 1
                 ? `${styles.submit} ${styles.active}`
                 : styles.submit
             }
-            onClick={buttonText === 'Sửa' ? editCommentHandler : null}
+            onClick={
+              buttonText === 'Sửa' ? editCommentHandler : replyCommentHandler
+            }
           >
             {buttonText}
           </button>

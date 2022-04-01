@@ -6,6 +6,7 @@ import VerticalProgressBar from '../../utils/vertical-progress-bar/VerticalProgr
 import styles from './CourseItem.module.scss'
 
 const CourseItem = ({ course, location }) => {
+  // Format student count
   const formatNumber = number => {
     return new Intl.NumberFormat(['ban', 'id']).format(+number)
   }

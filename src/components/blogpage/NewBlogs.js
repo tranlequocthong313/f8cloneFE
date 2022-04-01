@@ -15,22 +15,34 @@ const NewBlogs = ({ blogs }) => {
   const [bookmarkData, setBookmarkData] = useState(null)
 
   useEffect(() => {
-    const getBookmark = async () => {
-      const token = Cookies.get('token')
+    const controller = new AbortController()
 
-      if (!token) return
+    ;(async () => {
+      try {
+        const token = Cookies.get('token')
 
-      const res = await fetch(`${apiURL}/me/bookmark`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      const data = await res.json()
-      setBookmarkData(data.bookmark)
-    }
+        if (!token) return
 
-    getBookmark()
+        const res = await fetch(
+          `${apiURL}/me/bookmark`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          },
+          {
+            signal: controller.signal,
+          }
+        )
+        const data = await res.json()
+        setBookmarkData(data.bookmark)
+      } catch (error) {
+        console.log(error)
+      }
+    })()
+
+    return () => controller?.abort()
   }, [])
 
   const bookmarkHandler = async blogId => {

@@ -15,34 +15,24 @@ const CurriculumOfCourse = ({ episodeList }) => {
   const openHandler = id =>
     setOpen(prev => {
       const isOpen = prev.includes(id)
-
       if (isOpen) {
         const newArray = prev.filter(item => item !== id)
-
-        if (newArray.length !== openAll.length) {
-          setIsOpenAll(false)
-        }
-
-        return newArray
-      } else {
-        const newArray = [...prev, id]
-
-        if (newArray.length === openAll.length) {
-          setIsOpenAll(true)
-        }
-
+        newArray.length !== openAll.length && setIsOpenAll(false)
         return newArray
       }
+      const newArray = [...prev, id]
+      newArray.length === openAll.length && setIsOpenAll(true)
+      return newArray
     })
 
   const handleOpenAll = () => {
     if (!isOpenAll) {
       setOpen(prev => [...prev, ...openAll])
       setIsOpenAll(true)
-    } else {
-      setOpen([])
-      setIsOpenAll(false)
+      return
     }
+    setOpen([])
+    setIsOpenAll(false)
   }
 
   return (

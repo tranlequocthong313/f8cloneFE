@@ -29,15 +29,7 @@ const BlogDetail = ({ blog }) => {
   const [bookmarkData, setBookmarkData] = useState(null)
 
   useEffect(() => {
-    console.log(blog.likes)
-    console.log(user.userId)
-    console.log(blog.likes.includes(user.userId))
-    // setIsLike(blog.likes.includes(user.userId))
-  }, [blog.likes, user.userId])
-
-  useEffect(() => {
     socket.on('comment', comment => {
-      console.log('socket on:', comment)
       setCommentData(prev => {
         return [comment, ...prev]
       })
@@ -45,13 +37,7 @@ const BlogDetail = ({ blog }) => {
   }, [])
 
   useEffect(() => {
-    if (showComment) {
-      document.body.style.overflow = 'hidden'
-    }
-
-    if (!showComment) {
-      document.body.style.overflow = 'overlay'
-    }
+    document.body.style.overflow = showComment ? 'hidden' : 'overlay'
   }, [showComment])
 
   useEffect(() => {
@@ -61,10 +47,7 @@ const BlogDetail = ({ blog }) => {
   const likeHandler = async () => {
     try {
       const token = Cookies.get('token')
-      if (!token) {
-        navigate('/login')
-        return
-      }
+      if (!token) return navigate('/login')
 
       const res = await fetch(`${apiURL}/blog/like`, {
         method: 'PUT',
@@ -76,44 +59,46 @@ const BlogDetail = ({ blog }) => {
       })
 
       const data = await res.json()
-
-      if (data.likes.length === 0) {
-        setLikeCount([])
-      } else {
-        setLikeCount(data.likes)
-      }
+      data.likes.length === 0 ? setLikeCount([]) : setLikeCount(data.likes)
     } catch (error) {
-      console.log(error.message)
+      console.log(error)
     }
   }
 
   useEffect(() => {
-    const getBookmark = async () => {
-      const token = Cookies.get('token')
+    const controller = new AbortController()
 
-      if (!token) return
+    ;(async () => {
+      try {
+        const token = Cookies.get('token')
+        if (!token) return
 
-      const res = await fetch(`${apiURL}/me/bookmark`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      const data = await res.json()
-      console.log(data.bookmark)
-      setBookmarkData(data.bookmark)
-    }
+        const res = await fetch(
+          `${apiURL}/me/bookmark`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          },
+          {
+            signal: controller.signal,
+          }
+        )
+        const data = await res.json()
+        setBookmarkData(data.bookmark)
+      } catch (error) {
+        console.log(error)
+      }
+    })()
 
-    getBookmark()
+    return () => controller?.abort()
   }, [])
 
   const bookmarkHandler = async blogId => {
     try {
       const token = Cookies.get('token')
-
-      if (!token) {
-        return navigate('/login')
-      }
+      if (!token) return navigate('/login')
 
       const res = await fetch(`${apiURL}/me/bookmark`, {
         method: 'PUT',
@@ -125,11 +110,10 @@ const BlogDetail = ({ blog }) => {
       })
 
       const data = await res.json()
-      console.log(data.bookmark)
-
       setBookmarkData(data.bookmark)
     } catch (error) {}
   }
+
   return (
     <Row className={styles.wrapper}>
       {/* {user && user.createBlog.isSuccess && (
@@ -147,7 +131,7 @@ const BlogDetail = ({ blog }) => {
       <Col xl={2} className={styles.colLeft}>
         <div className={styles.aside}>
           <h4 className={styles.fullName}>{blog.postedBy.fullName}</h4>
-          <p className={styles.userTitle}></p>
+          <p className={styles.userTitle}>{blog.postedBy.bio}</p>
           <hr />
           <Reaction
             commentData={commentData}

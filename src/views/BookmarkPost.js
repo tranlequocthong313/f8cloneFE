@@ -10,7 +10,6 @@ import SideBar from '../components/main-layout/sidebar/SideBar'
 import Cookies from 'js-cookie'
 import { apiURL } from '../context/constants'
 import timeSinceHandler from '../components/utils/timeSinceHandler/timeSinceHandler'
-import SecondaryCard from '../components/utils/card/SecondaryCard'
 
 const Footer = React.lazy(() =>
   import('../components/main-layout/footer/Footer')
@@ -20,30 +19,35 @@ const BookmarkPost = () => {
   const [bookmarkData, setBookmarkData] = useState(null)
 
   useEffect(() => {
-    const getUserHandler = async () => {
-      const token = Cookies.get('token')
+    const controller = new AbortController()
 
+    ;(async () => {
       try {
+        const token = Cookies.get('token')
         if (!token) return
 
-        const res = await fetch(`${apiURL}/me/bookmark-post`, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
+        const res = await fetch(
+          `${apiURL}/me/bookmark-post`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
           },
-        })
+          {
+            signal: controller.signal,
+          }
+        )
 
         const data = await res.json()
-
-        console.log(data)
 
         setBookmarkData(data)
       } catch (error) {
         console.log(error)
       }
-    }
+    })()
 
-    getUserHandler()
+    return () => controller?.abort()
   }, [])
 
   return (

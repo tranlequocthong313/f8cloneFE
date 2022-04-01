@@ -48,12 +48,10 @@ const LoginWithEmailAndPasswordForm = ({
         create: OTP,
       }
     })
-    console.log('OTP: ', OTP)
     return OTP
   }
 
   const sendOTPHandler = async option => {
-    console.log('OTP RUN')
     await fetch(`${apiURL}/register/verify`, {
       method: 'POST',
       body: JSON.stringify({
@@ -76,18 +74,9 @@ const LoginWithEmailAndPasswordForm = ({
 
   const counterHandler = () => {
     setInterval(() => {
-      setCounter(prev => {
-        if (prev > 0) {
-          return prev - 1
-        } else {
-          setIsSentVerifyCode(false)
-        }
-      })
+      setCounter(prev => (prev > 0 ? prev - 1 : setIsSentVerifyCode(false)))
     }, 1000)
   }
-
-  console.log(verifyOTP.create)
-  console.log(verifyOTP.input)
 
   // Sign up or Sign in with email and password
   const loginWithEmailAndPasswordHandler = async () => {
@@ -105,119 +94,92 @@ const LoginWithEmailAndPasswordForm = ({
         })
 
         const data = await res.json()
-
         Cookies.set('token', data.accessToken)
-
-        const obj = {
+        return dispatchAndNavigateHandler({
           ...data.user,
           accessToken: data.accessToken,
           admin: data.admin,
-        }
-
-        if (data.user) {
-          dispatchAndNavigateHandler(obj)
-        }
-      } else {
-        if (verifyOTP.input !== verifyOTP.create) {
-          console.log('OTP is not right!')
-          return
-        }
-
-        await fetch(`${apiURL}/register/`, {
-          method: 'POST',
-          body: JSON.stringify({
-            fullName,
-            email: userEmailAndPasswordInput.email,
-            password: userEmailAndPasswordInput.password,
-            activated: true,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
         })
-
-        setUserEmailAndPasswordInput(prev => {
-          return {
-            ...prev,
-            email: '',
-            password: '',
-          }
-        })
-
-        isLoginHandler()
       }
+
+      if (verifyOTP.input !== verifyOTP.create) return
+
+      await fetch(`${apiURL}/register/`, {
+        method: 'POST',
+        body: JSON.stringify({
+          fullName,
+          email: userEmailAndPasswordInput.email,
+          password: userEmailAndPasswordInput.password,
+          activated: true,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      setUserEmailAndPasswordInput(prev => {
+        return {
+          ...prev,
+          email: '',
+          password: '',
+        }
+      })
+
+      isLoginHandler()
     } catch (error) {
-      const errorMessage = error.message
-      console.log(errorMessage)
+      console.log(error)
     }
   }
 
   const checkUserEmailExistHandler = async e => {
-    if (e.target.value) {
-      if (EmailValidator.validate(e.target.value)) {
-        const res = await fetch(`${apiURL}/login/check-email`, {
-          method: 'POST',
-          body: JSON.stringify({ email: e.target.value }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
+    if (e.target.value && EmailValidator.validate(e.target.value)) {
+      const res = await fetch(`${apiURL}/login/check-email`, {
+        method: 'POST',
+        body: JSON.stringify({ email: e.target.value }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
 
-        const data = await res.json()
-
-        if (data.success) {
-          setExistEmail(true)
-        } else {
-          setExistEmail(false)
-        }
-      }
+      const data = await res.json()
+      data.success ? setExistEmail(true) : setExistEmail(false)
+      setUserEmailAndPasswordInput(prev => {
+        return { ...prev, email: e.target.value }
+      })
     }
-
-    setUserEmailAndPasswordInput(prev => {
-      return { ...prev, email: e.target.value }
-    })
   }
 
   const forgotPasswordHandler = async () => {
-    console.log(verifyOTP.input)
-    console.log(verifyOTP.create)
-    if (!isValidOTP) {
-      if (verifyOTP.input !== verifyOTP.create) {
-        console.log('OTP is not right!')
-        return
-      }
+    if (!isValidOTP && verifyOTP.input !== verifyOTP.create)
+      return console.log('OTP is not right!')
 
+    try {
       setIsValidOTP(true)
-    } else {
-      try {
-        const res = await fetch(`${apiURL}/login/reset-password`, {
-          method: 'POST',
-          body: JSON.stringify({
-            email: userEmailAndPasswordInput.email,
-            password: password.pass,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-        const data = await res.json()
-        setForgotPassword(false)
-        console.log(data.message)
-      } catch (error) {
-        console.log(error)
-      }
+
+      const res = await fetch(`${apiURL}/login/reset-password`, {
+        method: 'POST',
+        body: JSON.stringify({
+          email: userEmailAndPasswordInput.email,
+          password: password.pass,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const data = await res.json()
+      setForgotPassword(false)
+      console.log(data.message)
+    } catch (error) {
+      console.log(error)
     }
   }
 
   const checkValidSignUpForm = () => {
-    if (
-      fullName.match('[a-zA-Z][a-zA-Z ]{2,}') &&
+    return fullName.match('[a-zA-Z][a-zA-Z ]{2,}') &&
       EmailValidator.validate(userEmailAndPasswordInput.email) &&
       userEmailAndPasswordInput.password.trim().length >= 6
-    ) {
-      return true
-    }
-    return false
+      ? true
+      : false
   }
 
   return (

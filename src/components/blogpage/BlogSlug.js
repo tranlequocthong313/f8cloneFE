@@ -5,6 +5,7 @@ import BlogDetail from '../newBlog/BlogDetail'
 import styles from './BlogSlug.module.scss'
 import SideBar from '../main-layout/sidebar/SideBar'
 import { useLocation } from 'react-router-dom'
+import Footer from '../main-layout/footer/Footer'
 
 const BlogSlug = () => {
   const location = useLocation()
@@ -24,20 +25,22 @@ const BlogSlug = () => {
   }, [])
 
   useEffect(() => {
-    const fetchData = async () => {
+    const controller = new AbortController()
+
+    ;(async () => {
       try {
         const res = await fetch(`${apiURL}${location.pathname}`)
         const data = await res.json()
         console.log(data)
 
-        setBlog(data)
-        document.title = `${data.titleDisplay} | by F8`
+        setBlog(data[0])
+        document.title = `${data[0].titleDisplay} | by F8`
       } catch (error) {
         console.log(error.message)
       }
-    }
+    })()
 
-    fetchData()
+    return () => controller?.abort()
   }, [])
 
   return (
@@ -47,6 +50,7 @@ const BlogSlug = () => {
         <SideBar isBlog={true} />
       </div>
       {blog && <BlogDetail blog={blog} />}
+      <Footer />
     </>
   )
 }

@@ -5,10 +5,12 @@ import styles from './VideoItem.module.scss'
 import youtubeDurationFormat from 'youtube-duration-format'
 
 const VideoItem = ({ video }) => {
+  // Format view, like, comment count
   const formatNumber = number => {
     return new Intl.NumberFormat(['ban', 'id']).format(number)
   }
 
+  // Format youtube duration time 0:0
   const formatDuration = duration => {
     const durationFormatted = youtubeDurationFormat(duration)
     return durationFormatted

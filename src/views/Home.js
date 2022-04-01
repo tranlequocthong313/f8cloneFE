@@ -29,9 +29,13 @@ const Home = () => {
   const [videoData, setVideoData] = useState([])
 
   useEffect(() => {
-    const fetchData = async () => {
+    const controller = new AbortController()
+
+    ;(async () => {
       try {
-        const res = await fetch(`${apiURL}`)
+        const res = await fetch(`${apiURL}`, {
+          signal: controller.signal,
+        })
         const data = await res.json()
 
         setCourseFE(data.courseFE)
@@ -41,9 +45,9 @@ const Home = () => {
       } catch (error) {
         console.log(error.message)
       }
-    }
+    })()
 
-    fetchData()
+    return () => controller?.abort()
   }, [user.videoCreated])
 
   return (

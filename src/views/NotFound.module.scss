@@ -3,6 +3,9 @@
 
 .logo {
   @include flexCenter(row);
+  align-items: center;
+  display: flex;
+  padding: 20px;
 }
 
 .logoNavbar {
@@ -34,12 +37,6 @@
   }
 }
 
-@media (max-width: 1023px) {
-  .logo {
-    display: none !important;
-  }
-}
-
 .content {
   position: absolute;
   top: 45%;
@@ -51,8 +48,11 @@
   transform: translate(-50%, -50%);
 
   .errorCode {
+    background-image: url('https://static.fullstack.edu.vn/static/media/ccgradient.24a9b0fc1e10582a3f3d.jpg');
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-size: contain;
     mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='269.799' height='103.52' viewBox='0 0 269.799 103.52'%3E%3Cpath id='Path_132471' data-name='Path 132471' d='M-88.24-21.12V-1.6c0,.96.48,1.6,1.44,1.6h22.72c.96,0,1.28-.64,1.28-1.6V-21.12H-54c1.12,0,1.28-.16,1.6-.96l2.72-18.56c.16-.64-.16-1.12-1.28-1.12H-62.8V-99.04c0-1.12-.32-1.44-1.44-1.44H-92.4c-1.76,0-2.4.32-3.04,1.28l-37.28,57.6a5.721,5.721,0,0,0-.64,3.04V-22.4c0,.8.16,1.28,1.44,1.28Zm0-20.64h-20.8c4.64-6.72,16.16-26.24,21.44-36h.16c-.48,5.76-.8,21.76-.8,31.52ZM.4-80.32c8,0,13.12,6.72,13.12,29.6C13.52-29.28,8.72-20.8.56-20.8c-8,0-13.12-9.12-13.12-30.4C-12.56-73.6-6.96-80.32.4-80.32ZM.56,1.6C29.2,1.6,41.2-23.04,41.2-50.56c0-26.24-10.56-51.36-40.64-51.36-25.12,0-41.12,21.28-41.12,51.36C-40.56-21.44-28.88,1.6.56,1.6ZM97.84-21.12V-1.6c0,.96.48,1.6,1.44,1.6H122c.96,0,1.28-.64,1.28-1.6V-21.12h8.8c1.12,0,1.28-.16,1.6-.96l2.72-18.56c.16-.64-.16-1.12-1.28-1.12H123.28V-99.04c0-1.12-.32-1.44-1.44-1.44H93.68c-1.76,0-2.4.32-3.04,1.28L53.36-41.6a5.721,5.721,0,0,0-.64,3.04V-22.4c0,.8.16,1.28,1.44,1.28Zm0-20.64H77.04c4.64-6.72,16.16-26.24,21.44-36h.16c-.48,5.76-.8,21.76-.8,31.52Z' transform='translate(133.36 101.92)'/%3E%3Cdiv xmlns='' id='divScriptsUsed' style='display: none'/%3E%3Cscript xmlns='' id='globalVarsDetection' src='chrome-extension://cmkdbmfndkfgebldhnkbfhlneefdaaip/js/wrs_env.js'/%3E%3C/svg%3E");
-    background: $primary-color;
     mask-repeat: no-repeat;
     mask-position: center;
     mask-size: auto;
@@ -126,4 +126,17 @@
   text-align: center;
   width: 100%;
   bottom: 20px;
+}
+
+@media (max-width: 739px) {
+  .logo {
+    display: none !important;
+  }
+}
+
+@media (max-width: 739px) {
+  .content {
+    padding: 0 16px;
+    width: 100%;
+  }
 }

@@ -4,14 +4,13 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './User.module.scss'
 import MyCourse from './MyCourse'
 import { useLocation, useNavigate } from 'react-router-dom'
-import BackDrop from '../../../utils/backdrop/BackDrop'
 import { Link } from 'react-router-dom'
 import userDefaultImage from '../../../../asset/nobody_m.256x256.jpg'
 import { useDispatch } from 'react-redux'
 import { logout } from '../../../../actions/userAction'
 import Cookies from 'js-cookie'
 import CreateVideo from '../../../homepage/videos/CreateVideo'
-import removeAccents from 'vn-remove-accents'
+import removeActions from '../../../utils/remove-accents/removeActions'
 
 const User = ({ photoURL, displayName, email, currentPage }) => {
   const navigate = useNavigate()
@@ -65,9 +64,9 @@ const User = ({ photoURL, displayName, email, currentPage }) => {
               <div className={styles.info}>
                 <div className={styles.name}>{displayName}</div>
                 <div className={styles.fullName}>
-                  {email
-                    ? `@${email.split('@gmail.com')[0].trim()}`
-                    : `@${removeAccents(displayName.replace(/\s/g, ''))}`}
+                  {`@${removeActions(
+                    displayName.toLowerCase().replace(/\s/g, '')
+                  )}`}
                 </div>
               </div>
             </div>
@@ -90,7 +89,7 @@ const User = ({ photoURL, displayName, email, currentPage }) => {
               <hr />
               <ul className={styles.list}>
                 <li>
-                  <Link to="settings">Cài đặt</Link>
+                  <Link to="/settings">Cài đặt</Link>
                 </li>
                 <li>
                   <Link to="/login" onClick={singOutHandler}>

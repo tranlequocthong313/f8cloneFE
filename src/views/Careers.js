@@ -16,16 +16,23 @@ const Careers = () => {
   const [jobs, setJobs] = useState([])
 
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch(`${apiURL}/help/get-job`)
+    const controller = new AbortController()
 
-      const data = await res.json()
-      console.log(data)
+    ;(async () => {
+      try {
+        const res = await fetch(`${apiURL}/help/get-job`, {
+          signal: controller.signal,
+        })
 
-      setJobs(data)
-    }
+        const data = await res.json()
 
-    fetchData()
+        setJobs(data)
+      } catch (error) {
+        console.log(error)
+      }
+    })()
+
+    return () => controller?.abort()
   }, [])
 
   return (

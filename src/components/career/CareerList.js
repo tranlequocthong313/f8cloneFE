@@ -5,6 +5,7 @@ import styles from './CareerList.module.scss'
 import timeSinceHandler from '../utils/timeSinceHandler/timeSinceHandler'
 
 const CareerList = ({ jobs }) => {
+  // Money format
   const formatNumber = number => {
     return new Intl.NumberFormat(['ban', 'id']).format(number)
   }

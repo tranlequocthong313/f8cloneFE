@@ -12,19 +12,8 @@ const LearningTrackItem = ({ episodes }) => {
   const openHandler = id =>
     setOpen(prev => {
       const isOpen = prev.includes(id)
-      let newArray = []
-
-      if (isOpen) {
-        newArray = prev.filter(item => item !== id)
-      } else {
-        newArray = [...prev, id]
-      }
-
-      return newArray
+      return isOpen ? prev.filter(item => item !== id) : [...prev, id]
     })
-
-  //f9a4cf08-45b5-4ec6-8958-d6c62dd6da81
-  //2f742497-e3aa-425c-99ec-373ce617c46c
 
   // Style lesson item
   const styleHandler = (learned, id) => {
@@ -32,9 +21,8 @@ const LearningTrackItem = ({ episodes }) => {
       return `${styles.lessonItem} ${styles.locked}`
     } else if (active === id) {
       return `${styles.lessonItem} ${styles.active}`
-    } else {
-      return styles.lessonItem
     }
+    return styles.lessonItem
   }
 
   return episodes.map(episode => (

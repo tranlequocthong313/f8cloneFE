@@ -6,12 +6,8 @@ const SelectCountry = memo(({ onChange }) => {
   const [countryCode, setCountryCode] = useState([])
 
   useEffect(() => {
-    getCountryCode()
-  }, [])
-
-  const getCountryCode = () => {
     setCountryCode(COUNTRY_CODE_DUMMY)
-  }
+  }, [])
 
   return (
     <select className={styles.selectCountry} onChange={onChange}>

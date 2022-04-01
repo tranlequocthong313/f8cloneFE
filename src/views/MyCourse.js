@@ -13,19 +13,23 @@ const MyCourse = () => {
   const [courseFE, setCourseFE] = useState([])
 
   useEffect(() => {
-    fetchData()
+    const controller = new AbortController()
+
+    ;(async () => {
+      try {
+        const res = await fetch(`${apiURL}`, {
+          signal: controller.signal,
+        })
+        const data = await res.json()
+
+        setCourseFE(data.courseFE)
+      } catch (error) {
+        console.log(error.message)
+      }
+    })()
+
+    return () => controller?.abort()
   }, [])
-
-  const fetchData = async () => {
-    try {
-      const res = await fetch(`${apiURL}`)
-      const data = await res.json()
-
-      setCourseFE(data.courseFE)
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
 
   return (
     <>

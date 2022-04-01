@@ -18,6 +18,7 @@ const Comment = ({
   blogId,
 }) => {
   const userPhotoURL = useSelector(state => state.user.photoURL)
+  const commentRef = useRef()
 
   const [showSubmit, setShowSubmit] = useState(false)
   const [showCode, setShowCode] = useState(false)
@@ -27,41 +28,18 @@ const Comment = ({
     show: false,
   })
 
-  const reportStatusHandler = status => {
-    if (status) {
-      setReportStatus(prev => {
-        return {
-          ...prev,
-          show: true,
-          isSuccess: true,
-        }
-      })
-    } else {
-      setReportStatus(prev => {
-        return {
-          ...prev,
-          show: true,
-          isSuccess: false,
-        }
-      })
-    }
+  const createStatus = (isSuccess, show) => {
+    setReportStatus(prev => {
+      return {
+        ...prev,
+        show,
+        isSuccess,
+      }
+    })
   }
 
-  const commentRef = useRef()
-
-  // useEffect(() => {
-  //   const scrollHandler = () => {
-  //     const scrollY = commentRef.current.
-  //     console.log(scrollY)
-  //   }
-
-  //   window.addEventListener('scroll', scrollHandler)
-
-  //   return () => {
-  //     console.log('Cleaner running')
-  //     window.removeEventListener('scroll', scrollHandler)
-  //   }
-  // })
+  const reportStatusHandler = status =>
+    status ? createStatus(true, true) : createStatus(false, true)
 
   return (
     <>
@@ -98,6 +76,7 @@ const Comment = ({
                   showModalHandler={setShowModal}
                   setCommentData={setCommentData}
                   reportStatusHandler={reportStatusHandler}
+                  blogId={blogId}
                 />
               )}
             </div>

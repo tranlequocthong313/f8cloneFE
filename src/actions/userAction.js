@@ -40,4 +40,11 @@ const createBlog = payload => {
   }
 }
 
-export { login, logout, setLoading, setAuth, createVideo, createBlog }
+const settings = payload => {
+  return {
+    type: 'SETTING',
+    payload,
+  }
+}
+
+export { login, logout, setLoading, setAuth, createVideo, createBlog, settings }

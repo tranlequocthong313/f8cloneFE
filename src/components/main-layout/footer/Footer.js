@@ -20,10 +20,10 @@ const Footer = () => {
               <Address />
             </Col>
             <Col sm={12} md={6} lg={3}>
-              <Support />
+              <About />
             </Col>
             <Col sm={12} md={6} lg={3}>
-              <About />
+              <Support />
             </Col>
             <Col sm={12} md={6} lg={3}>
               <Manager />

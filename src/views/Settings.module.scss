@@ -1,7 +1,47 @@
+@import '../sass/color';
+
+.settings {
+  max-width: 1100px;
+  margin: 66px auto 0 auto;
+  padding-top: 0;
+}
+
 .wrapper {
-  height: 100vh;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin-top: 54px;
+  padding-bottom: 48px;
+
+  .container {
+    margin-bottom: 30px;
+  }
+
+  .heading {
+    color: $text-color;
+    font-size: 28px;
+    font-weight: 600;
+  }
+
+  .userInfo {
+    margin-bottom: 30px;
+
+    h2 {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      color: $text-color;
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0 0 20px;
+      padding: 10px 0;
+    }
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1239px) {
+  .settings {
+    width: 984px;
+  }
+}
+
+@media (min-width: 740px) and (max-width: 1023px) {
+  .settings {
+    width: 644px;
+  }
 }

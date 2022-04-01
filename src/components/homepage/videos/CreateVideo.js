@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 import styles from './CreateVideo.module.scss'
 import { createVideo } from '../../../actions/userAction'
 import MainToast from '../../utils/toast/MainToast'
-import removeAccents from 'vn-remove-accents'
+import removeActions from '../../utils/remove-accents/removeActions'
 
 const CreateVideo = () => {
   const dispatch = useDispatch()
@@ -16,8 +16,17 @@ const CreateVideo = () => {
     show: false,
   })
   const [showModal, setShowModal] = useState(false)
-
   const showModalHandler = () => setShowModal(prev => !prev)
+
+  const createStatusHandler = (isSuccess, show) => {
+    setCreateStatus(prev => {
+      return {
+        ...prev,
+        isSuccess,
+        show,
+      }
+    })
+  }
 
   const getYoutubeData = async () => {
     showModalHandler()
@@ -27,34 +36,27 @@ const CreateVideo = () => {
       )
 
       const data = await res.json()
-
-      console.log(data)
+      const youtube = data.items[0]
 
       const videoData = {
         videoId,
-        duration: data.items[0].contentDetails.duration,
-        title: data.items[0].snippet.localized.title,
-        search: removeAccents(data.items[0].snippet.localized.title),
-        image: data.items[0].snippet.thumbnails.standard
-          ? data.items[0].snippet.thumbnails.standard.url
-          : data.items[0].snippet.thumbnails.high
-          ? data.items[0].snippet.thumbnails.high.url
-          : data.items[0].snippet.thumbnails.medium.url,
-        viewCount: +data.items[0].statistics.viewCount,
-        likeCount: +data.items[0].statistics.likeCount,
-        commentCount: +data.items[0].statistics.commentCount,
+        duration: youtube.contentDetails.duration,
+        title: youtube.snippet.localized.title,
+        search: removeActions(youtube.snippet.localized.title),
+        image: youtube.snippet.thumbnails.standard // Many videos doesn't have thumbnails standard
+          ? youtube.snippet.thumbnails.standard.url
+          : youtube.snippet.thumbnails.high
+          ? youtube.snippet.thumbnails.high.url
+          : youtube.snippet.thumbnails.medium.url,
+        viewCount: +youtube.statistics.viewCount,
+        likeCount: +youtube.statistics.likeCount,
+        commentCount: +youtube.statistics.commentCount,
       }
 
       createVideoHandler(videoData)
     } catch (error) {
-      console.log(error.message)
-      setCreateStatus(prev => {
-        return {
-          ...prev,
-          isSuccess: false,
-          show: true,
-        }
-      })
+      console.log(error)
+      createStatus(false, true)
     }
   }
 
@@ -70,28 +72,15 @@ const CreateVideo = () => {
 
       const data = await res.json()
 
-      if (data.success) {
-        dispatch(createVideo({ videoData }))
-        setCreateStatus(prev => {
-          return {
-            ...prev,
-            isSuccess: true,
-            show: true,
-          }
-        })
-      } else {
-        setCreateStatus(prev => {
-          return {
-            ...prev,
-            isSuccess: false,
-            show: true,
-          }
-        })
-      }
+      if (!data.success) return createStatusHandler(false, true)
+
+      dispatch(createVideo({ videoData }))
+      createStatusHandler(true, true)
     } catch (error) {
       console.log(error)
     }
   }
+
   return (
     <>
       <div className={styles.videoCreate} onClick={showModalHandler}>

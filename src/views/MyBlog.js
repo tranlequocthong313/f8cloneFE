@@ -29,31 +29,34 @@ const MyBlog = () => {
   const [myBlog, setMyBlog] = useState(null)
 
   useEffect(() => {
-    getMyBlogHandler()
+    const controller = new AbortController()(async () => {
+      try {
+        const token = Cookies.get('token')
+
+        if (!token) return
+
+        const res = await fetch(
+          `${apiURL}/blog/my-post`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          },
+          {
+            signal: controller.signal,
+          }
+        )
+        const data = await res.json()
+        console.log(data)
+        // setMyBlog(data.myBlog)
+      } catch (error) {
+        console.log(error)
+      }
+    })()
+
+    return () => controller?.abort()
   }, [])
-
-  const getMyBlogHandler = async () => {
-    try {
-      const token = Cookies.get('token')
-
-      if (!token) return
-
-      const res = await fetch(`${apiURL}/blog/my-post`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      const data = await res.json()
-      console.log(
-        '🚀 ~ file: MyBlog.js ~ line 39 ~ getMyBlogHandler ~ data',
-        data
-      )
-      // setMyBlog(data.myBlog)
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
   return (
     <>

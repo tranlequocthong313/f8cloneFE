@@ -30,11 +30,7 @@ const NewBlog = () => {
     document.title = title
 
     // User has to enter title and content then the 'POST' button is active
-    if (title && content) {
-      setIsValid(true)
-    } else {
-      setIsValid(false)
-    }
+    title && content ? setIsValid(true) : setIsValid(false)
   }, [title, content])
 
   const blogDataHandler = () => {
@@ -59,9 +55,6 @@ const NewBlog = () => {
     const newContent = text.replace(/\d/g, '')
     setContent(newContent)
   }
-
-  console.log(title)
-  console.log(content)
 
   return (
     <>

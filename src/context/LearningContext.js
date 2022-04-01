@@ -26,20 +26,24 @@ const LearningContextProvider = ({ children }) => {
   const [course, setCourse] = useState(null)
 
   useEffect(() => {
-    fetchData()
+    const controller = new AbortController()
+
+    ;(async () => {
+      try {
+        const res = await fetch(`${apiURL}${location.pathname}`, {
+          signal: controller.signal,
+        })
+        const data = await res.json()
+
+        setCourse(data)
+        // getLearningEpisode(data.episode)
+      } catch (error) {
+        console.log(error.message)
+      }
+    })()
+
+    return () => controller?.abort()
   }, [])
-
-  const fetchData = async () => {
-    try {
-      const res = await fetch(`${apiURL}${location.pathname}`)
-      const data = await res.json()
-
-      setCourse(data)
-      // getLearningEpisode(data.episode)
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
 
   // const getLearningEpisode = episodes => {
   //   const learningEpisode = episodes.find(episode => episode.learning)

@@ -1,4 +1,3 @@
-import React from 'react'
 import Blog from './views/Blog'
 import Courses from './views/Courses'
 import LearningPath from './views/LearningPath'
@@ -18,7 +17,6 @@ import Cookies from 'js-cookie'
 import { setAuth } from './actions/userAction'
 import { apiURL } from './context/constants'
 import BlogSlug from './components/blogpage/BlogSlug'
-import io from 'socket.io-client'
 import Auth from './views/Auth'
 import NotFound from './views/NotFound'
 import Learning from './views/Learning'
@@ -27,21 +25,8 @@ import NewBlog from './views/NewBlog'
 import Settings from './views/Settings'
 import BookmarkPost from './views/BookmarkPost'
 import MyBlog from './views/MyBlog'
-import removeAccents from 'vn-remove-accents'
 
 function App() {
-  // const socket = io.connect(apiURL)
-  // useEffect(() => {
-  //   socket.on('message', ({ message }) => {
-  //     console.log(message)
-  //   })
-  // })
-
-  // useEffect(() => {
-  //   socket.emit('message', { message: 'Thong dep trai' })
-  // }, [])
-
-  console.log('NODE_ENV: ', process.env.NODE_ENV)
   const dispatch = useDispatch()
   const location = useLocation()
 
@@ -53,42 +38,47 @@ function App() {
   }, [location.pathname])
 
   useEffect(() => {
-    const getUserHandler = async () => {
-      const token = Cookies.get('token')
+    const controller = new AbortController()
 
+    ;(async () => {
       try {
+        const token = Cookies.get('token')
         if (!token) return
 
-        const res = await fetch(`${apiURL}/api/auth`, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
+        const res = await fetch(
+          `${apiURL}/api/auth`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
           },
-        })
+          {
+            signal: controller.signal,
+          }
+        )
 
         const data = await res.json()
 
-        const obj = {
-          ...data.user,
-          accessToken: token,
-          admin: data.admin,
-        }
-        console.log(obj)
-
-        dispatch(setAuth(obj))
+        dispatch(
+          setAuth({
+            ...data.user,
+            accessToken: token,
+            admin: data.admin,
+          })
+        )
       } catch (error) {
         console.log(error)
       }
-    }
+    })()
 
-    getUserHandler()
+    return () => controller?.abort()
   }, [])
 
   useEffect(() => {
-    if (location !== 'new-blog') {
+    if (location !== 'new-blog')
       document.title =
         'F8 - Học Lập Trình Để Đi Làm | F8 trên Youtube | F8 trên Facebook'
-    }
   }, [location])
 
   return (
