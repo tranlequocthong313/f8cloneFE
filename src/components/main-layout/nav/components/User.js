@@ -3,19 +3,17 @@ import { Image } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './User.module.scss'
 import MyCourse from './MyCourse'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
-import userDefaultImage from '../../../../asset/nobody_m.256x256.jpg'
+import userDefaultImage from '../../../../asset/images/nobody_m.256x256.jpg'
 import { useDispatch } from 'react-redux'
 import { logout } from '../../../../actions/userAction'
 import Cookies from 'js-cookie'
-import CreateVideo from '../../../homepage/videos/CreateVideo'
 import removeActions from '../../../utils/remove-accents/removeActions'
 
 const User = ({ photoURL, displayName, email, currentPage }) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const location = useLocation()
 
   const [show, setShow] = useState(false)
 
@@ -44,7 +42,6 @@ const User = ({ photoURL, displayName, email, currentPage }) => {
 
   return (
     <>
-      {location.pathname === '/' && <CreateVideo />}
       <MyCourse />
       {/* <Notification notifications={NOTIFICATION_DUMMY_DATA} /> */}
       <>

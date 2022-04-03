@@ -1,6 +1,6 @@
 const initialState = {
   userId: null,
-  admin: false,
+  isAdmin: false,
   displayName: null,
   photoURL: null,
   email: null,
@@ -26,6 +26,7 @@ const initialState = {
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'LOGIN':
+      console.log(action.payload.isAdmin)
       return {
         ...state,
         userId: action.payload._id,
@@ -37,7 +38,7 @@ const userReducer = (state = initialState, action) => {
           : '',
         isLoggedIn: !!action.payload.accessToken,
         bio: action.payload.bio ? action.payload.bio : '',
-        admin: action.payload.admin,
+        isAdmin: action.payload.isAdmin,
         socials: action.payload.socials ? action.payload.socials : {},
       }
 
@@ -57,6 +58,7 @@ const userReducer = (state = initialState, action) => {
       }
 
     case 'SET_AUTH':
+      console.log(action.payload.isAdmin)
       return {
         ...state,
         userId: action.payload._id,
@@ -68,7 +70,7 @@ const userReducer = (state = initialState, action) => {
           : '',
         bio: action.payload.bio ? action.payload.bio : '',
         isLoggedIn: !!action.payload.accessToken,
-        admin: action.payload.admin,
+        isAdmin: action.payload.isAdmin,
         socials: action.payload.socials ? action.payload.socials : {},
       }
 

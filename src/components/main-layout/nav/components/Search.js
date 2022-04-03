@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './Search.module.scss'
 import { Link } from 'react-router-dom'
 import { apiURL } from '../../../../context/constants'
-import noPhotoURL from '../../../../asset/nobody_m.256x256.jpg'
+import noPhotoURL from '../../../../asset/images/nobody_m.256x256.jpg'
 
 const Search = ({ currentPage }) => {
   const [searchInput, setSearchInput] = useState('')
@@ -55,7 +55,7 @@ const Search = ({ currentPage }) => {
   return (
     <>
       {currentPage !== 'new-blog' && (
-        <form
+        <div
           className={
             isFocus
               ? `${styles.searchWrapper} ${styles.focus}`
@@ -86,8 +86,7 @@ const Search = ({ currentPage }) => {
             <div className={styles.dropDown}>
               <div className={styles.resultWrapper}>
                 <div className={styles.header}>
-                  <i className="bi bi-search"></i>
-
+                  <i className="fa-regular fa-magnifying-glass"></i>
                   {result.courses.length === 0 &&
                   result.blogs.length === 0 &&
                   result.videos.length === 0 &&
@@ -165,7 +164,7 @@ const Search = ({ currentPage }) => {
               </div>
             </div>
           )}
-        </form>
+        </div>
       )}
     </>
   )

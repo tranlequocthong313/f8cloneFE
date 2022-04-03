@@ -30,6 +30,8 @@
     margin-left: 10px;
     background-color: #f3f3f3;
     display: none;
+
+    
   }
 }
 
@@ -58,6 +60,14 @@
   padding: 8px 0 8px 8px;
   margin-right: 4px;
   text-decoration: none;
+
+  i {
+    font-size: 12px;
+    margin-left: 4px;
+    position: relative;
+    top: -1px;
+    transition: .3s ease;
+  }
 
   &:hover {
     text-decoration: underline;

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import styles from './Comment.module.scss'
 import CommentHeader from './CommentHeader'
 import CommentInput from './CommentInput'
@@ -41,21 +41,26 @@ const Comment = ({
   const reportStatusHandler = status =>
     status ? createStatus(true, true) : createStatus(false, true)
 
+  const [visible, setVisible] = useState(false)
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
+  }
+
   return (
     <>
       {showModal && (
         <CommentModal showModalHandler={() => setShowModal(false)} />
       )}
-      <div
-        className={styles.wrapper}
-        onClick={e => e.stopPropagation()}
-        ref={commentRef}
-      >
+      <div className={styles.wrapper} onClick={e => e.stopPropagation()}>
         <div className={styles.container}>
           <div className={styles.closeButton} onClick={setShowComment}>
             <i className="bi bi-x"></i>
           </div>
-          <div className={styles.content}>
+          <div className={styles.content} ref={commentRef}>
             <div className={styles.detailRow}>
               <CommentHeader commentData={commentData} />
               <CommentInput
@@ -81,7 +86,7 @@ const Comment = ({
               )}
             </div>
           </div>
-          <ScrollToTop />
+          {visible && <ScrollToTop scrollToTop={scrollToTop} />}
         </div>
         <MainToast
           createStatus={reportStatus}

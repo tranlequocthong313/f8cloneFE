@@ -7,7 +7,7 @@ import styles from './Header.module.scss'
 import MobileNav from './components/MobileNav'
 import '../../../sass/_custom.scss'
 import { useSelector } from 'react-redux'
-import NewPost from '../../newBlog/NewPost'
+import NewPost from '../../new-post/NewPost'
 import { Link } from 'react-router-dom'
 import User from './components/User'
 

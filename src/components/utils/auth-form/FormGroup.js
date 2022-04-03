@@ -1,7 +1,7 @@
 import React from 'react'
 import { Form, Image } from 'react-bootstrap'
 import styles from './FormGroup.module.scss'
-import SelectCountry from '../../authpage/buttons/SelectCountry'
+import SelectCountry from '../../auth/buttons/SelectCountry'
 
 const FormGroup = ({
   onClick,

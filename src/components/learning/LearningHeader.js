@@ -2,14 +2,14 @@ import React from 'react'
 import { Navbar, Image } from 'react-bootstrap'
 import styles from './LearningHeader.module.scss'
 import { Link } from 'react-router-dom'
-import logo from '../../asset/f8_icon.png'
+import logo from '../../asset/images/f8_icon.png'
 import CircularProgressBar from '../utils/circular-progress-bar/CircularProgressBar'
 
 const LearningHeader = () => {
   return (
     <Navbar className={styles.navHeader}>
       <Link to="/" className={styles.backHome}>
-        <i className="bi bi-chevron-left"></i>
+        <i className="fa-solid fa-chevron-left"></i>
       </Link>
       <Navbar.Brand className={styles.logo}>
         <Link to="/">
@@ -28,10 +28,10 @@ const LearningHeader = () => {
           </p>
         </div>
         <button className={styles.actionButton}>
-          <i className="bi bi-file-earmark-fill"></i> <span>Ghi chú</span>
+          <i className="fa-solid fa-file"></i> <span>Ghi chú</span>
         </button>
         <button className={styles.actionButton}>
-          <i className="bi bi-question-circle-fill"></i> <span>Hướng dẫn</span>
+          <i className="fa-solid fa-circle-question"></i> <span>Hướng dẫn</span>
         </button>
       </div>
     </Navbar>

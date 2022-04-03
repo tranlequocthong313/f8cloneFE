@@ -1,8 +1,8 @@
 import React from 'react'
 import Canvas from '../canvas/Canvas'
 import styles from './CommentModal.module.scss'
-import noPhotoURL from '../../../asset/nobody_m.256x256.jpg'
-import likeEmoji from '../../../asset/likeemoji.png'
+import noPhotoURL from '../../../asset/images/nobody_m.256x256.jpg'
+import likeEmoji from '../../../asset/images/likeemoji.png'
 
 const CommentModal = ({ showModalHandler }) => {
   return (

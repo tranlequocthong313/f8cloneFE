@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { LearningContext } from '../../context/LearningContext'
-import VideoPlayer from '../coursepage/VideoPlayer'
+import VideoPlayer from '../course/VideoPlayer'
 import styles from './LearningVideo.module.scss'
 
 const LearningVideo = () => {

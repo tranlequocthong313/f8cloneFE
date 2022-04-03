@@ -24,7 +24,7 @@ const Notification = ({ notifications }) => {
     <>
       {/* <BackDrop show={show} onClick={showHandler} /> */}
       <i
-        className={`${styles.userNotification} bi bi-bell-fill`}
+        className={`${styles.userNotification} fa-regular fa-bell`}
         onClick={showHandler}
       >
         {/* {show && (

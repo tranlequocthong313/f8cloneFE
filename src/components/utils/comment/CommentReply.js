@@ -1,5 +1,5 @@
 import styles from './CommentReply.module.scss'
-import noPhotoURL from '../../../asset/nobody_m.256x256.jpg'
+import noPhotoURL from '../../../asset/images/nobody_m.256x256.jpg'
 import CommentReaction from './CommentReaction'
 import CommentReactionCounter from './CommentReactionCounter'
 import timeSinceHandler from '../timeSinceHandler/timeSinceHandler'
@@ -79,8 +79,8 @@ const CommentReply = ({
                   <i
                     className={
                       !extend.includes(reply._id)
-                        ? 'bi bi-chevron-down'
-                        : 'bi bi-chevron-up'
+                        ? 'fa-regular fa-chevron-down'
+                        : 'fa-regular fa-chevron-up'
                     }
                   ></i>
                 </div>
@@ -128,7 +128,7 @@ const CommentReply = ({
               >
                 <span className={styles.dot}>.</span>
                 <span className={styles.optionIcon}>
-                  <i className="bi bi-three-dots"></i>
+                  <i className="fa-solid fa-ellipsis"></i>
                 </span>
                 {showOption === reply._id && (
                   <div className={styles.optionWrapper}>
@@ -140,11 +140,11 @@ const CommentReply = ({
                               showEditInputHandler(reply._id)
                             }}
                           >
-                            <i className="bi bi-pencil-fill"></i>
+                            <i className="fa-solid fa-pen"></i>
                             <span>Sửa bình luận</span>
                           </li>
                           <li onClick={() => deleteComment(reply._id)}>
-                            <i className="bi bi-trash-fill"></i>
+                            <i className="fa-solid fa-trash"></i>
                             <span>Xóa bình luận</span>
                           </li>
                         </>
@@ -155,7 +155,7 @@ const CommentReply = ({
                             reportStatusHandler(reportCommentHandler(reply._id))
                           }
                         >
-                          <i className="bi bi-flag-fill"></i>
+                          <i className="fa-solid fa-flag"></i>
                           <span>Báo cáo bình luận</span>
                         </li>
                       )}

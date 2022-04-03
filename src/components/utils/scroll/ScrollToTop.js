@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './ScrollToTop.module.scss'
 
-const ScrollToTop = ({ onScroll }) => {
+const ScrollToTop = ({ scrollToTop }) => {
   return (
-    <div className={styles.wrapper} onClick={onScroll}>
-      <i className="bi bi-arrow-up-short"></i>
+    <div className={styles.wrapper} onClick={scrollToTop}>
+      <i className="fa-solid fa-arrow-up"></i>
     </div>
   )
 }

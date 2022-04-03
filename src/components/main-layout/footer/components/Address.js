@@ -1,8 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styles from './Address.module.scss'
-import f8logo from '../../../../asset/f8_icon.png'
-import dmcalogo from '../../../../asset/dmca.png'
+import f8logo from '../../../../asset/images/f8_icon.png'
+import dmcalogo from '../../../../asset/images/dmca.png'
 
 const Address = () => {
   return (

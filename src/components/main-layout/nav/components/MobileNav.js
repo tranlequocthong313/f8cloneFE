@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import styles from './MobileNav.module.scss'
 import '../../../../sass/_offCanvas.scss'
 import { useDispatch, useSelector } from 'react-redux'
-import userDefaultImage from '../../../../asset/nobody_m.256x256.jpg'
+import userDefaultImage from '../../../../asset/images/nobody_m.256x256.jpg'
 import { logout } from '../../../../actions/userAction'
 import { NavContext } from '../../../../context/NavContext'
 import Cookies from 'js-cookie'
@@ -60,7 +60,8 @@ const MobileNav = ({ photoURL }) => {
             <ul className={styles.list}>
               <li>
                 <Link to="/login">
-                  <i className="bi bi-box-arrow-in-right"></i>Đăng nhập
+                  <i className="fa-solid fa-right-to-bracket"></i>
+                  Đăng nhập
                 </Link>
               </li>
             </ul>
@@ -74,7 +75,7 @@ const MobileNav = ({ photoURL }) => {
               className={active === 'my-course' ? styles.active : styles.item}
             >
               <Link to="/my-course">
-                <i className="bi bi-book-fill"></i>
+                <i className="fa-solid fa-book-open"></i>
                 <span>Khóa học của tôi</span>
               </Link>
             </li>
@@ -88,7 +89,7 @@ const MobileNav = ({ photoURL }) => {
               className={active === '' ? styles.active : styles.item}
             >
               <Link to="/">
-                <i className="bi bi-house-door-fill"></i>
+                <i className="fa-solid fa-house"></i>
                 <span>Trang chủ</span>
               </Link>
             </li>
@@ -102,7 +103,7 @@ const MobileNav = ({ photoURL }) => {
               }
             >
               <Link to="/learning-path">
-                <i className="bi bi-bar-chart-fill"></i>
+                <i className="fa-solid fa-road"></i>
                 <span>Lộ trình</span>
               </Link>
             </li>
@@ -114,7 +115,7 @@ const MobileNav = ({ photoURL }) => {
               className={active === 'courses' ? styles.active : styles.item}
             >
               <Link to={'/courses' || '/course-slug'}>
-                <i className="bi bi-lightbulb-fill"></i>
+                <i className="fa-solid fa-lightbulb"></i>
                 <span>Khóa học</span>
               </Link>
             </li>
@@ -126,7 +127,7 @@ const MobileNav = ({ photoURL }) => {
               className={active === 'blog' ? styles.active : styles.item}
             >
               <Link to="/blog">
-                <i className="bi bi-book-fill"></i>
+                <i className="fa-solid fa-newspaper"></i>
                 <span>Blog</span>
               </Link>
             </li>
@@ -140,7 +141,7 @@ const MobileNav = ({ photoURL }) => {
               className={active === 'me' ? styles.active : styles.item}
             >
               <Link to="/bookmark-post">
-                <i className="bi bi-bookmark-fill"></i>
+                <i className="fa-solid fa-bookmark"></i>
                 <span>Bài viết đã lưu</span>
               </Link>
             </li>
@@ -154,7 +155,7 @@ const MobileNav = ({ photoURL }) => {
               className={active === 'about-us' ? styles.active : styles.item}
             >
               <Link to="/about-us">
-                <i className="bi bi-info-circle-fill"></i>
+                <i className="fa-solid fa-circle-info"></i>
                 <span>Giới thiệu</span>
               </Link>
             </li>
@@ -166,7 +167,7 @@ const MobileNav = ({ photoURL }) => {
               className={active === 'careers' ? styles.active : styles.item}
             >
               <Link to="/careers">
-                <i className="bi bi-people-fill"></i>
+                <i className="fa-solid fa-users"></i>
                 <span>Cơ hội việc làm</span>
               </Link>
             </li>
@@ -175,7 +176,7 @@ const MobileNav = ({ photoURL }) => {
             <ul className={styles.list}>
               <li onClick={handleShow} className={styles.item}>
                 <Link to="/login" onClick={singOutHandler}>
-                  <i className="bi bi-box-arrow-in-right"></i>
+                  <i className="fa-solid fa-right-from-bracket"></i>
                   <span>Đăng xuất</span>
                 </Link>
               </li>

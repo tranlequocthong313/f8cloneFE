@@ -1,18 +1,59 @@
 @import './sass/color';
-// @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,900&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap');
 #root {
   overflow: hidden;
 }
 
+@font-face {
+  font-family: regularFont;
+  src: url('./asset/fonts/Montserrat-Regular.ttf');
+}
+
+@font-face {
+  font-family: mediumFont;
+  src: url('./asset/fonts/Montserrat-Medium.ttf');
+}
+
+@font-face {
+  font-family: semiBoldFont;
+  src: url('./asset/fonts/Montserrat-Bold.ttf');
+}
+
+@font-face {
+  font-family: boldFont;
+  src: url('./asset/fonts/Montserrat-Black.ttf');
+}
+
+@font-face {
+  font-family: extraBoldFont;
+  src: url('./asset/fonts/Montserrat-Black.ttf');
+}
+
 body {
-  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+  font-family: regularFont, Arial, Helvetica, sans-serif;
   margin: 0 14px;
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+
+  h1 {
+    font-family: extraBoldFont, Arial, Helvetica, sans-serif;
+  }
+  
+  h2 {
+    font-family: boldFont, Arial, Helvetica, sans-serif;
+  }
+  
+  h3 {
+    font-family: semiBoldFont, Arial, Helvetica, sans-serif;
+  }
+
+  h4 {
+    font-family: mediumFont, Arial, Helvetica, sans-serif;
+  }
 }
+
+
 
 ::selection {
   color: #fff;

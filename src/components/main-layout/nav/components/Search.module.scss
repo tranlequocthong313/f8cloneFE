@@ -2,16 +2,15 @@
 @import '../../../../sass/color';
 
 .searchWrapper {
-  width: 420px;
-  height: 40px;
-  padding: 0 16px 0 8px;
   border-radius: 20px;
   border: 2px solid #e8e8e8;
   transition: border-color 0.2s ease-in-out;
   background-color: #fff;
-  margin: 0 auto;
   @include flexCenter(row);
-  flex: 1 1;
+  padding: 0 16px 0 8px;
+  margin: 0 auto;
+  width: 420px;
+  height: 40px;
   z-index: 100;
 
   &.focus {

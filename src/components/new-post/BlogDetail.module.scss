@@ -1,0 +1,156 @@
+@import '../../sass/color';
+
+.wrapper {
+  margin-top: calc(66px + 24px);
+  line-height: 1.6;
+  padding: 0 44px 60px;
+
+  .colLeft {
+    margin-left: 8.33333%;
+    .aside {
+      padding-right: 48px;
+      position: sticky;
+      top: 116px;
+      .fullName {
+        color: #292929;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 0;
+      }
+
+      .userTitle {
+        color: #757575;
+        font-size: 14px;
+        margin-top: 4px;
+      }
+
+      hr {
+        border: none;
+        height: 1px;
+      }
+    }
+  }
+
+  .colRight {
+    word-wrap: break-word;
+    .heading {
+      color: #222;
+      font-size: 40px;
+      font-weight: 700;
+      margin: 25px 0;
+      line-height: 1.6;
+    }
+
+    .header {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 28px;
+
+      .user {
+        display: flex;
+        .avatar {
+          border-radius: 50%;
+          height: 48px;
+          width: 48px;
+        }
+        .info {
+          display: flex;
+          flex-direction: column;
+          font-size: 14px;
+          justify-content: center;
+          margin-left: 12px;
+        }
+        .name {
+          color: #292929;
+          font-size: 16px;
+          font-weight: 600;
+          margin: 0;
+        }
+      }
+      .time {
+        color: #757575;
+        margin: 0;
+
+        .dot {
+          color: #757575;
+          font-weight: 500;
+          padding: 0 4px;
+        }
+      }
+    }
+
+    .markDown {
+      font-size: 18px;
+      line-height: 2;
+    }
+
+    .actions {
+      color: #757575;
+      display: flex;
+      font-size: 16px;
+      margin-right: -8px;
+      user-select: none;
+
+      .bookmark {
+        color: #757575;
+        padding: 4px 8px;
+        cursor: pointer;
+
+        i {
+          &.bookmarkActive {
+            color: $primary-color;
+
+            &:hover {
+              color:  $primary-color;
+            }
+          }
+          &:hover {
+            color: #292929;
+          }
+        }
+      }
+      .option {
+        cursor: pointer;
+        padding: 4px 8px;
+        &:hover {
+          color: #292929;
+        }
+      }
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 48px;
+
+      a {
+        background-color: #f2f2f2;
+        border-radius: 3px;
+        color: #666;
+        font-size: 14px;
+        margin: 8px 8px 0 0;
+        padding: 4px 10px;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .colLeft {
+    display: none;
+  }
+}
+
+@media (min-width: 740px) and (max-width: 1023px) {
+  .wrapper {
+    padding: 0 32px 60px !important;
+  }
+}
+
+@media (max-width: 739px) {
+  .wrapper {
+    padding: 0 16px 60px !important;
+  }
+}

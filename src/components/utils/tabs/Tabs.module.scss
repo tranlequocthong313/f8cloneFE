@@ -2,38 +2,31 @@
 
 .tabs {
   display: flex;
-  list-style: none;
-  margin-bottom: 0;
   margin-top: 16px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  list-style-type: none;
   padding-left: 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
-  & li + li {
+  & + & {
     margin-left: 24px;
   }
 
   .tab {
-    color: $description-color;
-    display: block;
     font-size: 16px;
-    font-weight: 500;
-    padding-bottom: 14px;
-    text-decoration: none;
+    font-weight: 700;
+    padding-bottom: 8px;
+    color: #666;
+    cursor: pointer;
+    background-color: transparent;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
 
     &.active {
-      font-weight: 700;
-      position: relative;
-      color: #000;
-
-      &::after {
-        border-bottom: 2px solid #000;
-        bottom: -1px;
-        content: '';
-        display: block;
-        left: 0;
-        position: absolute;
-        right: 0;
-      }
+      color: #242424;
+      border-bottom: 2px solid #242424;
     }
   }
 }
+
+

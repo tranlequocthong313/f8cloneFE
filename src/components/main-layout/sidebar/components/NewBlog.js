@@ -6,14 +6,14 @@ import styles from './NewBlog.module.scss'
 const NewBlog = () => {
   return (
     <NavDropdown
-      title={<i className={`${styles.newBlogIcon} bi bi-plus`}></i>}
+      title={<i className={`${styles.newBlogIcon} fa-regular fa-plus`}></i>}
       id="basic-nav-dropdown"
       className={styles.newBlog}
     >
       <ul className={styles.list}>
         <li>
           <Link to="/new-blog" className={styles.link}>
-            <i className="bi bi-pencil-fill"></i>
+            <i className="fa-solid fa-pen"></i>
             <span>Viết blog</span>
           </Link>
         </li>

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import styles from './CommentInput.module.scss'
-import noPhotoURL from '../../../asset/nobody_m.256x256.jpg'
+import noPhotoURL from '../../../asset/images/nobody_m.256x256.jpg'
 import ContentEditable from '../content-editable/ContentEditable'
 import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
@@ -79,7 +79,7 @@ const CommentInput = ({
               className={styles.commentCode}
               onClick={() => setShowCode(true)}
             >
-              <i className="bi bi-code-slash"></i>
+              <i className="fa-solid fa-code"></i>
               <span>Chèn code</span>
             </div>
           )}

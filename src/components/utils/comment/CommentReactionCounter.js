@@ -1,10 +1,10 @@
 import styles from './CommentReactionCounter.module.scss'
-import likeEmoji from '../../../asset/likeemoji.png'
-import loveEmoji from '../../../asset/loveemoji.png'
-import Haha from '../../../asset/hahaemoji.png'
-import wowEmoji from '../../../asset/wowemoji.png'
-import cryEmoji from '../../../asset/cryemoji.png'
-import angryEmoji from '../../../asset/angryemoji.png'
+import likeEmoji from '../../../asset/images/likeemoji.png'
+import loveEmoji from '../../../asset/images/loveemoji.png'
+import Haha from '../../../asset/images/hahaemoji.png'
+import wowEmoji from '../../../asset/images/wowemoji.png'
+import cryEmoji from '../../../asset/images/cryemoji.png'
+import angryEmoji from '../../../asset/images/angryemoji.png'
 
 const CommentReactionCounter = ({ showModalHandler, reactData }) => {
   const checkEmojiHandler = emoji => {

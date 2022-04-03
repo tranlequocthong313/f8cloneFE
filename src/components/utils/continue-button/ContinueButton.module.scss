@@ -17,4 +17,9 @@
   color: #444;
   box-shadow: 0 3px 8px rgba($color: #000000, $alpha: 0.1);
   background-color: transparent;
+  text-decoration: none;
+
+  &:hover {
+    color: #444;
+  }
 }

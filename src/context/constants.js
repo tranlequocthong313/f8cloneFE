@@ -1,9 +1,9 @@
-import likeEmoji from '../asset/likeemoji.png'
-import loveEmoji from '../asset/loveemoji.png'
-import hahaEmoji from '../asset/hahaemoji.png'
-import cryEmoji from '../asset/cryemoji.png'
-import angryEmoji from '../asset/angryemoji.png'
-import wowEmoji from '../asset/wowemoji.png'
+import likeEmoji from '../asset/images/likeemoji.png'
+import loveEmoji from '../asset/images/loveemoji.png'
+import hahaEmoji from '../asset/images/hahaemoji.png'
+import cryEmoji from '../asset/images/cryemoji.png'
+import angryEmoji from '../asset/images/angryemoji.png'
+import wowEmoji from '../asset/images/wowemoji.png'
 
 const apiURL =
   process.env.NODE_ENV !== 'production'

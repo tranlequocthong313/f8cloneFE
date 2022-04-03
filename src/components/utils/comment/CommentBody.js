@@ -7,7 +7,7 @@ import { reportCommentHandler } from '../report/Report'
 import CommentInputSecondary from './CommentInputSecondary'
 import timeSinceHandler from '../../utils/timeSinceHandler/timeSinceHandler'
 import CommentReactionCounter from './CommentReactionCounter'
-import noPhotoURL from '../../../asset/nobody_m.256x256.jpg'
+import noPhotoURL from '../../../asset/images/nobody_m.256x256.jpg'
 import styles from './CommentBody.module.scss'
 import io from 'socket.io-client'
 
@@ -280,8 +280,8 @@ const CommentBody = ({
                       <i
                         className={
                           !extend.includes(comment._id)
-                            ? 'bi bi-chevron-down'
-                            : 'bi bi-chevron-up'
+                            ? 'fa-regular fa-chevron-down'
+                            : 'fa-regular fa-chevron-up'
                         }
                       ></i>
                     </div>
@@ -329,7 +329,7 @@ const CommentBody = ({
                   >
                     <span className={styles.dot}>.</span>
                     <span className={styles.optionIcon}>
-                      <i className="bi bi-three-dots"></i>
+                      <i className="fa-solid fa-ellipsis"></i>
                     </span>
                     {showOption === comment._id && (
                       <div className={styles.optionWrapper}>
@@ -341,11 +341,11 @@ const CommentBody = ({
                                   showInputHandler(comment._id, 'edit')
                                 }}
                               >
-                                <i className="bi bi-pencil-fill"></i>
+                                <i className="fa-solid fa-pen"></i>
                                 <span>Sửa bình luận</span>
                               </li>
                               <li onClick={() => deleteComment(comment._id)}>
-                                <i className="bi bi-trash-fill"></i>
+                                <i className="fa-solid fa-trash"></i>
                                 <span>Xóa bình luận</span>
                               </li>
                             </>
@@ -358,7 +358,7 @@ const CommentBody = ({
                                 )
                               }
                             >
-                              <i className="bi bi-flag-fill"></i>
+                              <i className="fa-solid fa-flag"></i>
                               <span>Báo cáo bình luận</span>
                             </li>
                           )}
@@ -431,13 +431,13 @@ const CommentBody = ({
                   {comment._id !== replyCommentData.commentId && (
                     <>
                       {`Xem ${comment.replies.length} câu trả lời`}
-                      <i className="bi bi-chevron-down"></i>
+                      <i className="fa-solid fa-chevron-down"></i>
                     </>
                   )}
                   {comment._id === replyCommentData.commentId && (
                     <>
                       {`Ẩn câu trả lời`}
-                      <i className="bi bi-chevron-up"></i>
+                      <i className="fa-solid fa-chevron-up"></i>
                     </>
                   )}
                 </span>
@@ -499,8 +499,8 @@ const CommentBody = ({
                               <i
                                 className={
                                   !extend.includes(reply._id)
-                                    ? 'bi bi-chevron-down'
-                                    : 'bi bi-chevron-up'
+                                    ? 'fa-regular fa-chevron-down'
+                                    : 'fa-regular fa-chevron-up'
                                 }
                               ></i>
                             </div>
@@ -548,7 +548,7 @@ const CommentBody = ({
                           >
                             <span className={styles.dot}>.</span>
                             <span className={styles.optionIcon}>
-                              <i className="bi bi-three-dots"></i>
+                              <i className="fa-solid fa-ellipsis"></i>
                             </span>
                             {showOption === reply._id && (
                               <div className={styles.optionWrapper}>
@@ -560,13 +560,13 @@ const CommentBody = ({
                                           showInputHandler(reply._id, 'edit')
                                         }}
                                       >
-                                        <i className="bi bi-pencil-fill"></i>
+                                        <i className="fa-solid fa-pen"></i>
                                         <span>Sửa bình luận</span>
                                       </li>
                                       <li
                                         onClick={() => deleteComment(reply._id)}
                                       >
-                                        <i className="bi bi-trash-fill"></i>
+                                        <i className="fa-solid fa-trash"></i>x
                                         <span>Xóa bình luận</span>
                                       </li>
                                     </>
@@ -579,7 +579,7 @@ const CommentBody = ({
                                         )
                                       }
                                     >
-                                      <i className="bi bi-flag-fill"></i>
+                                      <i className="fa-solid fa-flag"></i>
                                       <span>Báo cáo bình luận</span>
                                     </li>
                                   )}

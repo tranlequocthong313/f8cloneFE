@@ -6,7 +6,7 @@ const ContinueButton = ({ path }) => {
   return (
     <div className={styles.wrapper}>
       <Link to={path} className={styles.body}>
-        <i className="bi bi-arrow-right"></i>
+        <i className="fa-solid fa-arrow-right"></i>
       </Link>
     </div>
   )

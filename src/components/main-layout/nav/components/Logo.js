@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { Navbar, Image } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import logo from '../../../../asset/f8_icon.png'
+import logo from '../../../../asset/images/f8_icon.png'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './Logo.module.scss'
 import { NavContext } from '../../../../context/NavContext'
@@ -25,7 +25,7 @@ const Logo = () => {
           onClick={() => activeHandler('')}
         >
           <h4 className={styles.logoHeading}>
-            <i className="bi bi-chevron-left"></i>
+            <i className="fa-solid fa-chevron-left"></i>
             <span>Quay lại</span>
           </h4>
         </Link>

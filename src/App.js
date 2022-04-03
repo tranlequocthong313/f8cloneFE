@@ -1,30 +1,31 @@
-import Blog from './views/Blog'
-import Courses from './views/Courses'
-import LearningPath from './views/LearningPath'
-import Home from './views/Home'
-import Contact from './views/Contact'
-import Search from './views/Search'
-import Privacy from './views/Privacy'
-import About from './views/About'
-import Careers from './views/Careers'
-import Terms from './views/Terms'
+import Blog from './views/public/Blog'
+import Courses from './views/public/Courses'
+import LearningPath from './views/public/LearningPath'
+import Home from './views/public/Home'
+import Contact from './views/public/Contact'
+import Search from './views/public/Search'
+import Privacy from './views/public/Privacy'
+import About from './views/public/About'
+import Careers from './views/public/Careers'
+import Terms from './views/public/Terms'
 import { Routes, Route } from 'react-router-dom'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import CourseSlug from './components/coursepage/CourseSlug'
+import CourseSlug from './components/course/CourseSlug'
 import { useLocation } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import { setAuth } from './actions/userAction'
 import { apiURL } from './context/constants'
-import BlogSlug from './components/blogpage/BlogSlug'
-import Auth from './views/Auth'
-import NotFound from './views/NotFound'
-import Learning from './views/Learning'
-import MyCourse from './views/MyCourse'
-import NewBlog from './views/NewBlog'
-import Settings from './views/Settings'
-import BookmarkPost from './views/BookmarkPost'
-import MyBlog from './views/MyBlog'
+import BlogSlug from './components/blog/BlogSlug'
+import Auth from './views/public/Auth'
+import NotFound from './views/public/NotFound'
+import Learning from './views/private/Learning'
+import MyCourse from './views/private/MyCourse'
+import NewBlog from './views/private/NewBlog'
+import Settings from './views/private/Settings'
+import BookmarkPost from './views/private/BookmarkPost'
+import MyBlog from './views/private/MyBlog'
+import Admin from './views/admin/Admin'
 
 function App() {
   const dispatch = useDispatch()
@@ -64,7 +65,6 @@ function App() {
           setAuth({
             ...data.user,
             accessToken: token,
-            admin: data.admin,
           })
         )
       } catch (error) {
@@ -114,6 +114,10 @@ function App() {
       <Route
         path="/my-post"
         element={user.isLoggedIn ? <MyBlog /> : <Auth />}
+      />
+      <Route
+        path="/admin"
+        element={user.isLoggedIn && user.isAdmin ? <Admin /> : <NotFound />}
       />
       <Route path="/courses" element={<Courses />} />
       <Route path="/courses/:slug" element={<CourseSlug />} />

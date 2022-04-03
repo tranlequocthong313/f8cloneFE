@@ -28,7 +28,6 @@
     "react-youtube": "^7.14.0",
     "redux": "^4.1.2",
     "socket.io-client": "^4.4.1",
-    "uuid": "^8.3.2",
     "vn-remove-accents": "^1.0.0",
     "web-vitals": "^2.1.0",
     "youtube-duration-format": "^0.2.0"

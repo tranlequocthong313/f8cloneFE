@@ -20,7 +20,7 @@ const LearningContent = ({ show }) => {
             <p>Cập nhật tháng 2 năm 2022</p>
           </div>
           <button className={styles.addNoteButton}>
-            <i className="bi bi-plus-lg"></i>
+            <i className="fa-solid fa-plus"></i>
             <span className={styles.label}>
               Thêm ghi chú tại <span className={styles.duration}>00:00</span>
             </span>
@@ -52,7 +52,7 @@ const LearningContent = ({ show }) => {
         </div>
       </div>
       <div className={styles.poweredBy}>
-        Made with <i className="bi bi-heart-fill"></i>{' '}
+        Made with <i className="fa-solid fa-heart"></i>{' '}
         <span className={styles.dot}>.</span> Powered by F8
       </div>
     </div>

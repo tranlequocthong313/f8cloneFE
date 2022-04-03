@@ -1,0 +1,136 @@
+.contentEditable {
+  font-size: 40px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  font-weight: 500;
+  margin: 50px 0;
+  transition: font-size 0.3s ease;
+  line-height: 1.4;
+  outline: none;
+
+  &:empty::before {
+    color: #757575;
+  }
+}
+
+.tabs {
+  display: flex;
+}
+
+.contentWrapper {
+  margin-top: 16px;
+  overflow: hidden;
+
+  .contentContainer {
+    border-top: none;
+    padding-top: 16px;
+    display: flex;
+    padding: 20px 0;
+
+    a {
+      flex-shrink: 0;
+      text-decoration: none;
+
+      .image {
+        background-color: #ebebeb;
+        background-position: 50%;
+        background-repeat: no-repeat;
+        background-size: cover;
+        border-radius: 16px;
+        color: #757575;
+        display: block;
+        font-size: 14px;
+        overflow: hidden;
+        padding-top: 56.25%;
+        width: 280px;
+      }
+    }
+
+    &.blogContent {
+      flex-direction: column;
+      display: flex;
+      margin-top: 16px;
+      max-width: 640px;
+      padding: 24px 0;
+
+      a {
+        .image {
+          background-color: #ebebeb;
+          border-radius: 16px;
+          color: #757575;
+          display: block;
+          font-size: 14px;
+          height: 180px;
+          margin-bottom: 28px;
+          object-fit: cover;
+          width: 100%;
+          padding: 0;
+        }
+      }
+    }
+
+    .info {
+      padding-left: 20px;
+
+      h2 {
+        font-size: 20px;
+        line-height: 1.6;
+        margin-bottom: 0;
+        margin-top: 16px;
+
+        a {
+          color: #292929;
+          font-weight: 600;
+        }
+      }
+
+      p {
+        color: #757575;
+        font-size: 14px;
+        line-height: 1.6;
+        margin-top: 4px;
+      }
+
+      .reaction {
+        color: #666;
+        display: flex;
+        font-size: 14px;
+        justify-content: space-between;
+        margin-top: 24px;
+
+        .like {
+          i {
+            font-weight: 18px;
+          }
+          span {
+            font-weight: 500;
+            margin-left: 8px;
+          }
+        }
+
+        .comment {
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  .blank {
+    color: #757575;
+    font-size: 14px;
+    padding: 32px 0;
+  }
+}
+
+@media (max-width: 739px) {
+  .contentWrapper {
+    .contentContainer {
+      flex-direction: column;
+
+      a {
+        .image {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,140 @@
+@import '../../sass/color';
+@import '../../sass/flexCenter';
+
+.wrapper {
+  @include flexCenter(row);
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  user-select: none;
+
+  &::before {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
+      url('../../asset/images/f8_bg_auth_1920.b517075e98f3051de678.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    content: '';
+    bottom: -5px;
+    left: -5px;
+    position: absolute;
+    right: -5px;
+    top: -5px;
+    z-index: -1;
+  }
+
+  .container {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    text-align: center;
+    z-index: 2;
+
+    .content {
+      background: #fff;
+      border-radius: 8px;
+      max-width: calc(100vw - 32px);
+      min-height: 600px;
+      padding: 48px 16px;
+      position: relative;
+      width: 640px;
+
+      .header {
+        overflow: hidden;
+        position: relative;
+
+        a {
+          text-decoration: none;
+
+          img {
+            height: 44px;
+            object-fit: cover;
+            width: 44px;
+          }
+        }
+
+        h3 {
+          color: #292929;
+          font-size: 28px;
+          font-weight: 700;
+          line-height: 1.4;
+          margin: 20px 0;
+        }
+      }
+
+      .body {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        margin-top: 8px;
+
+        .noAccount {
+          font-size: 14px;
+          line-height: 1.8;
+          margin-bottom: 0;
+          padding: 24px 16px 0;
+          margin-top: 14px;
+
+          a {
+            color: $primary-color;
+            font-weight: 600;
+            text-decoration: none;
+          }
+        }
+
+        .forgotPassword {
+          cursor: pointer;
+          font-size: 14px;
+          line-height: 1.8;
+          margin-top: 5px;
+          color: $primary-color;
+          font-weight: 600;
+        }
+      }
+
+      .backButton {
+        // position: absolute;
+        // left: 0;
+
+        i {
+          color: #404040;
+          font-size: 24px;
+          left: 0;
+          // top: -10px !important;
+          // z-index: 99999;
+          padding: 0 10px;
+          position: absolute;
+          top: 0;
+
+          &:hover {
+            // color: #292929;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+
+    .about {
+      line-height: 1.8;
+      margin-top: 12px;
+
+      a {
+        color: #fff;
+        font-size: 14px;
+        text-decoration: none;
+      }
+      span {
+        margin: 0 8px;
+        color: #fff;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+@media (max-width: 739px) {
+  .content {
+    max-width: 577px;
+  }
+}

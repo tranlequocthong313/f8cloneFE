@@ -31,8 +31,8 @@ const LearningTrackItem = ({ episodes }) => {
         <h3 className={styles.title}>{episode.title}</h3>
         <span className={styles.description}>2/2 | 22:09</span>
         <span className={styles.icon}>
-          {/* <i className="bi bi-chevron-up"></i> */}
-          <i className="bi bi-chevron-down"></i>
+          {/* <i className="fa-solid fa-chevron-up"></i> */}
+          <i className="fa-solid fa-chevron-down"></i>
         </span>
       </div>
       <Collapse in={open.includes(episode.id)}>
@@ -49,8 +49,8 @@ const LearningTrackItem = ({ episodes }) => {
                   <i
                     className={
                       active !== lesson.id
-                        ? 'bi bi-play-circle-fill'
-                        : `bi-disc-fill ${styles.playingIcon}`
+                        ? 'fa-regular fa-circle-play'
+                        : `fa-regular fa-compact-disc ${styles.playingIcon}`
                     }
                   ></i>{' '}
                   {lesson.time}
@@ -63,9 +63,9 @@ const LearningTrackItem = ({ episodes }) => {
                     : `${styles.statusIcon} ${styles.locked}`
                 }
               >
-                {lesson.learned && <i className="bi bi-check-circle-fill"></i>}
+                {lesson.learned && <i className="fa-solid fa-circle-check"></i>}
                 {!lesson.learned && active !== lesson.id && (
-                  <i className="bi bi-lock-fill"></i>
+                  <i className="fa-solid fa-clock-five"></i>
                 )}
               </div>
             </div>

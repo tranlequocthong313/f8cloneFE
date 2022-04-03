@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './FieldInput.module.scss'
-import noPhotoURL from '../../../asset/nobody_m.256x256.jpg'
+import noPhotoURL from '../../../asset/images/nobody_m.256x256.jpg'
 
 const FieldInput = ({
   title,
@@ -59,7 +59,7 @@ const FieldInput = ({
                       : styles.chooseAvatar
                   }
                 >
-                  <i className="bi bi-camera-fill"></i>
+                  <i className="fa-solid fa-camera"></i>
                 </div>
                 <div className={styles.pickAvatar}>
                   <input
