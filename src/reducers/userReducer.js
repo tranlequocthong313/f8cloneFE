@@ -26,7 +26,6 @@ const initialState = {
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'LOGIN':
-      console.log(action.payload.isAdmin)
       return {
         ...state,
         userId: action.payload._id,
@@ -58,7 +57,6 @@ const userReducer = (state = initialState, action) => {
       }
 
     case 'SET_AUTH':
-      console.log(action.payload.isAdmin)
       return {
         ...state,
         userId: action.payload._id,

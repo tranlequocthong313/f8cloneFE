@@ -8,6 +8,8 @@ import Header from '../../components/main-layout/nav/Header'
 import '../../sass/_markdownEditor.scss'
 import ContentEditable from '../../components/utils/content-editable/ContentEditable'
 import Modal from '../../components/new-post/Modal'
+import { useLocation } from 'react-router-dom'
+import { apiURL } from '../../context/constants'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer')
@@ -16,6 +18,8 @@ const Footer = React.lazy(() =>
 const NewBlog = () => {
   const mdEditor = useRef(null)
   const titleRef = useRef(null)
+
+  const location = useLocation()
 
   const [isValid, setIsValid] = useState(false)
   const [showModal, setShowModal] = useState(false)
@@ -54,6 +58,18 @@ const NewBlog = () => {
   const editorChangeHandler = ({ html, text }) => {
     const newContent = text.replace(/\d/g, '')
     setContent(newContent)
+  }
+
+  const draftBlogHandler = async () => {
+    try {
+      const res = await fetch(`${apiURL}/blog/draft`)
+
+      const data = await res.json()
+
+      console.log(data)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (

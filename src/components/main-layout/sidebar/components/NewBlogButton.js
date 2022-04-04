@@ -1,9 +1,9 @@
 import React from 'react'
 import { NavDropdown } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import styles from './NewBlog.module.scss'
+import styles from './NewBlogButton.module.scss'
 
-const NewBlog = () => {
+const NewBlogButton = () => {
   return (
     <NavDropdown
       title={<i className={`${styles.newBlogIcon} fa-regular fa-plus`}></i>}
@@ -22,4 +22,4 @@ const NewBlog = () => {
   )
 }
 
-export default NewBlog
+export default NewBlogButton

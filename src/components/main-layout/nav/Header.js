@@ -7,7 +7,7 @@ import styles from './Header.module.scss'
 import MobileNav from './components/MobileNav'
 import '../../../sass/_custom.scss'
 import { useSelector } from 'react-redux'
-import NewPost from '../../new-post/NewPost'
+import PublishButton from '../../new-post/PublishButton'
 import { Link } from 'react-router-dom'
 import User from './components/User'
 
@@ -35,7 +35,7 @@ const Header = ({
 
         <div className={styles.userAction}>
           {currentPage === 'new-blog' && (
-            <NewPost
+            <PublishButton
               blogDataHandler={blogDataHandler}
               setShowModal={setShowModal}
               isValid={isValid}

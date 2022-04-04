@@ -1,5 +1,5 @@
 import React, { useContext, memo } from 'react'
-import NewBlog from './components/NewBlog'
+import NewBlogButton from './components/NewBlogButton'
 import { Navbar, Nav, Col } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import styles from './SideBar.module.scss'
@@ -17,7 +17,7 @@ const SideBar = ({ isBlog }) => {
             : styles.container
         }
       >
-        <NewBlog />
+        <NewBlogButton />
         <ul className={styles.list}>
           <li className={styles.item}>
             <Link

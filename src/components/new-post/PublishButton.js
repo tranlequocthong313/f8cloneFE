@@ -1,7 +1,7 @@
 import React from 'react'
-import styles from './NewPost.module.scss'
+import styles from './PublishButton.module.scss'
 
-const NewPost = ({ blogDataHandler, setShowModal, isValid }) => {
+const PublishButton = ({ blogDataHandler, setShowModal, isValid }) => {
   return (
     <div
       className={
@@ -21,4 +21,4 @@ const NewPost = ({ blogDataHandler, setShowModal, isValid }) => {
   )
 }
 
-export default NewPost
+export default PublishButton

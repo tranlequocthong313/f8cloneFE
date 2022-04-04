@@ -16,8 +16,9 @@ const Footer = React.lazy(() =>
 )
 
 const MyBlog = () => {
-  const [tabs, setTabs] = useState('draft')
+  const [tabs, setTabs] = useState('drafts')
   const [myBlog, setMyBlog] = useState(null)
+  const [myDraftBlog, setMyDraftBlog] = useState(null)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -41,7 +42,6 @@ const MyBlog = () => {
         )
 
         const data = await res.json()
-        console.log(data)
         setMyBlog(data.myBlog)
       } catch (error) {
         console.log(error)
@@ -68,17 +68,60 @@ const MyBlog = () => {
                 <Row style={{ marginTop: 0 }}>
                   <Col xs={12} md={12} xl={8}>
                     <div className={styles.tabs}>
-                      {/* <Tabs tab={'Bản nháp'} quantity={bookmarkData && `(${bookmarkData.length})`}/> */}
+                      <Tabs
+                        tab={'Bản nháp'}
+                        quantity={
+                          myDraftBlog &&
+                          myDraftBlog.length > 0 &&
+                          `(${myDraftBlog.length})`
+                        }
+                        onActive={() => setTabs('drafts')}
+                        isActive={tabs === 'drafts'}
+                      />
                       <Tabs
                         tab={'Đã xuất bản'}
-                        quantity={myBlog && `(${myBlog.length})`}
+                        quantity={
+                          myBlog && myBlog.length > 0 && `(${myBlog.length})`
+                        }
                         onActive={() => setTabs('published')}
                         isActive={tabs === 'published'}
                       />
                     </div>
-                    {myBlog && myBlog.length === 0 && (
+                    {tabs === 'drafts' && !myDraftBlog && (
                       <div className={styles.message}>
-                        <p>Bạn chưa lưu bài viết nào.</p>
+                        <p>Chưa có bản nháp nào.</p>
+                        <p>
+                          Bấm vào đây để{' '}
+                          <Link to="/blog">xem các bài viết nổi bật.</Link>
+                        </p>
+                      </div>
+                    )}
+                    {tabs === 'drafts' &&
+                      myDraftBlog &&
+                      myDraftBlog.map(blog => (
+                        <ul key={blog._id} className={styles.blogList}>
+                          <li>
+                            <h3>
+                              <a href={`blog/${blog.slug}`}>
+                                <span>{blog.titleDisplay}</span>
+                              </a>
+                            </h3>
+                            <div className={styles.author}>
+                              <a href={`blog/${blog.slug}`}>
+                                Chỉnh sửa {timeSinceHandler(blog.createdAt)}
+                              </a>
+                              <span className={styles.dot}>.</span>
+                              <span>{blog.readingTime} phút đọc</span>
+                            </div>
+                            <span className={styles.option}>
+                              <i className="fa-solid fa-ellipsis"></i>
+                            </span>
+                          </li>
+                        </ul>
+                      ))}
+                    {tabs === 'published' && !myBlog && (
+                      <div className={styles.message}>
+                        <p>Chưa có xuất bản nào.</p>
                         <p>
                           Bấm vào đây để{' '}
                           <Link to="/blog">xem các bài viết nổi bật.</Link>
