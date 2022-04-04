@@ -1,5 +1,22 @@
+.wrapper {
+  margin-top: 0;
+  margin-bottom: 60px;
+  padding: 8px 44px 0;
+
+  .containerTop {
+    h2 {
+      color: #242424;
+      font-size: 28px;
+      font-weight: 900;
+      margin: 18px 0;
+    }
+    padding: 0;
+    margin-bottom: 40px;
+  }
+}
+
 .leftLayout {
-  padding: 0 64px 44px 0;
+  padding: 0px 64px 44px 0px !important;
 }
 
 .rightLayout {
@@ -8,8 +25,13 @@
 }
 
 @media (max-width: 1023px) {
-  .layout {
-    flex-direction: column-reverse;
+  .wrapper {
+    margin-bottom: 48px;
+    padding: 0 16px;
+
+    .containerTop {
+      margin-bottom: 40px;
+    }
   }
 
   .leftLayout {

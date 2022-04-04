@@ -21,7 +21,7 @@ import Auth from './views/public/Auth'
 import NotFound from './views/public/NotFound'
 import Learning from './views/private/Learning'
 import MyCourse from './views/private/MyCourse'
-import NewBlog from './views/private/NewBlog'
+import NewPost from './views/private/NewPost'
 import Settings from './views/private/Settings'
 import BookmarkPost from './views/private/BookmarkPost'
 import MyBlog from './views/private/MyBlog'
@@ -31,7 +31,7 @@ function App() {
   const dispatch = useDispatch()
   const location = useLocation()
 
-  const user = useSelector(state => state.user)
+  const user = useSelector((state) => state.user)
 
   // Scroll to top when routing
   useEffect(() => {
@@ -56,7 +56,7 @@ function App() {
           },
           {
             signal: controller.signal,
-          }
+          },
         )
 
         const data = await res.json()
@@ -65,7 +65,7 @@ function App() {
           setAuth({
             ...data.user,
             accessToken: token,
-          })
+          }),
         )
       } catch (error) {
         console.log(error)
@@ -101,7 +101,7 @@ function App() {
       />
       <Route
         path="/new-blog"
-        element={user.isLoggedIn ? <NewBlog /> : <Auth />}
+        element={user.isLoggedIn ? <NewPost /> : <Auth />}
       />
       <Route
         path="/settings"

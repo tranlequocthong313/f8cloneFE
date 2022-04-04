@@ -1,7 +1,5 @@
 .withSidebarContent {
   padding: 0 40px 0 20px;
-  overflow: hidden;
-  min-height: 100vh;
 }
 
 @media (max-width: 1023px) {
@@ -13,6 +11,6 @@
 
 @media (min-width: 0px) and (max-width: 739px) {
   .withSidebarContent {
-    padding: 0 32px;
+    padding: 0 16px;
   }
 }

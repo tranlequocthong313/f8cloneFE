@@ -1,6 +1,17 @@
-.container {
-  padding: 8px 44px 0;
+.wrapper {
+  margin-top: 0;
   margin-bottom: 60px;
+  padding: 8px 44px 0;
+
+  .containerTop {
+    h2 {
+      color: #242424;
+      font-size: 28px;
+      font-weight: 900;
+      margin: 18px 0;
+    }
+    margin-bottom: 40px;
+  }
 }
 
 .suggestion {
@@ -49,9 +60,13 @@
 }
 
 @media (max-width: 1023px) {
-  .container {
-    padding: 0;
+  .wrapper {
     margin-bottom: 48px;
+    padding: 0;
+
+    .containerTop {
+      margin-bottom: 20px;
+    }
   }
 }
 

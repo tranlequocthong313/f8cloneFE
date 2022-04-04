@@ -109,6 +109,15 @@
 
 @media (max-width: 739px) {
   .body {
-    flex-direction: column;
+    flex-direction: column-reverse;
+
+    .image {
+      margin: 12px 0px 8px;
+      order: 1;
+
+      img {
+        width: 100%;
+      }
+    }
   }
 }

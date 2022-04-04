@@ -1,8 +1,7 @@
 @import '../../../sass/flexCenter';
 .wrapper {
+  flex-shrink: 0;
   width: 96px;
-  z-index: 8;
-  padding: 0 8px;
 }
 
 .container {
@@ -10,6 +9,12 @@
   flex-shrink: 0;
   position: fixed;
   top: 60px;
+  padding: 0 8px;
+  width: 96px;
+  z-index: 8;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .blogSidebar {

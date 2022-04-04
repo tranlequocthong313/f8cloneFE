@@ -39,7 +39,7 @@ const About = () => {
       <Header />
       <Container style={{ maxWidth: '100vw', padding: 0 }}>
         <div className={`${styles.wrapper} ${styles.textContent}`}>
-          <Container style={{ padding: 0 }}>
+          <Container style={{ padding: 0, margin: '0 auto' }}>
             <Row className={styles.root} style={{ marginTop: 66 }}>
               <Col md={12} xl={6} style={{ padding: 0 }}>
                 <img
@@ -90,7 +90,7 @@ const About = () => {
             </Row>
           </Container>
         </div>
-        <Container style={{ marginBottom: 0 }}>
+        <Container style={{ padding: 0, margin: '0 auto' }}>
           <Row className={styles.subRoot}>
             <Col xs={12} md={12} lg={12} xl={12} style={{ padding: 0 }}>
               <div className={`${styles.goal} ${styles.textContent}`}>
@@ -135,7 +135,7 @@ const About = () => {
           </Row>
         </Container>
         <div className={styles.saleWhat}>
-          <Container>
+          <Container style={{ padding: 0, margin: '0 auto' }}>
             <Row>
               <Col xs={12} md={12} lg={12} xl={12} style={{ padding: 0 }}>
                 <div className={styles.content}>
@@ -173,7 +173,7 @@ const About = () => {
             </Row>
           </Container>
         </div>
-        <Container>
+        <Container style={{ padding: 0, margin: '0 auto' }}>
           <Row className={styles.subRoot}>
             <Col xs={12} md={12} lg={12} xl={12} style={{ padding: 0 }}>
               <div className={`${styles.strategy} ${styles.textContent}`}>
@@ -281,7 +281,7 @@ const About = () => {
           </Row>
         </Container>
         <div className={`${styles.environment} ${styles.textContent}`}>
-          <Container>
+          <Container style={{ padding: 0, margin: '0 auto' }}>
             <Row className={styles.root}>
               <Col xs={12} md={12} lg={12} xl={12} style={{ padding: 0 }}>
                 <h3 className={styles.heading}>Môi trường làm việc</h3>
@@ -328,7 +328,7 @@ const About = () => {
             </Row>
           </Container>
         </div>
-        <Container>
+        <Container style={{ padding: 0, margin: '0 auto' }}>
           <Row className={styles.subRoot}>
             <Col xs={12} md={12} lg={12} xl={12} style={{ padding: 0 }}>
               <div className={`${styles.recruitment} ${styles.textContent}`}>

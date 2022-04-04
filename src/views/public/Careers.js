@@ -1,15 +1,13 @@
 import React, { Suspense, useEffect, useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import styles from './Careers.module.scss'
-import '../../sass/_mainHeadingTitle.scss'
-import '../../sass/_withSidebarContent.scss'
 import CareerList from '../../components/career/CareerList'
 import Header from '../../components/main-layout/nav/Header'
 import SideBar from '../../components/main-layout/sidebar/SideBar'
 import { apiURL } from '../../context/constants'
 
 const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer')
+  import('../../components/main-layout/footer/Footer'),
 )
 
 const Careers = () => {
@@ -39,14 +37,12 @@ const Careers = () => {
     <>
       <Header />
       <Row>
-        <Col xs={0} sm={0} md={1} lg={1} xl={1}>
-          <SideBar />
-        </Col>
+        <SideBar />
         <Col xs={12} sm={12} md={12} lg={11} xl={11}>
           <div className="withSidebarContent">
-            <div className={styles.container}>
+            <Row className={styles.wrapper}>
               <div className={styles.containerTop}>
-                <h1 className="mainHeadingTitle">Cơ hội việc làm</h1>
+                <h2>Cơ hội việc làm</h2>
                 <p>
                   F8 tin rằng mỗi người đều có những tiềm năng vô hạn để trở nên
                   giỏi giang. Vấn đề là họ không áp dụng đúng phương pháp để
@@ -60,7 +56,7 @@ const Careers = () => {
                 <h2>2 việc làm đang mở tại F8</h2>
                 <CareerList xl={8} jobs={jobs} />
               </div>
-            </div>
+            </Row>
           </div>
         </Col>
       </Row>

@@ -19,7 +19,7 @@ const CourseSlug = () => {
   const [hasRequire, setHasRequire] = useState(false)
   const [show, setShow] = useState(false)
 
-  const showHandler = () => setShow(prev => !prev)
+  const showHandler = () => setShow((prev) => !prev)
 
   useEffect(() => {
     const controller = new AbortController()

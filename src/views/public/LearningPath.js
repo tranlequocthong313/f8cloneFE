@@ -2,14 +2,14 @@ import React, { Suspense } from 'react'
 import '../../sass/_withSidebarContent.scss'
 import ctaImage from '../../asset/images/fb-group-cards@2x.png'
 import Suggestion from '../../components/utils/suggestion/Suggestion'
-import '../../sass/_container.scss'
 import { Col, Row } from 'react-bootstrap'
 import LearningList from '../../components/learning-path/LearningList'
 import SideBar from '../../components/main-layout/sidebar/SideBar'
 import Header from '../../components/main-layout/nav/Header'
+import styles from './LearningPath.module.scss'
 
 const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer')
+  import('../../components/main-layout/footer/Footer'),
 )
 
 const LearningPath = () => {
@@ -17,14 +17,12 @@ const LearningPath = () => {
     <>
       <Header />
       <Row>
-        <Col xs={0} sm={0} md={1} lg={1} xl={1}>
-          <SideBar />
-        </Col>
+        <SideBar />
         <Col xs={12} sm={12} md={12} lg={11} xl={11}>
           <div className="withSidebarContent">
-            <div className="container">
-              <div className="containerTop">
-                <h1>Lộ trình học</h1>
+            <Row className={styles.wrapper}>
+              <div className={styles.containerTop}>
+                <h2>Lộ trình học</h2>
                 <p>
                   Để bắt đầu một cách thuận lợi, bạn nên tập trung vào một lộ
                   trình học. Ví dụ: Để đi làm với vị trí “Lập trình viên
@@ -40,7 +38,7 @@ const LearningPath = () => {
                 button={'Tham gia nhóm'}
                 image={ctaImage}
               />
-            </div>
+            </Row>
           </div>
         </Col>
       </Row>

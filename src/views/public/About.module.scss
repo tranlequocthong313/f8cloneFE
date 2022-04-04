@@ -1,362 +1,348 @@
 @import url('https://fonts.googleapis.com/css2?family=Lora:ital@1&family=Montserrat:wght@900&display=swap');
-$bg-image: linear-gradient(171deg,#2b87da,#00ace0);
+$bg-image: linear-gradient(171deg, #2b87da, #00ace0);
 
 .root {
-    background: $bg-image;
-    padding: 0;
-    width: 100%;
-    margin: 0 auto;
-    max-width: 1100px;
-    color: #fff;
+  background: $bg-image;
+  padding: 0;
+  width: 100%;
+  margin: 0 auto;
+  max-width: 1100px;
+  color: #fff;
 }
 
 p {
-    text-align: justify;
+  text-align: justify;
 }
 
 .subRoot {
-    background: #fff;
-    padding: 0;
-    width: 100%;
-    margin: 0 auto;
-    max-width: 1100px;
+  background: #fff;
+  padding: 0;
+  width: 100%;
+  margin: 0 auto;
+  max-width: 1100px;
 }
 
 .wrapper {
-    background: $bg-image;
-    overflow: hidden;
-    padding: 48px 0;
-    color: #fff;
-    text-shadow: 0 0.2rem 0.2rem #0c71c3;
+  background: $bg-image;
+  overflow: hidden;
+  padding: 48px 0;
+  color: #fff;
+  text-shadow: 0 0.2rem 0.2rem #0c71c3;
 
-
-    .firstImage {
-        height: 100%;
-        object-fit: cover;
-        border: 0;
-        display: block;
-        max-width: 100%;
-        width: 100%;
-    }
-}
-
-.textContent {
-    font-size: 18px;
-    line-height: 1.8;
-}
-
-.introText {
-    margin-left: 32px;
-    .heading {
-        margin: 24px 0;
-        color: #fff;
-        margin-bottom: 8px;
-        margin-top: 32px;
-        font-size: 24px;
-        margin-top: -4px;
-        text-transform: uppercase;
-    }
-}
-
-
-
-.introTextSecond {
-    margin-top: 44px;
-}
-
-.goal {
-    min-height: 100px;
-    padding: 60px 0;
-
-    .heading {
-        margin: 24px 0;
-        color: rgb(12, 113, 195);
-        margin-bottom: 8px;
-        margin-top: 32px;
-        font-size: 24px;
-        margin-top: -4px;
-        text-transform: uppercase;
-    }
-}
-
-.saleWhat {
-    background: $bg-image;
-    height: 280px;
-    margin-bottom: 380px;
-
-    .content {
-        background-color: #fff;
-        box-shadow: rgba($color: #000000, $alpha: 0.12) 0px 12px 18px -6px;
-        padding: 32px 64px;
-        position: relative;
-        top: 100px;
-    
-        .heading {
-            margin: 24px 0;
-            color: rgb(12, 113, 195);
-            font-size: 24px;
-            text-align: center;
-            text-transform: uppercase;
-        }
-    
-        .subHeading {
-            margin-top: 0px;
-            color: rgb(0, 0, 0);
-            font-size: 18px;
-            margin-bottom: 0px;
-            text-transform: none;
-            font-weight: 600;
-        }
-    }
-    
-    .grid {
-        display: flex;
-        flex-wrap: wrap;
-        margin-top: 36px;
-    
-        .gridItem {
-            flex: 1 0 50%;
-            margin: 18px 0;
-            padding: 0 24px;
-        }
-    }
-}
-
-.strategy {
-    padding-bottom: 60px;
-
-    .heading {
-        margin: 24px 0;
-        color: rgb(12, 113, 195);
-        font-size: 24px;
-        text-align: center;
-        text-transform: uppercase;
-    }
-
-    .subHeading {
-        margin-top: 0px;
-        color: rgb(0, 0, 0);
-        font-size: 18px;
-        margin-bottom: 0px;
-        text-transform: none;
-        font-weight: 600;
-        margin-top: 24px;
-        margin-bottom: 16px;
-    }
-
-    p {
-        margin-top: 8px;
-        color: #404040;
-    }
-}
-
-.textHorizontalWithImg {
-    display: flex;
-
-    .subHeading {
-        margin-top: 0px;
-        color: rgb(0, 0, 0);
-        font-size: 18px;
-        margin-bottom: 0px;
-        text-transform: none;
-        font-weight: 600;
-        margin-top: 24px;
-        margin-bottom: 16px;
-    }
-
-    &.reverse {
-        flex-direction: row-reverse;
-        
-        .textBlock {
-            margin-left: 52px;
-            margin-right: auto;
-        }
-    }
-
-    .textBlock {
-        flex: 1 1;
-        margin-right: 52px;
-    }
-}
-
-.environment {
-    background: $bg-image;
-    padding: 32px 0 64px;
-
-    .heading {
-        margin: 24px 0;
-        color: rgb(255, 255, 255);
-        font-size: 24px;
-        text-align: center;
-        text-transform: uppercase;
-    }
-
-    .quote {
-        background-color: #fff;
-        box-shadow: 0 12px 18px -6px #00a1ba;
-        color: #333;
-        font-family: 'Lora', serif;
-        font-size: 20px;
-        margin-top: 52px;
-        padding: 32px 36px 44px;
-
-        a {
-            text-decoration: none;
-        }
-
-        .iconLeft {
-            color: rgb(102, 102, 102);
-            margin-right: 16px;
-        }
-
-        .iconRight {
-            color: rgb(102, 102, 102);
-            margin-left: 16px;
-        }
-    }
-}
-
-.recruitment {
-    padding: 32px 0 64px;
-
-    .heading {
-        margin: 24px 0;
-        color: rgb(12, 113, 195);
-        font-size: 24px;
-        text-align: center;
-        text-transform: uppercase;
-    }
-}
-
-.viewMoreJobs {
-    appearance: auto;
-    border-radius: 30px;
-    display: block;
-    border: none;
-    outline: none;
-    color: #fff;
-    padding: 10px 20px;
-    align-items: center;
-    display: flex;
+  .firstImage {
     height: 100%;
-    justify-content: center;
-    margin: 52px auto 0;
-    width: 220px;
-    background-color: #1dbfaf;
-    background-image: linear-gradient(70.06deg, #2cccff -5%, #22dfbf 106%);;
-}
-
-.img {
-    object-fit: contain;
-    width: 400px;
+    object-fit: cover;
     border: 0;
     display: block;
     max-width: 100%;
+    width: 100%;
+  }
+}
+
+.textContent {
+  font-size: 18px;
+  line-height: 1.8;
+}
+
+.introText {
+  margin-left: 32px;
+  .heading {
+    margin: 24px 0;
+    color: #fff;
+    margin-bottom: 8px;
+    margin-top: 32px;
+    font-size: 24px;
+    margin-top: -4px;
+    text-transform: uppercase;
+  }
+}
+
+.introTextSecond {
+  margin-top: 44px;
+}
+
+.goal {
+  min-height: 100px;
+  padding: 60px 0;
+
+  .heading {
+    margin: 24px 0;
+    color: rgb(12, 113, 195);
+    margin-bottom: 8px;
+    margin-top: 32px;
+    font-size: 24px;
+    margin-top: -4px;
+    text-transform: uppercase;
+  }
+}
+
+.saleWhat {
+  background: $bg-image;
+  height: 280px;
+  margin-bottom: 380px;
+
+  .content {
+    background-color: #fff;
+    box-shadow: rgba($color: #000000, $alpha: 0.12) 0px 12px 18px -6px;
+    padding: 32px 64px;
+    position: relative;
+    top: 100px;
+
+    .heading {
+      margin: 24px 0;
+      color: rgb(12, 113, 195);
+      font-size: 24px;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .subHeading {
+      margin-top: 0px;
+      color: rgb(0, 0, 0);
+      font-size: 18px;
+      margin-bottom: 0px;
+      text-transform: none;
+      font-weight: 600;
+    }
+  }
+
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 36px;
+
+    .gridItem {
+      flex: 1 0 50%;
+      margin: 18px 0;
+      padding: 0 24px;
+    }
+  }
+}
+
+.strategy {
+  padding-bottom: 60px;
+
+  .heading {
+    margin: 24px 0;
+    color: rgb(12, 113, 195);
+    font-size: 24px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .subHeading {
+    margin-top: 0px;
+    color: rgb(0, 0, 0);
+    font-size: 18px;
+    margin-bottom: 0px;
+    text-transform: none;
+    font-weight: 600;
+    margin-top: 24px;
+    margin-bottom: 16px;
+  }
+
+  p {
+    margin-top: 8px;
+    color: #404040;
+  }
+}
+
+.textHorizontalWithImg {
+  display: flex;
+
+  .subHeading {
+    margin-top: 0px;
+    color: rgb(0, 0, 0);
+    font-size: 18px;
+    margin-bottom: 0px;
+    text-transform: none;
+    font-weight: 600;
+    margin-top: 24px;
+    margin-bottom: 16px;
+  }
+
+  &.reverse {
+    flex-direction: row-reverse;
+
+    .textBlock {
+      margin-left: 52px;
+      margin-right: auto;
+    }
+  }
+
+  .textBlock {
+    flex: 1 1;
+    margin-right: 52px;
+  }
+}
+
+.environment {
+  background: $bg-image;
+  padding: 32px 0 64px;
+
+  .heading {
+    margin: 24px 0;
+    color: rgb(255, 255, 255);
+    font-size: 24px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .quote {
+    background-color: #fff;
+    box-shadow: 0 12px 18px -6px #00a1ba;
+    color: #333;
+    font-family: 'Lora', serif;
+    font-size: 20px;
+    margin-top: 52px;
+    padding: 32px 36px 44px;
+
+    a {
+      text-decoration: none;
+    }
+
+    .iconLeft {
+      color: rgb(102, 102, 102);
+      margin-right: 16px;
+    }
+
+    .iconRight {
+      color: rgb(102, 102, 102);
+      margin-left: 16px;
+    }
+  }
+}
+
+.recruitment {
+  padding: 32px 0 64px;
+
+  .heading {
+    margin: 24px 0;
+    color: rgb(12, 113, 195);
+    font-size: 24px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+}
+
+.viewMoreJobs {
+  appearance: auto;
+  border-radius: 30px;
+  display: block;
+  border: none;
+  outline: none;
+  color: #fff;
+  padding: 10px 20px;
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  margin: 52px auto 0;
+  width: 220px;
+  background-color: #1dbfaf;
+  background-image: linear-gradient(70.06deg, #2cccff -5%, #22dfbf 106%);
+}
+
+.img {
+  object-fit: contain;
+  width: 400px;
+  border: 0;
+  display: block;
+  max-width: 100%;
 }
 
 .career {
-    flex-direction: row;
+  flex-direction: row;
 }
 
+@media (min-width: 0px) and (max-width: 1023px) {
+  .introText {
+    margin-left: 0px;
+    margin-top: 48px;
+  }
 
+  .goal {
+    padding: 60px 0 0 0;
+  }
 
-@media (min-width: 0px) and (max-width: 1023px)
-{
-    .introText{
+  .textHorizontalWithImg {
+    flex-direction: column;
+
+    .img {
+      margin-bottom: 28px;
+      width: 100%;
+    }
+
+    .textBlock {
+      margin-right: 0px;
+      margin-left: 0px;
+    }
+
+    &.reverse {
+      flex-direction: column;
+      margin-left: 0px;
+
+      .textBlock {
+        margin-right: 0px;
         margin-left: 0px;
-        margin-top: 48px;
+      }
+    }
+  }
+
+  .saleWhat {
+    margin-bottom: 520px;
+
+    .content {
+      top: 68px !important;
     }
 
-    .goal {
-        padding: 60px 0 0 0;
+    .grid {
+      flex-direction: column;
     }
-
-    .textHorizontalWithImg {
-        flex-direction: column;
-
-        .img {
-            margin-bottom: 28px;
-            width: 100%;
-        }
-
-        .textBlock {
-            margin-right: 0px;
-            margin-left: 0px;
-        }
-
-        &.reverse {
-            flex-direction: column;
-            margin-left: 0px;
-
-            .textBlock {
-                margin-right: 0px;
-                margin-left: 0px;
-            }
-        }
-    }
-
-    .saleWhat {
-        margin-bottom: 520px;
-
-        .content {
-            top: 68px !important;
-        }
-
-        .grid {
-            flex-direction: column;
-        }
-    }
+  }
 }
 
-@media (min-width: 0px) and (max-width: 739px){
-    .wrapper {
-        padding: 0px 0px 28px;
+@media (min-width: 0px) and (max-width: 739px) {
+  .wrapper {
+    padding: 0px 0px 28px;
+  }
+
+  .introText {
+    margin-top: 32px;
+  }
+
+  .textContent {
+    padding: 0px 16px;
+  }
+
+  .saleWhat {
+    height: auto;
+    margin-bottom: 880px;
+    position: relative;
+
+    .content {
+      background: linear-gradient(171deg, #2b87da, #00ace0);
+      box-shadow: none;
+      padding-left: 16px;
+      padding-right: 16px;
+      top: 0px;
+      left: 0;
+      right: 0;
+      position: absolute;
+      color: #fff;
+
+      .heading {
+        color: #fff;
+      }
+
+      .subHeading {
+        color: #fff;
+      }
     }
-   
-    .introText {
-        margin-top: 32px;
-        padding: 0px 16px;
-    }
+  }
 
-    .introTextSecond {
-        padding: 0px 16px;
-    }
-
-    .textContent {
-        padding-bottom: 0;
-    }
-
-    .saleWhat {
-        height: auto;
-        margin-bottom: 880px;
-        position: relative;
-        
-        .content {
-            background: linear-gradient(171deg, #2b87da, #00ace0);
-            box-shadow: none;
-            padding-left: 16px;
-            padding-right: 16px;
-            top: 0px;
-            left: 0;
-            right: 0;
-            position: absolute;
-            color: #fff;
-
-
-            .heading {
-                color: #fff;
-            }
-
-            .subHeading {
-                color: #fff;
-            }
-        }   
-    }
-
-    .environment {
-        padding-bottom: 48px;
-        padding-top: 20px;
-    }
+  .environment {
+    padding-bottom: 48px;
+    padding-top: 20px;
+  }
 }
-
-

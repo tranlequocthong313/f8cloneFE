@@ -11,17 +11,17 @@ import { apiURL } from '../../context/constants'
 import { useSelector } from 'react-redux'
 
 const BlogList = React.lazy(() =>
-  import('../../components/home/blogs/BlogList')
+  import('../../components/home/blogs/BlogList'),
 )
 const VideoList = React.lazy(() =>
-  import('../../components/home/videos/VideoList')
+  import('../../components/home/videos/VideoList'),
 )
 const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer')
+  import('../../components/main-layout/footer/Footer'),
 )
 
 const Home = () => {
-  const user = useSelector(state => state.user)
+  const user = useSelector((state) => state.user)
 
   const [courseFE, setCourseFE] = useState([])
   const [courseBE, setCourseBE] = useState([])
@@ -54,9 +54,9 @@ const Home = () => {
     <>
       <Header />
       <Row>
-        <Col xs={0} sm={0} md={1} lg={1} xl={1}>
-          <SideBar />
-        </Col>
+        {/* <Col xs={0} sm={0} md={1} lg={1} xl={1}> */}
+        <SideBar />
+        {/* </Col> */}
         <Col xs={12} sm={12} md={12} lg={11} xl={11}>
           <div className="withSidebarContent">
             <Slide />
