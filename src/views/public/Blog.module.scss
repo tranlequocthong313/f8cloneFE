@@ -1,5 +1,5 @@
 .wrapper {
-  margin-top: 0;
+  margin-top: 0 !important;
   margin-bottom: 60px;
   padding: 8px 44px 0;
 
@@ -26,8 +26,9 @@
 
 @media (max-width: 1023px) {
   .wrapper {
+    margin-top: 0;
     margin-bottom: 48px;
-    padding: 0 16px;
+    padding: 0 8px !important;
 
     .containerTop {
       margin-bottom: 40px;
