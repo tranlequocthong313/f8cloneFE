@@ -128,6 +128,8 @@ const BlogDetail = ({ blog }) => {
             likeCount={likeCount.length}
             likeHandler={likeHandler}
             setShowComment={() => setShowComment(true)}
+            blogId={blog._id}
+            setCommentData={setCommentData}
           />
         </div>
       </Col>
