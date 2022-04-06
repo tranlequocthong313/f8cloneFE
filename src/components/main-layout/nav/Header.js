@@ -11,6 +11,7 @@ import PublishButton from '../../new-post/PublishButton'
 import { Link } from 'react-router-dom'
 import User from './components/User'
 import MyCourse from './components/MyCourse'
+import Notification from './components/Notification'
 
 const Login = React.lazy(() => import('./components/Login'))
 
@@ -50,6 +51,7 @@ const Header = ({
             {user.isLoggedIn && (
               <>
                 <MyCourse />
+                <Notification />
                 <User
                   currentPage={currentPage}
                   photoURL={user.photoURL}
