@@ -22,7 +22,7 @@ const Search = ({ currentPage }) => {
 
       setSearchInput(e.target.value)
 
-      if (length === 0) {
+      if (length === 0)
         setResult((prev) => {
           return {
             ...prev,
@@ -31,10 +31,8 @@ const Search = ({ currentPage }) => {
             videos: [],
           }
         })
-      }
 
       if (length >= 2 && match[0] === e.target.value) {
-        // setTimeout(async () => {
         const res = await fetch(`${apiURL}/search/${e.target.value}`)
         const data = await res.json()
 
@@ -46,7 +44,6 @@ const Search = ({ currentPage }) => {
             videos: [...data.videos],
           }
         })
-        // }, 500)
       }
     } catch (error) {
       console.log(error)

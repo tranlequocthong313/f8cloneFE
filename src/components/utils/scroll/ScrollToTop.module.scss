@@ -11,15 +11,21 @@
   width: 36px;
   @include flexCenter(row);
   position: absolute;
-  bottom: 24px;
-  right: 24px;
+  bottom: 70px;
+  right: 30px;
   z-index: 1001;
-  font-size: 32px;
+  font-size: 24px;
 }
 
 @media (min-width: 0px) and (max-width: 1023px) {
   .wrapper {
     height: 42px;
     width: 42px;
+  }
+}
+
+@media (max-width: 739px) {
+  .wrapper {
+    right: 12px;
   }
 }

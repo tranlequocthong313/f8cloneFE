@@ -112,7 +112,9 @@ const BlogDetail = ({ blog }) => {
 
       const data = await res.json()
       setBookmarkData(data.bookmark)
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (

@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import styles from './ScrollToTop.module.scss'
 
-const ScrollToTop = ({ scrollToTop }) => {
+const ScrollToTop = ({ onScroll }) => {
   return (
-    <div className={styles.wrapper} onClick={scrollToTop}>
+    <div className={styles.wrapper} onClick={onScroll}>
       <i className="fa-solid fa-arrow-up"></i>
     </div>
   )

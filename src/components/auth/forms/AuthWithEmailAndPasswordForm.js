@@ -42,7 +42,7 @@ const LoginWithEmailAndPasswordForm = ({
     for (let i = 0; i < 6; i++) {
       OTP += digits[Math.floor(Math.random() * 10)]
     }
-    setVerifyOTP(prev => {
+    setVerifyOTP((prev) => {
       return {
         ...prev,
         create: OTP,
@@ -51,7 +51,7 @@ const LoginWithEmailAndPasswordForm = ({
     return OTP
   }
 
-  const sendOTPHandler = async option => {
+  const sendOTPHandler = async (option) => {
     await fetch(`${apiURL}/register/verify`, {
       method: 'POST',
       body: JSON.stringify({
@@ -66,7 +66,7 @@ const LoginWithEmailAndPasswordForm = ({
   }
 
   // Call send verify code function to user's phone and set re-send button count back 60s for re-sending
-  const onSubmitHandler = option => {
+  const onSubmitHandler = (option) => {
     sendOTPHandler(option)
     setIsSentVerifyCode(true)
     counterHandler()
@@ -74,7 +74,7 @@ const LoginWithEmailAndPasswordForm = ({
 
   const counterHandler = () => {
     setInterval(() => {
-      setCounter(prev => (prev > 0 ? prev - 1 : setIsSentVerifyCode(false)))
+      setCounter((prev) => (prev > 0 ? prev - 1 : setIsSentVerifyCode(false)))
     }, 1000)
   }
 
@@ -116,8 +116,10 @@ const LoginWithEmailAndPasswordForm = ({
           'Content-Type': 'application/json',
         },
       })
-
-      setUserEmailAndPasswordInput(prev => {
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setUserEmailAndPasswordInput((prev) => {
         return {
           ...prev,
           email: '',
@@ -126,12 +128,10 @@ const LoginWithEmailAndPasswordForm = ({
       })
 
       isLoginHandler()
-    } catch (error) {
-      console.log(error)
     }
   }
 
-  const checkUserEmailExistHandler = async e => {
+  const checkUserEmailExistHandler = async (e) => {
     if (e.target.value && EmailValidator.validate(e.target.value)) {
       const res = await fetch(`${apiURL}/login/check-email`, {
         method: 'POST',
@@ -143,7 +143,7 @@ const LoginWithEmailAndPasswordForm = ({
 
       const data = await res.json()
       data.success ? setExistEmail(true) : setExistEmail(false)
-      setUserEmailAndPasswordInput(prev => {
+      setUserEmailAndPasswordInput((prev) => {
         return { ...prev, email: e.target.value }
       })
     }
@@ -192,7 +192,7 @@ const LoginWithEmailAndPasswordForm = ({
               placeholder={'Họ và tên của bạn'}
               maxLength={50}
               pattern={'[a-zA-Z][a-zA-Z ]{2,}'}
-              onChange={{ input: e => setUsername(e.target.value) }}
+              onChange={{ input: (e) => setUsername(e.target.value) }}
             />
           )}
           <FormGroup
@@ -204,8 +204,8 @@ const LoginWithEmailAndPasswordForm = ({
             onClick={() => switchPhoneAndEmailHandler('phone')}
             value={userEmailAndPasswordInput.email}
             onChange={{
-              input: e =>
-                setUserEmailAndPasswordInput(prev => {
+              input: (e) =>
+                setUserEmailAndPasswordInput((prev) => {
                   return { ...prev, email: e.target.value }
                 }),
             }}
@@ -216,8 +216,8 @@ const LoginWithEmailAndPasswordForm = ({
             isLoginEmailOption={'email'}
             value={userEmailAndPasswordInput.password}
             onChange={{
-              input: e =>
-                setUserEmailAndPasswordInput(prev => {
+              input: (e) =>
+                setUserEmailAndPasswordInput((prev) => {
                   return { ...prev, password: e.target.value }
                 }),
             }}
@@ -230,8 +230,8 @@ const LoginWithEmailAndPasswordForm = ({
               isSendVerifyCode={isSendVerifyCode}
               counter={counter}
               onChange={{
-                input: e =>
-                  setVerifyOTP(prev => {
+                input: (e) =>
+                  setVerifyOTP((prev) => {
                     return {
                       ...prev,
                       input: e.target.value,
@@ -292,8 +292,8 @@ const LoginWithEmailAndPasswordForm = ({
                 isSendVerifyCode={isSendVerifyCode}
                 counter={counter}
                 onChange={{
-                  input: e =>
-                    setVerifyOTP(prev => {
+                  input: (e) =>
+                    setVerifyOTP((prev) => {
                       return {
                         ...prev,
                         input: e.target.value,
@@ -316,8 +316,8 @@ const LoginWithEmailAndPasswordForm = ({
                 type={'password'}
                 placeholder={'Mật khẩu'}
                 onChange={{
-                  input: e =>
-                    setPassword(prev => {
+                  input: (e) =>
+                    setPassword((prev) => {
                       return {
                         ...prev,
                         pass: e.target.value,
@@ -330,8 +330,8 @@ const LoginWithEmailAndPasswordForm = ({
                 placeholder={'Xác nhận mật khẩu'}
                 type={'password'}
                 onChange={{
-                  input: e =>
-                    setPassword(prev => {
+                  input: (e) =>
+                    setPassword((prev) => {
                       return {
                         ...prev,
                         rePass: e.target.value,

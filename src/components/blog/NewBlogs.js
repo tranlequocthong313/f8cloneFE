@@ -33,7 +33,7 @@ const NewBlogs = ({ blogs }) => {
           },
           {
             signal: controller.signal,
-          }
+          },
         )
         const data = await res.json()
         setBookmarkData(data.bookmark)
@@ -45,7 +45,7 @@ const NewBlogs = ({ blogs }) => {
     return () => controller?.abort()
   }, [])
 
-  const bookmarkHandler = async blogId => {
+  const bookmarkHandler = async (blogId) => {
     try {
       const token = Cookies.get('token')
 
@@ -66,12 +66,14 @@ const NewBlogs = ({ blogs }) => {
       console.log('bookmark', data)
 
       setBookmarkData(data.bookmark)
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
     <>
-      {blogs.map(blog => (
+      {blogs.map((blog) => (
         <SecondaryCard key={blog._id}>
           <div className={styles.header}>
             <div className={styles.author}>

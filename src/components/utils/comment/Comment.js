@@ -27,6 +27,7 @@ const Comment = ({
     isSuccess: false,
     show: false,
   })
+  const [visible, setVisible] = useState(false)
 
   const createStatus = (isSuccess, show) => {
     setReportStatus((prev) => {
@@ -41,13 +42,12 @@ const Comment = ({
   const reportStatusHandler = (status) =>
     status ? createStatus(true, true) : createStatus(false, true)
 
-  const [visible, setVisible] = useState(false)
+  const scrollToTopHandler = () => {
+    const SHOW_SCROLL_TO_TOP_OFFSET = 1000
 
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    })
+    commentRef.current.scrollTop >= SHOW_SCROLL_TO_TOP_OFFSET
+      ? setVisible(true)
+      : setVisible(false)
   }
 
   return (
@@ -57,7 +57,11 @@ const Comment = ({
       )}
 
       <div className={styles.container}>
-        <div className={styles.content} ref={commentRef}>
+        <div
+          className={styles.content}
+          ref={commentRef}
+          onScroll={scrollToTopHandler}
+        >
           <CommentHeader commentData={commentData} />
           <CommentInput
             showCode={showCode}
@@ -81,7 +85,13 @@ const Comment = ({
             />
           )}
         </div>
-        {visible && <ScrollToTop scrollToTop={scrollToTop} />}
+        {visible && (
+          <ScrollToTop
+            onScroll={() =>
+              commentRef.current.scrollTo({ top: 0, behavior: 'smooth' })
+            }
+          />
+        )}
       </div>
       <MainToast
         createStatus={reportStatus}

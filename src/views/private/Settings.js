@@ -86,8 +86,9 @@ const Settings = () => {
       dispatch(settings({ fullName: data.fullName, photoURL: user.photoURL }))
     } catch (error) {
       console.log(error)
+    } finally {
+      editModeHandler('name')
     }
-    editModeHandler('name')
   }
 
   const changeAvatarHandler = () => {
@@ -130,8 +131,9 @@ const Settings = () => {
       }
     } catch (error) {
       console.log(error)
+    } finally {
+      editModeHandler('avatar')
     }
-    editModeHandler('avatar')
   }
 
   const bioChangeHandler = async () => {
@@ -160,8 +162,9 @@ const Settings = () => {
       )
     } catch (error) {
       console.log(error)
+    } finally {
+      editModeHandler('bio')
     }
-    editModeHandler('bio')
   }
 
   const socialChangeHandler = async (socialName) => {
@@ -194,8 +197,9 @@ const Settings = () => {
       })
     } catch (error) {
       console.log(error)
+    } finally {
+      editModeHandler(socialName)
     }
-    editModeHandler(socialName)
   }
 
   return (
