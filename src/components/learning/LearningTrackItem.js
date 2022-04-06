@@ -9,10 +9,10 @@ const LearningTrackItem = ({ episodes }) => {
   const { active, activeHandler, playVideoHandler } =
     useContext(LearningContext)
 
-  const openHandler = id =>
-    setOpen(prev => {
+  const openHandler = (id) =>
+    setOpen((prev) => {
       const isOpen = prev.includes(id)
-      return isOpen ? prev.filter(item => item !== id) : [...prev, id]
+      return isOpen ? prev.filter((item) => item !== id) : [...prev, id]
     })
 
   // Style lesson item
@@ -25,7 +25,7 @@ const LearningTrackItem = ({ episodes }) => {
     return styles.lessonItem
   }
 
-  return episodes.map(episode => (
+  return episodes.map((episode) => (
     <div key={episode.id}>
       <div className={styles.wrapper} onClick={() => openHandler(episode.id)}>
         <h3 className={styles.title}>{episode.title}</h3>
@@ -37,7 +37,7 @@ const LearningTrackItem = ({ episodes }) => {
       </div>
       <Collapse in={open.includes(episode.id)}>
         <div className={styles.panelBody}>
-          {episode.lessons.map(lesson => (
+          {episode.lessons.map((lesson) => (
             <div
               className={styleHandler(lesson.learned, lesson.id)}
               key={lesson.id}

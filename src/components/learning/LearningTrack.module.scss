@@ -7,52 +7,53 @@
   top: 0;
   width: 23%;
   z-index: 2;
+}
 
-  .container {
-    animation: fadeIn 0.2s ease-in;
-    background-color: #fff;
+.container {
+  animation: fadeIn 0.2s ease-in;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+
+  .heading {
+    align-items: center;
     display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
+    justify-content: space-between;
+    padding: 12px 16px;
+    user-select: none;
 
-    .heading {
-      align-items: center;
-      display: flex;
-      justify-content: space-between;
-      padding: 12px 16px;
-      user-select: none;
-
-      h1 {
-        font-size: 16px;
-        line-height: 1.4;
-        margin: 0;
-      }
-      .closeButton {
-        background-color: transparent;
-        display: none;
-        font-size: 18px;
-        margin-right: 8px;
-        border: none;
-        box-shadow: none;
-        outline: none;
-        padding: 0;
-      }
+    h4 {
+      font-size: 16px;
+      line-height: 1.4;
+      margin: 0;
+      font-weight: 600;
     }
-
-    .body {
-      overflow-y: overlay;
-      flex: 1 1;
-      overscroll-behavior: contain;
+    .closeButton {
+      background-color: transparent;
+      display: none;
+      font-size: 18px;
+      margin-right: 8px;
+      border: none;
+      box-shadow: none;
+      outline: none;
+      padding: 0;
     }
+  }
 
-    @keyframes fadeIn {
-      0% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 1;
-      }
+  .body {
+    overflow-y: overlay;
+    flex: 1 1;
+    overscroll-behavior: contain;
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
     }
   }
 }
@@ -64,32 +65,10 @@
     width: 50%;
     z-index: 99;
   }
-
-  .backDrop {
-    background-color: rgba(0, 0, 0, 0.2);
-    display: block;
-    inset: 0;
-    position: fixed;
-    z-index: 98;
-  }
 }
 
-@media (min-width: 0px) and (max-width: 1023px) {
+@media (max-width: 1023px) {
   .wrapper {
-    left: 0;
-    right: unset;
-
-    .closeButton {
-      display: block !important;
-    }
-  }
-}
-
-@media (max-width: 739px) {
-  .wrapper {
-    bottom: 0;
-    margin-top: 0 !important;
-    width: 100%;
-    z-index: 99;
+    display: none !important;
   }
 }

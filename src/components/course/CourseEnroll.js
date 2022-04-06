@@ -11,7 +11,7 @@ const CourseEnroll = ({ image, showHandler, slug }) => {
           className={styles.backgroundImg}
           style={{ backgroundImage: `url(${image})` }}
         ></div>
-        <i className={`${styles.icon} fa-regular fa-circle-play`}></i>
+        <i className={`${styles.icon} fa-solid fa-circle-play`}></i>
         <p>Xem giới thiệu khóa học</p>
       </div>
       <h5>Miễn phí</h5>
@@ -20,23 +20,23 @@ const CourseEnroll = ({ image, showHandler, slug }) => {
       </MainButton>
       <ul>
         <li>
-          <i className={`${styles.icon} fa-regular fa-compass`}></i>
+          <i className={`${styles.icon} fa-solid fa-compass`}></i>
           <span>Trình độ cơ bản</span>
         </li>
         <li>
-          <i className={`${styles.icon} fa-regular fa-film`} />
+          <i className={`${styles.icon} fa-solid fa-film`} />
           <span>
             Tổng số <strong>10</strong> bài học
           </span>
         </li>
         <li>
-          <i className={`${styles.icon} fa-regular fa-clock`}></i>
+          <i className={`${styles.icon} fa-solid fa-clock`}></i>
           <span>
             Thời lượng <strong>03 giờ 25 phút</strong>
           </span>
         </li>
         <li>
-          <i className={`${styles.icon} fa-regular fa-battery-full`}></i>
+          <i className={`${styles.icon} fa-solid fa-battery-full`}></i>
           <span>Học mọi lúc, mọi nơi</span>
         </li>
       </ul>

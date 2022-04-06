@@ -17,7 +17,11 @@ const Learning = () => {
       <LearningHeader />
       <LearningContent show={show} />
       {show && (
-        <LearningTrack showHandler={showHandler} episodes={course.episode} />
+        <LearningTrack
+          onComputer={true}
+          showHandler={showHandler}
+          episodes={course.episode}
+        />
       )}
       <div
         className={styles.commentButton}
@@ -36,7 +40,11 @@ const Learning = () => {
           // blogId={blog._id}
         /> */}
       {/* )} */}
-      <LearningActionBar showHandler={showHandler} show={show} />
+      <LearningActionBar
+        episodes={course.episode}
+        show={show}
+        showHandler={showHandler}
+      />
     </>
   )
 }

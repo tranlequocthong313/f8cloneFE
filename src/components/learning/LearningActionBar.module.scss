@@ -53,6 +53,7 @@
       -webkit-line-clamp: 1;
       display: -webkit-box;
       font-size: 14px;
+      font-weight: 600;
       overflow: hidden;
       margin: 0;
     }
@@ -74,6 +75,22 @@
   }
 }
 
+.mobileLearningTrack {
+  display: none;
+
+  .modalWrapper {
+    border-left: 1px solid #e7e7e7;
+    bottom: 50px;
+    margin-top: 50px;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 23%;
+    z-index: 9999;
+    display: none;
+  }
+}
+
 @media (max-width: 1023px) {
   .wrapper {
     .button {
@@ -87,6 +104,14 @@
       left: 0;
     }
   }
+
+  .mobileLearningTrack {
+    display: block !important;
+
+    .modalWrapper {
+      display: block !important;
+    }
+  }
 }
 
 @media (max-width: 739px) {
@@ -94,5 +119,11 @@
     .title {
       display: none !important;
     }
+  }
+
+  .modalWrapper {
+    bottom: 0;
+    margin-top: 0 !important;
+    width: 100%;
   }
 }

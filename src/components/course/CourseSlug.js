@@ -66,23 +66,23 @@ const CourseSlug = () => {
                   </MainButton>
                   <ul>
                     <li>
-                      <i className={`${styles.icon} fa-regular fa-compass`}></i>
+                      <i className={`${styles.icon} fa-solid fa-compass`}></i>
                       <span>Trình độ {course ? course.level : ''}</span>
                     </li>
                     <li>
-                      <i className={`${styles.icon} fa-regular fa-film`} />
+                      <i className={`${styles.icon} fa-solid fa-film`} />
                       <span>
                         Tổng số <strong>10</strong> bài học
                       </span>
                     </li>
                     <li>
-                      <i className={`${styles.icon} fa-regular fa-clock`}></i>
+                      <i className={`${styles.icon} fa-solid fa-clock`}></i>
                       <span>
                         Thời lượng <strong>03 giờ 25 phút</strong>
                       </span>
                     </li>
                     <li>
-                      <i className={`${styles.icon} fa-regular fa-clock`}></i>
+                      <i className={`${styles.icon} fa-solid fa-clock`}></i>
                       <span>Học mọi lúc, mọi nơi</span>
                     </li>
                   </ul>

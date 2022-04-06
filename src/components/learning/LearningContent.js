@@ -13,10 +13,10 @@ const LearningContent = ({ show }) => {
       <div className={styles.content}>
         <div className={styles.contentTop}>
           <div className={styles.heading}>
-            <h1>
+            <h3>
               Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo
               dục
-            </h1>
+            </h3>
             <p>Cập nhật tháng 2 năm 2022</p>
           </div>
           <button className={styles.addNoteButton}>
