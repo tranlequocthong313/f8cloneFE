@@ -17,7 +17,7 @@ const Comment = ({
   setCommentData,
   blogId,
 }) => {
-  const userPhotoURL = useSelector(state => state.user.photoURL)
+  const userPhotoURL = useSelector((state) => state.user.photoURL)
   const commentRef = useRef()
 
   const [showSubmit, setShowSubmit] = useState(false)
@@ -29,7 +29,7 @@ const Comment = ({
   })
 
   const createStatus = (isSuccess, show) => {
-    setReportStatus(prev => {
+    setReportStatus((prev) => {
       return {
         ...prev,
         show,
@@ -38,7 +38,7 @@ const Comment = ({
     })
   }
 
-  const reportStatusHandler = status =>
+  const reportStatusHandler = (status) =>
     status ? createStatus(true, true) : createStatus(false, true)
 
   const [visible, setVisible] = useState(false)
@@ -55,53 +55,47 @@ const Comment = ({
       {showModal && (
         <CommentModal showModalHandler={() => setShowModal(false)} />
       )}
-      <div className={styles.wrapper} onClick={e => e.stopPropagation()}>
-        <div className={styles.container}>
-          <div className={styles.closeButton} onClick={setShowComment}>
-            <i className="bi bi-x"></i>
-          </div>
-          <div className={styles.content} ref={commentRef}>
-            <div className={styles.detailRow}>
-              <CommentHeader commentData={commentData} />
-              <CommentInput
-                showCode={showCode}
-                showSubmit={showSubmit}
-                onInput={onInput}
-                setShowSubmit={setShowSubmit}
-                setShowCode={setShowCode}
-                commentInput={commentInput}
-                submitComment={submitComment}
-                userPhotoURL={userPhotoURL}
-                blogId={blogId}
-              />
-              {commentData.length > 0 && (
-                <CommentBody
-                  commentData={commentData}
-                  userPhotoURL={userPhotoURL}
-                  showModalHandler={setShowModal}
-                  setCommentData={setCommentData}
-                  reportStatusHandler={reportStatusHandler}
-                  blogId={blogId}
-                />
-              )}
-            </div>
-          </div>
-          {visible && <ScrollToTop scrollToTop={scrollToTop} />}
+
+      <div className={styles.container}>
+        <div className={styles.content} ref={commentRef}>
+          <CommentHeader commentData={commentData} />
+          <CommentInput
+            showCode={showCode}
+            showSubmit={showSubmit}
+            onInput={onInput}
+            setShowSubmit={setShowSubmit}
+            setShowCode={setShowCode}
+            commentInput={commentInput}
+            submitComment={submitComment}
+            userPhotoURL={userPhotoURL}
+            blogId={blogId}
+          />
+          {commentData.length > 0 && (
+            <CommentBody
+              commentData={commentData}
+              userPhotoURL={userPhotoURL}
+              showModalHandler={setShowModal}
+              setCommentData={setCommentData}
+              reportStatusHandler={reportStatusHandler}
+              blogId={blogId}
+            />
+          )}
         </div>
-        <MainToast
-          createStatus={reportStatus}
-          setCreateStatus={() =>
-            setReportStatus(prev => {
-              return {
-                ...prev,
-                show: false,
-              }
-            })
-          }
-          successText={'Đã gửi báo cáo tới quản trị viên'}
-          failText={'Gửi báo cáo không thành công'}
-        />
+        {visible && <ScrollToTop scrollToTop={scrollToTop} />}
       </div>
+      <MainToast
+        createStatus={reportStatus}
+        setCreateStatus={() =>
+          setReportStatus((prev) => {
+            return {
+              ...prev,
+              show: false,
+            }
+          })
+        }
+        successText={'Đã gửi báo cáo tới quản trị viên'}
+        failText={'Gửi báo cáo không thành công'}
+      />
     </>
   )
 }

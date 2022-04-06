@@ -19,18 +19,18 @@
       line-height: 1.6;
     }
 
-    a {
-      display: inline-block;
-      color: #292929;
-      border: 2px solid #292929;
-      padding: 10px 16px;
+    .button {
+      padding: 8px 16px !important;
       font-size: 15px;
-      font-weight: 600;
-      border-radius: 999px;
       margin-top: 8px;
-      transition: 0.2s ease;
-      text-align: center;
-      text-decoration: none;
+
+      &:hover {
+        background-color: #292929;
+
+        a {
+          color: #fff;
+        }
+      }
     }
   }
 

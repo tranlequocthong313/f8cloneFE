@@ -18,6 +18,10 @@ const Courses = () => {
   const [courseBE, setCourseBE] = useState([])
 
   useEffect(() => {
+    document.title = 'Danh sách các khóa học lập trình tại F8 | by F8'
+  }, [])
+
+  useEffect(() => {
     const controller = new AbortController()
 
     ;(async () => {

@@ -4,11 +4,12 @@ import ScrollHorizontal from '../../utils/scroll/ScrollHorizontal'
 import MainCard from '../../utils/card/MainCard'
 import { Link } from 'react-router-dom'
 import styles from './CourseList.module.scss'
+import MainButton from '../../utils/button/MainButton'
 
 const CourseList = ({ courses, location }) => {
   return (
     <ScrollHorizontal path={'courses'}>
-      {courses.map(course => (
+      {courses.map((course) => (
         <CourseItem key={course._id} course={course} location={location} />
       ))}
       {location === 'my-course' && (
@@ -16,7 +17,9 @@ const CourseList = ({ courses, location }) => {
           <Link to="/courses">
             <i className="fa-solid fa-circle-plus"></i>
             <div className={styles.star}></div>
-            <button>Thêm khóa học</button>
+            <MainButton outline={true} className={styles.button}>
+              Thêm khóa học
+            </MainButton>
           </Link>
         </MainCard>
       )}

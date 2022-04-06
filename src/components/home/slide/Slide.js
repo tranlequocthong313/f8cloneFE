@@ -6,6 +6,7 @@ import banner3 from '../../../asset/images/Banner_04_2.png'
 import banner4 from '../../../asset/images/Banner_web_ReactJS.png'
 import styles from './Slide.module.scss'
 import '../../../sass/_carousel.scss'
+import MainButton from '../../utils/button/MainButton'
 
 const Slide = () => {
   return (
@@ -34,14 +35,15 @@ const Slide = () => {
               và có những con người yêu thích lập trình F8 sẽ ở đó.
             </p>
             <div>
-              <a
-                className={styles.button}
-                rel="noopener noreferrer"
-                target="_blank"
-                href="https://www.youtube.com/channel/UCNSCWwgW-rwmoE3Yc4WmJhw"
-              >
-                Truy cập kênh
-              </a>
+              <MainButton className={styles.button} outline={true}>
+                <a
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  href="https://www.youtube.com/channel/UCNSCWwgW-rwmoE3Yc4WmJhw"
+                >
+                  Truy cập kênh
+                </a>
+              </MainButton>
             </div>
           </div>
 
@@ -80,14 +82,15 @@ const Slide = () => {
               ràng cho việc đó. Học lập trình cũng không là ngoại lệ.
             </p>
             <div>
-              <a
-                className={styles.button}
-                rel="noopener noreferrer"
-                target="_blank"
-                href="https://fullstack.edu.vn/blog/tong-hop-cac-san-pham-cua-hoc-vien-tai-f8.html"
-              >
-                Xem thành quả
-              </a>
+              <MainButton className={styles.button} outline={true}>
+                <a
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  href="https://fullstack.edu.vn/blog/tong-hop-cac-san-pham-cua-hoc-vien-tai-f8.html"
+                >
+                  Xem thành quả
+                </a>
+              </MainButton>
             </div>
           </div>
 
@@ -126,14 +129,15 @@ const Slide = () => {
               và có những con người yêu thích lập trình F8 sẽ ở đó.
             </p>
             <div>
-              <a
-                className={styles.button}
-                rel="noopener noreferrer"
-                target="_blank"
-                href="https://www.facebook.com/groups/649972919142215"
-              >
-                Truy cập nhóm
-              </a>
+              <MainButton className={styles.button} outline={true}>
+                <a
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  href="https://www.facebook.com/groups/649972919142215"
+                >
+                  Truy cập nhóm
+                </a>
+              </MainButton>
             </div>
           </div>
 
@@ -172,14 +176,15 @@ const Slide = () => {
               là bạn có thể làm hầu hết các dự án thường gặp với ReactJS.
             </p>
             <div>
-              <a
-                className={styles.button}
-                rel="noopener noreferrer"
-                target="_blank"
-                href="https://fullstack.edu.vn/courses/reactjs?ref=banner"
-              >
-                Đăng ký ngay
-              </a>
+              <MainButton className={styles.button} outline={true}>
+                <a
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  href="https://fullstack.edu.vn/courses/reactjs?ref=banner"
+                >
+                  Đăng ký ngay
+                </a>
+              </MainButton>
             </div>
           </div>
 

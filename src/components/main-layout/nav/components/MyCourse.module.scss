@@ -7,14 +7,10 @@
   cursor: pointer;
   color: $text-color;
   padding: 0;
-  // line-height: 43px;
-  // display: flex;
-  // align-items: center;
   padding: 8px !important;
 
   a {
     color: $text-color;
-    // padding: 8px;
 
     &:hover,
     &:active,
@@ -27,115 +23,114 @@
   a::after {
     content: none;
   }
+}
 
-  .wrapper {
-    position: absolute;
-    top: 34px;
-    right: 0;
-    background-color: #fff;
-    animation: fadeIn 0.3s ease;
-    border-radius: 10px;
-    box-shadow: 0 -4px 32px rgba($color: #000000, $alpha: 0.2);
-    color: #1d2129;
-    margin: 0;
-    overflow: hidden;
-    padding-left: 0;
-    transition: all 0.3s ease-in-out;
-    will-change: opacity, transform;
-    min-width: 360px;
-    padding-bottom: 12px;
-    z-index: 9999;
+.wrapper {
+  position: absolute;
+  top: 35px !important;
+  right: 16px !important;
+  box-shadow: 0 -4px 32px rgba($color: #000000, $alpha: 0.2);
+  color: #1d2129;
+  margin: 0;
+  overflow: hidden;
+  padding-left: 0;
+  transition: all 0.3s ease-in-out;
+  will-change: opacity, transform;
+  width: 345px;
+  padding: 0 !important;
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        top: 100%;
-      }
-
-      to {
-        opacity: 1;
-        top: 34px;
-      }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      top: 100%;
     }
 
-    .header {
-      padding: 14px 20px 16px;
+    to {
+      opacity: 1;
+      top: 34px;
+    }
+  }
+
+  .header {
+    padding: 14px 20px 16px;
+    display: flex;
+    align-items: center;
+
+    a {
+      text-decoration: none;
+    }
+
+    h5 {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .viewAll {
+      font-size: 14px;
+      margin-left: auto;
+      color: $primary-color;
+      padding: 8px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+  }
+
+  .body {
+    display: flex;
+    padding: 0 20px;
+    transition: background-color 0.3s;
+    border-radius: 10px;
+    max-height: 68vh;
+    overflow-y: auto;
+
+    &:hover {
+      background-color: #1618230d;
+    }
+
+    .thumb {
       display: flex;
       align-items: center;
-
-      a {
-        text-decoration: none;
-      }
-
-      h6 {
-        font-size: 18px;
-        margin: 0;
-      }
-
-      .viewAll {
-        font-size: 14px;
-        margin-left: auto;
-        color: $primary-color;
-        padding: 8px;
-        border-radius: 4px;
-        font-weight: 500;
+      img {
+        width: 120px;
+        min-height: 67px;
+        border-radius: 8px;
+        background-color: #ebebeb;
+        border-style: none;
       }
     }
 
-    .body {
-      display: flex;
-      padding: 8px 20px 8px 20px;
-      transition: background-color 0.3s;
-      border-radius: 10px;
-      max-height: 68vh;
-      overflow-y: auto;
+    .info {
+      flex: 1 1;
+      margin-left: 12px;
 
-      &:hover {
-        background-color: #1618230d;
-      }
-
-      .thumb {
-        display: flex;
-        align-items: center;
-        img {
-          width: 120px;
-          min-height: 67px;
-          border-radius: 8px;
-          background-color: #ebebeb;
-          border-style: none;
-        }
-      }
-
-      .info {
-        flex: 1 1;
-        margin-left: 12px;
-
-        h3 {
-          font-size: 14px;
-          margin: 6px 0 0;
-
-          a {
-            color: $text-color;
-            text-decoration: none;
-          }
-        }
-
-        p {
-          font-size: 12px;
-          margin: 4px 0 0;
-          color: #666;
-        }
+      h3 {
+        font-size: 14px;
+        margin: 6px 0 0;
 
         a {
-          font-size: 14px;
-          font-weight: 600;
-          color: $primary-color;
-          margin-top: 6px;
-          cursor: pointer;
-          display: block;
-          background-color: transparent;
+          color: $text-color;
           text-decoration: none;
+          padding: 0;
         }
+      }
+
+      p {
+        font-size: 12px;
+        margin: 4px 0 0;
+        color: #666;
+      }
+
+      .startButton {
+        font-size: 13px;
+        font-weight: 600;
+        color: $primary-color;
+        margin-top: 6px;
+        cursor: pointer;
+        display: block;
+        background-color: transparent;
+        text-decoration: none;
+        padding: 0;
       }
     }
   }
@@ -143,6 +138,10 @@
 
 @media (max-width: 1023px) {
   .userCourse {
+    display: none !important;
+  }
+
+  .wrapper {
     display: none !important;
   }
 }

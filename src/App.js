@@ -75,12 +75,6 @@ function App() {
     return () => controller?.abort()
   }, [])
 
-  useEffect(() => {
-    if (location !== 'new-blog')
-      document.title =
-        'F8 - Học Lập Trình Để Đi Làm | F8 trên Youtube | F8 trên Facebook'
-  }, [location])
-
   return (
     <Routes>
       <Route

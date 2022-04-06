@@ -16,6 +16,11 @@ const Blog = () => {
   const [blogs, setBlogs] = useState(null)
 
   useEffect(() => {
+    document.title =
+      'Danh sách bài viết về lĩnh vực IT / CNTT / Phần mềm / lập trình tại F8'
+  }, [])
+
+  useEffect(() => {
     const controller = new AbortController()
 
     ;(async () => {

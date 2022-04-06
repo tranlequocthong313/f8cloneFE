@@ -29,6 +29,11 @@ const Home = () => {
   const [videoData, setVideoData] = useState([])
 
   useEffect(() => {
+    document.title =
+      'F8 - học lập trình để đi làm! | Học lập trình online | Học lập trình Javascript'
+  }, [])
+
+  useEffect(() => {
     const controller = new AbortController()
 
     ;(async () => {

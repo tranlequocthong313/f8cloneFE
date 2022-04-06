@@ -32,6 +32,7 @@ const BlogSlug = () => {
       try {
         const res = await fetch(`${apiURL}${location.pathname}`)
         const data = await res.json()
+
         setBlog(data[0])
         document.title = `${data[0].titleDisplay} | by F8`
       } catch (error) {

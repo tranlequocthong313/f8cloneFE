@@ -158,6 +158,7 @@
 
       .action {
         color: #999;
+        display: flex;
         font-size: 14px;
 
         .reactionButton {
@@ -198,77 +199,44 @@
         .dot {
           margin: 0 4px 0 4px;
         }
-
-        .optionButton {
-          opacity: 0;
-          transition: all 0.3s ease-in-out;
+        .optionIcon {
+          color: #888;
+          font-size: 16px;
+          padding: 4px;
           cursor: pointer;
-          position: relative;
 
           &:hover {
-            .optionIcon {
-              color: $text-color;
-            }
+            color: #292929;
           }
+        }
 
-          .optionIcon {
-            color: #888;
-            font-size: 16px;
-            padding: 4px;
-            position: relative;
-            top: 2px;
-          }
+        .optionWrapper {
+          position: absolute;
+          min-width: 201px;
+          margin: 0px;
+          top: 24px;
+          right: 0;
+          z-index: 21;
 
-          .optionWrapper {
-            z-index: 9999;
-            position: absolute;
-            inset: 0px 0px auto auto;
-            margin: 0px;
-            max-width: calc(100vw - 10px);
-            top: 20px;
-            right: 0;
+          .optionItem {
+            color: #444;
+            cursor: pointer;
+            display: block;
+            font-size: 14px;
+            padding: 8px 20px;
+            transition: 0.3s;
 
-            .list {
-              min-width: 200px;
-              padding: 8px 0;
-              transition: all 0.3s ease-in-out;
-              will-change: opacity, transform;
-              animation: fadeIn 0.3s ease;
-              background: #fff;
-              border-radius: 10px;
-              box-shadow: 0 -4px 32px rgba($color: #000000, $alpha: 0.2);
-              color: #1d2129;
-              margin: 0;
-              overflow: hidden;
-              list-style-type: none;
-
-              li {
-                color: #444;
-                cursor: pointer;
-                display: block;
-                font-size: 14px;
-                padding: 8px 20px;
-                transition: 0.3s;
-
-                i {
-                  font-size: 16px;
-                }
-
-                span {
-                  margin-left: 16px;
-                }
-              }
+            &:hover {
+              background-color: #f0f0f0;
+              color: #292929;
             }
 
-            @keyframes fadeIn {
-              from {
-                opacity: 0;
-                transform: translateY(-8px);
-              }
-              to {
-                opacity: 1;
-                transform: translateY(0);
-              }
+            i {
+              font-size: 16px;
+            }
+
+            span {
+              margin-left: 16px;
             }
           }
         }

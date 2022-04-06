@@ -14,6 +14,11 @@ const Careers = () => {
   const [jobs, setJobs] = useState([])
 
   useEffect(() => {
+    document.title =
+      'Tuyển dụng các vị trí làm việc tại F8 | Cơ hội việc làm IT | Đào tạo và phát triển nhân tài'
+  }, [])
+
+  useEffect(() => {
     const controller = new AbortController()
 
     ;(async () => {

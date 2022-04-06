@@ -15,6 +15,11 @@ const About = () => {
   const [jobs, setJobs] = useState([])
 
   useEffect(() => {
+    document.title =
+      'Giới thiệu về F8 | Nơi có những khóa học lập trình online chất lượng'
+  }, [])
+
+  useEffect(() => {
     const controller = new AbortController()
 
     ;(async () => {

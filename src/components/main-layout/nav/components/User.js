@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Image } from 'react-bootstrap'
+import { Image, Dropdown } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './User.module.scss'
 import MyCourse from './MyCourse'
@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux'
 import { logout } from '../../../../actions/userAction'
 import Cookies from 'js-cookie'
 import removeActions from '../../../utils/remove-accents/removeActions'
+import Tippy from '../../../utils/tippy/Tippy'
 
 const User = ({ photoURL, displayName, email, currentPage }) => {
   const navigate = useNavigate()
@@ -17,7 +18,7 @@ const User = ({ photoURL, displayName, email, currentPage }) => {
 
   const [show, setShow] = useState(false)
 
-  const showHandler = () => setShow(prev => !prev)
+  const showHandler = () => setShow((prev) => !prev)
 
   // Dispatch logout action and navigate user to login page after logout
   const dispatchAndNavigateHandler = () => {
@@ -41,64 +42,45 @@ const User = ({ photoURL, displayName, email, currentPage }) => {
   }, [])
 
   return (
-    <>
-      <MyCourse />
-      {/* <Notification notifications={NOTIFICATION_DUMMY_DATA} /> */}
-      <>
-        {/* <BackDrop onClick={showHandler} show={show} /> */}
+    <Tippy
+      button={
         <Image
           className={styles.userPicture}
           src={photoURL || userDefaultImage}
           onClick={showHandler}
         />
-        {show && (
-          <div className={styles.container} onClick={e => e.stopPropagation()}>
-            <div className={styles.user}>
-              <Image
-                src={photoURL || userDefaultImage}
-                className={styles.avatar}
-              />
-              <div className={styles.info}>
-                <div className={styles.name}>{displayName}</div>
-                <div className={styles.fullName}>
-                  {`@${removeActions(
-                    displayName.toLowerCase().replace(/\s/g, '')
-                  )}`}
-                </div>
-              </div>
-            </div>
-            <div className={styles.content}>
-              <hr />
-              <ul className={styles.list}>
-                <li>
-                  <Link to="new-blog">Viết blog</Link>
-                </li>
-                <li>
-                  <Link to="/my-post">Bài viết của tôi</Link>
-                </li>
-              </ul>
-              <hr />
-              <ul className={styles.list}>
-                <li>
-                  <Link to="/bookmark-post">Bài viết đã lưu</Link>
-                </li>
-              </ul>
-              <hr />
-              <ul className={styles.list}>
-                <li>
-                  <Link to="/settings">Cài đặt</Link>
-                </li>
-                <li>
-                  <Link to="/login" onClick={singOutHandler}>
-                    Đăng xuất
-                  </Link>
-                </li>
-              </ul>
-            </div>
+      }
+      className={styles.menuWrapper}
+    >
+      <div className={styles.user}>
+        <Image src={photoURL || userDefaultImage} className={styles.avatar} />
+        <div className={styles.info}>
+          <div className={styles.name}>{displayName}</div>
+          <div className={styles.fullName}>
+            {displayName &&
+              `@${removeActions(displayName.toLowerCase().replace(/\s/g, ''))}`}
           </div>
-        )}
-      </>
-    </>
+        </div>
+      </div>
+      <Dropdown.Divider />
+      <Link className={styles.menuItem} to="/new-blog">
+        Viết blog
+      </Link>
+      <Link className={styles.menuItem} to="/my-post">
+        Bài viết của tôi
+      </Link>
+      <Dropdown.Divider />
+      <Link className={styles.menuItem} to="/bookmark-post">
+        Bài viết đã lưu
+      </Link>
+      <Dropdown.Divider />
+      <Link className={styles.menuItem} to="/settings">
+        Cài đặt
+      </Link>
+      <Link className={styles.menuItem} to="/login" onClick={singOutHandler}>
+        Đăng xuất
+      </Link>
+    </Tippy>
   )
 }
 

@@ -3,15 +3,16 @@ import CardButton from '../../utils/card/CardButton'
 import MainCard from '../../utils/card/MainCard'
 import styles from './VideoItem.module.scss'
 import youtubeDurationFormat from 'youtube-duration-format'
+import MainButton from '../../utils/button/MainButton'
 
 const VideoItem = ({ video }) => {
   // Format view, like, comment count
-  const formatNumber = number => {
+  const formatNumber = (number) => {
     return new Intl.NumberFormat(['ban', 'id']).format(number)
   }
 
   // Format youtube duration time 0:0
-  const formatDuration = duration => {
+  const formatDuration = (duration) => {
     const durationFormatted = youtubeDurationFormat(duration)
     return durationFormatted
   }
@@ -27,7 +28,7 @@ const VideoItem = ({ video }) => {
           title={video.title}
           style={{ backgroundImage: `url(${video.image})` }}
         >
-          <CardButton>Xem video</CardButton>
+          <MainButton className={styles.button}>Xem video</MainButton>
           <div className={styles.videoInfo}>
             <div className={styles.playWrap}>
               <i className="fa-solid fa-play"></i>

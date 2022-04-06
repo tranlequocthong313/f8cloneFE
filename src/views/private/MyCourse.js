@@ -6,11 +6,15 @@ import { apiURL } from '../../context/constants'
 import CourseList from '../../components/home/courses/CourseList'
 
 const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer')
+  import('../../components/main-layout/footer/Footer'),
 )
 
 const MyCourse = () => {
   const [courseFE, setCourseFE] = useState([])
+
+  useEffect(() => {
+    document.title = 'Thiết lập về tôi tại F8'
+  }, [])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -35,14 +39,12 @@ const MyCourse = () => {
     <>
       <Header />
       <Row>
-        <Col xs={0} sm={0} md={1} lg={1} xl={1}>
-          <SideBar />
-        </Col>
+        <SideBar />
         <Col xs={12} sm={12} md={12} lg={11} xl={11}>
           <div className="withSidebarContent">
             <div className="container">
               <div className="containerTop">
-                <h1>Khóa học của tôi</h1>
+                <h2>Khóa học của tôi</h2>
                 <p>Bạn chưa hoàn thành khóa học nào.</p>
               </div>
               <CourseList courses={courseFE} location={'my-course'} />

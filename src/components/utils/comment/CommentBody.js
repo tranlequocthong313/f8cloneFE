@@ -10,6 +10,7 @@ import CommentReactionCounter from './CommentReactionCounter'
 import noPhotoURL from '../../../asset/images/nobody_m.256x256.jpg'
 import styles from './CommentBody.module.scss'
 import io from 'socket.io-client'
+import Tippy from '../tippy/Tippy'
 
 const socket = io.connect(apiURL)
 
@@ -35,7 +36,7 @@ const CommentBody = ({
   })
   const [showReplyBox, setShowReplyBox] = useState([])
 
-  const user = useSelector(state => state.user)
+  const user = useSelector((state) => state.user)
 
   const STRING_LENGTH_EXTEND = 350 // Content length > 350 => show extend
 
@@ -61,7 +62,7 @@ const CommentBody = ({
     }
   }
 
-  const replyCommentHandler = async commentId => {
+  const replyCommentHandler = async (commentId) => {
     try {
       const token = Cookies.get('token')
       if (!token) return
@@ -87,7 +88,7 @@ const CommentBody = ({
     }
   }
 
-  const getReplyComment = async commentId => {
+  const getReplyComment = async (commentId) => {
     try {
       const token = Cookies.get('token')
       if (!token) return
@@ -108,7 +109,7 @@ const CommentBody = ({
     }
   }
 
-  const deleteComment = async commentId => {
+  const deleteComment = async (commentId) => {
     try {
       const token = Cookies.get('token')
       if (!token) return
@@ -130,7 +131,7 @@ const CommentBody = ({
     }
   }
 
-  const editCommentHandler = async commentId => {
+  const editCommentHandler = async (commentId) => {
     try {
       const token = Cookies.get('token')
       if (!token) return
@@ -156,8 +157,8 @@ const CommentBody = ({
     }
 
     setEditComment('')
-    setShowEdit(prev => prev.filter(item => item !== commentId))
-    setShowCodeEdit(prev => prev.filter(item => item !== commentId))
+    setShowEdit((prev) => prev.filter((item) => item !== commentId))
+    setShowCodeEdit((prev) => prev.filter((item) => item !== commentId))
   }
 
   const showInputHandler = (commentId, option) => {
@@ -165,19 +166,19 @@ const CommentBody = ({
     const isEdit = showEdit.includes(commentId)
 
     if (option === 'reply' && !isReply && !isEdit) {
-      setShowReply(prev => [...prev, commentId])
+      setShowReply((prev) => [...prev, commentId])
     } else if (option === 'reply' && !isReply && isEdit) {
-      setShowReply(prev => [...prev, commentId])
-      setShowEdit(prev => prev.filter(item => item !== commentId))
+      setShowReply((prev) => [...prev, commentId])
+      setShowEdit((prev) => prev.filter((item) => item !== commentId))
     } else if (option === 'reply' && isReply) {
-      setShowReply(prev => prev.filter(item => item !== commentId))
+      setShowReply((prev) => prev.filter((item) => item !== commentId))
     } else if (option === 'edit' && !isEdit && isReply) {
-      setShowEdit(prev => [...prev, commentId])
-      setShowReply(prev => prev.filter(item => item !== commentId))
+      setShowEdit((prev) => [...prev, commentId])
+      setShowReply((prev) => prev.filter((item) => item !== commentId))
     } else if (option === 'edit' && !isEdit && !isReply) {
-      return setShowEdit(prev => [...prev, commentId])
+      return setShowEdit((prev) => [...prev, commentId])
     }
-    setShowEdit(prev => prev.filter(item => item !== commentId))
+    setShowEdit((prev) => prev.filter((item) => item !== commentId))
   }
 
   const showCodeEditReplyHandler = (commentId, option) => {
@@ -185,25 +186,25 @@ const CommentBody = ({
     const isEdit = showCodeEdit.includes(commentId)
 
     if (option === 'reply' && !isReply && !isEdit) {
-      setShowCodeReply(prev => [...prev, commentId])
+      setShowCodeReply((prev) => [...prev, commentId])
     } else if (option === 'reply' && !isReply && isEdit) {
-      setShowCodeReply(prev => [...prev, commentId])
-      setShowCodeEdit(prev => prev.filter(item => item !== commentId))
+      setShowCodeReply((prev) => [...prev, commentId])
+      setShowCodeEdit((prev) => prev.filter((item) => item !== commentId))
     } else if (option === 'reply' && isReply) {
-      setShowCodeReply(prev => prev.filter(item => item !== commentId))
+      setShowCodeReply((prev) => prev.filter((item) => item !== commentId))
     } else if (option === 'edit' && !isEdit && isReply) {
-      setShowCodeEdit(prev => [...prev, commentId])
-      setShowCodeReply(prev => prev.filter(item => item !== commentId))
+      setShowCodeEdit((prev) => [...prev, commentId])
+      setShowCodeReply((prev) => prev.filter((item) => item !== commentId))
     } else if (option === 'edit' && !isEdit && !isReply) {
-      setShowCodeEdit(prev => [...prev, commentId])
+      setShowCodeEdit((prev) => [...prev, commentId])
     } else {
-      setShowCodeEdit(prev => prev.filter(item => item !== commentId))
+      setShowCodeEdit((prev) => prev.filter((item) => item !== commentId))
     }
   }
 
   const copyHandler = (commentId, commentContent) => {
     navigator.clipboard.writeText(commentContent)
-    setIsCopy(prev => {
+    setIsCopy((prev) => {
       return [...prev, commentId]
     })
     const timer = setTimeout(() => {
@@ -212,12 +213,12 @@ const CommentBody = ({
     }, 5000)
   }
 
-  const extendHandler = commentId =>
+  const extendHandler = (commentId) =>
     extend.includes(commentId)
-      ? setExtend(prev => prev.filter(item => item !== commentId))
-      : setExtend(prev => [...prev, commentId])
+      ? setExtend((prev) => prev.filter((item) => item !== commentId))
+      : setExtend((prev) => [...prev, commentId])
 
-  const showOptionHandler = commentId =>
+  const showOptionHandler = (commentId) =>
     showOption === commentId ? setShowOption(null) : setShowOption(commentId)
 
   const styleCommentContent = (commentId, commentContent) => {
@@ -234,7 +235,7 @@ const CommentBody = ({
 
   return (
     <>
-      {commentData.map(comment => (
+      {commentData.map((comment) => (
         <div key={comment._id}>
           <div className={styles.commentList}>
             <div className={styles.avatar}>
@@ -323,49 +324,49 @@ const CommentBody = ({
                   <span className={styles.createdAt}>
                     {timeSinceHandler(comment.createdAt)}
                   </span>
-                  <span
-                    className={styles.optionButton}
-                    onClick={() => showOptionHandler(comment._id)}
+
+                  <span className={styles.dot}>.</span>
+
+                  <Tippy
+                    button={
+                      <i
+                        className={`fa-solid fa-ellipsis ${styles.optionIcon}`}
+                      ></i>
+                    }
+                    className={styles.optionWrapper}
                   >
-                    <span className={styles.dot}>.</span>
-                    <span className={styles.optionIcon}>
-                      <i className="fa-solid fa-ellipsis"></i>
-                    </span>
-                    {showOption === comment._id && (
-                      <div className={styles.optionWrapper}>
-                        <ul className={styles.list}>
-                          {comment.postedBy._id === user.userId && (
-                            <>
-                              <li
-                                onClick={() => {
-                                  showInputHandler(comment._id, 'edit')
-                                }}
-                              >
-                                <i className="fa-solid fa-pen"></i>
-                                <span>Sửa bình luận</span>
-                              </li>
-                              <li onClick={() => deleteComment(comment._id)}>
-                                <i className="fa-solid fa-trash"></i>
-                                <span>Xóa bình luận</span>
-                              </li>
-                            </>
-                          )}
-                          {comment.postedBy._id !== user.userId && (
-                            <li
-                              onClick={() =>
-                                reportStatusHandler(
-                                  reportCommentHandler(comment._id)
-                                )
-                              }
-                            >
-                              <i className="fa-solid fa-flag"></i>
-                              <span>Báo cáo bình luận</span>
-                            </li>
-                          )}
-                        </ul>
+                    {comment.postedBy._id === user.userId && (
+                      <>
+                        <div
+                          className={styles.optionItem}
+                          onClick={() => {
+                            showInputHandler(comment._id, 'edit')
+                          }}
+                        >
+                          <i className="fa-solid fa-pen"></i>
+                          <span>Sửa bình luận</span>
+                        </div>
+                        <div
+                          className={styles.optionItem}
+                          onClick={() => deleteComment(comment._id)}
+                        >
+                          <i className="fa-solid fa-trash"></i>
+                          <span>Xóa bình luận</span>
+                        </div>
+                      </>
+                    )}
+                    {comment.postedBy._id !== user.userId && (
+                      <div
+                        className={styles.optionItem}
+                        onClick={() =>
+                          reportStatusHandler(reportCommentHandler(comment._id))
+                        }
+                      >
+                        <i className="fa-solid fa-flag"></i>
+                        <span>Báo cáo bình luận</span>
                       </div>
                     )}
-                  </span>
+                  </Tippy>
                 </div>
               </div>
 
@@ -383,7 +384,7 @@ const CommentBody = ({
                     }
                     buttonText={'Trả lời'}
                     firstString={comment.postedBy.fullName}
-                    onInput={e => setReplyComment(e.target.innerText)}
+                    onInput={(e) => setReplyComment(e.target.innerText)}
                     commentInput={replyComment}
                   />
                 )}
@@ -402,7 +403,7 @@ const CommentBody = ({
                     buttonText={'Sửa'}
                     firstString={comment.content}
                     editCommentHandler={() => editCommentHandler(comment._id)}
-                    onInput={e => setEditComment(e.target.innerText)}
+                    onInput={(e) => setEditComment(e.target.innerText)}
                     commentInput={editComment}
                   />
                 )}
@@ -444,7 +445,7 @@ const CommentBody = ({
               </div>
 
               {comment._id === replyCommentData.commentId &&
-                replyCommentData.replies.map(reply => (
+                replyCommentData.replies.map((reply) => (
                   <div
                     className={`${styles.commentList} ${styles.replyCommentList}`}
                     key={reply._id}
@@ -463,7 +464,7 @@ const CommentBody = ({
                       <div
                         className={styleCommentContent(
                           reply._id,
-                          reply.content
+                          reply.content,
                         )}
                       >
                         <div>
@@ -575,7 +576,7 @@ const CommentBody = ({
                                     <li
                                       onClick={() =>
                                         reportStatusHandler(
-                                          reportCommentHandler(reply._id)
+                                          reportCommentHandler(reply._id),
                                         )
                                       }
                                     >
@@ -622,7 +623,7 @@ const CommentBody = ({
                             editCommentHandler={() =>
                               editCommentHandler(reply._id)
                             }
-                            onInput={e => setEditComment(e.target.innerText)}
+                            onInput={(e) => setEditComment(e.target.innerText)}
                             editComment={editComment}
                           />
                         )}

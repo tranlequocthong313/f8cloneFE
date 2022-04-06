@@ -2,15 +2,10 @@
 
 .mobileNav {
   color: #707070;
-  flex: 1 1;
   font-size: 20px;
   margin-right: 32px;
   padding: 8px 0;
   display: none;
-
-  i {
-    font-size: 28px;
-  }
 }
 
 .user {
@@ -62,9 +57,44 @@
   }
 }
 
+.icon {
+  font-size: 28px;
+  flex: 1 1;
+  margin-right: 160px;
+  display: none;
+}
+
 @media (max-width: 1023px) {
+  .mobileNav {
+    width: 60% !important;
+    z-index: 9999 !important;
+    font-size: 1.6rem;
+    padding: 16px 0 0 32px;
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    overflow-y: auto;
+    animation: slideIn 0.5s ease;
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-100%);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+        transform: translateX(0);
+      }
+    }
+  }
+
   .user {
     padding: 16px 0 0px 20px;
+  }
+
+  .icon {
+    display: block;
   }
 
   .mobileNav {
@@ -73,6 +103,11 @@
 }
 
 @media (max-width: 739px) {
+  .mobileNav {
+    width: 80% !important;
+    padding: 16px 0 0 16px !important;
+  }
+
   .user {
     padding-bottom: 24px;
   }

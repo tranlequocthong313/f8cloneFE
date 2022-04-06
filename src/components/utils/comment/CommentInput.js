@@ -31,10 +31,6 @@ const CommentInput = ({
       const token = Cookies.get('token')
       if (!token) return navigate('/login')
 
-      setCommentInput('')
-      setShowSubmit(false)
-      setShowCode(false)
-
       const res = await fetch(`${apiURL}/blog/comment`, {
         method: 'PUT',
         body: JSON.stringify({
@@ -53,10 +49,15 @@ const CommentInput = ({
       const comment = {
         ...data.comments[0],
       }
+
       socket.emit('comment', comment)
     } catch (error) {
       console.log(error)
     }
+
+    setCommentInput('')
+    setShowSubmit(false)
+    setShowCode(false)
   }
 
   return (
@@ -65,7 +66,7 @@ const CommentInput = ({
       <div onClick={() => setShowSubmit(true)}>
         <ContentEditable
           text={'Viết bình luận của bạn...'}
-          onInput={e => setCommentInput(e.target.innerText)}
+          onInput={(e) => setCommentInput(e.target.innerText)}
           maxLength={'3000'}
           className={styles.commentInput}
           showCode={showCode}

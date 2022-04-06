@@ -12,13 +12,17 @@ import timeSinceHandler from '../../components/utils/timeSinceHandler/timeSinceH
 import Tabs from '../../components/utils/tabs/Tabs'
 
 const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer')
+  import('../../components/main-layout/footer/Footer'),
 )
 
 const MyBlog = () => {
   const [tabs, setTabs] = useState('drafts')
   const [myBlog, setMyBlog] = useState(null)
   const [myDraftBlog, setMyDraftBlog] = useState(null)
+
+  useEffect(() => {
+    document.title = 'Bài viết của tôi tại F8'
+  }, [])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -38,7 +42,7 @@ const MyBlog = () => {
           },
           {
             signal: controller.signal,
-          }
+          },
         )
 
         const data = await res.json()
@@ -55,14 +59,12 @@ const MyBlog = () => {
     <>
       <Header />
       <Row>
-        <Col xs={0} sm={0} md={1} lg={1} xl={1}>
-          <SideBar />
-        </Col>
-        <Col xs={12} sm={12} md={12} lg={11} xl={11}>
+        <SideBar />
+        <Col xs={12} sm={12} md={12} lg={11} xl={11} style={{ padding: '8px' }}>
           <div className="withSidebarContent">
             <div className="container">
               <div className="containerTop">
-                <h1>Bài viết của tôi</h1>
+                <h2>Bài viết của tôi</h2>
               </div>
               <Container fluid style={{ padding: 0 }}>
                 <Row style={{ marginTop: 0 }}>
@@ -98,7 +100,7 @@ const MyBlog = () => {
                     )}
                     {tabs === 'drafts' &&
                       myDraftBlog &&
-                      myDraftBlog.map(blog => (
+                      myDraftBlog.map((blog) => (
                         <ul key={blog._id} className={styles.blogList}>
                           <li>
                             <h3>
@@ -130,7 +132,7 @@ const MyBlog = () => {
                     )}
                     {tabs === 'published' &&
                       myBlog &&
-                      myBlog.map(blog => (
+                      myBlog.map((blog) => (
                         <ul key={blog._id} className={styles.blogList}>
                           <li>
                             <h3>

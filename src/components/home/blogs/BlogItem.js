@@ -4,6 +4,7 @@ import MainCard from '../../utils/card/MainCard'
 import styles from './BlogItem.module.scss'
 import CardButton from '../../utils/card/CardButton'
 import noPhotoUser from '../../../asset/images/nobody_m.256x256.jpg'
+import MainButton from '../../utils/button/MainButton'
 
 const BlogItem = ({ blog }) => {
   return (
@@ -17,7 +18,7 @@ const BlogItem = ({ blog }) => {
               : `url(https://accounts.fullstack.edu.vn/assets/icon/f8_icon.png)`,
           }}
         >
-          <CardButton>Xem bài viết</CardButton>
+          <MainButton className={styles.button}>Xem bài viết</MainButton>
         </section>
       </Link>
       <h4 className={styles.title}>

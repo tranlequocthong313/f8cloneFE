@@ -4,6 +4,7 @@ import styles from './Search.module.scss'
 import { Link } from 'react-router-dom'
 import { apiURL } from '../../../../context/constants'
 import noPhotoURL from '../../../../asset/images/nobody_m.256x256.jpg'
+import Tippy from '../../../utils/tippy/Tippy'
 
 const Search = ({ currentPage }) => {
   const [searchInput, setSearchInput] = useState('')
@@ -14,7 +15,7 @@ const Search = ({ currentPage }) => {
     videos: [],
   })
 
-  const searchHandler = async e => {
+  const searchHandler = async (e) => {
     try {
       const length = e.target.value.trim().length
       let match = e.target.value.match(/^[a-zA-Z ]*/)
@@ -22,7 +23,7 @@ const Search = ({ currentPage }) => {
       setSearchInput(e.target.value)
 
       if (length === 0) {
-        setResult(prev => {
+        setResult((prev) => {
           return {
             ...prev,
             courses: [],
@@ -37,7 +38,7 @@ const Search = ({ currentPage }) => {
         const res = await fetch(`${apiURL}/search/${e.target.value}`)
         const data = await res.json()
 
-        setResult(prev => {
+        setResult((prev) => {
           return {
             ...prev,
             courses: [...data.courses],
@@ -86,7 +87,7 @@ const Search = ({ currentPage }) => {
             <div className={styles.dropDown}>
               <div className={styles.resultWrapper}>
                 <div className={styles.header}>
-                  <i className="fa-regular fa-magnifying-glass"></i>
+                  <i className="fa-solid fa-magnifying-glass"></i>
                   {result.courses.length === 0 &&
                   result.blogs.length === 0 &&
                   result.videos.length === 0 &&
@@ -102,7 +103,7 @@ const Search = ({ currentPage }) => {
                       <h5>KHÓA HỌC</h5>
                       <Link to="">Xem thêm</Link>
                     </div>
-                    {result.courses.map(course => (
+                    {result.courses.map((course) => (
                       <Link
                         className={styles.searchItem}
                         to={`courses/${course.slug}`}
@@ -120,7 +121,7 @@ const Search = ({ currentPage }) => {
                       <h5>BÀI VIẾT</h5>
                       <Link to="">Xem thêm</Link>
                     </div>
-                    {result.blogs.map(blog => (
+                    {result.blogs.map((blog) => (
                       <Link
                         className={styles.searchItem}
                         to={`blog/${blog.slug}`}
@@ -147,7 +148,7 @@ const Search = ({ currentPage }) => {
                       <h5>VIDEO</h5>
                       <Link to="">Xem thêm</Link>
                     </div>
-                    {result.videos.map(video => (
+                    {result.videos.map((video) => (
                       <a
                         className={styles.searchItem}
                         rel="noopener noreferrer"

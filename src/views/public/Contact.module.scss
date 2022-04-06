@@ -25,33 +25,18 @@
       padding: 4px 12px;
       color: $text-color;
       font-family: inherit;
-      transition: background-color .15s cubic-bezier(.2,.2,.2,1),border-color .15s cubic-bezier(.2,.2,.2,1);
+      transition: background-color 0.15s cubic-bezier(0.2, 0.2, 0.2, 1),
+        border-color 0.15s cubic-bezier(0.2, 0.2, 0.2, 1);
       width: 100%;
       background-color: #fff;
     }
   }
 
-  .submitButton {
-    background-color: $primary-color;
-    color: #fff;
+  .button {
     min-width: 100px;
-    border: 1px solid $primary-color;
-    border-radius: 999px;
-    display: inline-block;
-    font-size: 14px;
-    font-weight: 600;
-    outline: none;
-    padding: 9px 16px;
-    text-align: center;
-    transition: .3s ease;
-    user-select: none;
-    white-space: nowrap;
-    box-shadow: none;
 
     &:hover {
-      cursor: pointer;
-    opacity: .9;
+      opacity: 0.9;
     }
   }
-
 }

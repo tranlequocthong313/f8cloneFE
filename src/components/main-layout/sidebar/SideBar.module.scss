@@ -8,7 +8,7 @@
   @include flexCenter(column);
   flex-shrink: 0;
   position: fixed;
-  top: 60px;
+  top: 80px;
   padding: 0 8px;
   width: 96px;
   z-index: 8;
@@ -25,6 +25,7 @@
 .list {
   list-style-type: none;
   padding: 0;
+  margin: 10px 0;
 
   a {
     width: 72px;

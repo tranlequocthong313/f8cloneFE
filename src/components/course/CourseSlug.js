@@ -9,6 +9,7 @@ import styles from './CourseSlug.module.scss'
 import CurriculumOfCourse from './CurriculumOfCourse'
 import PreviewCourse from './PreviewCourse'
 import { apiURL } from '../../context/constants'
+import MainButton from '../utils/button/MainButton'
 
 const Footer = React.lazy(() => import('../main-layout/footer/Footer'))
 
@@ -58,12 +59,11 @@ const CourseSlug = () => {
                 </div>
                 <div className={styles.purchaseBadge}>
                   <h5>Miễn phí</h5>
-                  <Link
-                    className={styles.learnNowButton}
-                    to={`/learning/${course ? course.slug : ''}`}
-                  >
-                    Đăng ký học
-                  </Link>
+                  <MainButton className={styles.button} primary={true}>
+                    <Link to={`/learning/${course ? course.slug : ''}`}>
+                      Đăng ký học
+                    </Link>
+                  </MainButton>
                   <ul>
                     <li>
                       <i className={`${styles.icon} fa-regular fa-compass`}></i>
@@ -112,8 +112,13 @@ const CourseSlug = () => {
           </div>
         </Col>
       </Row>
-      <div className={styles.mobileRegisterBtn}>
-        <button>ĐĂNG KÝ MIỄN PHÍ</button>
+
+      <div className={styles.mobileButtonWrapper}>
+        <MainButton className={styles.mobileButton} primary={true}>
+          <Link to={`/learning/${course ? course.slug : ''}`}>
+            ĐĂNG KÝ MIỄN PHÍ
+          </Link>
+        </MainButton>
       </div>
       <Suspense fallback={<div>Loading...</div>}>
         <Footer />

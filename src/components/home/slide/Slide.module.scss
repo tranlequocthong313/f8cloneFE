@@ -47,22 +47,16 @@
 }
 
 .button {
-  text-align: center;
-  display: inline-block;
   min-width: 124px;
-  padding: 4px 10px;
-  color: #fff;
-  border-radius: 16px;
-  border: 2px solid #fff;
-  font-size: 14px;
-  font-weight: 700;
-  text-decoration: none;
-  transition: 0.2s ease;
-  position: absolute;
+  padding: 4px 12px !important;
+  border: 2px solid #fff !important;
+
+  a {
+    color: #fff !important;
+  }
 
   &:hover {
-    background-color: #fff;
-    color: #2877fa;
+    opacity: 0.8 !important;
   }
 }
 

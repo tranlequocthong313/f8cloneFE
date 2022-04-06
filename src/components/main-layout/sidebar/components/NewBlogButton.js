@@ -2,23 +2,19 @@ import React from 'react'
 import { NavDropdown } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import styles from './NewBlogButton.module.scss'
+import Tippy from '../../../utils/tippy/Tippy'
 
 const NewBlogButton = () => {
   return (
-    <NavDropdown
-      title={<i className={`${styles.newBlogIcon} fa-regular fa-plus`}></i>}
-      id="basic-nav-dropdown"
-      className={styles.newBlog}
+    <Tippy
+      button={<i className={`${styles.newBlogIcon} fa-regular fa-plus`}></i>}
+      className={styles.wrapper}
     >
-      <ul className={styles.list}>
-        <li>
-          <Link to="/new-blog" className={styles.link}>
-            <i className="fa-solid fa-pen"></i>
-            <span>Viết blog</span>
-          </Link>
-        </li>
-      </ul>
-    </NavDropdown>
+      <Link to="/new-blog">
+        <i className="fa-solid fa-pen"></i>
+        <span>Viết blog</span>
+      </Link>
+    </Tippy>
   )
 }
 

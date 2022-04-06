@@ -13,12 +13,12 @@ import { storage } from '../../firebase/config'
 import removeActions from '../../components/utils/remove-accents/removeActions'
 
 const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer')
+  import('../../components/main-layout/footer/Footer'),
 )
 
 const Settings = () => {
   const dispatch = useDispatch()
-  const user = useSelector(state => state.user)
+  const user = useSelector((state) => state.user)
 
   const [isEditMode, setIsEditMode] = useState([])
   const [fullName, setFullName] = useState(user.displayName)
@@ -35,16 +35,18 @@ const Settings = () => {
     twitter: user.socials.twitter ? user.socials.twitter : '',
   })
 
-  console.log(user.socials)
+  useEffect(() => {
+    document.title = 'Thiết lập về tôi tại F8'
+  }, [])
 
-  const editModeHandler = name => {
+  const editModeHandler = (name) => {
     if (!name) return
 
     const isShow = isEditMode.includes(name)
     console.log(isShow)
     isShow
-      ? setIsEditMode(prev => prev.filter(item => item !== name))
-      : setIsEditMode(prev => [...prev, name])
+      ? setIsEditMode((prev) => prev.filter((item) => item !== name))
+      : setIsEditMode((prev) => [...prev, name])
   }
 
   useEffect(() => {
@@ -53,9 +55,9 @@ const Settings = () => {
     }
   }, [image])
 
-  const getNewAvatarHandler = e => {
+  const getNewAvatarHandler = (e) => {
     const image = URL.createObjectURL(e.target.files[0])
-    setImage(prev => {
+    setImage((prev) => {
       return {
         ...prev,
         preview: image,
@@ -96,16 +98,16 @@ const Settings = () => {
       if (image.avatar) {
         const storageRef = ref(
           storage,
-          `uploads/${image.avatar && image.avatar.name}`
+          `uploads/${image.avatar && image.avatar.name}`,
         )
         const uploadTask = uploadBytesResumable(storageRef, image.avatar)
 
         uploadTask.on(
           'state_changed',
-          snapshot => {
+          (snapshot) => {
             Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
           },
-          err => console.log(err),
+          (err) => console.log(err),
           async () => {
             const url = await getDownloadURL(uploadTask.snapshot.ref)
 
@@ -121,9 +123,9 @@ const Settings = () => {
             const data = await res.json()
             setImage(data.photoURL)
             dispatch(
-              settings({ fullName: user.displayName, photoURL: data.photoURL })
+              settings({ fullName: user.displayName, photoURL: data.photoURL }),
             )
-          }
+          },
         )
       }
     } catch (error) {
@@ -154,7 +156,7 @@ const Settings = () => {
           fullName: user.displayName,
           photoURL: user.photoURL,
           bio: data.bio,
-        })
+        }),
       )
     } catch (error) {
       console.log(error)
@@ -162,7 +164,7 @@ const Settings = () => {
     editModeHandler('bio')
   }
 
-  const socialChangeHandler = async socialName => {
+  const socialChangeHandler = async (socialName) => {
     try {
       const token = Cookies.get('token')
 
@@ -180,7 +182,7 @@ const Settings = () => {
       const data = await res.json()
 
       console.log(data)
-      setSocial(prev => {
+      setSocial((prev) => {
         return {
           ...prev,
           fb: data.socials.fb ? data.socials.fb : '',
@@ -203,15 +205,15 @@ const Settings = () => {
         <Row style={{ margin: 0 }}>
           <Col sm={12} md={12} lg={9} xl={9}>
             <div className={styles.wrapper}>
-              <h1 className={styles.heading}>Cài đặt</h1>
+              <h3 className={styles.heading}>Cài đặt</h3>
               <div className={styles.container}>
                 <div className={styles.userInfo}>
-                  <h2>Thông tin cá nhân</h2>
+                  <h3>Thông tin cá nhân</h3>
                 </div>
                 <FieldInput
                   title={'Họ tên'}
                   value={fullName}
-                  onChange={e => setFullName(e.target.value)}
+                  onChange={(e) => setFullName(e.target.value)}
                   description={
                     'Tên của bạn xuất hiện trên trang cá nhân và bên cạnh các bình luận của bạn.'
                   }
@@ -224,7 +226,7 @@ const Settings = () => {
                 />
                 <FieldInput
                   title={'Bio'}
-                  onChange={e => setBio(e.target.value)}
+                  onChange={(e) => setBio(e.target.value)}
                   value={bio}
                   description={
                     'Bio hiển thị trên trang cá nhân và trong các bài viết (blog) của bạn.'
@@ -259,13 +261,13 @@ const Settings = () => {
                 <FieldInput
                   title={'User Name'}
                   value={`${removeActions(
-                    user.displayName.toLowerCase().replace(/\s/g, '')
+                    user.displayName.toLowerCase().replace(/\s/g, ''),
                   )}`}
                   placeholder={'Thêm user name'}
                   isEdit={false}
                   disabled={true}
                   description={`URL: https://fullstack.edu.vn/@${removeActions(
-                    user.displayName.toLowerCase().replace(/\s/g, '')
+                    user.displayName.toLowerCase().replace(/\s/g, ''),
                   )}`}
                 />
                 <FieldInput
@@ -280,13 +282,13 @@ const Settings = () => {
 
               <div className={styles.container}>
                 <div className={styles.userInfo}>
-                  <h2>Mạng xã hội</h2>
+                  <h3>Mạng xã hội</h3>
                 </div>
                 <FieldInput
                   title={'Facebook'}
                   maxLength={150}
-                  onChange={e =>
-                    setSocial(prev => {
+                  onChange={(e) =>
+                    setSocial((prev) => {
                       return {
                         ...prev,
                         fb: e.target.value,
@@ -304,8 +306,8 @@ const Settings = () => {
                   title={'Youtube'}
                   placeholder={'Eg. https://www.youtube.com/c/F8VNOfficial'}
                   maxLength={150}
-                  onChange={e =>
-                    setSocial(prev => {
+                  onChange={(e) =>
+                    setSocial((prev) => {
                       return {
                         ...prev,
                         youtube: e.target.value,
@@ -322,8 +324,8 @@ const Settings = () => {
                   title={'Linkedin'}
                   placeholder={'Eg. https://www.linkedin.com/in/hoclaptrinhf8/'}
                   maxLength={150}
-                  onChange={e =>
-                    setSocial(prev => {
+                  onChange={(e) =>
+                    setSocial((prev) => {
                       return {
                         ...prev,
                         linkedin: e.target.value,
@@ -340,8 +342,8 @@ const Settings = () => {
                   title={'Instagram'}
                   placeholder={'Eg. https://www.instagram.com/hoclaptrinhf8/'}
                   maxLength={150}
-                  onChange={e =>
-                    setSocial(prev => {
+                  onChange={(e) =>
+                    setSocial((prev) => {
                       return {
                         ...prev,
                         instagram: e.target.value,
@@ -358,8 +360,8 @@ const Settings = () => {
                   title={'Twitter'}
                   placeholder={'Eg. https://twitter.com/hoclaptrinhf8'}
                   maxLength={150}
-                  onChange={e =>
-                    setSocial(prev => {
+                  onChange={(e) =>
+                    setSocial((prev) => {
                       return {
                         ...prev,
                         twitter: e.target.value,

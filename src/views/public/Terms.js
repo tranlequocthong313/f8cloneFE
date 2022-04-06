@@ -1,26 +1,28 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import styles from './Terms.module.scss'
 import Header from '../../components/main-layout/nav/Header'
 import SideBar from '../../components/main-layout/sidebar/SideBar'
 import { Row, Col, Container } from 'react-bootstrap'
 
 const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer')
+  import('../../components/main-layout/footer/Footer'),
 )
 
 const Terms = () => {
+  useEffect(() => {
+    document.title = 'Điều khoản sử dụng'
+  }, [])
+
   return (
     <>
       <Header />
       <Row>
-        <Col xs={0} sm={0} md={1} lg={1} xl={1}>
-          <SideBar />
-        </Col>
-        <Col xs={12} sm={12} md={12} lg={11} xl={11}>
+        <SideBar />
+        <Col xs={12} sm={12} md={12} lg={11} xl={11} style={{ height: 1000 }}>
           <div className="withSidebarContent">
             <div className="container">
               <div className="containerTop">
-                <h1>Điều khoản sử dụng</h1>
+                <h2>Điều khoản sử dụng</h2>
                 <p>Điều khoản sử dụng</p>
               </div>
               <Container fluid style={{ padding: 0 }}>

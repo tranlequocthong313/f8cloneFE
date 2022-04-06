@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Image } from 'react-bootstrap'
 import styles from './Suggestion.module.scss'
+import MainButton from '../button/MainButton'
 
 const Suggestion = ({ title, description, button, image }) => {
   return (
@@ -9,7 +10,9 @@ const Suggestion = ({ title, description, button, image }) => {
       <div className={styles.suggestionInfo}>
         <h2>{title}</h2>
         <p>{description}</p>
-        <Link to="/">{button}</Link>
+        <MainButton outline={true} className={styles.button}>
+          <Link to="/">{button}</Link>
+        </MainButton>
       </div>
       <div className={styles.image}>
         <Image src={image} />

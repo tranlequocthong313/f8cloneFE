@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import MainButton from '../utils/button/MainButton'
 import styles from './CourseEnroll.module.scss'
 
 const CourseEnroll = ({ image, showHandler, slug }) => {
@@ -14,9 +15,9 @@ const CourseEnroll = ({ image, showHandler, slug }) => {
         <p>Xem giới thiệu khóa học</p>
       </div>
       <h5>Miễn phí</h5>
-      <Link to={`/learning/${slug}`} className={styles.learnNowButton}>
-        Đăng ký học
-      </Link>
+      <MainButton className={styles.button} primary={true}>
+        <Link to={`/learning/${slug}`}>Đăng ký học</Link>
+      </MainButton>
       <ul>
         <li>
           <i className={`${styles.icon} fa-regular fa-compass`}></i>

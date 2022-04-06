@@ -1,26 +1,28 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import styles from './Privacy.module.scss'
 import Header from '../../components/main-layout/nav/Header'
 import SideBar from '../../components/main-layout/sidebar/SideBar'
 import { Row, Col, Container } from 'react-bootstrap'
 
 const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer')
+  import('../../components/main-layout/footer/Footer'),
 )
 
 const Privacy = () => {
+  useEffect(() => {
+    document.title = 'Chính sách bảo mật'
+  }, [])
+
   return (
     <>
       <Header />
       <Row>
-        <Col xs={0} sm={0} md={1} lg={1} xl={1}>
-          <SideBar />
-        </Col>
-        <Col xs={12} sm={12} md={12} lg={11} xl={11}>
+        <SideBar />
+        <Col xs={12} sm={12} md={12} lg={11} xl={11} style={{ height: 1000 }}>
           <div className="withSidebarContent">
             <div className="container">
               <div className="containerTop">
-                <h1>Chính sách bảo mật</h1>
+                <h2>Chính sách bảo mật</h2>
                 <p>Chính sách bảo mật</p>
               </div>
               <Container fluid style={{ padding: 0 }}>

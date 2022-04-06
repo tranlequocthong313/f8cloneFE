@@ -14,7 +14,7 @@ const Footer = () => {
   return (
     <div className={styles.footerWrapper}>
       <section className={styles.footerContainer}>
-        <Container>
+        <Container style={{ maxWidth: 1100 }}>
           <Row>
             <Col sm={12} md={6} lg={3}>
               <Address />

@@ -1,13 +1,14 @@
-import React, { Suspense, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { Row, Col, Form } from 'react-bootstrap'
 import styles from './Contact.module.scss'
 import Header from '../../components/main-layout/nav/Header'
 import SideBar from '../../components/main-layout/sidebar/SideBar'
 import { apiURL } from '../../context/constants'
 import MainToast from '../../components/utils/toast/MainToast'
+import MainButton from '../../components/utils/button/MainButton'
 
 const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer')
+  import('../../components/main-layout/footer/Footer'),
 )
 
 const Contact = () => {
@@ -20,8 +21,12 @@ const Contact = () => {
     show: false,
   })
 
+  useEffect(() => {
+    document.title = 'Liên hệ với F8'
+  }, [])
+
   const createStatusHandler = (isSuccess, show) => {
-    setCreateStatus(prev => {
+    setCreateStatus((prev) => {
       return {
         ...prev,
         isSuccess,
@@ -30,7 +35,7 @@ const Contact = () => {
     })
   }
 
-  const submitContactHandler = async e => {
+  const submitContactHandler = async (e) => {
     e.preventDefault()
 
     if (fullName === '' || email === '' || phoneNumber === '' || content === '')
@@ -82,7 +87,7 @@ const Contact = () => {
                 >
                   <Form.Label>Họ và tên</Form.Label>
                   <Form.Control
-                    onChange={e => setFullName(e.target.value)}
+                    onChange={(e) => setFullName(e.target.value)}
                     type="text"
                     placeholder="Nhập tên đầy đủ..."
                   />
@@ -93,7 +98,7 @@ const Contact = () => {
                 >
                   <Form.Label>Email</Form.Label>
                   <Form.Control
-                    onChange={e => setEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                     type="email"
                     placeholder="Nhập email..."
                   />
@@ -104,7 +109,7 @@ const Contact = () => {
                 >
                   <Form.Label>Điện thoại</Form.Label>
                   <Form.Control
-                    onChange={e => setPhoneNumber(e.target.value)}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
                     type="text"
                     placeholder="Nhập số điện thoại..."
                   />
@@ -115,15 +120,19 @@ const Contact = () => {
                 >
                   <Form.Label>Nội dung</Form.Label>
                   <Form.Control
-                    onChange={e => setContent(e.target.value)}
+                    onChange={(e) => setContent(e.target.value)}
                     as={'textarea'}
                     rows={4}
                     placeholder="Nhập nội dung liên hệ..."
                   />
                 </Form.Group>
-                <button type="submit" className={styles.submitButton}>
+                <MainButton
+                  type="submit"
+                  className={styles.button}
+                  primary={true}
+                >
                   Gửi đi
-                </button>
+                </MainButton>
               </Form>
             </div>
           </div>
@@ -133,7 +142,7 @@ const Contact = () => {
       <MainToast
         createStatus={createStatus}
         setCreateStatus={() =>
-          setCreateStatus(prev => {
+          setCreateStatus((prev) => {
             return {
               ...prev,
               show: false,

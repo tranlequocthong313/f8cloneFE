@@ -1,11 +1,13 @@
 import React from 'react'
 import styles from './PublishButton.module.scss'
+import MainButton from '../utils/button/MainButton'
 
 const PublishButton = ({ blogDataHandler, setShowModal, isValid }) => {
   return (
-    <div
+    <MainButton
+      primary={true}
       className={
-        isValid ? styles.navAction : `${styles.disabled} ${styles.navAction}`
+        isValid ? styles.button : `${styles.disabled} ${styles.button}`
       }
       onClick={
         isValid
@@ -16,8 +18,8 @@ const PublishButton = ({ blogDataHandler, setShowModal, isValid }) => {
           : null
       }
     >
-      <button>Xuất bản</button>
-    </div>
+      Xuất bản
+    </MainButton>
   )
 }
 

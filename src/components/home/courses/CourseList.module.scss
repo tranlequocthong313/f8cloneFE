@@ -33,26 +33,15 @@
       width: 126px;
     }
 
-    button {
+    .button {
       left: 50%;
       position: absolute;
       transform: translate(-50%);
       border-width: 2px;
       bottom: 20px;
-      appearance: none;
       background-color: #fff;
-      border: 1px solid $primary-color;
-      border-radius: 999px;
+      border: 2px solid $primary-color;
       color: $primary-color;
-      display: inline-block;
-      font-size: 14px;
-      font-weight: 600;
-      outline: none;
-      padding: 9px 16px;
-      text-align: center;
-      transition: 0.3s ease;
-      user-select: none;
-      white-space: nowrap;
     }
   }
 

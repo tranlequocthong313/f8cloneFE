@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import '../../sass/_withSidebarContent.scss'
 import ctaImage from '../../asset/images/fb-group-cards@2x.png'
 import Suggestion from '../../components/utils/suggestion/Suggestion'
@@ -13,6 +13,11 @@ const Footer = React.lazy(() =>
 )
 
 const LearningPath = () => {
+  useEffect(() => {
+    document.title =
+      'Lộ trình học lập trình cho người mới tại F8 | Tự học lập trình từ đầu ở nhà'
+  }, [])
+
   return (
     <>
       <Header />

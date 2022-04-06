@@ -13,6 +13,7 @@ import skillImage4 from '../../asset/images/6200b809e5c13.png'
 import skillImage5 from '../../asset/images/6200ad9d8a2d8.png'
 import skillImage6 from '../../asset/images/6200af9262b30.png'
 import skillImage7 from '../../asset/images/6200afb926038.png'
+import MainButton from '../utils/button/MainButton'
 
 const LearningList = () => {
   return (
@@ -68,9 +69,9 @@ const LearningList = () => {
               tooltip={'Xây Dựng Website với ReactJS'}
             />
           </div>
-          <Link to="/" className={styles.btn}>
-            Xem chi tiết
-          </Link>
+          <MainButton primary={true} className={styles.btn}>
+            <Link to="/">Xem chi tiết</Link>
+          </MainButton>
         </SecondaryCard>
       </div>
       <div className={styles.wrapper}>
@@ -116,9 +117,9 @@ const LearningList = () => {
               tooltip={'Node & ExpressJS'}
             />
           </div>
-          <Link to="/" className={styles.btn}>
-            Xem chi tiết
-          </Link>
+          <MainButton primary={true} className={styles.btn}>
+            <Link to="/">Xem chi tiết</Link>
+          </MainButton>
         </SecondaryCard>
       </div>
     </div>

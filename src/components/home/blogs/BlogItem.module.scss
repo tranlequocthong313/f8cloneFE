@@ -35,8 +35,24 @@
   }
 }
 
+.button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 138px;
+  height: 36px;
+  border-radius: 20px;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  visibility: hidden;
+}
+
 @media (max-width: 1023px) {
   .author {
+    display: none;
+  }
+
+  .button {
     display: none;
   }
 }

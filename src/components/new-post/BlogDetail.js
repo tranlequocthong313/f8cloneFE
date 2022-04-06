@@ -15,11 +15,12 @@ import { useSelector } from 'react-redux'
 import Reaction from './Reaction'
 import Comment from '../utils/comment/Comment'
 import io from 'socket.io-client'
+import Tippy from '../utils/tippy/Tippy'
 
 const socket = io.connect(apiURL)
 
 const BlogDetail = ({ blog }) => {
-  const user = useSelector(state => state.user)
+  const user = useSelector((state) => state.user)
   const navigate = useNavigate()
 
   const [likeCount, setLikeCount] = useState(blog.likes)
@@ -29,8 +30,8 @@ const BlogDetail = ({ blog }) => {
   const [bookmarkData, setBookmarkData] = useState(null)
 
   useEffect(() => {
-    socket.on('comment', comment => {
-      setCommentData(prev => {
+    socket.on('comment', (comment) => {
+      setCommentData((prev) => {
         return [comment, ...prev]
       })
     })
@@ -83,7 +84,7 @@ const BlogDetail = ({ blog }) => {
           },
           {
             signal: controller.signal,
-          }
+          },
         )
         const data = await res.json()
         setBookmarkData(data.bookmark)
@@ -95,7 +96,7 @@ const BlogDetail = ({ blog }) => {
     return () => controller?.abort()
   }, [])
 
-  const bookmarkHandler = async blogId => {
+  const bookmarkHandler = async (blogId) => {
     try {
       const token = Cookies.get('token')
       if (!token) return navigate('/login')
@@ -162,9 +163,33 @@ const BlogDetail = ({ blog }) => {
                 }
               ></i>
             </div>
-            <div className={styles.option}>
-              <i className="fa-solid fa-ellipsis"></i>
-            </div>
+            <Tippy
+              button={
+                <i className={`fa-solid fa-ellipsis ${styles.option}`}></i>
+              }
+              className={styles.menuWrapper}
+            >
+              <div className={styles.menuItem}>
+                <i className="fa-brands fa-facebook"></i>
+                <span>Chia sẻ lên Facebook</span>
+              </div>
+              <div className={styles.menuItem}>
+                <i className="fa-brands fa-twitter"></i>
+                <span>Chia sẻ lên Twitter</span>
+              </div>
+              <div className={styles.menuItem}>
+                <i className="fa-solid fa-envelope"></i>
+                <span>Chia sẻ tới Email</span>
+              </div>
+              <div className={styles.menuItem}>
+                <i className="fa-solid fa-link"></i>
+                <span>Sao chép liên kết</span>
+              </div>
+              <div className={styles.menuItem}>
+                <i className="fa-solid fa-flag"></i>
+                <span>Báo cáo bài viết</span>
+              </div>
+            </Tippy>
           </div>
         </div>
         <ReactMarkdown children={blog.content} className={styles.markDown} />
@@ -174,10 +199,12 @@ const BlogDetail = ({ blog }) => {
           likeCount={likeCount.length}
           likeHandler={likeHandler}
           setShowComment={() => setShowComment(true)}
+          blogId={blog._id}
+          setCommentData={setCommentData}
         />
         {blog.tags && (
           <div className={styles.tags}>
-            {blog.tags.map(tag => (
+            {blog.tags.map((tag) => (
               <Link to="/" key={tag}>
                 {tag}
               </Link>
@@ -188,14 +215,6 @@ const BlogDetail = ({ blog }) => {
         <BlogHighlights blog={blog} />
         <Topics />
       </Col>
-      {showComment && (
-        <Comment
-          setShowComment={() => setShowComment(false)}
-          commentData={commentData}
-          setCommentData={setCommentData}
-          blogId={blog._id}
-        />
-      )}
     </Row>
   )
 }

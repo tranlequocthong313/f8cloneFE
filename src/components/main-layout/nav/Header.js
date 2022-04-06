@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux'
 import PublishButton from '../../new-post/PublishButton'
 import { Link } from 'react-router-dom'
 import User from './components/User'
+import MyCourse from './components/MyCourse'
 
 const Login = React.lazy(() => import('./components/Login'))
 
@@ -20,7 +21,7 @@ const Header = ({
   isValid,
   scrollY,
 }) => {
-  const user = useSelector(state => state.user)
+  const user = useSelector((state) => state.user)
 
   return (
     <Navbar
@@ -28,7 +29,7 @@ const Header = ({
         scrollY ? `${styles.navHeader} ${styles.moveOut}` : styles.navHeader
       }
     >
-      <Container fluid>
+      <Container fluid style={{ padding: 0 }}>
         <MobileNav photoURL={user.photoURL} />
         <Logo />
         <Search currentPage={currentPage} />
@@ -47,12 +48,15 @@ const Header = ({
 
           <Suspense fallback={<User />}>
             {user.isLoggedIn && (
-              <User
-                currentPage={currentPage}
-                photoURL={user.photoURL}
-                displayName={user.displayName}
-                email={user.email}
-              />
+              <>
+                <MyCourse />
+                <User
+                  currentPage={currentPage}
+                  photoURL={user.photoURL}
+                  displayName={user.displayName}
+                  email={user.email}
+                />
+              </>
             )}
             {!user.isLoggedIn && <Login />}
           </Suspense>

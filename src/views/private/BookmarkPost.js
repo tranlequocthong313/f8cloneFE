@@ -13,11 +13,15 @@ import timeSinceHandler from '../../components/utils/timeSinceHandler/timeSinceH
 import Tabs from '../../components/utils/tabs/Tabs'
 
 const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer')
+  import('../../components/main-layout/footer/Footer'),
 )
 
 const BookmarkPost = () => {
   const [bookmarkData, setBookmarkData] = useState(null)
+
+  useEffect(() => {
+    document.title = 'Bài viết đã lưu tại F8'
+  }, [])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -37,7 +41,7 @@ const BookmarkPost = () => {
           },
           {
             signal: controller.signal,
-          }
+          },
         )
 
         const data = await res.json()
@@ -79,7 +83,7 @@ const BookmarkPost = () => {
                 </div>
               )}
               {bookmarkData &&
-                bookmarkData.map(bookmark => (
+                bookmarkData.map((bookmark) => (
                   <ul key={bookmark._id} className={styles.bookmarkList}>
                     <li>
                       <h3>

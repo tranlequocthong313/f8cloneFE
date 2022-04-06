@@ -1,32 +1,9 @@
-@media (max-width: 1023px) {
-  .offcanvas {
-    width: 60% !important;
-    z-index: 9999 !important;
-    font-size: 1.6rem;
-    padding: 16px 0 0 32px;
-    display: flex;
-    flex-direction: column;
-    max-height: 100%;
-    overflow-y: auto;
-    animation: slideIn 0.5s ease;
-
-    @keyframes slideIn {
-      from {
-        opacity: 0;
-        transform: translateX(-100%);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-        transform: translateX(0);
-      }
-    }
-  }
+.offcanvas-header {
+  padding: 1rem 2rem 0.8rem 1rem;
 }
 
 @media (max-width: 739px) {
-  .offcanvas {
-    width: 80% !important;
-    padding: 16px 0 0 16px !important;
+  .offcanvas-header {
+    padding: 0.6rem 1rem 0.8rem 0.6rem;
   }
 }

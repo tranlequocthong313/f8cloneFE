@@ -30,8 +30,7 @@ const NewPost = () => {
   const LIMIT_TITLE_LENGTH = '190'
 
   useEffect(() => {
-    // Set browser title = title
-    document.title = title
+    document.title = title ? title : 'Viết blog | F8'
 
     // User has to enter title and content then the 'POST' button is active
     title && content ? setIsValid(true) : setIsValid(false)
