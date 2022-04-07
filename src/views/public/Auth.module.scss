@@ -63,6 +63,38 @@
         }
       }
 
+      .validate {
+        font-size: 14px;
+        line-height: 1.8;
+        margin-bottom: 0;
+        padding: 24px 16px 0;
+        animation: shaking 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        color: $invalid-color;
+        font-weight: 500;
+        max-width: 480px;
+        font-weight: 600;
+        text-align: unset;
+
+        @keyframes shaking {
+          0% {
+            transform: translateX(0);
+          }
+
+          25% {
+            transform: translateX(-4px);
+          }
+          50% {
+            transform: translateX(4px);
+          }
+          75% {
+            transform: translateX(-4px);
+          }
+          100% {
+            transform: translateX(0);
+          }
+        }
+      }
+
       .body {
         align-items: center;
         display: flex;

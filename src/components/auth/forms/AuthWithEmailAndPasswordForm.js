@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import FormGroup from '../../utils/auth-form/FormGroup'
 import { Form } from 'react-bootstrap'
 import styles from './AuthWithEmailAndPasswordForm.module.scss'
-import * as EmailValidator from 'email-validator'
 import Cookies from 'js-cookie'
 import { apiURL } from '../../../context/constants'
+import AuthForgetPassword from './AuthForgetPassword'
 
 const LoginWithEmailAndPasswordForm = ({
   switchPhoneAndEmailHandler,
@@ -18,7 +18,7 @@ const LoginWithEmailAndPasswordForm = ({
   // Website F8 uses 120s for the resend button
   const LIMITED_SECOND = 120
 
-  const [fullName, setUsername] = useState('')
+  const [fullName, setFullName] = useState('')
   const [isSendVerifyCode, setIsSentVerifyCode] = useState(false)
   const [counter, setCounter] = useState(LIMITED_SECOND)
   const [verifyOTP, setVerifyOTP] = useState({
@@ -29,12 +29,11 @@ const LoginWithEmailAndPasswordForm = ({
     email: '',
     password: '',
   })
-  const [existEmail, setExistEmail] = useState(false)
-  const [isValidOTP, setIsValidOTP] = useState(false)
-  const [password, setPassword] = useState({
-    pass: '',
-    rePass: '',
-  })
+  const [validateFullName, setValidateFullName] = useState(null)
+  const [validateEmail, setValidateEmail] = useState(null)
+  const [invalidEmailOrPassword, setInvalidEmailOrPassword] = useState(null)
+  const [invalidOTP, setInvalidOTP] = useState(null)
+  const [disabled, setDisabled] = useState(true)
 
   const createOTPHandler = () => {
     var digits = '0123456789'
@@ -94,15 +93,23 @@ const LoginWithEmailAndPasswordForm = ({
         })
 
         const data = await res.json()
-        Cookies.set('token', data.accessToken, { expires: 365 })
-        return dispatchAndNavigateHandler({
-          ...data.user,
-          accessToken: data.accessToken,
-          admin: data.admin,
-        })
+
+        console.log(data)
+
+        if (data.success) {
+          Cookies.set('token', data.accessToken, { expires: 365 })
+          return dispatchAndNavigateHandler({
+            ...data.user,
+            accessToken: data.accessToken,
+            admin: data.admin,
+          })
+        }
+
+        return !data.success && setInvalidEmailOrPassword(data.message)
       }
 
-      if (verifyOTP.input !== verifyOTP.create) return
+      if (verifyOTP.input !== verifyOTP.create)
+        return setInvalidOTP('Mã xác minh không hợp lệ')
 
       await fetch(`${apiURL}/register/`, {
         method: 'POST',
@@ -116,9 +123,7 @@ const LoginWithEmailAndPasswordForm = ({
           'Content-Type': 'application/json',
         },
       })
-    } catch (error) {
-      console.log(error)
-    } finally {
+
       setUserEmailAndPasswordInput((prev) => {
         return {
           ...prev,
@@ -128,11 +133,20 @@ const LoginWithEmailAndPasswordForm = ({
       })
 
       isLoginHandler()
+    } catch (error) {
+      console.log(error)
     }
   }
 
+  const isValidEmailHandler = (email) => {
+    const regex = /\S+@\S+\.\S+/
+    return regex.test(email)
+  }
+
   const checkUserEmailExistHandler = async (e) => {
-    if (e.target.value && EmailValidator.validate(e.target.value)) {
+    console.log(e.target.value)
+
+    if (e.target.value && isValidEmailHandler(e.target.value)) {
       const res = await fetch(`${apiURL}/login/check-email`, {
         method: 'POST',
         body: JSON.stringify({ email: e.target.value }),
@@ -142,45 +156,69 @@ const LoginWithEmailAndPasswordForm = ({
       })
 
       const data = await res.json()
-      data.success ? setExistEmail(true) : setExistEmail(false)
-      setUserEmailAndPasswordInput((prev) => {
-        return { ...prev, email: e.target.value }
-      })
+
+      !isLogin &&
+        data.notUsed &&
+        setUserEmailAndPasswordInput((prev) => {
+          return { ...prev, email: e.target.value }
+        })
+      isLogin &&
+        data.used &&
+        setUserEmailAndPasswordInput((prev) => {
+          return { ...prev, email: e.target.value }
+        })
+
+      isLogin
+        ? setValidateEmail(data.notUsed ? data.notUsed : null)
+        : setValidateEmail(data.used ? data.used : null)
+    }
+
+    e.target.value.length === 0 && setValidateEmail(null)
+  }
+
+  const validateFullNameHandler = () => {
+    if (fullName.length === 0) {
+      setValidateFullName('Tên không được để trống')
+    } else if (fullName.length === 1) {
+      setValidateFullName('Tên của bạn không hợp lệ')
+    } else {
+      setValidateFullName(null)
     }
   }
 
-  const forgotPasswordHandler = async () => {
-    if (!isValidOTP && verifyOTP.input !== verifyOTP.create)
-      return console.log('OTP is not right!')
-
-    try {
-      setIsValidOTP(true)
-
-      const res = await fetch(`${apiURL}/login/reset-password`, {
-        method: 'POST',
-        body: JSON.stringify({
-          email: userEmailAndPasswordInput.email,
-          password: password.pass,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      const data = await res.json()
-      setForgotPassword(false)
-      console.log(data.message)
-    } catch (error) {
-      console.log(error)
+  useEffect(() => {
+    const disableHandler = () => {
+      if (!isLogin) {
+        return (
+          fullName.trim().indexOf(' ') === -1 ||
+          validateFullName !== null ||
+          !isValidEmailHandler(userEmailAndPasswordInput.email) ||
+          userEmailAndPasswordInput.password.length < 8 ||
+          validateEmail !== null
+        )
+      }
+      return (
+        !isValidEmailHandler(userEmailAndPasswordInput.email) ||
+        validateEmail !== null
+      )
     }
-  }
 
-  const checkValidSignUpForm = () => {
-    return fullName.match('[a-zA-Z][a-zA-Z ]{2,}') &&
-      EmailValidator.validate(userEmailAndPasswordInput.email) &&
-      userEmailAndPasswordInput.password.trim().length >= 6
-      ? true
-      : false
-  }
+    setDisabled(disableHandler())
+  }, [
+    fullName,
+    isLogin,
+    validateFullName,
+    userEmailAndPasswordInput.email,
+    userEmailAndPasswordInput.password.length,
+    validateEmail,
+  ])
+
+  useEffect(() => {
+    userEmailAndPasswordInput.password.length === 0 &&
+      setInvalidEmailOrPassword(null)
+
+    verifyOTP.input.length === 0 && setInvalidOTP(null)
+  }, [userEmailAndPasswordInput.password.length, verifyOTP.input.length])
 
   return (
     <>
@@ -192,7 +230,14 @@ const LoginWithEmailAndPasswordForm = ({
               placeholder={'Họ và tên của bạn'}
               maxLength={50}
               pattern={'[a-zA-Z][a-zA-Z ]{2,}'}
-              onChange={{ input: (e) => setUsername(e.target.value) }}
+              onChange={{
+                input: (e) => {
+                  setFullName(e.target.value)
+                  setValidateFullName(null)
+                },
+              }}
+              onBlur={() => validateFullNameHandler()}
+              inValid={validateFullName}
             />
           )}
           <FormGroup
@@ -202,13 +247,11 @@ const LoginWithEmailAndPasswordForm = ({
             isLogin={isLogin}
             placeholder={'Địa chỉ email'}
             onClick={() => switchPhoneAndEmailHandler('phone')}
-            value={userEmailAndPasswordInput.email}
             onChange={{
-              input: (e) =>
-                setUserEmailAndPasswordInput((prev) => {
-                  return { ...prev, email: e.target.value }
-                }),
+              input: checkUserEmailExistHandler,
             }}
+            maxLength={50}
+            inValid={validateEmail}
           />
           <FormGroup
             type={'password'}
@@ -221,6 +264,7 @@ const LoginWithEmailAndPasswordForm = ({
                   return { ...prev, password: e.target.value }
                 }),
             }}
+            inValid={invalidEmailOrPassword}
           />
           {!isLogin && (
             <FormGroup
@@ -238,10 +282,10 @@ const LoginWithEmailAndPasswordForm = ({
                     }
                   }),
               }}
-              disabled={!checkValidSignUpForm()}
-              onClick={
-                checkValidSignUpForm() ? () => onSubmitHandler('signUp') : null
-              }
+              disabled={disabled}
+              onClick={() => onSubmitHandler('signUp')}
+              inputDisabled={!isSendVerifyCode}
+              inValid={invalidOTP}
             />
           )}
           {!isLogin && (
@@ -259,8 +303,8 @@ const LoginWithEmailAndPasswordForm = ({
           {isLogin && (
             <div
               className={
-                EmailValidator.validate(userEmailAndPasswordInput.email) &&
-                userEmailAndPasswordInput.password.trim().length >= 6
+                validateEmail === null &&
+                userEmailAndPasswordInput.password.length >= 8
                   ? styles.logInButton
                   : `${styles.logInButton} ${styles.disabled}`
               }
@@ -272,102 +316,37 @@ const LoginWithEmailAndPasswordForm = ({
         </Form>
       )}
       {forgotPassword && (
-        <Form className={styles.formBody}>
-          {!isValidOTP && (
-            <>
-              <FormGroup
-                label={'Email'}
-                type={'email'}
-                isLogin={isLogin}
-                placeholder={'Nhập địa chỉ email'}
-                onClick={() => switchPhoneAndEmailHandler('phone')}
-                onChange={{
-                  input: checkUserEmailExistHandler,
-                }}
-              />
-              <FormGroup
-                placeholder={'Nhập mã xác nhận'}
-                maxLength={6}
-                OTPInput={true}
-                isSendVerifyCode={isSendVerifyCode}
-                counter={counter}
-                onChange={{
-                  input: (e) =>
-                    setVerifyOTP((prev) => {
-                      return {
-                        ...prev,
-                        input: e.target.value,
-                      }
-                    }),
-                }}
-                disabled={!existEmail || isSendVerifyCode}
-                onClick={
-                  existEmail && !isSendVerifyCode
-                    ? () => onSubmitHandler('forgotPwd')
-                    : null
-                }
-              />
-            </>
-          )}
-          {isValidOTP && (
-            <>
-              <FormGroup
-                label={'Nhập mật khẩu mới'}
-                type={'password'}
-                placeholder={'Mật khẩu'}
-                onChange={{
-                  input: (e) =>
-                    setPassword((prev) => {
-                      return {
-                        ...prev,
-                        pass: e.target.value,
-                      }
-                    }),
-                }}
-              />
-              <FormGroup
-                label={'Nhập lại mật khẩu mới'}
-                placeholder={'Xác nhận mật khẩu'}
-                type={'password'}
-                onChange={{
-                  input: (e) =>
-                    setPassword((prev) => {
-                      return {
-                        ...prev,
-                        rePass: e.target.value,
-                      }
-                    }),
-                }}
-              />
-            </>
-          )}
-          {!isValidOTP && (
-            <div
-              className={
-                verifyOTP.input.length === 6
-                  ? styles.logInButton
-                  : `${styles.logInButton} ${styles.disabled}`
+        <AuthForgetPassword
+          setForgotPassword={setForgotPassword}
+          checkUserEmailExistHandler={checkUserEmailExistHandler}
+          counter={counter}
+          validateEmail={validateEmail}
+          email={userEmailAndPasswordInput.email}
+          isValidEmailHandler={isValidEmailHandler}
+          verifyOTP={verifyOTP}
+          invalidOTP={invalidOTP}
+          setInvalidOTP={setInvalidOTP}
+          isSendVerifyCode={isSendVerifyCode}
+          disabled={disabled}
+          setDisabled={setDisabled}
+          setVerifyOTP={(e) =>
+            setVerifyOTP((prev) => {
+              return {
+                ...prev,
+                input: e.target.value,
               }
-              onClick={forgotPasswordHandler}
-            >
-              <span>Xác nhận</span>
-            </div>
-          )}
-          {isValidOTP && (
-            <div
-              className={
-                password.pass === password.rePass
-                  ? styles.logInButton
-                  : `${styles.logInButton} ${styles.disabled}`
+            })
+          }
+          setUserEmailAndPasswordInput={() =>
+            setUserEmailAndPasswordInput((prev) => {
+              return {
+                ...prev,
+                email: userEmailAndPasswordInput.email,
               }
-              onClick={
-                password.pass === password.rePass ? forgotPasswordHandler : null
-              }
-            >
-              <span>Xác nhận</span>
-            </div>
-          )}
-        </Form>
+            })
+          }
+          onSubmitHandler={() => onSubmitHandler('forgotPwd')}
+        />
       )}
     </>
   )

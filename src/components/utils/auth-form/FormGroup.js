@@ -21,6 +21,9 @@ const FormGroup = ({
   value,
   disabled,
   pattern,
+  onBlur,
+  inValid,
+  inputDisabled,
 }) => {
   return (
     <Form.Group className="mb-3">
@@ -34,7 +37,11 @@ const FormGroup = ({
           </Form.Label>
         )}
       </div>
-      <div className={`${styles.inputWrap}`}>
+      <div
+        className={
+          !!inValid ? `${styles.inputWrap} ${styles.invalid}` : styles.inputWrap
+        }
+      >
         {phoneInput && (
           <>
             <Image
@@ -54,7 +61,9 @@ const FormGroup = ({
           value={value}
           placeholder={placeholder}
           onChange={onChange.input}
+          onBlur={onBlur}
           pattern={pattern}
+          disabled={inputDisabled}
         />
 
         {OTPInput && (
@@ -73,7 +82,7 @@ const FormGroup = ({
         )}
       </div>
 
-      {/* <div className={styles.message}>Tên của bạn không hợp lệ</div> */}
+      {!!inValid && <div className={styles.message}>{inValid}</div>}
 
       {!isLogin && isLoginEmailOption === 'email' && (
         <div className={styles.help}>

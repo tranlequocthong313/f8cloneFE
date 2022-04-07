@@ -20,20 +20,23 @@ const Auth = () => {
 
   const [isLogin, setIsLogin] = useState(true)
   const [loginOption, setLoginOption] = useState('')
-
   const [forgotPassword, setForgotPassword] = useState(false)
+  const [isValid, setIsValid] = useState(true)
 
   // Dispatch login action and navigate user to home page after login
-  const dispatchAndNavigateHandler = payload => {
+  const dispatchAndNavigateHandler = (payload) => {
     dispatch(login(payload))
     navigate('/')
   }
 
   // Handle switch between sign in and sign up option from user
-  const isLoginHandler = () => setIsLogin(prev => !prev)
+  const isLoginHandler = () => {
+    setIsLogin((prev) => !prev)
+    setLoginOption('')
+  }
 
   // Google, Facebook, Github authentication
-  const loginWithProviderHandler = async provider => {
+  const loginWithProviderHandler = async (provider) => {
     try {
       const res = await signInWithPopup(auth, provider)
       const user = res.user
@@ -78,12 +81,12 @@ const Auth = () => {
         accessToken: newData.accessToken,
       })
     } catch (error) {
-      console.log(error.message)
+      console.log(error)
     }
   }
 
   // Handle switch "Phone and Email authentication option"
-  const switchPhoneAndEmailHandler = option => {
+  const switchPhoneAndEmailHandler = (option) => {
     setLoginOption(option)
   }
 
@@ -115,7 +118,7 @@ const Auth = () => {
             {!forgotPassword && (
               <h3>{isLogin ? 'Đăng nhập vào' : 'Đăng ký tài khoản'} F8</h3>
             )}
-            {forgotPassword && <h1>Lấy lại mật khẩu</h1>}
+            {forgotPassword && <h3>Lấy lại mật khẩu</h3>}
           </div>
           <div className={styles.body}>
             {isShowAuthProviderOption && (
@@ -141,6 +144,12 @@ const Auth = () => {
                 setForgotPassword={setForgotPassword}
                 dispatchAndNavigateHandler={dispatchAndNavigateHandler}
               />
+            )}
+            {!isValid && (
+              <p className={styles.validate}>
+                Email thongahuhu@gmail.com đã được sử dụng bởi một phương thức
+                đăng nhập khác Github.
+              </p>
             )}
             {!forgotPassword && (
               <div className={styles.noAccount}>

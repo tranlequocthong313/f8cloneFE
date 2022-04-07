@@ -12,7 +12,7 @@
 
   label {
     display: block;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     margin: 10px 0 10px 8px;
   }
@@ -65,6 +65,7 @@
     &.disabled {
       background-color: #ccc;
       color: #757575;
+      pointer-events: none;
       cursor: not-allowed;
     }
   }

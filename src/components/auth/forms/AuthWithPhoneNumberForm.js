@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Form } from 'react-bootstrap'
 import styles from './AuthWithPhoneNumberForm.module.scss'
 import { signInWithPhoneNumber, RecaptchaVerifier } from 'firebase/auth'
@@ -25,9 +25,13 @@ const LoginWithPhoneNumberForm = ({
   const [verifyOTP, setVerifyOTP] = useState('')
   const [counter, setCounter] = useState(LIMITED_SECOND)
   const [userPhoneNumber, setUserPhoneNumber] = useState('')
-  const [fullName, setUsername] = useState('')
+  const [fullName, setFullName] = useState('')
+  const [validatePhoneNumber, setValidatePhoneNumber] = useState(null)
+  const [validateFullName, setValidateFullName] = useState(null)
+  const [invalidOTP, setInvalidOTP] = useState(null)
+  const [disabled, setDisabled] = useState(true)
 
-  const getCountryNameHandler = e => {
+  const getCountryNameHandler = (e) => {
     const countryNameFormatted = e.target.value.split(' ')[0].toLowerCase()
     const countryCodeFormatted = e.target.value.split(' +')[1]
 
@@ -44,7 +48,7 @@ const LoginWithPhoneNumberForm = ({
 
   const counterHandler = () => {
     setInterval(() => {
-      setCounter(prev => (prev > 0 ? prev - 1 : setIsSentVerifyCode(false)))
+      setCounter((prev) => (prev > 0 ? prev - 1 : setIsSentVerifyCode(false)))
     }, 1000)
   }
 
@@ -55,7 +59,7 @@ const LoginWithPhoneNumberForm = ({
       {
         size: 'invisible',
       },
-      auth
+      auth,
     )
 
     // Format phone number to send to firebase
@@ -66,7 +70,7 @@ const LoginWithPhoneNumberForm = ({
       const confirmationResult = await signInWithPhoneNumber(
         auth,
         phoneNumber,
-        appVerifier
+        appVerifier,
       )
       window.confirmationResult = confirmationResult
     } catch (error) {
@@ -74,14 +78,13 @@ const LoginWithPhoneNumberForm = ({
     }
   }
 
-  console.log(verifyOTP)
-
   // Verify OTP code firebase have been sent to user's phone if true then login
   const validateOTPHandler = async () => {
     if (verifyOTP === '') return
 
     try {
       const result = await window.confirmationResult.confirm(verifyOTP)
+
       let user = await result.user
 
       if (user && isLogin) {
@@ -126,11 +129,12 @@ const LoginWithPhoneNumberForm = ({
         })
       }
     } catch (error) {
-      console.log(error.message)
+      if (error.code === 'auth/invalid-verification-code')
+        setInvalidOTP('Mã xác minh không hợp lệ')
     }
   }
 
-  const checkNumberPhoneHandler = async e => {
+  const checkNumberPhoneHandler = async (e) => {
     try {
       const length = e.target.value.trim().length
 
@@ -147,11 +151,56 @@ const LoginWithPhoneNumberForm = ({
 
         !isLogin && data.notUsed && setUserPhoneNumber(e.target.value)
         isLogin && data.used && setUserPhoneNumber(e.target.value)
+
+        isLogin
+          ? setValidatePhoneNumber(data.notUsed ? data.notUsed : null)
+          : setValidatePhoneNumber(data.used ? data.used : null)
       }
+
+      length === 0 && setValidatePhoneNumber(null)
     } catch (error) {
       console.log(error)
     }
   }
+
+  const validateFullNameHandler = () => {
+    if (fullName.length === 0) {
+      setValidateFullName('Tên không được để trống')
+    } else if (
+      fullName.length === 1 ||
+      !fullName.match('[a-zA-Z][a-zA-Z ]{2,}')
+    ) {
+      setValidateFullName('Tên của bạn không hợp lệ')
+    } else {
+      setValidateFullName(null)
+    }
+  }
+
+  useEffect(() => {
+    const disableHandler = () => {
+      if (!isLogin) {
+        return (
+          fullName.trim().indexOf(' ') === -1 ||
+          validateFullName !== null ||
+          userPhoneNumber.length !== 10 ||
+          validatePhoneNumber !== null
+        )
+      }
+      return userPhoneNumber.length !== 10 || validatePhoneNumber !== null
+    }
+
+    setDisabled(disableHandler())
+  }, [
+    fullName,
+    isLogin,
+    userPhoneNumber.length,
+    validateFullName,
+    validatePhoneNumber,
+  ])
+
+  useEffect(() => {
+    verifyOTP.length === 0 && setInvalidOTP(null)
+  }, [verifyOTP.length])
 
   return (
     <Form className={styles.formBody}>
@@ -160,7 +209,14 @@ const LoginWithPhoneNumberForm = ({
           label="Tên của bạn?"
           maxLength={50}
           placeholder={'Họ và tên của bạn'}
-          onChange={{ input: e => setUsername(e.target.value) }}
+          onChange={{
+            input: (e) => {
+              setFullName(e.target.value)
+              setValidateFullName(null)
+            },
+          }}
+          onBlur={() => validateFullNameHandler()}
+          inValid={validateFullName}
         />
       )}
       <FormGroup
@@ -176,16 +232,19 @@ const LoginWithPhoneNumberForm = ({
           input: checkNumberPhoneHandler,
         }}
         countryName={countryName}
+        inValid={validatePhoneNumber}
       />
       <FormGroup
         placeholder={'Nhập mã xác nhận'}
         maxLength={6}
         OTPInput={true}
         isSendVerifyCode={isSendVerifyCode}
-        onChange={{ input: e => setVerifyOTP(e.target.value) }}
+        onChange={{ input: (e) => setVerifyOTP(e.target.value) }}
         counter={counter}
-        disabled={!userPhoneNumber}
-        onClick={userPhoneNumber ? onSubmitHandler : null}
+        disabled={disabled}
+        inputDisabled={!isSendVerifyCode}
+        onClick={onSubmitHandler}
+        inValid={invalidOTP}
       />
       <div
         className={
@@ -193,7 +252,7 @@ const LoginWithPhoneNumberForm = ({
             ? styles.logInButton
             : `${styles.logInButton} ${styles.disabled}`
         }
-        onClick={verifyOTP.length === 6 ? validateOTPHandler : null}
+        onClick={validateOTPHandler}
       >
         <span>{isLogin ? 'Đăng nhập' : 'Đăng ký'}</span>
       </div>
