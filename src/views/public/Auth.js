@@ -3,7 +3,12 @@ import { Link } from 'react-router-dom'
 import { Image } from 'react-bootstrap'
 import styles from './Auth.module.scss'
 import f8Logo from '../../asset/images/f8_icon.png'
-import { signInWithPopup } from 'firebase/auth'
+import {
+  EmailAuthCredential,
+  EmailAuthProvider,
+  fetchSignInMethodsForEmail,
+  signInWithPopup,
+} from 'firebase/auth'
 import { auth } from '../../firebase/config'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -21,7 +26,7 @@ const Auth = () => {
   const [isLogin, setIsLogin] = useState(true)
   const [loginOption, setLoginOption] = useState('')
   const [forgotPassword, setForgotPassword] = useState(false)
-  const [isValid, setIsValid] = useState(true)
+  const [inValid, setInValid] = useState(false)
 
   // Dispatch login action and navigate user to home page after login
   const dispatchAndNavigateHandler = (payload) => {
@@ -67,6 +72,7 @@ const Auth = () => {
           fullName: user.displayName,
           email: user.email,
           photoURL: user.photoURL,
+          provider: user.providerData[0].providerId,
           activated: true,
         }),
         headers: {
@@ -81,7 +87,9 @@ const Auth = () => {
         accessToken: newData.accessToken,
       })
     } catch (error) {
-      console.log(error)
+      console.log(error.code)
+      if (error.code === 'auth/account-exists-with-different-credential')
+        setInValid(true)
     }
   }
 
@@ -145,10 +153,9 @@ const Auth = () => {
                 dispatchAndNavigateHandler={dispatchAndNavigateHandler}
               />
             )}
-            {!isValid && (
+            {inValid && (
               <p className={styles.validate}>
-                Email thongahuhu@gmail.com đã được sử dụng bởi một phương thức
-                đăng nhập khác Github.
+                Email đã được sử dụng bởi một phương thức đăng nhập khác.
               </p>
             )}
             {!forgotPassword && (
