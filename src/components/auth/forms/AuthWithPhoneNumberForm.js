@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Form } from 'react-bootstrap'
+import { Form, Spinner } from 'react-bootstrap'
 import styles from './AuthWithPhoneNumberForm.module.scss'
 import { signInWithPhoneNumber, RecaptchaVerifier } from 'firebase/auth'
 import { auth } from '../../../firebase/config'
@@ -30,6 +30,7 @@ const LoginWithPhoneNumberForm = ({
   const [validateFullName, setValidateFullName] = useState(null)
   const [invalidOTP, setInvalidOTP] = useState(null)
   const [disabled, setDisabled] = useState(true)
+  const [loading, setLoading] = useState(false)
 
   const getCountryNameHandler = (e) => {
     const countryNameFormatted = e.target.value.split(' ')[0].toLowerCase()
@@ -47,8 +48,15 @@ const LoginWithPhoneNumberForm = ({
   }
 
   const counterHandler = () => {
-    setInterval(() => {
-      setCounter((prev) => (prev > 0 ? prev - 1 : setIsSentVerifyCode(false)))
+    let interval = setInterval(() => {
+      setCounter((prev) => {
+        if (prev > 0) {
+          return prev - 1
+        }
+        clearInterval(interval)
+        setIsSentVerifyCode(false)
+        return LIMITED_SECOND
+      })
     }, 1000)
   }
 
@@ -80,9 +88,8 @@ const LoginWithPhoneNumberForm = ({
 
   // Verify OTP code firebase have been sent to user's phone if true then login
   const validateOTPHandler = async () => {
-    if (verifyOTP === '') return
-
     try {
+      setLoading(true)
       const result = await window.confirmationResult.confirm(verifyOTP)
 
       let user = await result.user
@@ -131,6 +138,8 @@ const LoginWithPhoneNumberForm = ({
     } catch (error) {
       if (error.code === 'auth/invalid-verification-code')
         setInvalidOTP('Mã xác minh không hợp lệ')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -257,7 +266,13 @@ const LoginWithPhoneNumberForm = ({
         }
         onClick={validateOTPHandler}
       >
-        <span>{isLogin ? 'Đăng nhập' : 'Đăng ký'}</span>
+        {loading && (
+          <Spinner
+            animation="border"
+            style={{ width: 24, height: 24, color: '#fff' }}
+          />
+        )}
+        {!loading && <span>{isLogin ? 'Đăng nhập' : 'Đăng ký'}</span>}
       </div>
     </Form>
   )

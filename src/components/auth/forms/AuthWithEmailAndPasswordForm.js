@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import FormGroup from '../../utils/auth-form/FormGroup'
-import { Form } from 'react-bootstrap'
+import { Form, Spinner } from 'react-bootstrap'
 import styles from './AuthWithEmailAndPasswordForm.module.scss'
 import Cookies from 'js-cookie'
 import { apiURL } from '../../../context/constants'
@@ -15,12 +15,13 @@ const LoginWithEmailAndPasswordForm = ({
   setForgotPassword,
   dispatchAndNavigateHandler,
 }) => {
-  // Website F8 uses 120s for the resend button
-  const LIMITED_SECOND = 120
+  // Website F8 uses 120s for signup resend button 60s for forget password resend button
+  const LIMITED_SECOND_FOR_SIGNUP = 120
+  const LIMITED_SECOND_FOR_FORGET_PWD = 60
 
   const [fullName, setFullName] = useState('')
   const [isSendVerifyCode, setIsSentVerifyCode] = useState(false)
-  const [counter, setCounter] = useState(LIMITED_SECOND)
+  const [counter, setCounter] = useState(LIMITED_SECOND_FOR_SIGNUP)
   const [verifyOTP, setVerifyOTP] = useState({
     input: '',
     create: '',
@@ -34,6 +35,11 @@ const LoginWithEmailAndPasswordForm = ({
   const [invalidEmailOrPassword, setInvalidEmailOrPassword] = useState(null)
   const [invalidOTP, setInvalidOTP] = useState(null)
   const [disabled, setDisabled] = useState(true)
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    setCounter(LIMITED_SECOND_FOR_FORGET_PWD)
+  }, [forgotPassword])
 
   const createOTPHandler = () => {
     var digits = '0123456789'
@@ -51,17 +57,21 @@ const LoginWithEmailAndPasswordForm = ({
   }
 
   const sendOTPHandler = async (option) => {
-    await fetch(`${apiURL}/register/verify`, {
-      method: 'POST',
-      body: JSON.stringify({
-        email: userEmailAndPasswordInput.email,
-        otp: createOTPHandler(),
-        option,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    try {
+      await fetch(`${apiURL}/register/verify`, {
+        method: 'POST',
+        body: JSON.stringify({
+          email: userEmailAndPasswordInput.email,
+          otp: createOTPHandler(),
+          option,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   // Call send verify code function to user's phone and set re-send button count back 60s for re-sending
@@ -72,13 +82,24 @@ const LoginWithEmailAndPasswordForm = ({
   }
 
   const counterHandler = () => {
-    setInterval(() => {
-      setCounter((prev) => (prev > 0 ? prev - 1 : setIsSentVerifyCode(false)))
+    let interval = setInterval(() => {
+      setCounter((prev) => {
+        if (prev > 0) {
+          return prev - 1
+        }
+        clearInterval(interval)
+        setIsSentVerifyCode(false)
+        return forgotPassword
+          ? LIMITED_SECOND_FOR_FORGET_PWD
+          : LIMITED_SECOND_FOR_SIGNUP
+      })
     }, 1000)
   }
 
   // Sign up or Sign in with email and password
   const loginWithEmailAndPasswordHandler = async () => {
+    console.log('loading true')
+    setLoading(true)
     try {
       if (isLogin) {
         const res = await fetch(`${apiURL}/login/email-password`, {
@@ -135,6 +156,9 @@ const LoginWithEmailAndPasswordForm = ({
       isLoginHandler()
     } catch (error) {
       console.log(error)
+    } finally {
+      console.log('loading false')
+      setLoading(false)
     }
   }
 
@@ -297,6 +321,7 @@ const LoginWithEmailAndPasswordForm = ({
               inValid={invalidOTP}
             />
           )}
+
           {!isLogin && (
             <div
               className={
@@ -319,7 +344,13 @@ const LoginWithEmailAndPasswordForm = ({
               }
               onClick={loginWithEmailAndPasswordHandler}
             >
-              <span>Đăng nhập</span>
+              {loading && (
+                <Spinner
+                  animation="border"
+                  style={{ width: 24, height: 24, color: '#fff' }}
+                />
+              )}
+              {!loading && <span>Đăng nhập</span>}
             </div>
           )}
         </Form>
@@ -338,6 +369,8 @@ const LoginWithEmailAndPasswordForm = ({
           isSendVerifyCode={isSendVerifyCode}
           disabled={disabled}
           setDisabled={setDisabled}
+          loading={loading}
+          setLoading={setLoading}
           setVerifyOTP={(e) =>
             setVerifyOTP((prev) => {
               return {

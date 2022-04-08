@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { apiURL } from '../../../context/constants'
-import { Form } from 'react-bootstrap'
+import { Form, Spinner } from 'react-bootstrap'
 import FormGroup from '../../utils/auth-form/FormGroup'
 import styles from './AuthForgetPassword.module.scss'
 
@@ -19,6 +19,8 @@ const AuthForgetPassword = ({
   setDisabled,
   disabled,
   onSubmitHandler,
+  loading,
+  setLoading,
 }) => {
   const [password, setPassword] = useState({
     pass: '',
@@ -28,6 +30,7 @@ const AuthForgetPassword = ({
   const [isConfirm, setIsConfirm] = useState(false)
 
   const forgotPasswordHandler = async () => {
+    setLoading(true)
     try {
       const res = await fetch(`${apiURL}/login/reset-password`, {
         method: 'POST',
@@ -44,6 +47,8 @@ const AuthForgetPassword = ({
       console.log(data.message)
     } catch (error) {
       console.log(error)
+    } finally {
+      setLoading(false)
     }
   }
   useEffect(() => {
@@ -160,7 +165,13 @@ const AuthForgetPassword = ({
           }
           onClick={forgotPasswordHandler}
         >
-          <span>Xác nhận</span>
+          {loading && (
+            <Spinner
+              animation="border"
+              style={{ width: 24, height: 24, color: '#fff' }}
+            />
+          )}
+          {!loading && <span>Xác nhận</span>}
         </div>
       )}
     </Form>
