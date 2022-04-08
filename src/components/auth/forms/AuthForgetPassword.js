@@ -159,7 +159,8 @@ const AuthForgetPassword = ({
           className={
             password.pass.length >= 8 &&
             password.rePass.length >= 8 &&
-            password.pass === password.rePass
+            password.pass === password.rePass &&
+            !loading
               ? styles.submitButton
               : `${styles.submitButton} ${styles.disabled}`
           }

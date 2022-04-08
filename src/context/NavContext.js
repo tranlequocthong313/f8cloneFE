@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
 export const NavContext = createContext()
@@ -8,7 +8,11 @@ const NavContextProvider = ({ children }) => {
 
   const [active, setActive] = useState(location.pathname.split('/')[1])
 
-  const activeHandler = tab => {
+  useEffect(() => {
+    location.pathname === '' && setActive('home')
+  }, [location.pathname])
+
+  const activeHandler = (tab) => {
     setActive(tab)
   }
 

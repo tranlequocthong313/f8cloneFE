@@ -260,7 +260,7 @@ const LoginWithPhoneNumberForm = ({
       />
       <div
         className={
-          verifyOTP.length === 6
+          verifyOTP.length === 6 && !loading
             ? styles.logInButton
             : `${styles.logInButton} ${styles.disabled}`
         }

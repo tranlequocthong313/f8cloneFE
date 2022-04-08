@@ -338,7 +338,8 @@ const LoginWithEmailAndPasswordForm = ({
             <div
               className={
                 validateEmail === null &&
-                userEmailAndPasswordInput.password.length >= 8
+                userEmailAndPasswordInput.password.length >= 8 &&
+                !loading
                   ? styles.logInButton
                   : `${styles.logInButton} ${styles.disabled}`
               }
