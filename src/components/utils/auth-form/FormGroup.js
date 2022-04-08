@@ -69,7 +69,7 @@ const FormGroup = ({
         {OTPInput && (
           <div
             className={
-              disabled
+              disabled || isSendVerifyCode
                 ? `${styles.verifyOTPButton} ${styles.disabled}`
                 : styles.verifyOTPButton
             }
