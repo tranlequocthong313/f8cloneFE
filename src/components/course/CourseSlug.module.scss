@@ -6,6 +6,10 @@
 
   .purchaseBadge {
     display: none;
+
+    a {
+      text-decoration: none;
+    }
   }
 }
 
@@ -26,6 +30,10 @@
 
 .mobileButtonWrapper {
   display: none;
+
+  a {
+    text-decoration: none;
+  }
 }
 
 @media (max-width: 1023px) {

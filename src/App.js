@@ -106,7 +106,11 @@ function App() {
         element={user.isLoggedIn ? <BookmarkPost /> : <Auth />}
       />
       <Route
-        path="/my-post"
+        path="/my-post/drafts"
+        element={user.isLoggedIn ? <MyBlog /> : <Auth />}
+      />
+      <Route
+        path="/my-post/published"
         element={user.isLoggedIn ? <MyBlog /> : <Auth />}
       />
       <Route

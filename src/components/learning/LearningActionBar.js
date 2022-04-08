@@ -2,8 +2,10 @@ import React from 'react'
 import styles from './LearningActionBar.module.scss'
 import VerticalModal from '../utils/vertical-modal/VerticalModal'
 import LearningTrack from './LearningTrack'
+import { Spinner } from 'react-bootstrap'
+import LearningTrackItem from './LearningTrackItem'
 
-const LearningActionBar = ({ episodes, show, showHandler }) => {
+const LearningActionBar = ({ episodes, show, showHandler, loading }) => {
   return (
     <div className={styles.wrapper}>
       <button className={styles.button}>
@@ -23,7 +25,8 @@ const LearningActionBar = ({ episodes, show, showHandler }) => {
           {show && <i className="fa-solid fa-arrow-right"></i>}
         </button>
       </div>
-      <div className={styles.mobileLearningTrack}>
+
+      <div className={styles.mobileAndTabletTrack}>
         <VerticalModal
           button={
             <div className={styles.toggleTrackMenu}>
@@ -34,12 +37,17 @@ const LearningActionBar = ({ episodes, show, showHandler }) => {
             </div>
           }
           closeButton={true}
+          hideOnComputer={true}
           header={
             <h4 style={{ fontSize: 16, fontWeight: 600 }}>Nội dung khóa học</h4>
           }
           className={styles.modalWrapper}
         >
-          <LearningTrack episodes={episodes} />
+          <div className={styles.container}>
+            <div className={styles.body}>
+              <LearningTrackItem episodes={episodes} />
+            </div>
+          </div>
         </VerticalModal>
       </div>
     </div>

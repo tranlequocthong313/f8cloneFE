@@ -13,32 +13,34 @@ const LearningContextProvider = ({ children }) => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const [show, setShow] = useState(false) //Show menu track
-
+  const [show, setShow] = useState(true) //Show menu track
   const [active, setActive] = useState(null) //Is Chosen lesson
   const [locked, setLocked] = useState(null) //lock lesson
-  let [searchParams, setSearchParams] = useSearchParams()
-  let [query, setQuery] = useState(searchParams.get('id'))
-
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [query, setQuery] = useState(searchParams.get('id'))
   const [play, setPlay] = useState(false)
-
   const [videoId, setVideoId] = useState('')
   const [course, setCourse] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const controller = new AbortController()
 
     ;(async () => {
       try {
+        setLoading(true)
         const res = await fetch(`${apiURL}${location.pathname}`, {
           signal: controller.signal,
         })
         const data = await res.json()
 
         setCourse(data)
+
         // getLearningEpisode(data.episode)
       } catch (error) {
         console.log(error.message)
+      } finally {
+        setLoading(false)
       }
     })()
 
@@ -56,7 +58,7 @@ const LearningContextProvider = ({ children }) => {
   //   createParams(learningLesson.id)
   // }
 
-  const activeHandler = async id => {
+  const activeHandler = async (id) => {
     try {
       setActive(id)
       createParams(id)
@@ -74,9 +76,12 @@ const LearningContextProvider = ({ children }) => {
     createParams(lessonId)
   }
 
-  const showHandler = () => setShow(prev => !prev)
+  const showHandler = () => {
+    console.log("I'm fucking running")
+    setShow((prev) => !prev)
+  }
 
-  const createParams = id => {
+  const createParams = (id) => {
     console.log('create params', id)
     navigate({
       pathname: location.pathname,
@@ -108,6 +113,7 @@ const LearningContextProvider = ({ children }) => {
     play,
     setPlay,
     onEndHandler,
+    loading,
   }
 
   return (

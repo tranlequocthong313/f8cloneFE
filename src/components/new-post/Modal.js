@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Row, Col } from 'react-bootstrap'
+import { Row, Col, Spinner } from 'react-bootstrap'
 import { useDropzone } from 'react-dropzone'
 import ContentEditable from '../utils/content-editable/ContentEditable'
 import moment from 'moment'
@@ -20,16 +20,17 @@ const Modal = ({ blogContent, setShowModal }) => {
     .resolvedOptions()
     .timeZone.split('/')[1]
 
-  const date = moment().add(1, 'hours').format('yyyy-MM-DThh:mm')
+  const date = moment().add(1, 'hours').format('yyyy-MM-DDTHH:mm')
 
   const [preview, setPreview] = useState(null)
-  const [showSchedule, setShowSchedule] = useState(false)
+  const [isSchedule, setIsSchedule] = useState(false)
   const [schedule, setSchedule] = useState(date)
   const [tags, setTags] = useState([])
-  const [allowRecommend, setAllowRecommend] = useState(false)
+  const [allowRecommend, setAllowRecommend] = useState(true)
   const [titleDisplay, setTitleDisplay] = useState('')
   const [description, setDescription] = useState('')
   const [image, setImage] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   // maxLengthContentEditable library require maxLength is string
   const LIMIT_TITLE_DISPLAY_LENGTH = '100'
@@ -43,7 +44,7 @@ const Modal = ({ blogContent, setShowModal }) => {
     return () => preview && URL.revokeObjectURL(preview)
   }, [preview])
 
-  const onDrop = useCallback(acceptedFiles => {
+  const onDrop = useCallback((acceptedFiles) => {
     const image = URL.createObjectURL(acceptedFiles[0])
     setPreview(image)
     setImage(acceptedFiles[0])
@@ -55,11 +56,7 @@ const Modal = ({ blogContent, setShowModal }) => {
     name: 'image',
   })
 
-  const showScheduleHandler = () => {
-    setShowSchedule(prev => !prev)
-  }
-
-  const readingTimeHandler = content => {
+  const readingTimeHandler = (content) => {
     const WORDS_PER_MINUTE = 200 // People read 200 words/min https://infusion.media/content-marketing/how-to-calculate-reading-time/
     const SMALLEST_READING_TIME = 1
 
@@ -69,25 +66,26 @@ const Modal = ({ blogContent, setShowModal }) => {
     return minute <= SMALLEST_READING_TIME ? SMALLEST_READING_TIME : minute
   }
 
-  const createSlugBlog = title =>
-    removeActions(
-      title
-        .toLowerCase()
-        .replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '')
-        .replace(/\s/g, '-')
-    )
+  const createSlugBlog = (title) => {
+    const slug = removeActions(title)
+    return slug
+      .toLowerCase()
+      .replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '')
+      .replace(/\s/g, '-')
+  }
 
   const uploadImageToStorage = () => {
+    setLoading(true)
     if (image) {
       const storageRef = ref(storage, `uploads/${image.name}`)
       const uploadTask = uploadBytesResumable(storageRef, image)
 
       return uploadTask.on(
         'state_changed',
-        snapshot => {
+        (snapshot) => {
           Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
         },
-        err => console.log(err),
+        (err) => console.log(err),
         async () => {
           try {
             const url = await getDownloadURL(uploadTask.snapshot.ref)
@@ -95,13 +93,13 @@ const Modal = ({ blogContent, setShowModal }) => {
           } catch (error) {
             console.log(error)
           }
-        }
+        },
       )
     }
     postBlogHandler()
   }
 
-  const postBlogHandler = async image => {
+  const postBlogHandler = async (image) => {
     try {
       const token = Cookies.get('token')
       if (!token) return
@@ -109,7 +107,7 @@ const Modal = ({ blogContent, setShowModal }) => {
       const blogData = {
         image,
         tags,
-        schedule,
+        schedule: isSchedule ? schedule : null,
         allowRecommend,
         description,
         title: blogContent.title,
@@ -117,7 +115,7 @@ const Modal = ({ blogContent, setShowModal }) => {
         slug: createSlugBlog(blogContent.title),
         readingTime: readingTimeHandler(blogContent.content),
         search: removeActions(
-          titleDisplay.length === 0 ? blogContent.title : titleDisplay
+          titleDisplay.length === 0 ? blogContent.title : titleDisplay,
         ),
         titleDisplay:
           titleDisplay.length === 0 ? blogContent.title : titleDisplay,
@@ -136,16 +134,22 @@ const Modal = ({ blogContent, setShowModal }) => {
       dispatchAndNavigate(data)
     } catch (error) {
       console.log(error.message)
+    } finally {
+      setLoading(false)
     }
   }
 
-  const dispatchAndNavigate = data => {
+  const dispatchAndNavigate = (data) => {
     createBlog({
       isSuccess: true,
       show: true,
     })
-    navigate(`/blog/${data.blog.slug}`)
+    navigate(
+      !data.blog.schedule ? `/blog/${data.blog.slug}` : '/my-post/published',
+    )
   }
+
+  console.log(isSchedule, schedule)
 
   return (
     <div className={styles.modal}>
@@ -180,7 +184,7 @@ const Modal = ({ blogContent, setShowModal }) => {
           <ContentEditable
             className={`${styles.contentEditable} ${styles.title}`}
             text={'Tiêu đề khi tin được hiển thị'}
-            onInput={e => setTitleDisplay(e.target.innerText)}
+            onInput={(e) => setTitleDisplay(e.target.innerText)}
             maxLength={LIMIT_TITLE_DISPLAY_LENGTH}
           />
           {titleDisplay.length >= SHOW_HELP_NUMBER_TITLE_DISPLAY && (
@@ -189,7 +193,7 @@ const Modal = ({ blogContent, setShowModal }) => {
           <ContentEditable
             className={`${styles.contentEditable} ${styles.description}`}
             text={'Mô tả khi tin được hiển thị'}
-            onInput={e => setDescription(e.target.innerText)}
+            onInput={(e) => setDescription(e.target.innerText)}
             maxLength={LIMIT_DESCRIPTION_LENGTH}
           />
           {description.length >= SHOW_HELP_NUMBER_DESCRIPTION && (
@@ -209,31 +213,27 @@ const Modal = ({ blogContent, setShowModal }) => {
             type="text"
             placeholder="Ví dụ: Front-end, ReactJS, UI, UX"
             className={styles.tagsInput}
-            onChange={e =>
-              setTags(prev => {
-                return [...prev, e.target.value]
-              })
-            }
+            onChange={(e) => setTags(e.target.value)}
           />
           <form className={styles.allow}>
             <input
               type="checkbox"
-              checked
+              checked={allowRecommend}
               className={styles.checkMark}
-              onChange={() => setAllowRecommend(prev => !prev)}
+              onChange={() => setAllowRecommend((prev) => !prev)}
             />
             <label>
               Đề xuất bài viết của bạn đến các độc giả quan tâm tới nội dung
               này.
             </label>
           </form>
-          {showSchedule && (
+          {isSchedule && (
             <form className={styles.schedule}>
               <label>Thời gian xuất bản:</label>
               <input
                 type="datetime-local"
                 value={schedule}
-                onChange={e => setSchedule(e.target.value)}
+                onChange={(e) => setSchedule(e.target.value)}
               />
               <div className={styles.help}>{timezone} time (GMT+7)</div>
               <p>
@@ -244,16 +244,27 @@ const Modal = ({ blogContent, setShowModal }) => {
           )}
           <div className={styles.actions}>
             <button
-              className={styles.postButton}
+              className={
+                !loading
+                  ? styles.postButton
+                  : `${styles.postButton} ${styles.disabled}`
+              }
               onClick={uploadImageToStorage}
             >
-              Xuất bản ngay
+              {isSchedule ? 'Lên lịch xuất bản' : 'Xuất bản ngay'}
+              {loading && (
+                <Spinner
+                  animation="border"
+                  size="sm"
+                  style={{ marginLeft: 8, color: '#fff' }}
+                />
+              )}
             </button>
             <button
               className={styles.postScheduleButton}
-              onClick={showScheduleHandler}
+              onClick={() => setIsSchedule((prev) => !prev)}
             >
-              {!showSchedule ? 'Lên lịch xuất bản' : 'Hủy lên lịch'}
+              {!isSchedule ? 'Lên lịch xuất bản' : 'Hủy lên lịch'}
             </button>
           </div>
           <img

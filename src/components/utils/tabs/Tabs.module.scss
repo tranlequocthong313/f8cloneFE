@@ -21,6 +21,7 @@
     background-color: transparent;
     border-bottom: 2px solid transparent;
     white-space: nowrap;
+    text-decoration: none;
 
     &.active {
       color: #242424;
@@ -28,5 +29,3 @@
     }
   }
 }
-
-

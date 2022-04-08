@@ -25,55 +25,57 @@ const LearningTrackItem = ({ episodes }) => {
     return styles.lessonItem
   }
 
-  return episodes.map((episode) => (
-    <div key={episode.id}>
-      <div className={styles.wrapper} onClick={() => openHandler(episode.id)}>
-        <h3 className={styles.title}>{episode.title}</h3>
-        <span className={styles.description}>2/2 | 22:09</span>
-        <span className={styles.icon}>
-          {/* <i className="fa-solid fa-chevron-up"></i> */}
-          <i className="fa-solid fa-chevron-down"></i>
-        </span>
-      </div>
-      <Collapse in={open.includes(episode.id)}>
-        <div className={styles.panelBody}>
-          {episode.lessons.map((lesson) => (
-            <div
-              className={styleHandler(lesson.learned, lesson.id)}
-              key={lesson.id}
-              onClick={() => playVideoHandler(lesson.id, lesson.videoId)}
-            >
-              <div className={styles.lessonInfo}>
-                <h3>{lesson.title}</h3>
-                <p>
-                  <i
-                    className={
-                      active !== lesson.id
-                        ? 'fa-regular fa-circle-play'
-                        : `fa-regular fa-compact-disc ${styles.playingIcon}`
-                    }
-                  ></i>{' '}
-                  {lesson.time}
-                </p>
-              </div>
-              <div
-                className={
-                  lesson.learned
-                    ? styles.statusIcon
-                    : `${styles.statusIcon} ${styles.locked}`
-                }
-              >
-                {lesson.learned && <i className="fa-solid fa-circle-check"></i>}
-                {!lesson.learned && active !== lesson.id && (
-                  <i className="fa-solid fa-clock-five"></i>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </Collapse>
-    </div>
-  ))
+  return <h1>Hello World!</h1>
+
+  // return episodes.map((episode) => (
+  //   <div key={episode.id}>
+  //     <div className={styles.wrapper} onClick={() => openHandler(episode.id)}>
+  //       <h3 className={styles.title}>{episode.title}</h3>
+  //       <span className={styles.description}>2/2 | 22:09</span>
+  //       <span className={styles.icon}>
+  //         {/* <i className="fa-solid fa-chevron-up"></i> */}
+  //         <i className="fa-solid fa-chevron-down"></i>
+  //       </span>
+  //     </div>
+  //     <Collapse in={open.includes(episode.id)}>
+  //       <div className={styles.panelBody}>
+  //         {episode.lessons.map((lesson) => (
+  //           <div
+  //             className={styleHandler(lesson.learned, lesson.id)}
+  //             key={lesson.id}
+  //             onClick={() => playVideoHandler(lesson.id, lesson.videoId)}
+  //           >
+  //             <div className={styles.lessonInfo}>
+  //               <h3>{lesson.title}</h3>
+  //               <p>
+  //                 <i
+  //                   className={
+  //                     active !== lesson.id
+  //                       ? 'fa-regular fa-circle-play'
+  //                       : `fa-regular fa-compact-disc ${styles.playingIcon}`
+  //                   }
+  //                 ></i>{' '}
+  //                 {lesson.time}
+  //               </p>
+  //             </div>
+  //             <div
+  //               className={
+  //                 lesson.learned
+  //                   ? styles.statusIcon
+  //                   : `${styles.statusIcon} ${styles.locked}`
+  //               }
+  //             >
+  //               {lesson.learned && <i className="fa-solid fa-circle-check"></i>}
+  //               {!lesson.learned && active !== lesson.id && (
+  //                 <i className="fa-solid fa-clock-five"></i>
+  //               )}
+  //             </div>
+  //           </div>
+  //         ))}
+  //       </div>
+  //     </Collapse>
+  //   </div>
+  // ))
 }
 
 export default LearningTrackItem

@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './LearningContent.module.scss'
 import LearningVideo from './LearningVideo'
 
 const LearningContent = ({ show }) => {
+  const [showComment, setShowComment] = useState(false)
+
   return (
     <div
       className={
@@ -49,6 +51,15 @@ const LearningContent = ({ show }) => {
             </a>{' '}
             để nhận thông báo khi có các bài học mới nhé ❤️
           </p>
+        </div>
+        <div
+          className={styles.commentButton}
+          onClick={() => setShowComment(true)}
+        >
+          <button className={styles.button}>
+            <i className="fa-solid fa-comments"></i>
+            <span className={styles.title}>Hỏi đáp</span>
+          </button>
         </div>
       </div>
       <div className={styles.poweredBy}>

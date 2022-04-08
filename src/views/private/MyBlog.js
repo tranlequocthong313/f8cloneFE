@@ -5,7 +5,7 @@ import SideBar from '../../components/main-layout/sidebar/SideBar'
 import '../../sass/_withSidebarContent.scss'
 import '../../sass/_container.scss'
 import styles from './MyBlog.module.scss'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { apiURL } from '../../context/constants'
 import Cookies from 'js-cookie'
 import timeSinceHandler from '../../components/utils/timeSinceHandler/timeSinceHandler'
@@ -16,7 +16,11 @@ const Footer = React.lazy(() =>
 )
 
 const MyBlog = () => {
-  const [tabs, setTabs] = useState('drafts')
+  const location = useLocation()
+
+  console.log(location.pathname)
+
+  const [tabs, setTabs] = useState(location.pathname)
   const [myBlog, setMyBlog] = useState(null)
   const [myDraftBlog, setMyDraftBlog] = useState(null)
 
@@ -46,7 +50,7 @@ const MyBlog = () => {
         )
 
         const data = await res.json()
-        setMyBlog(data.myBlog)
+        data.myBlog.length > 0 && setMyBlog(data.myBlog)
       } catch (error) {
         console.log(error)
       }
@@ -71,25 +75,27 @@ const MyBlog = () => {
                   <Col xs={12} md={12} xl={8}>
                     <div className={styles.tabs}>
                       <Tabs
+                        path={'/my-post/drafts'}
                         tab={'Bản nháp'}
                         quantity={
                           myDraftBlog &&
                           myDraftBlog.length > 0 &&
                           `(${myDraftBlog.length})`
                         }
-                        onActive={() => setTabs('drafts')}
-                        isActive={tabs === 'drafts'}
+                        onActive={() => setTabs('/my-post/drafts')}
+                        isActive={tabs === '/my-post/drafts'}
                       />
                       <Tabs
+                        path={'/my-post/published'}
                         tab={'Đã xuất bản'}
                         quantity={
                           myBlog && myBlog.length > 0 && `(${myBlog.length})`
                         }
-                        onActive={() => setTabs('published')}
-                        isActive={tabs === 'published'}
+                        onActive={() => setTabs('/my-post/published')}
+                        isActive={tabs === '/my-post/published'}
                       />
                     </div>
-                    {tabs === 'drafts' && !myDraftBlog && (
+                    {tabs === '/my-post/drafts' && !myDraftBlog && (
                       <div className={styles.message}>
                         <p>Chưa có bản nháp nào.</p>
                         <p>
@@ -98,7 +104,7 @@ const MyBlog = () => {
                         </p>
                       </div>
                     )}
-                    {tabs === 'drafts' &&
+                    {tabs === '/my-post/drafts' &&
                       myDraftBlog &&
                       myDraftBlog.map((blog) => (
                         <ul key={blog._id} className={styles.blogList}>
@@ -121,7 +127,7 @@ const MyBlog = () => {
                           </li>
                         </ul>
                       ))}
-                    {tabs === 'published' && !myBlog && (
+                    {tabs === '/my-post/published' && !myBlog && (
                       <div className={styles.message}>
                         <p>Chưa có xuất bản nào.</p>
                         <p>
@@ -130,13 +136,18 @@ const MyBlog = () => {
                         </p>
                       </div>
                     )}
-                    {tabs === 'published' &&
+                    {tabs === '/my-post/published' &&
                       myBlog &&
                       myBlog.map((blog) => (
                         <ul key={blog._id} className={styles.blogList}>
                           <li>
                             <h3>
                               <a href={`blog/${blog.slug}`}>
+                                {blog.schedule !== null && (
+                                  <i
+                                    className={`fa-solid fa-clock ${styles.clockIcon}`}
+                                  ></i>
+                                )}
                                 <span>{blog.titleDisplay}</span>
                               </a>
                             </h3>

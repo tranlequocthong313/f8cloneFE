@@ -15,9 +15,11 @@ const CourseEnroll = ({ image, showHandler, slug }) => {
         <p>Xem giới thiệu khóa học</p>
       </div>
       <h5>Miễn phí</h5>
-      <MainButton className={styles.button} primary={true}>
-        <Link to={`/learning/${slug}`}>Đăng ký học</Link>
-      </MainButton>
+      <Link to={`/learning/${slug}`}>
+        <MainButton className={styles.button} primary={true}>
+          Đăng ký học
+        </MainButton>
+      </Link>
       <ul>
         <li>
           <i className={`${styles.icon} fa-solid fa-compass`}></i>

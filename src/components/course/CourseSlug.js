@@ -59,11 +59,11 @@ const CourseSlug = () => {
                 </div>
                 <div className={styles.purchaseBadge}>
                   <h5>Miễn phí</h5>
-                  <MainButton className={styles.button} primary={true}>
-                    <Link to={`/learning/${course ? course.slug : ''}`}>
+                  <Link to={`/learning/${course ? course.slug : ''}`}>
+                    <MainButton className={styles.button} primary={true}>
                       Đăng ký học
-                    </Link>
-                  </MainButton>
+                    </MainButton>
+                  </Link>
                   <ul>
                     <li>
                       <i className={`${styles.icon} fa-solid fa-compass`}></i>
@@ -114,11 +114,11 @@ const CourseSlug = () => {
       </Row>
 
       <div className={styles.mobileButtonWrapper}>
-        <MainButton className={styles.mobileButton} primary={true}>
-          <Link to={`/learning/${course ? course.slug : ''}`}>
+        <Link to={`/learning/${course ? course.slug : ''}`}>
+          <MainButton className={styles.mobileButton} primary={true}>
             ĐĂNG KÝ MIỄN PHÍ
-          </Link>
-        </MainButton>
+          </MainButton>
+        </Link>
       </div>
       <Suspense fallback={<div>Loading...</div>}>
         <Footer />

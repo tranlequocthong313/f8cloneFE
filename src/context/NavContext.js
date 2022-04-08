@@ -10,6 +10,8 @@ const NavContextProvider = ({ children }) => {
 
   useEffect(() => {
     location.pathname === '' && setActive('home')
+    location.pathname.includes('/blog') && setActive('blog')
+    location.pathname.includes('/courses') && setActive('courses')
   }, [location.pathname])
 
   const activeHandler = (tab) => {

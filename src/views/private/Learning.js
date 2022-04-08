@@ -9,8 +9,7 @@ import { LearningContext } from '../../context/LearningContext'
 import styles from './Learning.module.scss'
 
 const Learning = () => {
-  const { show, showHandler, course } = useContext(LearningContext)
-  const [showComment, setShowComment] = useState(false)
+  const { show, showHandler, course, loading } = useContext(LearningContext)
 
   return (
     <>
@@ -18,20 +17,11 @@ const Learning = () => {
       <LearningContent show={show} />
       {show && (
         <LearningTrack
-          onComputer={true}
-          showHandler={showHandler}
-          episodes={course.episode}
+          // episodes={course.episode}
+          loading={loading}
         />
       )}
-      <div
-        className={styles.commentButton}
-        onClick={() => setShowComment(true)}
-      >
-        <button className={styles.wrapper}>
-          <i className="fa-solid fa-comments"></i>
-          <span className={styles.title}>Hỏi đáp</span>
-        </button>
-      </div>
+
       {/* {showComment && (
         <Comment
           // setShowComment={() => setShowComment(false)}
@@ -41,9 +31,10 @@ const Learning = () => {
         /> */}
       {/* )} */}
       <LearningActionBar
-        episodes={course.episode}
+        // episodes={course.episode}
         show={show}
         showHandler={showHandler}
+        loading={loading}
       />
     </>
   )
