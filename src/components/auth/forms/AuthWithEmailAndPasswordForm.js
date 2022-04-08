@@ -144,8 +144,6 @@ const LoginWithEmailAndPasswordForm = ({
   }
 
   const checkUserEmailExistHandler = async (e) => {
-    console.log(e.target.value)
-
     if (e.target.value && isValidEmailHandler(e.target.value)) {
       const res = await fetch(`${apiURL}/login/check-email`, {
         method: 'POST',
@@ -264,6 +262,12 @@ const LoginWithEmailAndPasswordForm = ({
                   return { ...prev, password: e.target.value }
                 }),
             }}
+            onKeyUp={(e) =>
+              e.keyCode === 13 &&
+              validateEmail === null &&
+              userEmailAndPasswordInput.password.length >= 8 &&
+              loginWithEmailAndPasswordHandler()
+            }
             inValid={invalidEmailOrPassword}
           />
           {!isLogin && (
@@ -284,6 +288,11 @@ const LoginWithEmailAndPasswordForm = ({
               }}
               disabled={disabled}
               onClick={() => onSubmitHandler('signUp')}
+              onKeyUp={(e) =>
+                e.keyCode === 13 &&
+                verifyOTP.input.length === 6 &&
+                loginWithEmailAndPasswordHandler()
+              }
               inputDisabled={!isSendVerifyCode}
               inValid={invalidOTP}
             />

@@ -153,7 +153,7 @@ const Auth = () => {
                 dispatchAndNavigateHandler={dispatchAndNavigateHandler}
               />
             )}
-            {inValid && (
+            {inValid && isShowAuthProviderOption && (
               <p className={styles.validate}>
                 Email đã được sử dụng bởi một phương thức đăng nhập khác.
               </p>

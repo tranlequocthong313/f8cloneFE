@@ -6,6 +6,7 @@ import SelectCountry from '../../auth/buttons/SelectCountry'
 const FormGroup = ({
   onClick,
   onChange,
+  onKeyUp,
   label,
   labelRight,
   type,
@@ -61,6 +62,7 @@ const FormGroup = ({
           value={value}
           placeholder={placeholder}
           onChange={onChange.input}
+          onKeyUp={onKeyUp}
           onBlur={onBlur}
           pattern={pattern}
           disabled={inputDisabled}

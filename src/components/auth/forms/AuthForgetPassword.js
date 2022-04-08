@@ -54,6 +54,14 @@ const AuthForgetPassword = ({
     setDisabled(disableHandler())
   }, [email, isValidEmailHandler, setDisabled, validateEmail])
 
+  const checkOTPValidHandler = () => {
+    if (verifyOTP.input !== verifyOTP.create) {
+      return setInvalidOTP('Mã xác minh không hợp lệ')
+    }
+    setIsConfirm(true)
+    setInvalidOTP(null)
+  }
+
   return (
     <Form className={styles.formBody}>
       {!isConfirm && (
@@ -78,11 +86,29 @@ const AuthForgetPassword = ({
             }}
             disabled={disabled}
             onClick={onSubmitHandler}
+            onKeyUp={(e) =>
+              e.keyCode === 13 &&
+              verifyOTP.input.length === 6 &&
+              checkOTPValidHandler()
+            }
             inputDisabled={!isSendVerifyCode}
             inValid={invalidOTP}
           />
         </>
       )}
+      {!isConfirm && (
+        <div
+          className={
+            verifyOTP.input.length === 6
+              ? styles.submitButton
+              : `${styles.submitButton} ${styles.disabled}`
+          }
+          onClick={checkOTPValidHandler}
+        >
+          <span>Xác nhận</span>
+        </div>
+      )}
+
       {isConfirm && (
         <>
           <FormGroup
@@ -112,27 +138,17 @@ const AuthForgetPassword = ({
                   }
                 }),
             }}
+            onKeyUp={(e) =>
+              e.keyCode === 13 &&
+              password.pass.length >= 8 &&
+              password.rePass.length >= 8 &&
+              password.pass === password.rePass &&
+              forgotPasswordHandler()
+            }
           />
         </>
       )}
-      {!isConfirm && (
-        <div
-          className={
-            verifyOTP.input.length === 6
-              ? styles.submitButton
-              : `${styles.submitButton} ${styles.disabled}`
-          }
-          onClick={() => {
-            if (verifyOTP.input !== verifyOTP.create) {
-              return setInvalidOTP('Mã xác minh không hợp lệ')
-            }
-            setIsConfirm(true)
-            setInvalidOTP(null)
-          }}
-        >
-          <span>Xác nhận</span>
-        </div>
-      )}
+
       {isConfirm && (
         <div
           className={

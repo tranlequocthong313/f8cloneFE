@@ -245,6 +245,9 @@ const LoginWithPhoneNumberForm = ({
         inputDisabled={!isSendVerifyCode}
         onClick={onSubmitHandler}
         inValid={invalidOTP}
+        onKeyUp={(e) =>
+          e.keyCode === 13 && verifyOTP.length === 6 && validateOTPHandler()
+        }
       />
       <div
         className={
