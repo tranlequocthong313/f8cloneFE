@@ -8,11 +8,11 @@ const NavContextProvider = ({ children }) => {
 
   const [active, setActive] = useState(location.pathname.split('/')[1])
 
-  useEffect(() => {
-    location.pathname === '' && setActive('home')
-    location.pathname.includes('/blog') && setActive('blog')
-    location.pathname.includes('/courses') && setActive('courses')
-  }, [location.pathname])
+  // useEffect(() => {
+  //   location.pathname === '' && setActive('home')
+  //   location.pathname.includes('/blog') && setActive('blog')
+  //   location.pathname.includes('/courses') && setActive('courses')
+  // }, [location.pathname])
 
   const activeHandler = (tab) => {
     setActive(tab)

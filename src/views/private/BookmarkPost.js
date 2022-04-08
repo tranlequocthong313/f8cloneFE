@@ -46,6 +46,8 @@ const BookmarkPost = () => {
 
         const data = await res.json()
 
+        console.log(data)
+
         setBookmarkData(data)
       } catch (error) {
         console.log(error)
@@ -71,6 +73,7 @@ const BookmarkPost = () => {
                   isActive={true}
                   tab={'Bài viết'}
                   quantity={bookmarkData ? `(${bookmarkData.length})` : `(0)`}
+                  path={'/bookmark-post'}
                 />
               </div>
               {bookmarkData && bookmarkData.length === 0 && (
