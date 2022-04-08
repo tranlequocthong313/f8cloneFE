@@ -46,8 +46,6 @@ const BookmarkPost = () => {
 
         const data = await res.json()
 
-        console.log(data)
-
         setBookmarkData(data)
       } catch (error) {
         console.log(error)

@@ -215,7 +215,7 @@ const BlogDetail = ({ blog }) => {
             ))}
           </div>
         )}
-        <BlogSameAuthor />
+        <BlogSameAuthor postedBy={blog.postedBy._id} />
         <BlogHighlights blog={blog} />
         <Topics />
       </Col>

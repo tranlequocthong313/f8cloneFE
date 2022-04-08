@@ -32,7 +32,7 @@ const BlogSlug = () => {
       try {
         const res = await fetch(`${apiURL}${location.pathname}`)
         const data = await res.json()
-
+        console.log(data)
         setBlog(data[0])
         document.title = `${data[0].titleDisplay} | by F8`
       } catch (error) {
@@ -41,7 +41,7 @@ const BlogSlug = () => {
     })()
 
     return () => controller?.abort()
-  }, [])
+  }, [location.pathname])
 
   return (
     <>
