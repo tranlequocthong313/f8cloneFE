@@ -15,21 +15,11 @@ import Notification from './components/Notification'
 
 const Login = React.lazy(() => import('./components/Login'))
 
-const Header = ({
-  currentPage,
-  blogDataHandler,
-  setShowModal,
-  isValid,
-  scrollY,
-}) => {
+const Header = ({ currentPage, blogDataHandler, setShowModal, isValid }) => {
   const user = useSelector((state) => state.user)
 
   return (
-    <Navbar
-      className={
-        scrollY ? `${styles.navHeader} ${styles.moveOut}` : styles.navHeader
-      }
-    >
+    <Navbar className={styles.navHeader}>
       <Container fluid style={{ padding: 0 }}>
         <MobileNav photoURL={user.photoURL} />
         <Logo />

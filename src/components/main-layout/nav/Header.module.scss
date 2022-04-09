@@ -14,10 +14,6 @@
   will-change: transform;
   z-index: 20;
 
-  &.moveOut {
-    transform: translateY(calc(66px * -1));
-  }
-
   .navAction {
     display: flex;
     align-items: center;

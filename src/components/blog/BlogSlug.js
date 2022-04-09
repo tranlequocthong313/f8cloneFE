@@ -11,19 +11,7 @@ import { Col } from 'react-bootstrap'
 const BlogSlug = () => {
   const location = useLocation()
 
-  const [scrollY, setScrollY] = useState(0)
   const [blog, setBlog] = useState(null)
-
-  useEffect(() => {
-    const onScroll = () => {
-      const scrollY = window.scrollY
-      setScrollY(scrollY)
-    }
-
-    window.addEventListener('scroll', onScroll)
-
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -45,7 +33,7 @@ const BlogSlug = () => {
 
   return (
     <>
-      <Header scrollY={scrollY} />
+      <Header />
       <div className={styles.sidebarWrap}>
         <Col xs={0} sm={0} md={1} lg={1} xl={1}>
           <SideBar isBlog={true} />

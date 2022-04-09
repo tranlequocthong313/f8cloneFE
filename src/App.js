@@ -75,6 +75,17 @@ function App() {
     return () => controller?.abort()
   }, [])
 
+  useEffect(() => {
+    console.log(
+      '%cHello! 🙋',
+      'font-size: 16px; font-weight: 600; color: #4ef2c1',
+    )
+    console.log(
+      '%cF8 front-end was built with Javascript, React, Redux, SASS, CSS module, webpack, and lots of love. \n \nF8 back-end was built with PHP, Laravel, Node, ExpressJS, MySQL, MongoDB, Redis, and lots of love. \n  \n👉 Want to work with us? Check out https://fullstack.edu.vn/careers/',
+      'font-size: 14px; font-weight: 500; color: #4ef2c1',
+    )
+  }, [])
+
   return (
     <Routes>
       <Route
