@@ -189,7 +189,7 @@ const AdminVideo = ({ videoData }) => {
             ))}
           {videoData.length === 0 && (
             <tr>
-              <td colSpan="5" className={styles.tableItem}>
+              <td colSpan="10" className={styles.tableItem}>
                 Không có dữ liệu.
               </td>
             </tr>
