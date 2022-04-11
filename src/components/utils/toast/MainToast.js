@@ -2,23 +2,18 @@ import React from 'react'
 import { ToastContainer, Toast } from 'react-bootstrap'
 import styles from './MainToast.module.scss'
 
-const MainToast = ({
-  createStatus,
-  setCreateStatus,
-  successText,
-  failText,
-}) => {
+const MainToast = ({ status, setStatus, successText, failText }) => {
   return (
     <ToastContainer className="mt-5" position={'top-center'}>
       <Toast
         className={styles.toast}
-        show={createStatus.show}
+        show={status.show}
         delay={2000}
-        onClose={setCreateStatus}
+        onClose={setStatus}
         autohide
       >
         <Toast.Body className={styles.toastBody}>
-          {createStatus.isSuccess ? successText : failText}
+          {status.isSuccess ? successText : failText}
         </Toast.Body>
       </Toast>
     </ToastContainer>

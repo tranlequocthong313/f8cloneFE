@@ -6,12 +6,12 @@ import styles from './BlogSlug.module.scss'
 import SideBar from '../main-layout/sidebar/SideBar'
 import { useLocation } from 'react-router-dom'
 import Footer from '../main-layout/footer/Footer'
-import { Col } from 'react-bootstrap'
 
 const BlogSlug = () => {
   const location = useLocation()
 
   const [blog, setBlog] = useState(null)
+  const [blogHighlight, setBlogHighlight] = useState(null)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -19,10 +19,13 @@ const BlogSlug = () => {
     ;(async () => {
       try {
         const res = await fetch(`${apiURL}${location.pathname}`)
+
         const data = await res.json()
-        console.log(data)
-        setBlog(data[0])
-        document.title = `${data[0].titleDisplay} | by F8`
+
+        setBlog(data.blogSlug)
+        setBlogHighlight(data.blogHighlight)
+
+        document.title = `${data.blogSlug.titleDisplay} | by F8`
       } catch (error) {
         console.log(error.message)
       }
@@ -35,11 +38,10 @@ const BlogSlug = () => {
     <>
       <Header />
       <div className={styles.sidebarWrap}>
-        <Col xs={0} sm={0} md={1} lg={1} xl={1}>
-          <SideBar isBlog={true} />
-        </Col>
+        <SideBar isHide={true} />
       </div>
-      {blog && <BlogDetail blog={blog} />}
+
+      {blog && <BlogDetail blog={blog} blogHighlight={blogHighlight} />}
       <Footer />
     </>
   )

@@ -9,6 +9,7 @@ const initialState = {
   isLoading: false,
   isLoggedIn: false,
   videoCreated: null,
+  blogCreated: null,
   bio: null,
   socials: {
     fb: null,
@@ -16,10 +17,6 @@ const initialState = {
     instagram: null,
     linkedin: null,
     twitter: null,
-  },
-  blogCreated: {
-    isSuccess: false,
-    show: false,
   },
 }
 
@@ -82,7 +79,7 @@ const userReducer = (state = initialState, action) => {
     case 'CREATE_BLOG':
       return {
         ...state,
-        blogCreated: action.payload.blogCreated,
+        blogCreated: action.payload.blogData,
       }
 
     case 'SETTING':

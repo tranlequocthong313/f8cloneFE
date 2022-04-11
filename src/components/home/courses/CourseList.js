@@ -5,24 +5,21 @@ import MainCard from '../../utils/card/MainCard'
 import { Link } from 'react-router-dom'
 import styles from './CourseList.module.scss'
 import MainButton from '../../utils/button/MainButton'
+import MainCardAdd from '../../utils/card/MainCardAdd'
+import { useSelector } from 'react-redux'
 
-const CourseList = ({ courses, location }) => {
+const CourseList = ({ courses, path }) => {
+  const user = useSelector((state) => state.user)
+
   return (
     <ScrollHorizontal path={'courses'}>
       {courses.map((course) => (
-        <CourseItem key={course._id} course={course} location={location} />
+        <CourseItem key={course._id} course={course} path={path} />
       ))}
-      {location === 'my-course' && (
-        <MainCard className={styles.addCard}>
-          <Link to="/courses">
-            <i className="fa-solid fa-circle-plus"></i>
-            <div className={styles.star}></div>
-            <MainButton outline={true} className={styles.button}>
-              Thêm khóa học
-            </MainButton>
-          </Link>
-        </MainCard>
+      {user.isAdmin && !path && (
+        <MainCardAdd path={'/admin/course'}>Thêm khóa học</MainCardAdd>
       )}
+      {path && <MainCardAdd path={path}>Thêm khóa học</MainCardAdd>}
     </ScrollHorizontal>
   )
 }

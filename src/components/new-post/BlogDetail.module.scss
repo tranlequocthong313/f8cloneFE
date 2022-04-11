@@ -1,8 +1,26 @@
 @import '../../sass/color';
+@import '../../sass/flexCenter';
 
 .wrapper {
   line-height: 1.6;
   padding: 0 44px 60px;
+
+  .verifyBar {
+    margin-top: 20px;
+    @include flexCenter(row);
+
+    i {
+      margin: 0 6px;
+      font-size: 18px;
+    }
+
+    .button {
+      margin: 0 8px;
+      &.cancel {
+        background-color: #888;
+      }
+    }
+  }
 
   .colLeft {
     margin-left: 8.33333%;

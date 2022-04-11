@@ -5,14 +5,14 @@ import { Link } from 'react-router-dom'
 import styles from './SideBar.module.scss'
 import { NavContext } from '../../../context/NavContext'
 
-const SideBar = ({ isBlog }) => {
+const SideBar = ({ isHide }) => {
   const { active, activeHandler } = useContext(NavContext)
 
   return (
     <Navbar className={styles.wrapper}>
       <Nav
         className={
-          isBlog
+          isHide
             ? `${styles.blogSidebar} ${styles.container}}`
             : styles.container
         }
@@ -22,8 +22,8 @@ const SideBar = ({ isBlog }) => {
           <li className={styles.item}>
             <Link
               to="/"
-              className={active === '' ? styles.active : ''}
-              onClick={() => activeHandler('')}
+              className={active === 'home' ? styles.active : ''}
+              onClick={() => activeHandler('home')}
             >
               <i className="fa-solid fa-house"></i>
               <span>Home</span>

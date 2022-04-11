@@ -5,7 +5,7 @@ import styles from './User.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import userDefaultImage from '../../../../asset/images/nobody_m.256x256.jpg'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../../../../actions/userAction'
 import Cookies from 'js-cookie'
 import removeActions from '../../../utils/remove-accents/removeActions'
@@ -14,6 +14,8 @@ import Tippy from '../../../utils/tippy/Tippy'
 const User = ({ photoURL, displayName, email, currentPage }) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
+
+  const user = useSelector((state) => state.user)
 
   const [show, setShow] = useState(false)
 
@@ -61,6 +63,14 @@ const User = ({ photoURL, displayName, email, currentPage }) => {
           </div>
         </div>
       </div>
+      {user.isAdmin && (
+        <>
+          <Dropdown.Divider />
+          <Link className={styles.menuItem} to="/admin/course">
+            Quản lý F8
+          </Link>
+        </>
+      )}
       <Dropdown.Divider />
       <Link className={styles.menuItem} to="/new-blog">
         Viết blog

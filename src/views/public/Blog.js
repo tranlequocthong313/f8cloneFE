@@ -7,6 +7,7 @@ import Topics from '../../components/blog/Topics'
 import Header from '../../components/main-layout/nav/Header'
 import SideBar from '../../components/main-layout/sidebar/SideBar'
 import { apiURL } from '../../context/constants'
+import { Link } from 'react-router-dom'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer'),
@@ -44,7 +45,14 @@ const Blog = () => {
       <Header />
       <Row>
         <SideBar />
-        <Col xs={12} sm={12} md={12} lg={11} xl={11}>
+        <Col
+          xs={12}
+          sm={12}
+          md={12}
+          lg={11}
+          xl={11}
+          style={{ marginBottom: 80 }}
+        >
           <div className="withSidebarContent">
             <Row className={styles.wrapper}>
               <div className={styles.containerTop}>
@@ -54,11 +62,16 @@ const Blog = () => {
                   online và các kỹ thuật lập trình web.
                 </p>
               </div>
-              {blogs && (
-                <Col xs={12} lg={8} xl={8} className={styles.leftLayout}>
-                  <NewBlogs blogs={blogs} />
-                </Col>
-              )}
+              <Col xs={12} lg={8} xl={8} className={styles.leftLayout}>
+                {blogs && blogs.length !== 0 && <NewBlogs blogs={blogs} />}
+                {!blogs ||
+                  (blogs.length === 0 && (
+                    <p>
+                      Không có bài viết nào{' '}
+                      <Link to="/new-blog">thêm bài viết.</Link>
+                    </p>
+                  ))}
+              </Col>
               <Col xs={12} lg={4} xl={4} className={styles.rightLayout}>
                 <Topics />
               </Col>

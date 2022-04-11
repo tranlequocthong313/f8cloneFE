@@ -16,10 +16,11 @@ import Reaction from './Reaction'
 import Comment from '../utils/comment/Comment'
 import io from 'socket.io-client'
 import Tippy from '../utils/tippy/Tippy'
+import MainButton from '../utils/button/MainButton'
 
 const socket = io.connect(apiURL)
 
-const BlogDetail = ({ blog }) => {
+const BlogDetail = ({ blog, blogHighlight }) => {
   const user = useSelector((state) => state.user)
   const navigate = useNavigate()
 
@@ -28,6 +29,7 @@ const BlogDetail = ({ blog }) => {
   const [showComment, setShowComment] = useState(false)
   const [commentData, setCommentData] = useState(blog.comments)
   const [bookmarkData, setBookmarkData] = useState(null)
+  const [showVerifyBar, setShowVerifyBar] = useState(false)
 
   useEffect(() => {
     socket.on('comment', (comment) => {
@@ -117,8 +119,51 @@ const BlogDetail = ({ blog }) => {
     }
   }
 
+  const verifyBlogHandler = async (isVerified, blogId) => {
+    try {
+      await fetch(`${apiURL}/admin/blog/verify`, {
+        method: 'POST',
+        body: JSON.stringify({ isVerified, blogId }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setShowVerifyBar(false)
+      navigate('/admin/blog')
+    }
+  }
+
   return (
     <Row className={styles.wrapper}>
+      {!blog.isVerified && user.isAdmin && !showVerifyBar && (
+        <div className={styles.verifyBar}>
+          <MainButton
+            primary={true}
+            className={`${styles.button} ${styles.cancel}`}
+            onClick={() => verifyBlogHandler(false, blog._id)}
+          >
+            Không xét duyệt
+          </MainButton>
+          <MainButton
+            primary={true}
+            className={styles.button}
+            onClick={() => verifyBlogHandler(true, blog._id)}
+          >
+            Xét duyệt bài viết
+          </MainButton>
+        </div>
+      )}
+      {!blog.isVerified && !user.isAdmin && (
+        <div className={styles.verifyBar}>
+          <i>
+            <i className="fa-solid fa-clock"></i>
+            Đang chờ kiểm duyệt ...
+          </i>
+        </div>
+      )}
       <Col xl={2} className={styles.colLeft}>
         <div className={styles.aside}>
           <h4 className={styles.fullName}>{blog.postedBy.fullName}</h4>
@@ -215,8 +260,9 @@ const BlogDetail = ({ blog }) => {
             ))}
           </div>
         )}
-        <BlogSameAuthor postedBy={blog.postedBy._id} />
-        <BlogHighlights blog={blog} />
+
+        <BlogSameAuthor postedBy={blog.postedBy._id} blogId={blog._id} />
+        <BlogHighlights blogHighlight={blogHighlight} />
         <Topics />
       </Col>
     </Row>

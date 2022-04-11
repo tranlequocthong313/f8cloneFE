@@ -1,4 +1,4 @@
-const timeSinceHandler = createdAt => {
+const timeSinceHandler = (createdAt) => {
   const createdAtDate = new Date(createdAt)
   const nowDate = new Date()
 

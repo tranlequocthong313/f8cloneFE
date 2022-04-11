@@ -54,9 +54,9 @@ const MobileNav = ({ photoURL }) => {
         <ul className={styles.list}>
           <li
             onClick={() => {
-              activeHandler('my-course')
+              activeHandler('/my-course')
             }}
-            className={active === 'my-course' ? styles.active : styles.item}
+            className={active === '/my-course' ? styles.active : styles.item}
           >
             <Link to="/my-course">
               <i className="fa-solid fa-book-open"></i>
@@ -67,9 +67,9 @@ const MobileNav = ({ photoURL }) => {
         <ul className={styles.list}>
           <li
             onClick={() => {
-              activeHandler('')
+              activeHandler('home')
             }}
-            className={active === '' ? styles.active : styles.item}
+            className={active === 'home' ? styles.active : styles.item}
           >
             <Link to="/">
               <i className="fa-solid fa-house"></i>
@@ -113,9 +113,9 @@ const MobileNav = ({ photoURL }) => {
         <ul className={styles.list}>
           <li
             onClick={() => {
-              activeHandler('me')
+              activeHandler('bookmark-post')
             }}
-            className={active === 'me' ? styles.active : styles.item}
+            className={active === 'bookmark-post' ? styles.active : styles.item}
           >
             <Link to="/bookmark-post">
               <i className="fa-solid fa-bookmark"></i>

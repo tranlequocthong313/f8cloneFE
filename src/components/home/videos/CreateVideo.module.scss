@@ -2,24 +2,40 @@
 
 .videoCreate {
   margin-right: 16px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  color: #333;
-  padding: 8px !important;
+  padding: 8px 12px !important;
+  color: red !important;
+  border-color: red !important;
 
   i {
     margin-right: 4px;
   }
-}
-
-.createButton {
-  background-color: $primary-color;
-  border: $primary-color;
 
   &:hover {
-    background-color: $primary-color;
-    opacity: 0.9;
+    color: #333 !important;
+    border-color: #333 !important;
+  }
+}
+
+.button {
+  width: 100px;
+  background-color: red !important;
+  border: red !important;
+  font-size: 16px;
+
+  &.cancel {
+    background-color: #888 !important;
+    border: #888 !important;
+    color: #fff;
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  &:hover {
+    opacity: 0.8;
   }
 }
 
@@ -27,13 +43,13 @@
   margin: 0 auto;
   width: 90%;
 
-  label {
+  .heading {
     font-size: 22px;
     font-weight: 600;
     margin-bottom: 24px;
   }
 
-  input {
+  .createVideoInput {
     height: 50px;
   }
 }
@@ -45,15 +61,5 @@
     font-size: 14px;
     font-weight: 500;
     color: #fff;
-  }
-}
-
-@media (max-width: 1023px) {
-  .videoCreate {
-    display: none;
-  }
-
-  .createModal {
-    display: none !important;
   }
 }

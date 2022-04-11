@@ -6,7 +6,7 @@ const Tabs = ({ tab, isActive, quantity, onActive, path }) => {
   return (
     <div className={styles.tabs}>
       <Link
-        to={path}
+        to={path ? path : '#'}
         onClick={onActive}
         className={isActive ? `${styles.tab} ${styles.active}` : styles.tab}
       >

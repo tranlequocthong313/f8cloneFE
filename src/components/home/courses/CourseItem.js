@@ -6,7 +6,7 @@ import MainCard from '../../utils/card/MainCard'
 import VerticalProgressBar from '../../utils/vertical-progress-bar/VerticalProgressBar'
 import styles from './CourseItem.module.scss'
 
-const CourseItem = ({ course, location }) => {
+const CourseItem = ({ course, path }) => {
   // Format student count
   const formatNumber = (number) => {
     return new Intl.NumberFormat(['ban', 'id']).format(+number)
@@ -25,13 +25,13 @@ const CourseItem = ({ course, location }) => {
       <h4 className={styles.title}>
         <Link to={`/courses/${course.slug}`}>{course.title}</Link>
       </h4>
-      {location !== 'my-course' && (
+      {!path && (
         <div className={styles.studentCount}>
           <i className="fa-solid fa-users"></i>
           <span>{formatNumber(course.studentCount)}</span>
         </div>
       )}
-      {location === 'my-course' && (
+      {path && (
         <div className={styles.progress}>
           <p>Học cách đây 23 ngày trước</p>
           <VerticalProgressBar tooltip={'50%'} />

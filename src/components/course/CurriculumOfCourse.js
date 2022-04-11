@@ -9,14 +9,14 @@ const CurriculumOfCourse = ({ episodeList }) => {
   const [isOpenAll, setIsOpenAll] = useState(false)
 
   useEffect(() => {
-    episodeList.map(episode => setOpenAll(prev => [...prev, episode.id]))
+    episodeList.map((episode) => setOpenAll((prev) => [...prev, episode.id]))
   }, [episodeList])
 
-  const openHandler = id =>
-    setOpen(prev => {
+  const openHandler = (id) =>
+    setOpen((prev) => {
       const isOpen = prev.includes(id)
       if (isOpen) {
-        const newArray = prev.filter(item => item !== id)
+        const newArray = prev.filter((item) => item !== id)
         newArray.length !== openAll.length && setIsOpenAll(false)
         return newArray
       }
@@ -25,9 +25,9 @@ const CurriculumOfCourse = ({ episodeList }) => {
       return newArray
     })
 
-  const handleOpenAll = () => {
+  const openAllHandler = () => {
     if (!isOpenAll) {
-      setOpen(prev => [...prev, ...openAll])
+      setOpen((prev) => [...prev, ...openAll])
       setIsOpenAll(true)
       return
     }
@@ -56,13 +56,13 @@ const CurriculumOfCourse = ({ episodeList }) => {
             Thời lượng <strong>03 giờ 25 phút</strong>
           </li>
         </ul>
-        <div className={styles.toggleBtn} onClick={handleOpenAll}>
+        <div className={styles.toggleBtn} onClick={openAllHandler}>
           {!isOpenAll ? 'Mở rộng tất cả' : 'Thu nhỏ tất cả'}
         </div>
       </div>
       <div className={styles.curriculumPanel}>
         <div className={styles.panelGroup}>
-          {episodeList.map(episode => (
+          {episodeList.map((episode) => (
             <div className={styles.panel} key={episode.id}>
               <div
                 className={styles.panelHeading}

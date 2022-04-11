@@ -11,9 +11,11 @@ import { ref, uploadBytesResumable, getDownloadURL } from '@firebase/storage'
 import { storage } from '../../firebase/config'
 import { createBlog } from '../../actions/userAction'
 import removeActions from '../utils/remove-accents/removeActions'
+import { useSelector } from 'react-redux'
 
 const Modal = ({ blogContent, setShowModal }) => {
   const navigate = useNavigate()
+  const user = useSelector((state) => state.user)
 
   // Get city living
   const timezone = Intl.DateTimeFormat()
@@ -112,13 +114,14 @@ const Modal = ({ blogContent, setShowModal }) => {
         description,
         title: blogContent.title,
         content: blogContent.content,
-        slug: createSlugBlog(blogContent.title),
         readingTime: readingTimeHandler(blogContent.content),
         search: removeActions(
           titleDisplay.length === 0 ? blogContent.title : titleDisplay,
         ),
         titleDisplay:
           titleDisplay.length === 0 ? blogContent.title : titleDisplay,
+        isPopular: false,
+        isVerified: user.isAdmin ? true : false,
       }
 
       const res = await fetch(`${apiURL}/new-blog`, {
@@ -140,10 +143,7 @@ const Modal = ({ blogContent, setShowModal }) => {
   }
 
   const dispatchAndNavigate = (data) => {
-    createBlog({
-      isSuccess: true,
-      show: true,
-    })
+    createBlog({ blogData: data.blog })
     navigate(
       !data.blog.schedule ? `/blog/${data.blog.slug}` : '/my-post/published',
     )

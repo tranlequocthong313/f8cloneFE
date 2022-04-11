@@ -21,8 +21,8 @@ const MyBlog = () => {
   console.log(location.pathname)
 
   const [tabs, setTabs] = useState(location.pathname)
-  const [myBlog, setMyBlog] = useState(null)
-  const [myDraftBlog, setMyDraftBlog] = useState(null)
+  const [myBlog, setMyBlog] = useState([])
+  const [myDraftBlog, setMyDraftBlog] = useState([])
 
   useEffect(() => {
     document.title = 'Bài viết của tôi tại F8'
@@ -37,7 +37,7 @@ const MyBlog = () => {
         if (!token) return
 
         const res = await fetch(
-          `${apiURL}/blog/my-post`,
+          `${apiURL}/help/my-post`,
           {
             headers: {
               'Content-Type': 'application/json',
@@ -77,20 +77,14 @@ const MyBlog = () => {
                       <Tabs
                         path={'/my-post/drafts'}
                         tab={'Bản nháp'}
-                        quantity={
-                          myDraftBlog &&
-                          myDraftBlog.length > 0 &&
-                          `(${myDraftBlog.length})`
-                        }
+                        quantity={`(${myDraftBlog.length})`}
                         onActive={() => setTabs('/my-post/drafts')}
                         isActive={tabs === '/my-post/drafts'}
                       />
                       <Tabs
                         path={'/my-post/published'}
                         tab={'Đã xuất bản'}
-                        quantity={
-                          myBlog && myBlog.length > 0 && `(${myBlog.length})`
-                        }
+                        quantity={`(${myBlog.length})`}
                         onActive={() => setTabs('/my-post/published')}
                         isActive={tabs === '/my-post/published'}
                       />
@@ -110,12 +104,12 @@ const MyBlog = () => {
                         <ul key={blog._id} className={styles.blogList}>
                           <li>
                             <h3>
-                              <a href={`blog/${blog.slug}`}>
+                              <a href={`/blog/${blog.slug}`}>
                                 <span>{blog.titleDisplay}</span>
                               </a>
                             </h3>
                             <div className={styles.author}>
-                              <a href={`blog/${blog.slug}`}>
+                              <a href={`/blog/${blog.slug}`}>
                                 Chỉnh sửa {timeSinceHandler(blog.createdAt)}
                               </a>
                               <span className={styles.dot}>.</span>
@@ -142,7 +136,7 @@ const MyBlog = () => {
                         <ul key={blog._id} className={styles.blogList}>
                           <li>
                             <h3>
-                              <a href={`blog/${blog.slug}`}>
+                              <a href={`/blog/${blog.slug}`}>
                                 {blog.schedule !== null && (
                                   <i
                                     className={`fa-solid fa-clock ${styles.clockIcon}`}
@@ -152,7 +146,7 @@ const MyBlog = () => {
                               </a>
                             </h3>
                             <div className={styles.author}>
-                              <a href={`blog/${blog.slug}`}>
+                              <a href={`/blog/${blog.slug}`}>
                                 Chỉnh sửa {timeSinceHandler(blog.createdAt)}
                               </a>
                               <span className={styles.dot}>.</span>

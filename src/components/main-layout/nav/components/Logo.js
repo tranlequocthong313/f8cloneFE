@@ -14,15 +14,15 @@ const Logo = () => {
       <Link to="/">
         <Image src={logo} className={styles.logoNavbar} />
       </Link>
-      {active === '' && (
+      {active === 'home' && (
         <h4 className={styles.logoHeading}>Học Lập Trình Để Đi Làm</h4>
       )}
 
-      {active !== '' && (
+      {active !== 'home' && (
         <Link
           to="/"
           className={styles.backHome}
-          onClick={() => activeHandler('')}
+          onClick={() => activeHandler('home')}
         >
           <h4 className={styles.logoHeading}>
             <i className="fa-solid fa-chevron-left"></i>

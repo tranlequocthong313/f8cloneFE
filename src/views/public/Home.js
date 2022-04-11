@@ -9,6 +9,8 @@ import Header from '../../components/main-layout/nav/Header'
 import SideBar from '../../components/main-layout/sidebar/SideBar'
 import { apiURL } from '../../context/constants'
 import { useSelector } from 'react-redux'
+import MainCardAdd from '../../components/utils/card/MainCardAdd'
+import { Link } from 'react-router-dom'
 
 const BlogList = React.lazy(() =>
   import('../../components/home/blogs/BlogList'),
@@ -53,7 +55,7 @@ const Home = () => {
     })()
 
     return () => controller?.abort()
-  }, [user.videoCreated])
+  }, [])
 
   return (
     <>
@@ -84,12 +86,26 @@ const Home = () => {
                   title={'Bài viết nổi bật'}
                   viewMode={'Xem tất cả'}
                 />
-                <BlogList blogs={blogData} />
+                {blogData && blogData.length !== 0 ? (
+                  <BlogList blogs={blogData} />
+                ) : (
+                  <p>
+                    Không có bài viết nào{' '}
+                    <Link to="/new-blog">thêm bài viết.</Link>
+                  </p>
+                )}
                 <HeadingTitleWrap
                   title={'Videos nổi bật'}
                   viewMode={'Xem tất cả'}
                 />
-                <VideoList videos={videoData} />
+                {videoData && videoData.length !== 0 ? (
+                  <VideoList videos={videoData} />
+                ) : (
+                  <p>
+                    Không có video nào{' '}
+                    {user.isAdmin && <Link to="/admin/video">thêm video.</Link>}
+                  </p>
+                )}
               </Suspense>
             </div>
           </div>

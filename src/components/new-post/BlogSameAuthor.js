@@ -3,7 +3,7 @@ import styles from './BlogSameAuthor.module.scss'
 import { Link } from 'react-router-dom'
 import { apiURL } from '../../context/constants'
 
-const BlogSameAuthor = ({ postedBy }) => {
+const BlogSameAuthor = ({ postedBy, blogId }) => {
   const [blogSameAuthor, setBlogSameAuthor] = useState([])
 
   useEffect(() => {
@@ -11,7 +11,7 @@ const BlogSameAuthor = ({ postedBy }) => {
 
     ;(async () => {
       try {
-        const res = await fetch(`${apiURL}/blog/same-author/${postedBy}`)
+        const res = await fetch(`${apiURL}/blog/${blogId}/${postedBy}`)
         const data = await res.json()
         setBlogSameAuthor(data)
       } catch (error) {
@@ -20,9 +20,7 @@ const BlogSameAuthor = ({ postedBy }) => {
     })()
 
     return () => controller?.abort()
-  }, [postedBy])
-
-  console.log()
+  }, [blogId, postedBy])
 
   return (
     <div className={styles.wrapper}>

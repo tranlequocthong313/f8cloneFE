@@ -78,11 +78,11 @@ function App() {
   useEffect(() => {
     console.log(
       '%cHello! 🙋',
-      'font-size: 16px; font-weight: 600; color: #4ef2c1',
+      'font-size: 16px; font-weight: 600; color: #32c6a1',
     )
     console.log(
       '%cF8 front-end was built with Javascript, React, Redux, SASS, CSS module, webpack, and lots of love. \n \nF8 back-end was built with PHP, Laravel, Node, ExpressJS, MySQL, MongoDB, Redis, and lots of love. \n  \n👉 Want to work with us? Check out https://fullstack.edu.vn/careers/',
-      'font-size: 14px; font-weight: 500; color: #4ef2c1',
+      'font-size: 14px; font-weight: 500; color: #32c6a1',
     )
   }, [])
 
@@ -125,7 +125,15 @@ function App() {
         element={user.isLoggedIn ? <MyBlog /> : <Auth />}
       />
       <Route
-        path="/admin"
+        path="/admin/course"
+        element={user.isLoggedIn && user.isAdmin ? <Admin /> : <NotFound />}
+      />
+      <Route
+        path="/admin/blog"
+        element={user.isLoggedIn && user.isAdmin ? <Admin /> : <NotFound />}
+      />
+      <Route
+        path="/admin/video"
         element={user.isLoggedIn && user.isAdmin ? <Admin /> : <NotFound />}
       />
       <Route path="/courses" element={<Courses />} />
