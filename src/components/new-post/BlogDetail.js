@@ -13,10 +13,10 @@ import { apiURL } from '../../context/constants'
 import Cookies from 'js-cookie'
 import { useSelector } from 'react-redux'
 import Reaction from './Reaction'
-import Comment from '../utils/comment/Comment'
 import io from 'socket.io-client'
 import Tippy from '../utils/tippy/Tippy'
 import MainButton from '../utils/button/MainButton'
+import { FacebookProvider, ShareButton } from 'react-facebook'
 
 const socket = io.connect(apiURL)
 
@@ -227,10 +227,16 @@ const BlogDetail = ({ blog, blogHighlight }) => {
                   <span>Sửa bài viết</span>
                 </Link>
               )}
-              <div className={styles.menuItem}>
-                <i className="fa-brands fa-facebook"></i>
-                <span>Chia sẻ lên Facebook</span>
-              </div>
+
+              <FacebookProvider appId="1374256726358638">
+                <ShareButton
+                  href={window.location.href}
+                  className={styles.menuItem}
+                >
+                  <i className="fa-brands fa-facebook"></i>
+                  <span>Chia sẻ lên Facebook</span>
+                </ShareButton>
+              </FacebookProvider>
               <div className={styles.menuItem}>
                 <i className="fa-brands fa-twitter"></i>
                 <span>Chia sẻ lên Twitter</span>
@@ -239,7 +245,12 @@ const BlogDetail = ({ blog, blogHighlight }) => {
                 <i className="fa-solid fa-envelope"></i>
                 <span>Chia sẻ tới Email</span>
               </div>
-              <div className={styles.menuItem}>
+              <div
+                className={styles.menuItem}
+                onClick={() =>
+                  navigator.clipboard.writeText(window.location.href)
+                }
+              >
                 <i className="fa-solid fa-link"></i>
                 <span>Sao chép liên kết</span>
               </div>

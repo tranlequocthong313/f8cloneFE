@@ -17,7 +17,6 @@ const Tippy = ({ button, children, className }) => {
   return (
     <Dropdown>
       <Dropdown.Toggle as={CustomToggle} />
-
       <Dropdown.Menu className={`${styles.tippy} ${className}`}>
         {children}
       </Dropdown.Menu>

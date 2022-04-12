@@ -40,7 +40,6 @@ const BlogSlug = () => {
       <div className={styles.sidebarWrap}>
         <SideBar isHide={true} />
       </div>
-
       {blog && <BlogDetail blog={blog} blogHighlight={blogHighlight} />}
       <Footer />
     </>

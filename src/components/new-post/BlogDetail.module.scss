@@ -168,10 +168,13 @@
     font-size: 14px;
     padding: 12px 20px;
     transition: 0.3s;
+    border: none;
+    outline: none;
+    background: #fff;
 
     &:hover {
-      background-color: #f0f0f0;
-      color: #292929;
+      background-color: #f0f0f0 !important;
+      color: #292929 !important;
     }
 
     i {
