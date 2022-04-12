@@ -249,7 +249,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
               </a>
 
               <a
-                href={`;body=${window.location.href}`}
+                href={`mailto;body=${window.location.href}`}
                 className={styles.menuItem}
               >
                 <i className="fa-solid fa-envelope"></i>
