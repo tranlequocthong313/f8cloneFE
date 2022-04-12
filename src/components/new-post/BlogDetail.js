@@ -226,7 +226,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
                   <span>Sửa bài viết</span>
                 </Link>
               )}
-              <div data-href={window.location.href}>
+              <div data-href={window.location.href} className="fb-share-button">
                 <a
                   rel="noopener noreferrer"
                   target="_blank"
@@ -249,7 +249,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
               </a>
 
               <a
-                href={`mailto;body=${window.location.href}`}
+                href={`mailto:mail@mail.com;body=${window.location.href}`}
                 className={styles.menuItem}
               >
                 <i className="fa-solid fa-envelope"></i>
