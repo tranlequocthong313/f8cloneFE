@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, Suspense } from 'react'
+import React, { useRef, useState, useEffect, Suspense, useContext } from 'react'
 import styles from './NewPost.module.scss'
 import Editor from 'react-markdown-editor-lite'
 import ReactMarkdown from 'react-markdown'
@@ -10,6 +10,7 @@ import ContentEditable from '../../components/utils/content-editable/ContentEdit
 import Modal from '../../components/new-post/Modal'
 import { useLocation } from 'react-router-dom'
 import { apiURL } from '../../context/constants'
+import { BlogContext } from '../../context/BlogContext'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer'),
@@ -19,10 +20,8 @@ const NewPost = () => {
   const mdEditor = useRef(null)
   const titleRef = useRef(null)
 
-  const location = useLocation()
+  const { showModal, setIsValid } = useContext(BlogContext)
 
-  const [isValid, setIsValid] = useState(false)
-  const [showModal, setShowModal] = useState(false)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
 
@@ -34,7 +33,7 @@ const NewPost = () => {
 
     // User has to enter title and content then the 'POST' button is active
     title && content ? setIsValid(true) : setIsValid(false)
-  }, [title, content])
+  }, [title, content, setIsValid])
 
   const blogDataHandler = () => {
     if (
@@ -59,28 +58,11 @@ const NewPost = () => {
     setContent(newContent)
   }
 
-  const draftBlogHandler = async () => {
-    try {
-      const res = await fetch(`${apiURL}/blog/draft`)
-
-      const data = await res.json()
-
-      console.log(data)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   return (
     <>
       {!showModal && (
         <>
-          <Header
-            currentPage={'new-blog'}
-            blogDataHandler={blogDataHandler}
-            setShowModal={setShowModal}
-            isValid={isValid}
-          />
+          <Header blogDataHandler={blogDataHandler} />
           <div className={styles.wrapper}>
             <ContentEditable
               text={'Tiêu đề'}
@@ -98,9 +80,7 @@ const NewPost = () => {
           </div>
         </>
       )}
-      {showModal && (
-        <Modal blogContent={{ title, content }} setShowModal={setShowModal} />
-      )}
+      {showModal && <Modal blogContent={{ title, content }} />}
       <Suspense fallback={<div>Loading...</div>}>
         <Footer />
       </Suspense>

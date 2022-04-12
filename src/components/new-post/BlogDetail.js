@@ -218,6 +218,15 @@ const BlogDetail = ({ blog, blogHighlight }) => {
               }
               className={styles.menuWrapper}
             >
+              {user.userId === blog.postedBy._id && (
+                <Link
+                  to={`/edit-blog/${blog.slug}`}
+                  className={styles.menuItem}
+                >
+                  <i className="fa-solid fa-pen"></i>
+                  <span>Sửa bài viết</span>
+                </Link>
+              )}
               <div className={styles.menuItem}>
                 <i className="fa-brands fa-facebook"></i>
                 <span>Chia sẻ lên Facebook</span>
@@ -234,10 +243,12 @@ const BlogDetail = ({ blog, blogHighlight }) => {
                 <i className="fa-solid fa-link"></i>
                 <span>Sao chép liên kết</span>
               </div>
-              <div className={styles.menuItem}>
-                <i className="fa-solid fa-flag"></i>
-                <span>Báo cáo bài viết</span>
-              </div>
+              {user.userId !== blog.postedBy._id && (
+                <div className={styles.menuItem}>
+                  <i className="fa-solid fa-flag"></i>
+                  <span>Báo cáo bài viết</span>
+                </div>
+              )}
             </Tippy>
           </div>
         </div>

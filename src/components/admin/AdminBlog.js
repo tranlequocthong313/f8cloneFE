@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Form, Modal } from 'react-bootstrap'
+import { Form, Modal, Spinner } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { createBlog } from '../../actions/userAction'
@@ -101,11 +101,12 @@ const AdminBlog = ({ blogData }) => {
             </th>
             <th className={styles.tableItem}>STT</th>
             <th className={styles.tableItem}>Tên bài viết</th>
-            <th className={styles.tableItem}>Tên tác giả</th>
+            <th className={styles.tableItem}>Tác giả</th>
             <th className={styles.tableItem}>Được phép đề xuất</th>
             <th className={styles.tableItem}>Tình trạng</th>
             <th className={styles.tableItem}>Đã xét duyệt</th>
             <th className={styles.tableItem}>Thời gian tạo</th>
+            <th className={styles.tableItem}>Thời gian sửa</th>
           </tr>
         </thead>
         <tbody>
@@ -122,7 +123,7 @@ const AdminBlog = ({ blogData }) => {
                   </Form>
                 </td>
                 <td className={styles.tableItem}>{index + 1}</td>
-                <td>{blog.title}</td>
+                <td className={styles.breakWord}>{blog.title}</td>
                 <td className={styles.tableItem}>{blog.postedBy.fullName}</td>
                 <td className={styles.tableItem}>
                   {blog.allowRecommend ? 'Yes' : 'No'}
@@ -135,6 +136,9 @@ const AdminBlog = ({ blogData }) => {
                 </td>
                 <td className={styles.tableItem}>
                   {formatTimeHandler(blog.createdAt)}
+                </td>
+                <td className={styles.tableItem}>
+                  {formatTimeHandler(blog.updatedAt)}
                 </td>
                 <td>
                   {blog.allowRecommend && blog.isVerified && (
@@ -156,6 +160,7 @@ const AdminBlog = ({ blogData }) => {
                           }
                         ></i>
                       )}
+
                       {check.includes(blog._id) && (
                         <i
                           className={

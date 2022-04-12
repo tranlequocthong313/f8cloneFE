@@ -1,4 +1,4 @@
-import React, { memo, Suspense } from 'react'
+import React, { memo, Suspense, useContext } from 'react'
 import { Navbar, Container } from 'react-bootstrap'
 import Logo from './components/Logo'
 import Search from './components/Search'
@@ -12,26 +12,23 @@ import { Link } from 'react-router-dom'
 import User from './components/User'
 import MyCourse from './components/MyCourse'
 import Notification from './components/Notification'
+import { BlogContext } from '../../../context/BlogContext'
 
 const Login = React.lazy(() => import('./components/Login'))
 
-const Header = ({ currentPage, blogDataHandler, setShowModal, isValid }) => {
+const Header = ({ blogDataHandler }) => {
   const user = useSelector((state) => state.user)
+  const { isEditBlog, isNewBlog } = useContext(BlogContext)
 
   return (
     <Navbar className={styles.navHeader}>
       <Container fluid style={{ padding: 0 }}>
         <MobileNav photoURL={user.photoURL} />
         <Logo />
-        <Search currentPage={currentPage} />
-
+        {!isEditBlog && !isNewBlog && <Search />}
         <div className={styles.userAction}>
-          {currentPage === 'new-blog' && (
-            <PublishButton
-              blogDataHandler={blogDataHandler}
-              setShowModal={setShowModal}
-              isValid={isValid}
-            />
+          {(isNewBlog || isEditBlog) && (
+            <PublishButton blogDataHandler={blogDataHandler} />
           )}
           <Link to="/search" className={styles.searchMobileWrapper}>
             <div className={styles.searchMobileIcon}></div>
@@ -43,7 +40,6 @@ const Header = ({ currentPage, blogDataHandler, setShowModal, isValid }) => {
                 <MyCourse />
                 <Notification />
                 <User
-                  currentPage={currentPage}
                   photoURL={user.photoURL}
                   displayName={user.displayName}
                   email={user.email}

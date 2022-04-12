@@ -1,0 +1,45 @@
+@import '../../sass/color';
+
+.buttonIcon {
+  cursor: pointer;
+  margin: 0 6px;
+  color: $primary-color;
+
+  &.addPopular {
+    color: green;
+  }
+
+  &.removePopular {
+    color: red;
+  }
+
+  &.delete {
+    color: black;
+  }
+
+  &.disabled {
+    color: #ddd;
+    pointer-events: none;
+    cursor: none;
+  }
+}
+.spinner {
+  animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.tableItem {
+  text-align: center;
+}
+
+.breakWord {
+  word-break: break-all;
+}

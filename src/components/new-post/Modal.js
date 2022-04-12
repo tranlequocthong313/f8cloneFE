@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useContext, useRef } from 'react'
 import { Row, Col, Spinner } from 'react-bootstrap'
 import { useDropzone } from 'react-dropzone'
 import ContentEditable from '../utils/content-editable/ContentEditable'
@@ -12,10 +12,15 @@ import { storage } from '../../firebase/config'
 import { createBlog } from '../../actions/userAction'
 import removeActions from '../utils/remove-accents/removeActions'
 import { useSelector } from 'react-redux'
+import { BlogContext } from '../../context/BlogContext'
 
-const Modal = ({ blogContent, setShowModal }) => {
+const Modal = ({ blogContent }) => {
   const navigate = useNavigate()
   const user = useSelector((state) => state.user)
+
+  const { setShowModal } = useContext(BlogContext)
+
+  const titleDisplayRef = useRef()
 
   // Get city living
   const timezone = Intl.DateTimeFormat()
@@ -58,6 +63,10 @@ const Modal = ({ blogContent, setShowModal }) => {
     name: 'image',
   })
 
+  useEffect(() => {
+    titleDisplayRef.current.innerText = blogContent.title
+  }, [blogContent.title])
+
   const readingTimeHandler = (content) => {
     const WORDS_PER_MINUTE = 200 // People read 200 words/min https://infusion.media/content-marketing/how-to-calculate-reading-time/
     const SMALLEST_READING_TIME = 1
@@ -66,14 +75,6 @@ const Modal = ({ blogContent, setShowModal }) => {
     const minute = Math.floor(wordCount / WORDS_PER_MINUTE)
 
     return minute <= SMALLEST_READING_TIME ? SMALLEST_READING_TIME : minute
-  }
-
-  const createSlugBlog = (title) => {
-    const slug = removeActions(title)
-    return slug
-      .toLowerCase()
-      .replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '')
-      .replace(/\s/g, '-')
   }
 
   const uploadImageToStorage = () => {
@@ -122,6 +123,7 @@ const Modal = ({ blogContent, setShowModal }) => {
           titleDisplay.length === 0 ? blogContent.title : titleDisplay,
         isPopular: false,
         isVerified: user.isAdmin ? true : false,
+        isPosted: true,
       }
 
       const res = await fetch(`${apiURL}/new-blog`, {
@@ -186,6 +188,7 @@ const Modal = ({ blogContent, setShowModal }) => {
             text={'Tiêu đề khi tin được hiển thị'}
             onInput={(e) => setTitleDisplay(e.target.innerText)}
             maxLength={LIMIT_TITLE_DISPLAY_LENGTH}
+            ref={titleDisplayRef}
           />
           {titleDisplay.length >= SHOW_HELP_NUMBER_TITLE_DISPLAY && (
             <div className={styles.help}>{`${titleDisplay.length}/100`}</div>

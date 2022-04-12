@@ -7,9 +7,8 @@ import MainButton from '../../utils/button/MainButton'
 
 const VideoItem = ({ video }) => {
   // Format view, like, comment count
-  const formatNumber = (number) => {
-    return new Intl.NumberFormat(['ban', 'id']).format(number)
-  }
+  const formatNumber = (number) =>
+    new Intl.NumberFormat(['ban', 'id']).format(number)
 
   // Format youtube duration time 0:0
   const formatDuration = (duration) => {

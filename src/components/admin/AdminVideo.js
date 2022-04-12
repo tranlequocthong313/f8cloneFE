@@ -128,7 +128,7 @@ const AdminVideo = ({ videoData }) => {
                   </Form>
                 </td>
                 <td className={styles.tableItem}>{index + 1}</td>
-                <td>{video.title}</td>
+                <td className={styles.breakWord}>{video.title}</td>
                 <td className={styles.tableItem}>
                   {formatDuration(video.duration)}
                 </td>

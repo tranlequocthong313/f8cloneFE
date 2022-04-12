@@ -1,8 +1,12 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import styles from './PublishButton.module.scss'
 import MainButton from '../utils/button/MainButton'
+import { BlogContext } from '../../context/BlogContext'
 
-const PublishButton = ({ blogDataHandler, setShowModal, isValid }) => {
+const PublishButton = ({ blogDataHandler }) => {
+  const { isValid, isNewBlog, isEditBlog, text, setShowModal } =
+    useContext(BlogContext)
+
   return (
     <MainButton
       primary={true}
@@ -10,15 +14,17 @@ const PublishButton = ({ blogDataHandler, setShowModal, isValid }) => {
         isValid ? styles.button : `${styles.disabled} ${styles.button}`
       }
       onClick={
-        isValid
+        isValid && isNewBlog
           ? () => {
               blogDataHandler()
               setShowModal(true)
             }
+          : isValid && isEditBlog
+          ? () => blogDataHandler()
           : null
       }
     >
-      Xuất bản
+      {text}
     </MainButton>
   )
 }

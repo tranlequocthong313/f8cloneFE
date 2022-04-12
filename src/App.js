@@ -26,6 +26,7 @@ import Settings from './views/private/Settings'
 import BookmarkPost from './views/private/BookmarkPost'
 import MyBlog from './views/private/MyBlog'
 import Admin from './views/admin/Admin'
+import EditPost from './views/private/EditPost'
 
 function App() {
   const dispatch = useDispatch()
@@ -107,6 +108,10 @@ function App() {
       <Route
         path="/new-blog"
         element={user.isLoggedIn ? <NewPost /> : <Auth />}
+      />
+      <Route
+        path="/edit-blog/:slug"
+        element={user.isLoggedIn ? <EditPost /> : <Auth />}
       />
       <Route
         path="/settings"

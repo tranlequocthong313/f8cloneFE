@@ -11,7 +11,7 @@ import Cookies from 'js-cookie'
 import removeActions from '../../../utils/remove-accents/removeActions'
 import Tippy from '../../../utils/tippy/Tippy'
 
-const User = ({ photoURL, displayName, email, currentPage }) => {
+const User = ({ photoURL, displayName, email }) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 

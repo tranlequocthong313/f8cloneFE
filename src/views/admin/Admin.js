@@ -88,10 +88,12 @@ const Admin = () => {
               />
             </div>
             {tabs === '/admin/course' && (
-              <div className={styles.container}>
-                <MainButton outline={true}>Thêm khóa học</MainButton>
+              <>
+                <MainButton outline={true}>
+                  <i className="fa-solid fa-plus"></i> Thêm khóa học
+                </MainButton>
                 <AdminCourse courseData={courseData} />
-              </div>
+              </>
             )}
             {tabs === '/admin/blog' && <AdminBlog blogData={blogData} />}
             {tabs === '/admin/video' && (

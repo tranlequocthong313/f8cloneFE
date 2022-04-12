@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { apiURL } from '../../context/constants'
 import timeSinceHandler from '../utils/timeSinceHandler/timeSinceHandler'
 import styles from './BlogHighlights.module.scss'
+import f8Logo from '../../asset/images/f8_icon.png'
 
 const BlogHighlights = ({ blogHighlight }) => {
   return (
@@ -29,7 +30,10 @@ const BlogHighlights = ({ blogHighlight }) => {
               <h3 className={styles.title}>{blog.titleDisplay}</h3>
             </Link>
             <Link to={`/blog/${blog.slug}`}>
-              <Image src={blog.image} className={styles.thumb} />
+              <Image
+                src={blog.image ? blog.image : f8Logo}
+                className={styles.thumb}
+              />
             </Link>
             <p>{blog.description ? blog.description : blog.content}</p>
           </div>
