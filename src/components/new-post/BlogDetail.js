@@ -16,7 +16,6 @@ import Reaction from './Reaction'
 import io from 'socket.io-client'
 import Tippy from '../utils/tippy/Tippy'
 import MainButton from '../utils/button/MainButton'
-import { FacebookProvider, ShareButton } from 'react-facebook'
 
 const socket = io.connect(apiURL)
 
@@ -227,24 +226,35 @@ const BlogDetail = ({ blog, blogHighlight }) => {
                   <span>Sửa bài viết</span>
                 </Link>
               )}
-
-              <FacebookProvider appId="1374256726358638">
-                <ShareButton
-                  href={window.location.href}
+              <div data-href={window.location.href}>
+                <a
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Ff8clone.tk%2F&amp;src=sdkpreparse"
                   className={styles.menuItem}
                 >
                   <i className="fa-brands fa-facebook"></i>
                   <span>Chia sẻ lên Facebook</span>
-                </ShareButton>
-              </FacebookProvider>
-              <div className={styles.menuItem}>
+                </a>
+              </div>
+              <a
+                rel="noopener noreferrer"
+                target="_blank"
+                href={`https://twitter.com/share?ref_src=twsrc%5Etfw&url=${window.location.href}`}
+                className={styles.menuItem}
+                data-show-count="false"
+              >
                 <i className="fa-brands fa-twitter"></i>
                 <span>Chia sẻ lên Twitter</span>
-              </div>
-              <div className={styles.menuItem}>
+              </a>
+
+              <a
+                href={`;body=${window.location.href}`}
+                className={styles.menuItem}
+              >
                 <i className="fa-solid fa-envelope"></i>
                 <span>Chia sẻ tới Email</span>
-              </div>
+              </a>
               <div
                 className={styles.menuItem}
                 onClick={() =>
