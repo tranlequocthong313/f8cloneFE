@@ -10,7 +10,7 @@ const NewBlogButton = () => {
       button={<i className={`${styles.newBlogIcon} fa-regular fa-plus`}></i>}
       className={styles.wrapper}
     >
-      <Link to="/new-blog">
+      <Link to="/new-post">
         <i className="fa-solid fa-pen"></i>
         <span>Viết blog</span>
       </Link>

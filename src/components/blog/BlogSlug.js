@@ -6,6 +6,7 @@ import styles from './BlogSlug.module.scss'
 import SideBar from '../main-layout/sidebar/SideBar'
 import { useLocation } from 'react-router-dom'
 import Footer from '../main-layout/footer/Footer'
+import NotFound from '../../views/public/NotFound'
 
 const BlogSlug = () => {
   const location = useLocation()

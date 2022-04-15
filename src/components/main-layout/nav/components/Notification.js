@@ -1,25 +1,98 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from './Notification.module.scss'
 import '../../../../sass/_custom.scss'
 import Tippy from '../../../utils/tippy/Tippy'
 import { Link } from 'react-router-dom'
 import f8logo from '../../../../asset/images/f8_icon.png'
+import { apiURL } from '../../../../context/constants'
+import timeSinceHandler from '../../../utils/timeSinceHandler/timeSinceHandler'
+import Cookies from 'js-cookie'
 
 const Notification = ({ notifications }) => {
-  const [seen, setSeen] = useState(false)
-  const [showMarkAll, setShowMarkAll] = useState(false)
+  const [seenAll, setSeenAll] = useState([])
+  const [newPostNotification, setNewPostNotification] = useState([])
+  const [noSeenCount, setNoSeenCount] = useState([])
 
-  const seenHandler = () => {
-    setSeen((prev) => !prev)
+  useEffect(() => {
+    const controller = new AbortController()
+
+    ;(async () => {
+      try {
+        const token = Cookies.get('token')
+        if (!token) return
+
+        const res = await fetch(
+          `${apiURL}/notification/`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          },
+          {
+            signal: controller.signal,
+          },
+        )
+
+        const data = await res.json()
+        data.forEach((item) => {
+          if (!item.isSeen) setNoSeenCount((prev) => [...prev, item._id])
+          setSeenAll((prev) => [...prev, item._id])
+        })
+        setNewPostNotification(data)
+      } catch (error) {
+        console.log(error)
+      }
+    })()
+
+    return () => controller?.abort()
+  }, [])
+
+  const countNoSeenHandler = (id) => {
+    const isSeenCount = noSeenCount.includes(id)
+    isSeenCount && setNoSeenCount((prev) => prev.filter((item) => item !== id))
   }
 
-  const showMarkAllHandler = () => {
-    setShowMarkAll((prev) => !prev)
+  console.log(noSeenCount)
+
+  console.log(noSeenCount.length)
+
+  const seenHandler = async (notificationId) => {
+    try {
+      const token = Cookies.get('token')
+      if (!token) return
+
+      const res = await fetch(`${apiURL}/notification/seen-notification`, {
+        method: 'POST',
+        body: JSON.stringify({
+          notificationId: notificationId ? [notificationId] : seenAll,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      const data = await res.json()
+      notificationId ? countNoSeenHandler(notificationId) : setNoSeenCount([])
+      setNewPostNotification(data)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
     <Tippy
-      button={<i className={`${styles.userNotification} fa-solid fa-bell`}></i>}
+      button={
+        <i className={`${styles.userNotification} fa-solid fa-bell`}>
+          {newPostNotification &&
+            newPostNotification.length > 0 &&
+            noSeenCount.length > 0 && (
+              <div className={styles.notificationCount}>
+                {noSeenCount.length}
+              </div>
+            )}
+        </i>
+      }
       className={styles.wrapper}
     >
       <header className={styles.header}>
@@ -28,7 +101,7 @@ const Notification = ({ notifications }) => {
           button={<i className="bi bi-three-dots"></i>}
           className={styles.markAll}
         >
-          <div className={styles.markAllItem} onClick={seenHandler}>
+          <div className={styles.markAllItem} onClick={() => seenHandler(null)}>
             <i className="bi bi-check"></i>
             <span>Đánh dấu tất cả đẫ đọc</span>
           </div>
@@ -36,29 +109,38 @@ const Notification = ({ notifications }) => {
       </header>
       <div className={styles.body}>
         <ul className={styles.list}>
-          {/* {notifications.map((notification) => (
+          {newPostNotification &&
+            newPostNotification.length !== 0 &&
+            newPostNotification.map((notification) => (
               <li
-                className={!seen ? styles.noSeen : ''}
-                key={notification.id}
-                onClick={() => seenHandler(notification.id)}
+                className={
+                  notification.isSeen
+                    ? styles.item
+                    : `${styles.item} ${styles.noSeen}`
+                }
+                key={notification._id}
+                onClick={() => seenHandler(notification._id)}
               >
-                <Link to={'/'}>
+                <Link to={`/blog/${notification.slug}`}>
                   <div className={styles.avatar}>
-                    <img alt="" src={notification.avatar} />
+                    <img
+                      alt=""
+                      src={notification.image ? notification.image : f8logo}
+                    />
                   </div>
                   <div className={styles.content}>
                     <div>
-                      <span className={styles.name}>{notification.name}</span>{' '}
+                      <span className={styles.name}>{notification.title}</span>{' '}
                       {notification.description}
                     </div>
                     <div className={styles.createdTime}>
-                      {notification.time}
+                      {timeSinceHandler(notification.createdAt)}
                     </div>
                   </div>
                 </Link>
               </li>
-            ))} */}
-          <li className={!seen ? styles.noSeen : ''}>
+            ))}
+          <li className={`${styles.item} ${styles.noSeen}`}>
             <div className={styles.avatar}>
               <img alt="" src={f8logo} />
             </div>

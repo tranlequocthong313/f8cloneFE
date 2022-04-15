@@ -91,7 +91,7 @@ const Home = () => {
                 ) : (
                   <p>
                     Không có bài viết nào{' '}
-                    <Link to="/new-blog">thêm bài viết.</Link>
+                    <Link to="/new-post">thêm bài viết.</Link>
                   </p>
                 )}
                 <HeadingTitleWrap

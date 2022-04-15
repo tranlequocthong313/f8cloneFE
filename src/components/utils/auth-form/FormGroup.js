@@ -25,6 +25,7 @@ const FormGroup = ({
   onBlur,
   inValid,
   inputDisabled,
+  tabIndex,
 }) => {
   return (
     <Form.Group className="mb-3">
@@ -66,6 +67,7 @@ const FormGroup = ({
           onBlur={onBlur}
           pattern={pattern}
           disabled={inputDisabled}
+          tabIndex={tabIndex}
         />
 
         {OTPInput && (

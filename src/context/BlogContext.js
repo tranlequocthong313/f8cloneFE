@@ -14,7 +14,7 @@ const BlogContextProvider = ({ children }) => {
   const [isValid, setIsValid] = useState(false)
 
   useEffect(() => {
-    if (location.pathname.includes('/new-blog')) {
+    if (location.pathname.includes('/new-post')) {
       setIsNewBlog(true)
       setText('Xuất bản')
     } else if (location.pathname.includes('/edit-blog/')) {

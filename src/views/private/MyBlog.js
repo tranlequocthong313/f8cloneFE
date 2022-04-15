@@ -36,21 +36,40 @@ const MyBlog = () => {
         const token = Cookies.get('token')
         if (!token) return
 
-        const res = await fetch(
-          `${apiURL}/help/my-post`,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
+        const res = await Promise.all([
+          fetch(
+            `${apiURL}/blog/draft`,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
             },
-          },
-          {
-            signal: controller.signal,
-          },
-        )
+            {
+              signal: controller.signal,
+            },
+          ),
+          fetch(
+            `${apiURL}/help/my-post`,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
+            },
+            {
+              signal: controller.signal,
+            },
+          ),
+        ])
 
-        const data = await res.json()
-        data.myBlog.length > 0 && setMyBlog(data.myBlog)
+        const myDraftBlogData = await res[0].json()
+        const myBlogData = await res[1].json()
+
+        console.log(myDraftBlogData)
+
+        setMyDraftBlog(myDraftBlogData)
+        setMyBlog(myBlogData)
       } catch (error) {
         console.log(error)
       }
@@ -66,7 +85,7 @@ const MyBlog = () => {
         <SideBar />
         <Col xs={12} sm={12} md={12} lg={11} xl={11} style={{ padding: '8px' }}>
           <div className="withSidebarContent">
-            <div className="container">
+            <div className="container" style={{ marginBottom: 100 }}>
               <div className="containerTop">
                 <h2>Bài viết của tôi</h2>
               </div>
@@ -89,7 +108,7 @@ const MyBlog = () => {
                         isActive={tabs === '/my-post/published'}
                       />
                     </div>
-                    {tabs === '/my-post/drafts' && !myDraftBlog && (
+                    {tabs === '/my-post/drafts' && myDraftBlog.length === 0 && (
                       <div className={styles.message}>
                         <p>Chưa có bản nháp nào.</p>
                         <p>
@@ -104,14 +123,14 @@ const MyBlog = () => {
                         <ul key={blog._id} className={styles.blogList}>
                           <li>
                             <h3>
-                              <a href={`/blog/${blog.slug}`}>
-                                <span>{blog.titleDisplay}</span>
-                              </a>
+                              <Link to={`/new-post/${blog._id}`}>
+                                <span>{blog.title}</span>
+                              </Link>
                             </h3>
                             <div className={styles.author}>
-                              <a href={`/blog/${blog.slug}`}>
+                              <Link to={`/new-post/${blog._id}`}>
                                 Chỉnh sửa {timeSinceHandler(blog.createdAt)}
-                              </a>
+                              </Link>
                               <span className={styles.dot}>.</span>
                               <span>{blog.readingTime} phút đọc</span>
                             </div>
@@ -121,7 +140,7 @@ const MyBlog = () => {
                           </li>
                         </ul>
                       ))}
-                    {tabs === '/my-post/published' && !myBlog && (
+                    {tabs === '/my-post/published' && myBlog.length === 0 && (
                       <div className={styles.message}>
                         <p>Chưa có xuất bản nào.</p>
                         <p>

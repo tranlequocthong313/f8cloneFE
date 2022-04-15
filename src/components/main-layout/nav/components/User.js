@@ -72,7 +72,7 @@ const User = ({ photoURL, displayName, email }) => {
         </>
       )}
       <Dropdown.Divider />
-      <Link className={styles.menuItem} to="/new-blog">
+      <Link className={styles.menuItem} to="/new-post">
         Viết blog
       </Link>
       <Link className={styles.menuItem} to="/my-post/drafts">

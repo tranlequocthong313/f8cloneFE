@@ -27,7 +27,9 @@
     "react-scripts": "5.0.0",
     "react-youtube": "^7.14.0",
     "redux": "^4.1.2",
+    "remark-gfm": "^3.0.1",
     "socket.io-client": "^4.4.1",
+    "unist-util-visit-parents": "^5.1.0",
     "vn-remove-accents": "^1.0.0",
     "web-vitals": "^2.1.0",
     "youtube-duration-format": "^0.2.0"

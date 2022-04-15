@@ -13,9 +13,10 @@ import { apiURL } from '../../context/constants'
 import Cookies from 'js-cookie'
 import { useSelector } from 'react-redux'
 import Reaction from './Reaction'
-import io from 'socket.io-client'
 import Tippy from '../utils/tippy/Tippy'
 import MainButton from '../utils/button/MainButton'
+import io from 'socket.io-client'
+import remarkGfm from 'remark-gfm'
 
 const socket = io.connect(apiURL)
 
@@ -273,7 +274,11 @@ const BlogDetail = ({ blog, blogHighlight }) => {
             </Tippy>
           </div>
         </div>
-        <ReactMarkdown children={blog.content} className={styles.markDown} />
+        <ReactMarkdown
+          children={blog.content}
+          className={styles.MarkdownParser}
+          remarkPlugins={[remarkGfm]}
+        />
         <Reaction
           commentData={commentData}
           isLike={isLike}
@@ -285,7 +290,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
         />
         {blog.tags && (
           <div className={styles.tags}>
-            {blog.tags.map((tag) => (
+            {['HTML', 'CSS', 'ReactJS', 'NodeJS'].map((tag) => (
               <Link to="/" key={tag}>
                 {tag}
               </Link>

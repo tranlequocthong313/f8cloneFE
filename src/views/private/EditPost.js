@@ -106,10 +106,7 @@ const EditPost = () => {
     })
   }
 
-  const editorChangeHandler = ({ html, text }) => {
-    const newContent = text.replace(/\d/g, '')
-    setContent(newContent)
-  }
+  const editorChangeHandler = ({ text }) => setContent(text)
 
   return (
     <>

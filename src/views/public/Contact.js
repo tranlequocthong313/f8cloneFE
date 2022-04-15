@@ -16,7 +16,7 @@ const Contact = () => {
   const [email, setEmail] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
   const [content, setContent] = useState('')
-  const [createStatus, setCreateStatus] = useState({
+  const [contactStatus, setContactStatus] = useState({
     isSuccess: false,
     show: false,
   })
@@ -25,8 +25,8 @@ const Contact = () => {
     document.title = 'Liên hệ với F8'
   }, [])
 
-  const createStatusHandler = (isSuccess, show) => {
-    setCreateStatus((prev) => {
+  const contactStatusHandler = (isSuccess, show) => {
+    setContactStatus((prev) => {
       return {
         ...prev,
         isSuccess,
@@ -57,8 +57,8 @@ const Contact = () => {
 
       const data = await res.json()
       data.success
-        ? createStatusHandler(true, true)
-        : createStatusHandler(false, true)
+        ? contactStatusHandler(true, true)
+        : contactStatusHandler(false, true)
     } catch (error) {
       console.log(error)
     }
@@ -140,9 +140,9 @@ const Contact = () => {
       </Row>
 
       <MainToast
-        createStatus={createStatus}
-        setCreateStatus={() =>
-          setCreateStatus((prev) => {
+        status={contactStatus}
+        setStatus={() =>
+          setContactStatus((prev) => {
             return {
               ...prev,
               show: false,

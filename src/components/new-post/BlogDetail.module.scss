@@ -97,9 +97,44 @@
       }
     }
 
-    .markDown {
+    .MarkdownParser {
       font-size: 18px;
       line-height: 2;
+      word-wrap: break-word;
+      color: #292929;
+
+      blockquote {
+        border-left: 3px solid $primary-color;
+        color: #757575;
+        margin-left: 0;
+        padding: 0 0 2px 20px;
+      }
+
+      img {
+        max-width: 100%;
+      }
+
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+
+        tr {
+          th,
+          td {
+            border: 1px solid #e6dfdd;
+            font-size: 14px;
+            line-height: 1.6;
+            padding: 2px 4px 2px 12px;
+            text-align: left;
+          }
+        }
+      }
+
+      a {
+        color: $primary-color;
+        text-decoration: underline;
+      }
     }
 
     .actions {

@@ -106,7 +106,11 @@ function App() {
         element={user.isLoggedIn ? <MyCourse /> : <Auth />}
       />
       <Route
-        path="/new-blog"
+        path="/new-post"
+        element={user.isLoggedIn ? <NewPost /> : <Auth />}
+      />
+      <Route
+        path="/new-post/:id"
         element={user.isLoggedIn ? <NewPost /> : <Auth />}
       />
       <Route

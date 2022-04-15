@@ -13,6 +13,9 @@ import { createBlog } from '../../actions/userAction'
 import removeActions from '../utils/remove-accents/removeActions'
 import { useSelector } from 'react-redux'
 import { BlogContext } from '../../context/BlogContext'
+import io from 'socket.io-client'
+
+const socket = io.connect(apiURL)
 
 const Modal = ({ blogContent }) => {
   const navigate = useNavigate()
@@ -126,7 +129,7 @@ const Modal = ({ blogContent }) => {
         isPosted: true,
       }
 
-      const res = await fetch(`${apiURL}/new-blog`, {
+      const res = await fetch(`${apiURL}/new-post`, {
         method: 'POST',
         body: JSON.stringify(blogData),
         headers: {
@@ -136,11 +139,35 @@ const Modal = ({ blogContent }) => {
       })
 
       const data = await res.json()
+
+      user.userId !== process.env.REACT_APP_ADMIN_ID && addNotification(data)
       dispatchAndNavigate(data)
+      setShowModal(false)
     } catch (error) {
       console.log(error.message)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const addNotification = async (data) => {
+    try {
+      await fetch(`${apiURL}/notification/new-notification`, {
+        method: 'POST',
+        body: JSON.stringify({
+          description: 'đang chờ được xét duyệt',
+          slug: data.blog.slug,
+          title: data.blog.title,
+          image: data.blog.image,
+          notifiedBy: data.blog.postedBy,
+          sendFor: process.env.REACT_APP_ADMIN_ID,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -151,7 +178,7 @@ const Modal = ({ blogContent }) => {
     )
   }
 
-  console.log(isSchedule, schedule)
+  console.log(tags)
 
   return (
     <div className={styles.modal}>
