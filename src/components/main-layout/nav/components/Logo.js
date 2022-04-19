@@ -7,7 +7,7 @@ import styles from './Logo.module.scss'
 import { NavContext } from '../../../../context/NavContext'
 
 const Logo = () => {
-  const { active } = useContext(NavContext)
+  const { activeTab } = useContext(NavContext)
 
   const navigate = useNavigate()
 
@@ -16,10 +16,10 @@ const Logo = () => {
       <Link to="/">
         <Image src={logo} className={styles.logoNavbar} />
       </Link>
-      {active === 'home' && (
+      {activeTab === 'home' && (
         <h4 className={styles.logoHeading}>Học Lập Trình Để Đi Làm</h4>
       )}
-      {active !== 'home' && (
+      {activeTab !== 'home' && (
         <div onClick={() => navigate(-1)}>
           <h4 className={styles.logoHeading}>
             <i className="fa-solid fa-chevron-left"></i>

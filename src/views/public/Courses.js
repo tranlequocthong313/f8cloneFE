@@ -30,7 +30,6 @@ const Courses = () => {
           signal: controller.signal,
         })
         const data = await res.json()
-        console.log('🚀 ~ file: Courses.js ~ line 27 ~ Courses ~ data', data)
 
         setCourseFE(data.courseFE)
         setCourseBE(data.courseBE)

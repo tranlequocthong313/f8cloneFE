@@ -3,7 +3,7 @@ import styles from './PublishButton.module.scss'
 import MainButton from '../utils/button/MainButton'
 import { BlogContext } from '../../context/BlogContext'
 
-const PublishButton = ({ blogDataHandler }) => {
+const PublishButton = ({ blogData }) => {
   const { isValid, isNewBlog, isEditBlog, text, setShowModal } =
     useContext(BlogContext)
 
@@ -16,11 +16,11 @@ const PublishButton = ({ blogDataHandler }) => {
       onClick={
         isValid && isNewBlog
           ? () => {
-              blogDataHandler()
+              blogData()
               setShowModal(true)
             }
           : isValid && isEditBlog
-          ? () => blogDataHandler()
+          ? () => blogData()
           : null
       }
     >

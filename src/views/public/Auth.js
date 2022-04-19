@@ -3,12 +3,7 @@ import { Link } from 'react-router-dom'
 import { Image } from 'react-bootstrap'
 import styles from './Auth.module.scss'
 import f8Logo from '../../asset/images/f8_icon.png'
-import {
-  EmailAuthCredential,
-  EmailAuthProvider,
-  fetchSignInMethodsForEmail,
-  signInWithPopup,
-} from 'firebase/auth'
+import { signInWithPopup } from 'firebase/auth'
 import { auth } from '../../firebase/config'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -28,20 +23,17 @@ const Auth = () => {
   const [forgotPassword, setForgotPassword] = useState(false)
   const [inValid, setInValid] = useState(false)
 
-  // Dispatch login action and navigate user to home page after login
-  const dispatchAndNavigateHandler = (payload) => {
+  const dispatchAndNavigate = (payload) => {
     dispatch(login(payload))
     navigate('/')
   }
 
-  // Handle switch between sign in and sign up option from user
-  const isLoginHandler = () => {
+  const handleIsLogin = () => {
     setIsLogin((prev) => !prev)
     setLoginOption('')
   }
 
-  // Google, Facebook, Github authentication
-  const loginWithProviderHandler = async (provider) => {
+  const loginWithProvider = async (provider) => {
     try {
       const res = await signInWithPopup(auth, provider)
       const user = res.user
@@ -58,14 +50,15 @@ const Auth = () => {
 
       const apiData = await apiRes.json()
 
-      if (apiData.savedUser) {
+      if (apiData.hasUserCreatedAlready) {
         Cookies.set('token', apiData.accessToken, { expires: 365 })
-        return dispatchAndNavigateHandler({
-          ...apiData.savedUser,
+        return dispatchAndNavigate({
+          ...apiData.userCreated,
           accessToken: apiData.accessToken,
         })
       }
 
+      console.log('CREATE NEW ACCOUNT WITH PROVIDER!')
       const newRes = await fetch(`${apiURL}/login/provider`, {
         method: 'POST',
         body: JSON.stringify({
@@ -82,23 +75,20 @@ const Auth = () => {
 
       const newData = await newRes.json()
       Cookies.set('token', newData.accessToken, { expires: 365 })
-      dispatchAndNavigateHandler({
-        ...newData.newUser,
+      console.log(newData)
+      dispatchAndNavigate({
+        ...newData.user,
         accessToken: newData.accessToken,
       })
     } catch (error) {
-      console.log(error.code)
-      if (error.code === 'auth/account-exists-with-different-credential')
-        setInValid(true)
+      const isUsedEmailForOtherAuthProvider =
+        error.code === 'auth/account-exists-with-different-credential'
+      isUsedEmailForOtherAuthProvider && setInValid(true)
     }
   }
 
-  // Handle switch "Phone and Email authentication option"
-  const switchPhoneAndEmailHandler = (option) => {
-    setLoginOption(option)
-  }
+  const switchPhoneAndEmail = (option) => setLoginOption(option)
 
-  // Show authentication buttons or not when click to "Phone and Email Authentication Option"
   let isShowAuthProviderOption
   if (loginOption === '') isShowAuthProviderOption = true
 
@@ -113,7 +103,7 @@ const Auth = () => {
                 onClick={() => {
                   forgotPassword
                     ? setForgotPassword(false)
-                    : switchPhoneAndEmailHandler('')
+                    : switchPhoneAndEmail('')
                 }}
                 className={styles.backButton}
               >
@@ -131,26 +121,26 @@ const Auth = () => {
           <div className={styles.body}>
             {isShowAuthProviderOption && (
               <SignInButtonContainer
-                switchPhoneAndEmailHandler={switchPhoneAndEmailHandler}
-                loginWithProviderHandler={loginWithProviderHandler}
+                switchPhoneAndEmail={switchPhoneAndEmail}
+                loginWithProvider={loginWithProvider}
               />
             )}
             {loginOption === 'phone' && (
               <AuthWithPhoneNumberForm
-                dispatchAndNavigateHandler={dispatchAndNavigateHandler}
-                switchPhoneAndEmailHandler={switchPhoneAndEmailHandler}
+                dispatchAndNavigate={dispatchAndNavigate}
+                switchPhoneAndEmail={switchPhoneAndEmail}
                 isLogin={isLogin}
               />
             )}
             {loginOption === 'email' && (
               <AuthWithEmailAndPasswordForm
                 loginOption={loginOption}
-                switchPhoneAndEmailHandler={switchPhoneAndEmailHandler}
+                switchPhoneAndEmail={switchPhoneAndEmail}
                 isLogin={isLogin}
-                isLoginHandler={isLoginHandler}
+                handleIsLogin={handleIsLogin}
                 forgotPassword={forgotPassword}
                 setForgotPassword={setForgotPassword}
-                dispatchAndNavigateHandler={dispatchAndNavigateHandler}
+                dispatchAndNavigate={dispatchAndNavigate}
               />
             )}
             {inValid && isShowAuthProviderOption && (
@@ -164,7 +154,7 @@ const Auth = () => {
                   {isLogin && (
                     <>
                       Bạn chưa có tài khoản?{' '}
-                      <Link to="/register" onClick={isLoginHandler}>
+                      <Link to="/register" onClick={isLogin}>
                         Đăng ký
                       </Link>
                     </>
@@ -172,7 +162,7 @@ const Auth = () => {
                   {!isLogin && (
                     <>
                       Bạn đã có tài khoản?{' '}
-                      <Link to="/login" onClick={isLoginHandler}>
+                      <Link to="/login" onClick={isLogin}>
                         Đăng nhập
                       </Link>
                     </>

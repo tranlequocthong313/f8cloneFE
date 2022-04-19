@@ -41,8 +41,6 @@ const Admin = () => {
         })
         const data = await res.json()
 
-        console.log(data)
-
         setCourseData(data.course)
         setBlogData(data.blogs)
         setVideoData(data.videos)

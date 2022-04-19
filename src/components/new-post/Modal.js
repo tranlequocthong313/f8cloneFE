@@ -35,18 +35,18 @@ const Modal = ({ blogContent }) => {
   const [preview, setPreview] = useState(null)
   const [isSchedule, setIsSchedule] = useState(false)
   const [schedule, setSchedule] = useState(date)
-  const [tags, setTags] = useState([])
   const [allowRecommend, setAllowRecommend] = useState(true)
   const [titleDisplay, setTitleDisplay] = useState('')
   const [description, setDescription] = useState('')
   const [image, setImage] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [tags, setTags] = useState(null)
+  const [tag, setTag] = useState('')
+  const [invalidTag, setInvalidTag] = useState(null)
 
-  // maxLengthContentEditable library require maxLength is string
   const LIMIT_TITLE_DISPLAY_LENGTH = '100'
   const LIMIT_DESCRIPTION_LENGTH = '160'
 
-  // F8 uses these number value to trigger show help text under contentEditable input
   const SHOW_HELP_NUMBER_TITLE_DISPLAY = 67
   const SHOW_HELP_NUMBER_DESCRIPTION = 108
 
@@ -70,7 +70,7 @@ const Modal = ({ blogContent }) => {
     titleDisplayRef.current.innerText = blogContent.title
   }, [blogContent.title])
 
-  const readingTimeHandler = (content) => {
+  const readingTime = (content) => {
     const WORDS_PER_MINUTE = 200 // People read 200 words/min https://infusion.media/content-marketing/how-to-calculate-reading-time/
     const SMALLEST_READING_TIME = 1
 
@@ -95,17 +95,19 @@ const Modal = ({ blogContent }) => {
         async () => {
           try {
             const url = await getDownloadURL(uploadTask.snapshot.ref)
-            postBlogHandler(url)
+            postBlog(url)
           } catch (error) {
             console.log(error)
+            setLoading(false)
           }
         },
       )
+    } else {
+      postBlog()
     }
-    postBlogHandler()
   }
 
-  const postBlogHandler = async (image) => {
+  const postBlog = async (image) => {
     try {
       const token = Cookies.get('token')
       if (!token) return
@@ -118,7 +120,7 @@ const Modal = ({ blogContent }) => {
         description,
         title: blogContent.title,
         content: blogContent.content,
-        readingTime: readingTimeHandler(blogContent.content),
+        readingTime: readingTime(blogContent.content),
         search: removeActions(
           titleDisplay.length === 0 ? blogContent.title : titleDisplay,
         ),
@@ -178,7 +180,31 @@ const Modal = ({ blogContent }) => {
     )
   }
 
-  console.log(tags)
+  const addTag = (e) => {
+    const isFullTagsSize = tags && tags.length === 5
+    if (isFullTagsSize) return
+
+    const isEnterPressed = e.keyCode === 13
+    if (isEnterPressed) {
+      const isExistTagAlready = tags.includes(tag)
+      if (isExistTagAlready) return setInvalidTag('Bạn đã thêm thẻ này')
+
+      const isValidTagAddInput = !tag.match(
+        /[`!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?~]/,
+      )
+      if (!isValidTagAddInput)
+        return setInvalidTag(
+          'Thẻ chỉ hỗ trợ chữ cái, số, dấu cách và dấu gạch ngang',
+        )
+
+      setInvalidTag(null)
+      setTags((prev) => [...prev, tag.trim()])
+      setTag('')
+    }
+  }
+
+  const removeTag = (tag) =>
+    setTags((prev) => prev.filter((item) => item !== tag))
 
   return (
     <div className={styles.modal}>
@@ -239,12 +265,45 @@ const Modal = ({ blogContent }) => {
           <span>
             Thêm tối đa 5 thẻ để độc giả biết bài viết của bạn nói về điều gì.
           </span>
-          <input
-            type="text"
-            placeholder="Ví dụ: Front-end, ReactJS, UI, UX"
-            className={styles.tagsInput}
-            onChange={(e) => setTags(e.target.value)}
-          />
+          Bạn đã thêm thẻ này
+          <div
+            className={
+              invalidTag !== null
+                ? `${styles.tagWrapper} ${styles.invalid}`
+                : styles.tagWrapper
+            }
+          >
+            {tags &&
+              tags.map((tag) => (
+                <div
+                  key={tag}
+                  id={`tag_${tag}`}
+                  tabIndex={1}
+                  className={styles.tagCard}
+                >
+                  <span>{tag}</span>
+                  <button onClick={() => removeTag(tag)}>x</button>
+                </div>
+              ))}
+            {(!tags || tags.length !== 5) && (
+              <input
+                type="text"
+                placeholder={
+                  tags && tags.length === 5
+                    ? ''
+                    : 'Ví dụ: Front-end, ReactJS, UI, UX'
+                }
+                className={styles.tagsInput}
+                disabled={tags && tags.length === 5}
+                onKeyDown={addTag}
+                value={tag}
+                onChange={(e) => setTag(e.target.value)}
+              />
+            )}
+          </div>
+          {invalidTag !== null && (
+            <div className={styles.invalidText}>{invalidTag}</div>
+          )}
           <form className={styles.allow}>
             <input
               type="checkbox"

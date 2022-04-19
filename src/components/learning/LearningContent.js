@@ -2,13 +2,15 @@ import React, { useState } from 'react'
 import styles from './LearningContent.module.scss'
 import LearningVideo from './LearningVideo'
 
-const LearningContent = ({ show }) => {
+const LearningContent = ({ isShowMenuTrack }) => {
   const [showComment, setShowComment] = useState(false)
 
   return (
     <div
       className={
-        show ? styles.wrapper : `${styles.wrapper} ${styles.fullWidth}`
+        isShowMenuTrack
+          ? styles.wrapper
+          : `${styles.wrapper} ${styles.fullWidth}`
       }
     >
       <LearningVideo />

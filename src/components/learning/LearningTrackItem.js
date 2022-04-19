@@ -4,32 +4,31 @@ import { Collapse } from 'react-bootstrap'
 import { LearningContext } from '../../context/LearningContext'
 
 const LearningTrackItem = ({ episodes }) => {
-  const [open, setOpen] = useState([])
+  // const [open, setOpen] = useState([])
 
-  const { active, activeHandler, playVideoHandler } =
-    useContext(LearningContext)
+  // const { isShowMenuTrack, handleIsShowMenuTrack, playVideo } = useContext(LearningContext)
 
-  const openHandler = (id) =>
-    setOpen((prev) => {
-      const isOpen = prev.includes(id)
-      return isOpen ? prev.filter((item) => item !== id) : [...prev, id]
-    })
+  // const open = (id) =>
+  //   setOpen((prev) => {
+  //     const isOpen = prev.includes(id)
+  //     return isOpen ? prev.filter((item) => item !== id) : [...prev, id]
+  //   })
 
-  // Style lesson item
-  const styleHandler = (learned, id) => {
-    if (!learned && active !== id) {
-      return `${styles.lessonItem} ${styles.locked}`
-    } else if (active === id) {
-      return `${styles.lessonItem} ${styles.active}`
-    }
-    return styles.lessonItem
-  }
+  // // Style lesson item
+  // const style = (learned, id) => {
+  //   if (!learned && active !== id) {
+  //     return `${styles.lessonItem} ${styles.locked}`
+  //   } else if (active === id) {
+  //     return `${styles.lessonItem} ${styles.active}`
+  //   }
+  //   return styles.lessonItem
+  // }
 
   return <h1>Hello World!</h1>
 
   // return episodes.map((episode) => (
   //   <div key={episode.id}>
-  //     <div className={styles.wrapper} onClick={() => openHandler(episode.id)}>
+  //     <div className={styles.wrapper} onClick={() => open(episode.id)}>
   //       <h3 className={styles.title}>{episode.title}</h3>
   //       <span className={styles.description}>2/2 | 22:09</span>
   //       <span className={styles.icon}>
@@ -41,9 +40,9 @@ const LearningTrackItem = ({ episodes }) => {
   //       <div className={styles.panelBody}>
   //         {episode.lessons.map((lesson) => (
   //           <div
-  //             className={styleHandler(lesson.learned, lesson.id)}
+  //             className={style(lesson.learned, lesson.id)}
   //             key={lesson.id}
-  //             onClick={() => playVideoHandler(lesson.id, lesson.videoId)}
+  //             onClick={() => playVideo(lesson.id, lesson.videoId)}
   //           >
   //             <div className={styles.lessonInfo}>
   //               <h3>{lesson.title}</h3>

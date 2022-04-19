@@ -1,4 +1,4 @@
-const timeSinceHandler = (createdAt) => {
+const timeSince = (createdAt) => {
   const createdAtDate = new Date(createdAt)
   const nowDate = new Date()
 
@@ -7,16 +7,21 @@ const timeSinceHandler = (createdAt) => {
   const months = nowDate.getMonth() - createdAtDate.getMonth()
   const years = nowDate.getFullYear() - createdAtDate.getFullYear()
 
-  if (years > 0) {
+  const hasYear = years > 0
+  const hasMonths = months > 0
+  const hasHours = hours > 0
+  const hasMinutes = minutes > 0
+
+  if (hasYear) {
     return `${years === 1 ? 'một' : years} năm trước`
-  } else if (months > 0) {
+  } else if (hasMonths) {
     return `${months === 1 ? 'một' : months} tháng trước`
-  } else if (hours > 0) {
+  } else if (hasHours) {
     return `${hours === 1 ? 'một' : hours} giờ trước`
-  } else if (minutes > 0) {
+  } else if (hasMinutes) {
     return `${minutes === 1 ? 'một' : minutes} phút trước`
   }
   return `vài giây trước`
 }
 
-export default timeSinceHandler
+export default timeSince

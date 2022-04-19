@@ -12,18 +12,17 @@ import VerticalModal from '../../../utils/vertical-modal/VerticalModal'
 const MobileNav = ({ photoURL }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { active, activeHandler } = useContext(NavContext)
+  const { activeTab, setActiveTab } = useContext(NavContext)
   const user = useSelector((state) => state.user)
 
-  // Dispatch logout action and navigate user to login page after logout
-  const dispatchAndNavigateHandler = () => {
+  const dispatchAndNavigate = () => {
     dispatch(logout())
     navigate('/login')
   }
 
-  const singOutHandler = () => {
+  const singOut = () => {
     Cookies.remove('token')
-    dispatchAndNavigateHandler()
+    dispatchAndNavigate()
   }
 
   return (
@@ -34,10 +33,7 @@ const MobileNav = ({ photoURL }) => {
     >
       {user.isLoggedIn && (
         <div className={styles.user}>
-          <Image
-            className={styles.userPicture}
-            src={photoURL || userDefaultImage}
-          />
+          <Image className={styles.userPicture} src={photoURL} />
         </div>
       )}
       <div className={styles.listWrap}>
@@ -54,9 +50,11 @@ const MobileNav = ({ photoURL }) => {
         <ul className={styles.list}>
           <li
             onClick={() => {
-              activeHandler('/my-course')
+              setActiveTab('/my-course')
             }}
-            className={active === '/my-course' ? styles.active : styles.item}
+            className={
+              activeTab === '/my-course' ? styles.setActiveTab : styles.item
+            }
           >
             <Link to="/my-course">
               <i className="fa-solid fa-book-open"></i>
@@ -67,9 +65,9 @@ const MobileNav = ({ photoURL }) => {
         <ul className={styles.list}>
           <li
             onClick={() => {
-              activeHandler('home')
+              setActiveTab('home')
             }}
-            className={active === 'home' ? styles.active : styles.item}
+            className={activeTab === 'home' ? styles.setActiveTab : styles.item}
           >
             <Link to="/">
               <i className="fa-solid fa-house"></i>
@@ -78,9 +76,11 @@ const MobileNav = ({ photoURL }) => {
           </li>
           <li
             onClick={() => {
-              activeHandler('learning-path')
+              setActiveTab('learning-path')
             }}
-            className={active === 'learning-path' ? styles.active : styles.item}
+            className={
+              activeTab === 'learning-path' ? styles.setActiveTab : styles.item
+            }
           >
             <Link to="/learning-path">
               <i className="fa-solid fa-road"></i>
@@ -89,9 +89,11 @@ const MobileNav = ({ photoURL }) => {
           </li>
           <li
             onClick={() => {
-              activeHandler('courses')
+              setActiveTab('courses')
             }}
-            className={active === 'courses' ? styles.active : styles.item}
+            className={
+              activeTab === 'courses' ? styles.setActiveTab : styles.item
+            }
           >
             <Link to={'/courses' || '/course-slug'}>
               <i className="fa-solid fa-lightbulb"></i>
@@ -100,9 +102,9 @@ const MobileNav = ({ photoURL }) => {
           </li>
           <li
             onClick={() => {
-              activeHandler('blog')
+              setActiveTab('blog')
             }}
-            className={active === 'blog' ? styles.active : styles.item}
+            className={activeTab === 'blog' ? styles.setActiveTab : styles.item}
           >
             <Link to="/blog">
               <i className="fa-solid fa-newspaper"></i>
@@ -113,9 +115,11 @@ const MobileNav = ({ photoURL }) => {
         <ul className={styles.list}>
           <li
             onClick={() => {
-              activeHandler('bookmark-post')
+              setActiveTab('bookmark-post')
             }}
-            className={active === 'bookmark-post' ? styles.active : styles.item}
+            className={
+              activeTab === 'bookmark-post' ? styles.setActiveTab : styles.item
+            }
           >
             <Link to="/bookmark-post">
               <i className="fa-solid fa-bookmark"></i>
@@ -126,9 +130,11 @@ const MobileNav = ({ photoURL }) => {
         <ul className={styles.list}>
           <li
             onClick={() => {
-              activeHandler('about-us')
+              setActiveTab('about-us')
             }}
-            className={active === 'about-us' ? styles.active : styles.item}
+            className={
+              activeTab === 'about-us' ? styles.setActiveTab : styles.item
+            }
           >
             <Link to="/about-us">
               <i className="fa-solid fa-circle-info"></i>
@@ -137,9 +143,11 @@ const MobileNav = ({ photoURL }) => {
           </li>
           <li
             onClick={() => {
-              activeHandler('careers')
+              setActiveTab('careers')
             }}
-            className={active === 'careers' ? styles.active : styles.item}
+            className={
+              activeTab === 'careers' ? styles.setActiveTab : styles.item
+            }
           >
             <Link to="/careers">
               <i className="fa-solid fa-users"></i>
@@ -150,7 +158,7 @@ const MobileNav = ({ photoURL }) => {
         {user.isLoggedIn && (
           <ul className={styles.list}>
             <li className={styles.item}>
-              <Link to="/login" onClick={singOutHandler}>
+              <Link to="/login" onClick={singOut}>
                 <i className="fa-solid fa-right-from-bracket"></i>
                 <span>Đăng xuất</span>
               </Link>

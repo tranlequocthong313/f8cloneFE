@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie'
 import { apiURL } from '../../../context/constants'
 
-const reportCommentHandler = async (commentId) => {
+const reportComment = async (commentId) => {
   try {
     const token = Cookies.get('token')
     if (!token) return
@@ -23,4 +23,4 @@ const reportCommentHandler = async (commentId) => {
   }
 }
 
-export { reportCommentHandler }
+export { reportComment }

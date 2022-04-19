@@ -4,13 +4,13 @@ import styles from './CommentModal.module.scss'
 import noPhotoURL from '../../../asset/images/nobody_m.256x256.jpg'
 import likeEmoji from '../../../asset/images/likeemoji.png'
 
-const CommentModal = ({ showModalHandler }) => {
+const CommentModal = ({ showModal }) => {
   return (
-    <Canvas onClick={showModalHandler}>
-      <div className={styles.wrapper} onClick={e => e.stopPropagation()}>
+    <Canvas onClick={showModal}>
+      <div className={styles.wrapper} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
           <p>Tất cả</p>
-          <div className={styles.closeButton} onClick={showModalHandler}>
+          <div className={styles.closeButton} onClick={showModal}>
             <i className="bi bi-x-lg"></i>
           </div>
         </div>

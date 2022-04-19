@@ -2,17 +2,15 @@ import React from 'react'
 import SecondaryCard from '../utils/card/SecondaryCard'
 import { Row, Col } from 'react-bootstrap'
 import styles from './CareerList.module.scss'
-import timeSinceHandler from '../utils/timeSinceHandler/timeSinceHandler'
+import timeSince from '../utils/timeSince/timeSince'
 
 const CareerList = ({ jobs, xl }) => {
-  // Money format
-  const formatNumber = number => {
-    return new Intl.NumberFormat(['ban', 'id']).format(number)
-  }
+  const formatSalary = (salary) =>
+    new Intl.NumberFormat(['ban', 'id']).format(salary)
 
   return (
     <Row style={{ margin: 0 }}>
-      {jobs.map(job => (
+      {jobs.map((job) => (
         <Col xl={xl} style={{ padding: 0 }} key={job._id}>
           <SecondaryCard>
             <div className={styles.cardWrapper}>
@@ -21,18 +19,18 @@ const CareerList = ({ jobs, xl }) => {
                 <i className="fa-solid fa-dollar-sign"></i>
                 Mức lương:{' '}
                 <span>
-                  {formatNumber(job.minSalary)} - {formatNumber(job.maxSalary)}
+                  {formatSalary(job.minSalary)} - {formatSalary(job.maxSalary)}
                 </span>
               </div>
               <div className={styles.languages}>
-                {job.languages.map(language => (
+                {job.languages.map((language) => (
                   <div className={styles.languageItem} key={language}>
                     {language}
                   </div>
                 ))}
               </div>
               <div className={styles.createdFromNow}>
-                {timeSinceHandler(job.createdAt)}
+                {timeSince(job.createdAt)}
               </div>
             </div>
           </SecondaryCard>

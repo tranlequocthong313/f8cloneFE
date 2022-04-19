@@ -6,43 +6,39 @@ export const NavContext = createContext()
 const NavContextProvider = ({ children }) => {
   const location = useLocation()
 
-  const [active, setActive] = useState(location.pathname.split('/')[1])
+  const [activeTab, setActiveTab] = useState(location.pathname.split('/')[1])
 
   useEffect(() => {
     switch (location.pathname) {
       case '/blog':
-        setActive('blog')
+        setActiveTab('blog')
         break
       case '/courses':
-        setActive('courses')
+        setActiveTab('courses')
         break
       case '/learning-path':
-        setActive('learning-path')
+        setActiveTab('learning-path')
         break
       case '/about-us':
-        setActive('about-us')
+        setActiveTab('about-us')
         break
       case '/careers':
-        setActive('careers')
+        setActiveTab('careers')
         break
       case '/bookmark-post':
-        setActive('bookmark-post')
+        setActiveTab('bookmark-post')
         break
       case '/':
-        setActive('home')
+        setActiveTab('home')
         break
       default:
-        setActive(null)
+        setActiveTab(null)
     }
   }, [location.pathname])
 
-  const activeHandler = (tab) => {
-    setActive(tab)
-  }
-
   const contextValue = {
-    active,
-    activeHandler,
+    setActiveTab,
+    activeTab,
   }
 
   return (

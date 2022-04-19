@@ -25,42 +25,46 @@ const Contact = () => {
     document.title = 'Liên hệ với F8'
   }, [])
 
-  const contactStatusHandler = (isSuccess, show) => {
-    setContactStatus((prev) => {
-      return {
-        ...prev,
-        isSuccess,
-        show,
-      }
-    })
-  }
-
-  const submitContactHandler = async (e) => {
+  const submitContact = async (e) => {
     e.preventDefault()
 
-    if (fullName === '' || email === '' || phoneNumber === '' || content === '')
-      return
+    const isValidInput =
+      fullName !== '' || email !== '' || phoneNumber !== '' || content !== ''
 
-    try {
-      const res = await fetch(`${apiURL}/help/contact`, {
-        method: 'POST',
-        body: JSON.stringify({
-          fullName,
-          email,
-          phoneNumber,
-          content,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+    if (isValidInput) {
+      try {
+        const res = await fetch(`${apiURL}/help/contact`, {
+          method: 'POST',
+          body: JSON.stringify({
+            fullName,
+            email,
+            phoneNumber,
+            content,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
 
-      const data = await res.json()
-      data.success
-        ? contactStatusHandler(true, true)
-        : contactStatusHandler(false, true)
-    } catch (error) {
-      console.log(error)
+        const data = await res.json()
+        data.success
+          ? setContactStatus((prev) => {
+              return {
+                ...prev,
+                isSuccess: true,
+                show: true,
+              }
+            })(true, true)
+          : setContactStatus((prev) => {
+              return {
+                ...prev,
+                isSuccess: false,
+                show: true,
+              }
+            })(false, true)
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 
@@ -77,10 +81,7 @@ const Contact = () => {
               <div className="containerTop">
                 <h1 className="mainHeadingTitle">Liên hệ</h1>
               </div>
-              <Form
-                className={styles.formContact}
-                onSubmit={submitContactHandler}
-              >
+              <Form className={styles.formContact} onSubmit={submitContact}>
                 <Form.Group
                   className={styles.formGroup}
                   controlId="formBasicEmail"

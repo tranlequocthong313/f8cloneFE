@@ -5,12 +5,12 @@ import Tippy from '../../../utils/tippy/Tippy'
 import { Link } from 'react-router-dom'
 import f8logo from '../../../../asset/images/f8_icon.png'
 import { apiURL } from '../../../../context/constants'
-import timeSinceHandler from '../../../utils/timeSinceHandler/timeSinceHandler'
+import timeSince from '../../../utils/timeSince/timeSince'
 import Cookies from 'js-cookie'
 
-const Notification = ({ notifications }) => {
+const Notification = () => {
   const [seenAll, setSeenAll] = useState([])
-  const [newPostNotification, setNewPostNotification] = useState([])
+  const [notifications, setNotifications] = useState([])
   const [noSeenCount, setNoSeenCount] = useState([])
 
   useEffect(() => {
@@ -36,10 +36,10 @@ const Notification = ({ notifications }) => {
 
         const data = await res.json()
         data.forEach((item) => {
-          if (!item.isSeen) setNoSeenCount((prev) => [...prev, item._id])
+          !item.isSeen && setNoSeenCount((prev) => [...prev, item._id])
           setSeenAll((prev) => [...prev, item._id])
         })
-        setNewPostNotification(data)
+        setNotifications(data)
       } catch (error) {
         console.log(error)
       }
@@ -48,16 +48,12 @@ const Notification = ({ notifications }) => {
     return () => controller?.abort()
   }, [])
 
-  const countNoSeenHandler = (id) => {
+  const countNoSeen = (id) => {
     const isSeenCount = noSeenCount.includes(id)
     isSeenCount && setNoSeenCount((prev) => prev.filter((item) => item !== id))
   }
 
-  console.log(noSeenCount)
-
-  console.log(noSeenCount.length)
-
-  const seenHandler = async (notificationId) => {
+  const seen = async (notificationId) => {
     try {
       const token = Cookies.get('token')
       if (!token) return
@@ -73,8 +69,8 @@ const Notification = ({ notifications }) => {
         },
       })
       const data = await res.json()
-      notificationId ? countNoSeenHandler(notificationId) : setNoSeenCount([])
-      setNewPostNotification(data)
+      notificationId ? countNoSeen(notificationId) : setNoSeenCount([])
+      setNotifications(data)
     } catch (error) {
       console.log(error)
     }
@@ -84,8 +80,8 @@ const Notification = ({ notifications }) => {
     <Tippy
       button={
         <i className={`${styles.userNotification} fa-solid fa-bell`}>
-          {newPostNotification &&
-            newPostNotification.length > 0 &&
+          {notifications &&
+            notifications.length > 0 &&
             noSeenCount.length > 0 && (
               <div className={styles.notificationCount}>
                 {noSeenCount.length}
@@ -101,7 +97,7 @@ const Notification = ({ notifications }) => {
           button={<i className="bi bi-three-dots"></i>}
           className={styles.markAll}
         >
-          <div className={styles.markAllItem} onClick={() => seenHandler(null)}>
+          <div className={styles.markAllItem} onClick={() => seen(null)}>
             <i className="bi bi-check"></i>
             <span>Đánh dấu tất cả đẫ đọc</span>
           </div>
@@ -109,9 +105,9 @@ const Notification = ({ notifications }) => {
       </header>
       <div className={styles.body}>
         <ul className={styles.list}>
-          {newPostNotification &&
-            newPostNotification.length !== 0 &&
-            newPostNotification.map((notification) => (
+          {notifications &&
+            notifications.length !== 0 &&
+            notifications.map((notification) => (
               <li
                 className={
                   notification.isSeen
@@ -119,22 +115,32 @@ const Notification = ({ notifications }) => {
                     : `${styles.item} ${styles.noSeen}`
                 }
                 key={notification._id}
-                onClick={() => seenHandler(notification._id)}
+                onClick={() => seen(notification._id)}
               >
                 <Link to={`/blog/${notification.slug}`}>
                   <div className={styles.avatar}>
                     <img
                       alt=""
-                      src={notification.image ? notification.image : f8logo}
+                      src={
+                        notification.image
+                          ? notification.image
+                          : notification.notifiedBy.photoURL
+                          ? notification.notifiedBy.photoURL
+                          : f8logo
+                      }
                     />
                   </div>
                   <div className={styles.content}>
                     <div>
-                      <span className={styles.name}>{notification.title}</span>{' '}
+                      <span className={styles.name}>
+                        {notification.title
+                          ? notification.title
+                          : notification.notifiedBy.fullName}
+                      </span>{' '}
                       {notification.description}
                     </div>
                     <div className={styles.createdTime}>
-                      {timeSinceHandler(notification.createdAt)}
+                      {timeSince(notification.createdAt)}
                     </div>
                   </div>
                 </Link>

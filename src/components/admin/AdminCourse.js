@@ -4,7 +4,7 @@ import MainTable from '../utils/table/MainTable'
 import styles from './AdminCourse.module.scss'
 
 const AdminCourse = ({ courseData }) => {
-  const formatNumber = (number) =>
+  const formatStudentCount = (number) =>
     new Intl.NumberFormat(['ban', 'id']).format(number)
 
   return (
@@ -46,7 +46,7 @@ const AdminCourse = ({ courseData }) => {
               {course.requirement ? 'Yes' : 'No'}
             </td>
             <td className={styles.tableItem}>
-              {formatNumber(course.studentCount)}
+              {formatStudentCount(course.studentCount)}
             </td>
             <td className={styles.tableItem}>{course.createdAt}</td>
             <td className={styles.tableItem}>{course.updatedAt}</td>

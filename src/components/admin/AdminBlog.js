@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Form, Modal, Spinner } from 'react-bootstrap'
+import { Form, Modal } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { createBlog } from '../../actions/userAction'
@@ -9,67 +9,69 @@ import MainTable from '../utils/table/MainTable'
 import styles from './AdminBlog.module.scss'
 
 const AdminBlog = ({ blogData }) => {
-  const formatTimeHandler = (date) => new Date(date).toLocaleString()
-
   const dispatch = useDispatch()
 
-  const [showModal, setShowModal] = useState(false)
-  const [check, setCheck] = useState([])
-  const [checkAll, setCheckAll] = useState([])
-  const [isCheckAll, setIsCheckAll] = useState(false)
+  const [isShowDeleteModal, setIsShowDeleteModal] = useState(false)
+  const [checkboxChosen, setCheckboxChosen] = useState([])
+  const [checkboxChosenAll, setCheckboxChosenAll] = useState([])
+  const [isCheckboxChosenAll, setIsCheckboxChosenAll] = useState(false)
 
   useEffect(() => {
-    const blogId = blogData.map((blog) => blog._id)
-    setCheckAll(blogId)
+    const blogIds = blogData.map((blog) => blog._id)
+    setCheckboxChosenAll(blogIds)
   }, [blogData])
 
-  const checkHandler = (id) =>
-    setCheck((prev) => {
-      const isChecked = prev.includes(id)
-      if (isChecked) {
-        const newArray = prev.filter((item) => item !== id)
-        setIsCheckAll(false)
-        return newArray
+  const showDeleteModal = () => setIsShowDeleteModal((prev) => !prev)
+
+  const formatDateToLocaleString = (date) => new Date(date).toLocaleString()
+
+  const checkBoxChosenSingle = (id) =>
+    setCheckboxChosen((prev) => {
+      const isChosen = prev.includes(id)
+
+      if (isChosen) {
+        const newChosen = prev.filter((item) => item !== id)
+        setIsCheckboxChosenAll(false)
+        return newChosen
       }
-      const newArray = [...prev, id]
-      newArray.length === checkAll.length && setIsCheckAll(true)
-      return newArray
+      const newChosen = [...prev, id]
+      const isChosenAllCheckbox = newChosen.length === checkboxChosenAll.length
+      isChosenAllCheckbox && setIsCheckboxChosenAll(true)
+      return newChosen
     })
 
-  const checkAllHandler = () => {
-    if (!isCheckAll) {
-      setCheck(checkAll)
-      return setIsCheckAll(true)
+  const handleCheckBoxChosenAll = () => {
+    if (isCheckboxChosenAll) {
+      setCheckboxChosen([])
+      setIsCheckboxChosenAll(false)
+    } else {
+      setCheckboxChosen(checkboxChosenAll)
+      setIsCheckboxChosenAll(true)
     }
-    setCheck([])
-    setIsCheckAll(false)
   }
 
-  const showModalHandler = () => setShowModal((prev) => !prev)
-
-  const deleteBlogHandler = async () => {
+  const deleteBlogIsChosen = async () => {
     try {
-      showModalHandler()
+      showDeleteModal()
       const res = await fetch(`${apiURL}/admin/blog/delete-soft`, {
         method: 'POST',
-        body: JSON.stringify({ blogId: check }),
+        body: JSON.stringify({ blogId: checkboxChosen }),
         headers: {
           'Content-Type': 'application/json',
         },
       })
 
       const data = await res.json()
-      console.log(data)
       dispatch(createBlog({ blogData: data.blog }))
     } catch (error) {
       console.log(error)
     } finally {
-      setCheck([])
-      setIsCheckAll(false)
+      setCheckboxChosen([])
+      setIsCheckboxChosenAll(false)
     }
   }
 
-  const setPopularHandler = async (blogId, isPopular) => {
+  const changePopularState = async (blogId, isPopular) => {
     try {
       const res = await fetch(`${apiURL}/admin/blog/add-popular`, {
         method: 'POST',
@@ -84,8 +86,8 @@ const AdminBlog = ({ blogData }) => {
     } catch (error) {
       console.log(error)
     } finally {
-      setCheck([])
-      setIsCheckAll(false)
+      setCheckboxChosen([])
+      setIsCheckboxChosenAll(false)
     }
   }
 
@@ -96,7 +98,10 @@ const AdminBlog = ({ blogData }) => {
           <tr>
             <th>
               <Form>
-                <Form.Check checked={isCheckAll} onChange={checkAllHandler} />
+                <Form.Check
+                  checked={isCheckboxChosenAll}
+                  onChange={handleCheckBoxChosenAll}
+                />
               </Form>
             </th>
             <th className={styles.tableItem}>STT</th>
@@ -110,86 +115,85 @@ const AdminBlog = ({ blogData }) => {
           </tr>
         </thead>
         <tbody>
-          {blogData.length !== 0 &&
-            blogData.map((blog, index) => (
-              <tr key={blog._id}>
-                <td>
-                  <Form>
-                    <Form.Check
-                      checked={check.includes(blog._id)}
-                      type={'checkbox'}
-                      onChange={() => checkHandler(blog._id)}
-                    />
-                  </Form>
-                </td>
-                <td className={styles.tableItem}>{index + 1}</td>
-                <td className={styles.breakWord}>{blog.title}</td>
-                <td className={styles.tableItem}>{blog.postedBy.fullName}</td>
-                <td className={styles.tableItem}>
-                  {blog.allowRecommend ? 'Yes' : 'No'}
-                </td>
-                <td className={styles.tableItem}>
-                  {blog.isPopular ? 'Hiện' : 'Ẩn'}
-                </td>
-                <td className={styles.tableItem}>
-                  {blog.isVerified ? 'Yes' : 'No'}
-                </td>
-                <td className={styles.tableItem}>
-                  {formatTimeHandler(blog.createdAt)}
-                </td>
-                <td className={styles.tableItem}>
-                  {formatTimeHandler(blog.updatedAt)}
-                </td>
-                <td>
-                  {blog.allowRecommend && blog.isVerified && (
-                    <>
-                      {!check.includes(blog._id) && (
-                        <i
-                          onClick={() =>
-                            setPopularHandler(blog._id, blog.isPopular)
-                          }
-                          title={
-                            blog.isPopular
-                              ? 'Xóa khỏi blog nổi bật'
-                              : 'Thêm vào blog nổi bật'
-                          }
-                          className={
-                            blog.isPopular
-                              ? `fa-solid fa-circle-minus ${styles.buttonIcon} ${styles.removePopular}`
-                              : `fa-solid fa-circle-plus ${styles.buttonIcon} ${styles.addPopular}`
-                          }
-                        ></i>
-                      )}
+          {blogData.map((blog, index) => (
+            <tr key={blog._id}>
+              <td>
+                <Form>
+                  <Form.Check
+                    checked={checkboxChosen.includes(blog._id)}
+                    type={'checkbox'}
+                    onChange={() => checkBoxChosenSingle(blog._id)}
+                  />
+                </Form>
+              </td>
+              <td className={styles.tableItem}>{index + 1}</td>
+              <td className={styles.breakWord}>{blog.title}</td>
+              <td className={styles.tableItem}>{blog.postedBy.fullName}</td>
+              <td className={styles.tableItem}>
+                {blog.allowRecommend ? 'Yes' : 'No'}
+              </td>
+              <td className={styles.tableItem}>
+                {blog.isPopular ? 'Hiện' : 'Ẩn'}
+              </td>
+              <td className={styles.tableItem}>
+                {blog.isVerified ? 'Yes' : 'No'}
+              </td>
+              <td className={styles.tableItem}>
+                {formatDateToLocaleString(blog.createdAt)}
+              </td>
+              <td className={styles.tableItem}>
+                {formatDateToLocaleString(blog.updatedAt)}
+              </td>
+              <td>
+                {blog.allowRecommend && blog.isVerified && (
+                  <>
+                    {!checkboxChosen.includes(blog._id) && (
+                      <i
+                        onClick={() =>
+                          changePopularState(blog._id, blog.isPopular)
+                        }
+                        title={
+                          blog.isPopular
+                            ? 'Xóa khỏi blog nổi bật'
+                            : 'Thêm vào blog nổi bật'
+                        }
+                        className={
+                          blog.isPopular
+                            ? `fa-solid fa-circle-minus ${styles.buttonIcon} ${styles.removePopular}`
+                            : `fa-solid fa-circle-plus ${styles.buttonIcon} ${styles.addPopular}`
+                        }
+                      ></i>
+                    )}
 
-                      {check.includes(blog._id) && (
-                        <i
-                          className={
-                            blog.isPopular
-                              ? `fa-solid fa-circle-minus ${styles.buttonIcon} ${styles.removePopular} ${styles.disabled}`
-                              : `fa-solid fa-circle-plus ${styles.buttonIcon} ${styles.addPopular} ${styles.disabled}`
-                          }
-                        ></i>
-                      )}
-                    </>
-                  )}
+                    {checkboxChosen.includes(blog._id) && (
+                      <i
+                        className={
+                          blog.isPopular
+                            ? `fa-solid fa-circle-minus ${styles.buttonIcon} ${styles.removePopular} ${styles.disabled}`
+                            : `fa-solid fa-circle-plus ${styles.buttonIcon} ${styles.addPopular} ${styles.disabled}`
+                        }
+                      ></i>
+                    )}
+                  </>
+                )}
+                <i
+                  onClick={showDeleteModal}
+                  title={'Xóa blog'}
+                  className={
+                    checkboxChosen.includes(blog._id)
+                      ? `fa-solid fa-trash ${styles.buttonIcon} ${styles.delete}`
+                      : `fa-solid fa-trash ${styles.buttonIcon} ${styles.delete} ${styles.disabled}`
+                  }
+                ></i>
+                <Link to={`/blog/${blog.slug}`}>
                   <i
-                    onClick={showModalHandler}
-                    title={'Xóa blog'}
-                    className={
-                      check.includes(blog._id)
-                        ? `fa-solid fa-trash ${styles.buttonIcon} ${styles.delete}`
-                        : `fa-solid fa-trash ${styles.buttonIcon} ${styles.delete} ${styles.disabled}`
-                    }
+                    title={'Truy cập bài viết'}
+                    className={`fa-solid fa-arrow-up-right-from-square ${styles.buttonIcon}`}
                   ></i>
-                  <Link to={`/blog/${blog.slug}`}>
-                    <i
-                      title={'Truy cập bài viết'}
-                      className={`fa-solid fa-arrow-up-right-from-square ${styles.buttonIcon}`}
-                    ></i>
-                  </Link>
-                </td>
-              </tr>
-            ))}
+                </Link>
+              </td>
+            </tr>
+          ))}
           {blogData.length === 0 && (
             <tr>
               <td colSpan="10" className={styles.tableItem}>
@@ -200,8 +204,8 @@ const AdminBlog = ({ blogData }) => {
         </tbody>
       </MainTable>
       <Modal
-        show={showModal}
-        onHide={showModalHandler}
+        show={isShowDeleteModal}
+        onHide={showDeleteModal}
         className={styles.createModal}
         centered
       >
@@ -213,8 +217,8 @@ const AdminBlog = ({ blogData }) => {
         </Modal.Body>
 
         <Modal.Footer>
-          <MainButton onClick={deleteBlogHandler}>Đồng ý</MainButton>
-          <MainButton onClick={showModalHandler}>Hủy</MainButton>
+          <MainButton onClick={deleteBlogIsChosen}>Đồng ý</MainButton>
+          <MainButton onClick={showDeleteModal}>Hủy</MainButton>
         </Modal.Footer>
       </Modal>
     </>

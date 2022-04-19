@@ -2,9 +2,8 @@ import { Link } from 'react-router-dom'
 import { Image } from 'react-bootstrap'
 import MainCard from '../../utils/card/MainCard'
 import styles from './BlogItem.module.scss'
-import CardButton from '../../utils/card/CardButton'
-import noPhotoUser from '../../../asset/images/nobody_m.256x256.jpg'
 import MainButton from '../../utils/button/MainButton'
+import f8Logo from '../../../asset/images/f8_icon.png'
 
 const BlogItem = ({ blog }) => {
   return (
@@ -15,7 +14,7 @@ const BlogItem = ({ blog }) => {
           style={{
             backgroundImage: blog.image
               ? `url(${blog.image})`
-              : `url(https://accounts.fullstack.edu.vn/assets/icon/f8_icon.png)`,
+              : `url(${f8Logo})`,
           }}
         >
           <MainButton className={styles.button}>Xem bài viết</MainButton>
@@ -26,12 +25,10 @@ const BlogItem = ({ blog }) => {
       </h4>
       <div className={styles.author}>
         <Link to={`blog/${blog.slug}`}>
-          <Image
-            src={!blog.postedBy.photoURL ? noPhotoUser : blog.postedBy.photoURL}
-          />
+          <Image src={blog.postedBy.photoURL} />
         </Link>
+        <Link to={`/${blog.postedBy.slug}`}>{blog.postedBy.fullName}</Link>
         <Link to={`blog/${blog.slug}`}>
-          {blog.postedBy.fullName}
           <span className={styles.dot}>.</span>
           <span>{blog.readingTime} phút đọc</span>
         </Link>

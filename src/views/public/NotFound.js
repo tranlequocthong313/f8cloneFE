@@ -5,7 +5,6 @@ import styles from './NotFound.module.scss'
 import logo from '../../asset/images/f8_icon.png'
 
 const NotFound = () => {
-  // Set window title
   useEffect(() => {
     document.title = 'Trang này không tồn tại'
   }, [])

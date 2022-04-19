@@ -12,71 +12,72 @@ const AuthForgetPassword = ({
   invalidOTP,
   setInvalidOTP,
   isSendVerifyCode,
-  checkUserEmailExistHandler,
-  isValidEmailHandler,
+  checkUserEmailExist,
+  isValidEmail,
   counter,
   validateEmail,
   setDisabled,
   disabled,
-  onSubmitHandler,
+  onSubmit,
   loading,
   setLoading,
 }) => {
-  const [password, setPassword] = useState({
+  const [passwordAndRePasswordText, setPasswordAndRePasswordText] = useState({
     pass: '',
     rePass: '',
   })
+  const [isConfirmOTPSentToEmail, setIsConfirmOTPSentToEmail] = useState(false)
 
-  const [isConfirm, setIsConfirm] = useState(false)
-
-  const forgotPasswordHandler = async () => {
+  const resetPassword = async () => {
     setLoading(true)
     try {
-      const res = await fetch(`${apiURL}/login/reset-password`, {
+      await fetch(`${apiURL}/login/reset-password`, {
         method: 'POST',
         body: JSON.stringify({
           email,
-          password: password.pass,
+          password: passwordAndRePasswordText.pass,
         }),
         headers: {
           'Content-Type': 'application/json',
         },
       })
-      const data = await res.json()
+
       setForgotPassword(false)
-      console.log(data.message)
     } catch (error) {
       console.log(error)
     } finally {
       setLoading(false)
     }
   }
+
   useEffect(() => {
-    const disableHandler = () => {
-      return !isValidEmailHandler(email) || validateEmail !== null
-    }
+    const disableSendOTPButtonWhenInvalidInputEmail = () =>
+      !isValidEmail(email) || validateEmail !== null
 
-    setDisabled(disableHandler())
-  }, [email, isValidEmailHandler, setDisabled, validateEmail])
+    setDisabled(disableSendOTPButtonWhenInvalidInputEmail())
+  }, [email, isValidEmail, setDisabled, validateEmail])
 
-  const checkOTPValidHandler = () => {
-    if (verifyOTP.input !== verifyOTP.create) {
-      return setInvalidOTP('Mã xác minh không hợp lệ')
+  const checkOTPValid = () => {
+    const isMatchOTP = verifyOTP.input === verifyOTP.create
+
+    if (isMatchOTP) {
+      setIsConfirmOTPSentToEmail(true)
+      setInvalidOTP(null)
+    } else {
+      setInvalidOTP('Mã xác minh không hợp lệ')
     }
-    setIsConfirm(true)
-    setInvalidOTP(null)
   }
 
   return (
     <Form className={styles.formBody}>
-      {!isConfirm && (
+      {!isConfirmOTPSentToEmail && (
         <>
           <FormGroup
             label={'Email'}
             type={'email'}
             placeholder={'Nhập địa chỉ email'}
             onChange={{
-              input: checkUserEmailExistHandler,
+              input: checkUserEmailExist,
             }}
             inValid={validateEmail}
           />
@@ -84,37 +85,38 @@ const AuthForgetPassword = ({
             placeholder={'Nhập mã xác nhận'}
             maxLength={6}
             OTPInput={true}
+            forgotPassword
             isSendVerifyCode={isSendVerifyCode}
             counter={counter}
             onChange={{
               input: setVerifyOTP,
             }}
             disabled={disabled}
-            onClick={onSubmitHandler}
+            onClick={onSubmit}
             onKeyUp={(e) =>
               e.keyCode === 13 &&
               verifyOTP.input.length === 6 &&
-              checkOTPValidHandler()
+              checkOTPValid()
             }
             inputDisabled={!isSendVerifyCode}
             inValid={invalidOTP}
           />
         </>
       )}
-      {!isConfirm && (
+      {!isConfirmOTPSentToEmail && (
         <div
           className={
             verifyOTP.input.length === 6
               ? styles.submitButton
               : `${styles.submitButton} ${styles.disabled}`
           }
-          onClick={checkOTPValidHandler}
+          onClick={checkOTPValid}
         >
           <span>Xác nhận</span>
         </div>
       )}
 
-      {isConfirm && (
+      {isConfirmOTPSentToEmail && (
         <>
           <FormGroup
             label={'Nhập mật khẩu mới'}
@@ -122,7 +124,7 @@ const AuthForgetPassword = ({
             placeholder={'Mật khẩu'}
             onChange={{
               input: (e) =>
-                setPassword((prev) => {
+                setPasswordAndRePasswordText((prev) => {
                   return {
                     ...prev,
                     pass: e.target.value,
@@ -136,7 +138,7 @@ const AuthForgetPassword = ({
             type={'password'}
             onChange={{
               input: (e) =>
-                setPassword((prev) => {
+                setPasswordAndRePasswordText((prev) => {
                   return {
                     ...prev,
                     rePass: e.target.value,
@@ -145,26 +147,28 @@ const AuthForgetPassword = ({
             }}
             onKeyUp={(e) =>
               e.keyCode === 13 &&
-              password.pass.length >= 8 &&
-              password.rePass.length >= 8 &&
-              password.pass === password.rePass &&
-              forgotPasswordHandler()
+              passwordAndRePasswordText.pass.length >= 8 &&
+              passwordAndRePasswordText.rePass.length >= 8 &&
+              passwordAndRePasswordText.pass ===
+                passwordAndRePasswordText.rePass &&
+              resetPassword()
             }
           />
         </>
       )}
 
-      {isConfirm && (
+      {isConfirmOTPSentToEmail && (
         <div
           className={
-            password.pass.length >= 8 &&
-            password.rePass.length >= 8 &&
-            password.pass === password.rePass &&
+            passwordAndRePasswordText.pass.length >= 8 &&
+            passwordAndRePasswordText.rePass.length >= 8 &&
+            passwordAndRePasswordText.pass ===
+              passwordAndRePasswordText.rePass &&
             !loading
               ? styles.submitButton
               : `${styles.submitButton} ${styles.disabled}`
           }
-          onClick={forgotPasswordHandler}
+          onClick={resetPassword}
         >
           {loading && (
             <Spinner

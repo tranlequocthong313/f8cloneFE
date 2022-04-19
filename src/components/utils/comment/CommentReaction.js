@@ -1,18 +1,18 @@
 import React from 'react'
-import { emojies } from '../../../context/constants'
+import { EMOJIES } from '../../../context/constants'
 import styles from './CommentReaction.module.scss'
 
-const CommentReaction = ({ reactCommentHandler, commentId }) => {
+const CommentReaction = ({ reactComment, commentId }) => {
   return (
     <div className={styles.wrapper}>
-      {emojies.map(emoji => (
+      {EMOJIES.map((emoji) => (
         <div className={styles.container} key={emoji.title}>
           <div className={styles.item}>
             <div className={styles.title}>{emoji.title}</div>
             <div
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation()
-                reactCommentHandler(emoji.title, commentId)
+                reactComment(emoji.title, commentId)
               }}
               style={{
                 backgroundImage: `url(${emoji.icon})`,

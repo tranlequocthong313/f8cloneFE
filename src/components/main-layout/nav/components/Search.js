@@ -1,10 +1,8 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './Search.module.scss'
 import { Link } from 'react-router-dom'
 import { apiURL } from '../../../../context/constants'
-import noPhotoURL from '../../../../asset/images/nobody_m.256x256.jpg'
-import Tippy from '../../../utils/tippy/Tippy'
 
 const Search = () => {
   const [searchInput, setSearchInput] = useState('')
@@ -15,14 +13,15 @@ const Search = () => {
     videos: [],
   })
 
-  const searchHandler = async (e) => {
+  const search = async (e) => {
     try {
+      setSearchInput(e.target.value)
+
       const length = e.target.value.trim().length
       let match = e.target.value.match(/^[a-zA-Z ]*/)
 
-      setSearchInput(e.target.value)
-
-      if (length === 0)
+      const isEmptySearchInput = length === 0
+      if (isEmptySearchInput)
         setResult((prev) => {
           return {
             ...prev,
@@ -32,7 +31,8 @@ const Search = () => {
           }
         })
 
-      if (length >= 2 && match[0] === e.target.value) {
+      const isValidSearchInput = length >= 2 && match[0] === e.target.value
+      if (isValidSearchInput) {
         const res = await fetch(`${apiURL}/search/${e.target.value}`)
         const data = await res.json()
 
@@ -66,7 +66,7 @@ const Search = () => {
           type={'text'}
           placeholder="Tìm kiếm khóa học, bài viết, video, ..."
           className={styles.searchInput}
-          onChange={searchHandler}
+          onChange={search}
           onClick={() => setIsFocus(true)}
           onBlur={() => setIsFocus(false)}
         />
@@ -94,12 +94,12 @@ const Search = () => {
                 <>
                   <div className={styles.heading}>
                     <h5>KHÓA HỌC</h5>
-                    <Link to="">Xem thêm</Link>
+                    <Link to={`/search/course?q=${searchInput}`}>Xem thêm</Link>
                   </div>
                   {result.courses.map((course) => (
                     <Link
                       className={styles.searchItem}
-                      to={`courses/${course.slug}`}
+                      to={`/courses/${course.slug}`}
                       key={course._id}
                     >
                       <img alt="" src={course.image} />
@@ -112,23 +112,17 @@ const Search = () => {
                 <>
                   <div className={styles.heading}>
                     <h5>BÀI VIẾT</h5>
-                    <Link to="">Xem thêm</Link>
+                    <Link to={`/search/blog?q=${searchInput}`}>Xem thêm</Link>
                   </div>
                   {result.blogs.map((blog) => (
                     <Link
                       className={styles.searchItem}
-                      to={`blog/${blog.slug}`}
+                      to={`/blog/${blog.slug}`}
                       key={blog._id}
                     >
                       <img
                         alt=""
-                        src={
-                          blog.image
-                            ? blog.image
-                            : blog.postedBy.photoURL
-                            ? blog.postedBy.photoURL
-                            : noPhotoURL
-                        }
+                        src={blog.image ? blog.image : blog.postedBy.photoURL}
                       />
                       <span>{blog.titleDisplay}</span>
                     </Link>
@@ -139,7 +133,7 @@ const Search = () => {
                 <>
                   <div className={styles.heading}>
                     <h5>VIDEO</h5>
-                    <Link to="">Xem thêm</Link>
+                    <Link to={`/search/video?q=${searchInput}`}>Xem thêm</Link>
                   </div>
                   {result.videos.map((video) => (
                     <a

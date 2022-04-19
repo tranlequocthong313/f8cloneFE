@@ -16,33 +16,34 @@ import { BlogContext } from '../../../context/BlogContext'
 
 const Login = React.lazy(() => import('./components/Login'))
 
-const Header = ({ blogDataHandler }) => {
+const Header = ({ blogData, className, isProfile, isSearchPage }) => {
   const user = useSelector((state) => state.user)
   const { isEditBlog, isNewBlog } = useContext(BlogContext)
 
   return (
-    <Navbar className={styles.navHeader}>
+    <Navbar className={`${styles.navHeader} ${className}`}>
       <Container fluid style={{ padding: 0 }}>
         <MobileNav photoURL={user.photoURL} />
         <Logo />
-        {!isEditBlog && !isNewBlog && <Search />}
+        {!isEditBlog && !isNewBlog && !isProfile && !isSearchPage && <Search />}
         <div className={styles.userAction}>
-          {(isNewBlog || isEditBlog) && (
-            <PublishButton blogDataHandler={blogDataHandler} />
+          {(isNewBlog || isEditBlog) && <PublishButton blogData={blogData} />}
+          {!isProfile && (
+            <Link to="/search" className={styles.searchMobileWrapper}>
+              <div className={styles.searchMobileIcon}></div>
+            </Link>
           )}
-          <Link to="/search" className={styles.searchMobileWrapper}>
-            <div className={styles.searchMobileIcon}></div>
-          </Link>
 
           <Suspense fallback={<User />}>
             {user.isLoggedIn && (
               <>
-                <MyCourse />
+                {!isProfile && <MyCourse />}
                 <Notification />
                 <User
                   photoURL={user.photoURL}
                   displayName={user.displayName}
                   email={user.email}
+                  slug={user.slug}
                 />
               </>
             )}

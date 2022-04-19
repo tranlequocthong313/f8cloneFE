@@ -27,6 +27,8 @@ import BookmarkPost from './views/private/BookmarkPost'
 import MyBlog from './views/private/MyBlog'
 import Admin from './views/admin/Admin'
 import EditPost from './views/private/EditPost'
+import BlogTag from './views/public/BlogTag'
+import Profile from './views/public/Profile'
 
 function App() {
   const dispatch = useDispatch()
@@ -34,7 +36,6 @@ function App() {
 
   const user = useSelector((state) => state.user)
 
-  // Scroll to top when routing
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [location.pathname])
@@ -150,12 +151,17 @@ function App() {
       <Route path="/blog/:slug" element={<BlogSlug />} />
       <Route path="/learning-path" element={<LearningPath />} />
       <Route path="/blog" element={<Blog />} />
+      <Route path="/blog/tag/:tag" element={<BlogTag />} />
       <Route path="/search" element={<Search />} />
+      <Route path="/search/course" element={<Search />} />
+      <Route path="/search/blog" element={<Search />} />
+      <Route path="/search/video" element={<Search />} />
       <Route path="/contact-us" element={<Contact />} />
       <Route path="/privacy" element={<Privacy />} />
       <Route path="/terms" element={<Terms />} />
       <Route path="/careers" element={<Careers />} />
       <Route path="/about-us" element={<About />} />
+      <Route path="/:userSlug" element={<Profile />} />
       <Route path="*" element={<NotFound />} />
       <Route path="/" element={<Home />} />
     </Routes>

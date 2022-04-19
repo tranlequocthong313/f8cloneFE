@@ -5,23 +5,23 @@ import styles from './AuthWithEmailAndPasswordForm.module.scss'
 import Cookies from 'js-cookie'
 import { apiURL } from '../../../context/constants'
 import AuthForgetPassword from './AuthForgetPassword'
+import userDefaultPhoto from '../../../asset/images/nobody_m.256x256.jpg'
 
 const LoginWithEmailAndPasswordForm = ({
-  switchPhoneAndEmailHandler,
-  authEmailAndPasswordHandler,
+  switchPhoneAndEmail,
+  authEmailAndPassword,
+  handleIsLogin,
   isLogin,
-  isLoginHandler,
   forgotPassword,
   setForgotPassword,
-  dispatchAndNavigateHandler,
+  dispatchAndNavigate,
 }) => {
-  // Website F8 uses 120s for signup resend button 60s for forget password resend button
-  const LIMITED_SECOND_FOR_SIGNUP = 120
-  const LIMITED_SECOND_FOR_FORGET_PWD = 60
+  const LIMITED_COUNTER_FOR_SIGNUP = 120
+  const LIMITED_COUNTER_FOR_FORGET_PWD = 60
 
   const [fullName, setFullName] = useState('')
   const [isSendVerifyCode, setIsSentVerifyCode] = useState(false)
-  const [counter, setCounter] = useState(LIMITED_SECOND_FOR_SIGNUP)
+  const [counter, setCounter] = useState(LIMITED_COUNTER_FOR_SIGNUP)
   const [verifyOTP, setVerifyOTP] = useState({
     input: '',
     create: '',
@@ -38,10 +38,10 @@ const LoginWithEmailAndPasswordForm = ({
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    setCounter(LIMITED_SECOND_FOR_FORGET_PWD)
+    setCounter(LIMITED_COUNTER_FOR_FORGET_PWD)
   }, [forgotPassword])
 
-  const createOTPHandler = () => {
+  const createOTP = () => {
     var digits = '0123456789'
     let OTP = ''
     for (let i = 0; i < 6; i++) {
@@ -56,13 +56,13 @@ const LoginWithEmailAndPasswordForm = ({
     return OTP
   }
 
-  const sendOTPHandler = async (option) => {
+  const sendOTP = async (option) => {
     try {
       await fetch(`${apiURL}/register/verify`, {
         method: 'POST',
         body: JSON.stringify({
           email: userEmailAndPasswordInput.email,
-          otp: createOTPHandler(),
+          otp: createOTP(),
           option,
         }),
         headers: {
@@ -74,30 +74,29 @@ const LoginWithEmailAndPasswordForm = ({
     }
   }
 
-  // Call send verify code function to user's phone and set re-send button count back 60s for re-sending
-  const onSubmitHandler = (option) => {
-    sendOTPHandler(option)
+  const onSubmitOTP = (option) => {
+    sendOTP(option)
     setIsSentVerifyCode(true)
-    counterHandler()
+    counterWhenSubmit()
   }
 
-  const counterHandler = () => {
+  const counterWhenSubmit = () => {
     let interval = setInterval(() => {
       setCounter((prev) => {
-        if (prev > 0) {
-          return prev - 1
-        }
+        let isCounterGreaterThanZero = prev > 0
+
+        if (isCounterGreaterThanZero) return prev - 1
+
         clearInterval(interval)
         setIsSentVerifyCode(false)
         return forgotPassword
-          ? LIMITED_SECOND_FOR_FORGET_PWD
-          : LIMITED_SECOND_FOR_SIGNUP
+          ? LIMITED_COUNTER_FOR_FORGET_PWD
+          : LIMITED_COUNTER_FOR_SIGNUP
       })
     }, 1000)
   }
 
-  // Sign up or Sign in with email and password
-  const loginWithEmailAndPasswordHandler = async () => {
+  const loginWithEmailAndPassword = async () => {
     console.log('loading true')
     setLoading(true)
     try {
@@ -114,12 +113,11 @@ const LoginWithEmailAndPasswordForm = ({
         })
 
         const data = await res.json()
+        const isLoginSuccess = data.success
 
-        console.log(data)
-
-        if (data.success) {
+        if (isLoginSuccess) {
           Cookies.set('token', data.accessToken, { expires: 365 })
-          return dispatchAndNavigateHandler({
+          return dispatchAndNavigate({
             ...data.user,
             accessToken: data.accessToken,
             admin: data.admin,
@@ -129,13 +127,16 @@ const LoginWithEmailAndPasswordForm = ({
         return !data.success && setInvalidEmailOrPassword(data.message)
       }
 
-      if (verifyOTP.input !== verifyOTP.create)
-        return setInvalidOTP('Mã xác minh không hợp lệ')
+      const isMatchOTP = verifyOTP.input === verifyOTP.create
+      if (!isMatchOTP) return setInvalidOTP('Mã xác minh không hợp lệ')
 
+      const userDefaultAvatar =
+        'https://firebasestorage.googleapis.com/v0/b/f8clone-3e404.appspot.com/o/uploads%2Fnobody_m.256x256.jpg?alt=media&token=8e617e21-795f-45ce-8340-955a5290e66f'
       await fetch(`${apiURL}/register/`, {
         method: 'POST',
         body: JSON.stringify({
           fullName,
+          photoURL: userDefaultAvatar,
           email: userEmailAndPasswordInput.email,
           password: userEmailAndPasswordInput.password,
           activated: true,
@@ -153,22 +154,21 @@ const LoginWithEmailAndPasswordForm = ({
         }
       })
 
-      isLoginHandler()
+      isLogin()
     } catch (error) {
       console.log(error)
     } finally {
-      console.log('loading false')
       setLoading(false)
     }
   }
 
-  const isValidEmailHandler = (email) => {
+  const isValidEmail = (email) => {
     const regex = /\S+@\S+\.\S+/
     return regex.test(email)
   }
 
-  const checkUserEmailExistHandler = async (e) => {
-    if (e.target.value && isValidEmailHandler(e.target.value)) {
+  const checkUserEmailExist = async (e) => {
+    if (isValidEmail(e.target.value)) {
       const res = await fetch(`${apiURL}/login/check-email`, {
         method: 'POST',
         body: JSON.stringify({ email: e.target.value }),
@@ -198,34 +198,37 @@ const LoginWithEmailAndPasswordForm = ({
     e.target.value.length === 0 && setValidateEmail(null)
   }
 
-  const validateFullNameHandler = () => {
-    if (fullName.length === 0) {
+  const handleValidateFullName = () => {
+    const isEmptyFullNameInput = fullName.length === 0
+    const isValidFullNameInput =
+      fullName.length > 1 && !fullName.match('[a-zA-Z][a-zA-Z ]{2,}')
+
+    if (isEmptyFullNameInput) {
       setValidateFullName('Tên không được để trống')
-    } else if (fullName.length === 1) {
-      setValidateFullName('Tên của bạn không hợp lệ')
-    } else {
+    } else if (isValidFullNameInput) {
       setValidateFullName(null)
+    } else {
+      setValidateFullName('Tên của bạn không hợp lệ')
     }
   }
 
   useEffect(() => {
-    const disableHandler = () => {
+    const disable = () => {
       if (!isLogin) {
         return (
           fullName.trim().indexOf(' ') === -1 ||
           validateFullName !== null ||
-          !isValidEmailHandler(userEmailAndPasswordInput.email) ||
+          !isValidEmail(userEmailAndPasswordInput.email) ||
           userEmailAndPasswordInput.password.length < 8 ||
           validateEmail !== null
         )
       }
       return (
-        !isValidEmailHandler(userEmailAndPasswordInput.email) ||
-        validateEmail !== null
+        !isValidEmail(userEmailAndPasswordInput.email) || validateEmail !== null
       )
     }
 
-    setDisabled(disableHandler())
+    setDisabled(disable())
   }, [
     fullName,
     isLogin,
@@ -258,7 +261,7 @@ const LoginWithEmailAndPasswordForm = ({
                   setValidateFullName(null)
                 },
               }}
-              onBlur={() => validateFullNameHandler()}
+              onBlur={handleValidateFullName}
               inValid={validateFullName}
             />
           )}
@@ -268,9 +271,9 @@ const LoginWithEmailAndPasswordForm = ({
             type={'email'}
             isLogin={isLogin}
             placeholder={'Địa chỉ email'}
-            onClick={() => switchPhoneAndEmailHandler('phone')}
+            onClick={() => switchPhoneAndEmail('phone')}
             onChange={{
-              input: checkUserEmailExistHandler,
+              input: checkUserEmailExist,
             }}
             maxLength={50}
             inValid={validateEmail}
@@ -290,7 +293,7 @@ const LoginWithEmailAndPasswordForm = ({
               e.keyCode === 13 &&
               validateEmail === null &&
               userEmailAndPasswordInput.password.length >= 8 &&
-              loginWithEmailAndPasswordHandler()
+              loginWithEmailAndPassword()
             }
             inValid={invalidEmailOrPassword}
           />
@@ -311,11 +314,11 @@ const LoginWithEmailAndPasswordForm = ({
                   }),
               }}
               disabled={disabled}
-              onClick={() => onSubmitHandler('signUp')}
+              onClick={() => onSubmitOTP('signUp')}
               onKeyUp={(e) =>
                 e.keyCode === 13 &&
                 verifyOTP.input.length === 6 &&
-                loginWithEmailAndPasswordHandler()
+                loginWithEmailAndPassword()
               }
               inputDisabled={!isSendVerifyCode}
               inValid={invalidOTP}
@@ -329,7 +332,7 @@ const LoginWithEmailAndPasswordForm = ({
                   ? styles.logInButton
                   : `${styles.logInButton} ${styles.disabled}`
               }
-              onClick={loginWithEmailAndPasswordHandler}
+              onClick={loginWithEmailAndPassword}
             >
               <span>Đăng ký</span>
             </div>
@@ -343,7 +346,7 @@ const LoginWithEmailAndPasswordForm = ({
                   ? styles.logInButton
                   : `${styles.logInButton} ${styles.disabled}`
               }
-              onClick={loginWithEmailAndPasswordHandler}
+              onClick={loginWithEmailAndPassword}
             >
               {loading && (
                 <Spinner
@@ -359,11 +362,11 @@ const LoginWithEmailAndPasswordForm = ({
       {forgotPassword && (
         <AuthForgetPassword
           setForgotPassword={setForgotPassword}
-          checkUserEmailExistHandler={checkUserEmailExistHandler}
+          checkUserEmailExist={checkUserEmailExist}
           counter={counter}
           validateEmail={validateEmail}
           email={userEmailAndPasswordInput.email}
-          isValidEmailHandler={isValidEmailHandler}
+          isValidEmail={isValidEmail}
           verifyOTP={verifyOTP}
           invalidOTP={invalidOTP}
           setInvalidOTP={setInvalidOTP}
@@ -388,7 +391,7 @@ const LoginWithEmailAndPasswordForm = ({
               }
             })
           }
-          onSubmitHandler={() => onSubmitHandler('forgotPwd')}
+          onSubmitOTP={() => onSubmitOTP('forgotPwd')}
         />
       )}
     </>

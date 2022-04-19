@@ -13,9 +13,9 @@ const LearningContextProvider = ({ children }) => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const [show, setShow] = useState(true) //Show menu track
-  const [active, setActive] = useState(null) //Is Chosen lesson
-  const [locked, setLocked] = useState(null) //lock lesson
+  const [isShowMenuTrack, setIsShowMenuTrack] = useState(true)
+  const [chosenLesson, setChosenLesson] = useState(null)
+  const [lockedLesson, setLockedLesson] = useState(null)
   const [searchParams, setSearchParams] = useSearchParams()
   const [query, setQuery] = useState(searchParams.get('id'))
   const [play, setPlay] = useState(false)
@@ -23,44 +23,9 @@ const LearningContextProvider = ({ children }) => {
   const [course, setCourse] = useState(null)
   const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
-    const controller = new AbortController()
-
-    ;(async () => {
-      try {
-        setLoading(true)
-        const res = await fetch(`${apiURL}${location.pathname}`, {
-          signal: controller.signal,
-        })
-        const data = await res.json()
-
-        setCourse(data)
-
-        // getLearningEpisode(data.episode)
-      } catch (error) {
-        console.log(error.message)
-      } finally {
-        setLoading(false)
-      }
-    })()
-
-    return () => controller?.abort()
-  }, [])
-
-  // const getLearningEpisode = episodes => {
-  //   const learningEpisode = episodes.find(episode => episode.learning)
-  //   const learningLesson = learningEpisode.lessons.find(
-  //     lesson => lesson.learned === false
-  //   )
-
-  //   activeHandler(learningLesson.id) // Set default lesson active state
-  //   setVideoId(learningLesson.videoId)
-  //   createParams(learningLesson.id)
-  // }
-
-  const activeHandler = async (id) => {
+  const active = async (id) => {
     try {
-      setActive(id)
+      setIsShowMenuTrack(id)
       createParams(id)
       await fetch(`${apiURL}${location.pathname}?id=${query}`)
     } catch (error) {
@@ -68,17 +33,12 @@ const LearningContextProvider = ({ children }) => {
     }
   }
 
-  const playVideoHandler = (lessonId, lessonVideoId) => {
-    showHandler()
+  const playVideo = (lessonId, lessonVideoId) => {
+    setIsShowMenuTrack((prev) => !prev)
     setPlay(true)
-    activeHandler(lessonId)
+    active(lessonId)
     setVideoId(lessonVideoId)
     createParams(lessonId)
-  }
-
-  const showHandler = () => {
-    console.log("I'm fucking running")
-    setShow((prev) => !prev)
   }
 
   const createParams = (id) => {
@@ -92,7 +52,7 @@ const LearningContextProvider = ({ children }) => {
     setQuery(id)
   }
 
-  const onEndHandler = async () => {
+  const onEnd = async () => {
     try {
       console.log('Video End')
       await fetch(`${apiURL}${location.pathname}?id=${query}`)
@@ -101,18 +61,19 @@ const LearningContextProvider = ({ children }) => {
     }
   }
 
+  const handleIsShowMenuTrack = () => setIsShowMenuTrack((prev) => !prev)
+
   const value = {
     course,
-    show,
-    showHandler,
-    active,
-    activeHandler,
-    locked,
-    playVideoHandler,
+    isShowMenuTrack,
+    chosenLesson,
+    lockedLesson,
+    playVideo,
+    handleIsShowMenuTrack,
     videoId,
     play,
     setPlay,
-    onEndHandler,
+    onEnd,
     loading,
   }
 
@@ -124,19 +85,3 @@ const LearningContextProvider = ({ children }) => {
 }
 
 export default LearningContextProvider
-
-// 1) !learned && locked && !active -> disabled + icon lock
-// 2) !learned && !locked && !active -> normal + icon none
-// 3) learned && !locked && !active -> normal + icon tick
-// 4) learned && !locked && active -> active + icon tick
-// 5) !learned && !locked && active -> active + icon none
-
-// (*) episode[0].lessons[0] khong bao gio bi locked && default active
-
-// - learned = true|false -->> OK
-// - active = check by id of lesson (active when !locked)
-// - locked = [lesson.id except episode[0].lessons[0]] -
-// locked.includes(lesson.id) => locked
-// onEnd(() => setLocked(prev => prev.shift())
-
-// episode is learning => episode.lesson => !learned => active

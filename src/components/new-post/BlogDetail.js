@@ -7,8 +7,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import BlogSameAuthor from './BlogSameAuthor'
 import BlogHighlights from './BlogHighlights'
 import Topics from '../blog/Topics'
-import noPhotoUser from '../../asset/images/nobody_m.256x256.jpg'
-import timeSinceHandler from '../utils/timeSinceHandler/timeSinceHandler'
+import timeSince from '../utils/timeSince/timeSince'
 import { apiURL } from '../../context/constants'
 import Cookies from 'js-cookie'
 import { useSelector } from 'react-redux'
@@ -26,10 +25,11 @@ const BlogDetail = ({ blog, blogHighlight }) => {
 
   const [likeCount, setLikeCount] = useState(blog.likes)
   const [isLike, setIsLike] = useState(blog.likes.includes(user.userId))
-  const [showComment, setShowComment] = useState(false)
+  const [isShowComment, setIsShowComment] = useState(false)
   const [commentData, setCommentData] = useState(blog.comments)
   const [bookmarkData, setBookmarkData] = useState(null)
-  const [showVerifyBar, setShowVerifyBar] = useState(false)
+  const [isShowVerifyBar, setIsShowVerifyBar] = useState(false)
+  const [tags, setTags] = useState(null)
 
   useEffect(() => {
     socket.on('comment', (comment) => {
@@ -40,14 +40,14 @@ const BlogDetail = ({ blog, blogHighlight }) => {
   }, [])
 
   useEffect(() => {
-    document.body.style.overflow = showComment ? 'hidden' : 'overlay'
-  }, [showComment])
+    document.body.style.overflow = isShowComment ? 'hidden' : 'overlay'
+  }, [isShowComment])
 
   useEffect(() => {
     setIsLike(likeCount.includes(user.userId))
   }, [user.userId, likeCount])
 
-  const likeHandler = async () => {
+  const like = async () => {
     try {
       const token = Cookies.get('token')
       if (!token) return navigate('/login')
@@ -63,6 +63,27 @@ const BlogDetail = ({ blog, blogHighlight }) => {
 
       const data = await res.json()
       data.likes.length === 0 ? setLikeCount([]) : setLikeCount(data.likes)
+      addNotification(data)
+      console.log(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const addNotification = async (data) => {
+    try {
+      await fetch(`${apiURL}/notification/new-notification`, {
+        method: 'POST',
+        body: JSON.stringify({
+          description: 'đã yêu thích bài viết của bạn.',
+          slug: data.slug,
+          notifiedBy: user.userId,
+          sendFor: user.userId === data.postedBy ? null : data.postedBy,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
     } catch (error) {
       console.log(error)
     }
@@ -98,7 +119,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
     return () => controller?.abort()
   }, [])
 
-  const bookmarkHandler = async (blogId) => {
+  const bookmark = async (blogId) => {
     try {
       const token = Cookies.get('token')
       if (!token) return navigate('/login')
@@ -119,7 +140,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
     }
   }
 
-  const verifyBlogHandler = async (isVerified, blogId) => {
+  const verifyBlog = async (isVerified, blogId) => {
     try {
       await fetch(`${apiURL}/admin/blog/verify`, {
         method: 'POST',
@@ -131,26 +152,44 @@ const BlogDetail = ({ blog, blogHighlight }) => {
     } catch (error) {
       console.log(error)
     } finally {
-      setShowVerifyBar(false)
+      setIsShowVerifyBar(false)
       navigate('/admin/blog')
     }
   }
 
+  useEffect(() => {
+    const controller = new AbortController()
+
+    ;(async () => {
+      try {
+        const res = await fetch(`${apiURL}/blog/get-tag`, {
+          signal: controller.signal,
+        })
+        const data = await res.json()
+        setTags(data)
+      } catch (error) {
+        console.log(error.message)
+      }
+    })()
+
+    return () => controller?.abort()
+  }, [])
+
   return (
     <Row className={styles.wrapper}>
-      {!blog.isVerified && user.isAdmin && !showVerifyBar && (
+      {!blog.isVerified && user.isAdmin && !isShowVerifyBar && (
         <div className={styles.verifyBar}>
           <MainButton
             primary={true}
             className={`${styles.button} ${styles.cancel}`}
-            onClick={() => verifyBlogHandler(false, blog._id)}
+            onClick={() => verifyBlog(false, blog._id)}
           >
             Không xét duyệt
           </MainButton>
           <MainButton
             primary={true}
             className={styles.button}
-            onClick={() => verifyBlogHandler(true, blog._id)}
+            onClick={() => verifyBlog(true, blog._id)}
           >
             Xét duyệt bài viết
           </MainButton>
@@ -173,8 +212,8 @@ const BlogDetail = ({ blog, blogHighlight }) => {
             commentData={commentData}
             isLike={isLike}
             likeCount={likeCount.length}
-            likeHandler={likeHandler}
-            setShowComment={() => setShowComment(true)}
+            like={like}
+            setShowComment={() => setIsShowComment(true)}
             blogId={blog._id}
             setCommentData={setCommentData}
           />
@@ -184,26 +223,22 @@ const BlogDetail = ({ blog, blogHighlight }) => {
         <h3 className={styles.heading}>{blog.title}</h3>
         <div className={styles.header}>
           <div className={styles.user}>
-            <Image
-              src={
-                blog.postedBy.photoURL ? blog.postedBy.photoURL : noPhotoUser
-              }
-              className={styles.avatar}
-            />
+            <Link to={`/${blog.postedBy.slug}`}>
+              <Image src={blog.postedBy.photoURL} className={styles.avatar} />
+            </Link>
             <div className={styles.info}>
-              <p className={styles.name}>{blog.postedBy.fullName}</p>
+              <Link to={`/${blog.postedBy.slug}`}>
+                <p className={styles.name}>{blog.postedBy.fullName}</p>
+              </Link>
               <p className={styles.time}>
-                {timeSinceHandler(blog.createdAt)}{' '}
+                {timeSince(blog.createdAt)}{' '}
                 <span className={styles.dot}>.</span>
                 {blog.readingTime} phút đọc
               </p>
             </div>
           </div>
           <div className={styles.actions}>
-            <div
-              className={styles.bookmark}
-              onClick={() => bookmarkHandler(blog._id)}
-            >
+            <div className={styles.bookmark} onClick={() => bookmark(blog._id)}>
               <i
                 className={
                   bookmarkData && bookmarkData.includes(blog._id)
@@ -283,15 +318,15 @@ const BlogDetail = ({ blog, blogHighlight }) => {
           commentData={commentData}
           isLike={isLike}
           likeCount={likeCount.length}
-          likeHandler={likeHandler}
-          setShowComment={() => setShowComment(true)}
+          like={like}
+          setShowComment={() => setIsShowComment(true)}
           blogId={blog._id}
           setCommentData={setCommentData}
         />
         {blog.tags && (
           <div className={styles.tags}>
-            {['HTML', 'CSS', 'ReactJS', 'NodeJS'].map((tag) => (
-              <Link to="/" key={tag}>
+            {blog.tags.map((tag) => (
+              <Link to={`/blog/tag/${tag}`} key={tag}>
                 {tag}
               </Link>
             ))}
@@ -300,7 +335,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
 
         <BlogSameAuthor postedBy={blog.postedBy._id} blogId={blog._id} />
         <BlogHighlights blogHighlight={blogHighlight} />
-        <Topics />
+        {tags && tags.length > 0 && <Topics tags={tags} />}
       </Col>
     </Row>
   )

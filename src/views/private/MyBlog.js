@@ -8,7 +8,7 @@ import styles from './MyBlog.module.scss'
 import { Link, useLocation } from 'react-router-dom'
 import { apiURL } from '../../context/constants'
 import Cookies from 'js-cookie'
-import timeSinceHandler from '../../components/utils/timeSinceHandler/timeSinceHandler'
+import timeSince from '../../components/utils/timeSince/timeSince'
 import Tabs from '../../components/utils/tabs/Tabs'
 
 const Footer = React.lazy(() =>
@@ -17,8 +17,6 @@ const Footer = React.lazy(() =>
 
 const MyBlog = () => {
   const location = useLocation()
-
-  console.log(location.pathname)
 
   const [tabs, setTabs] = useState(location.pathname)
   const [myBlog, setMyBlog] = useState([])
@@ -129,7 +127,7 @@ const MyBlog = () => {
                             </h3>
                             <div className={styles.author}>
                               <Link to={`/new-post/${blog._id}`}>
-                                Chỉnh sửa {timeSinceHandler(blog.createdAt)}
+                                Chỉnh sửa {timeSince(blog.createdAt)}
                               </Link>
                               <span className={styles.dot}>.</span>
                               <span>{blog.readingTime} phút đọc</span>
@@ -166,7 +164,7 @@ const MyBlog = () => {
                             </h3>
                             <div className={styles.author}>
                               <a href={`/blog/${blog.slug}`}>
-                                Chỉnh sửa {timeSinceHandler(blog.createdAt)}
+                                Chỉnh sửa {timeSince(blog.createdAt)}
                               </a>
                               <span className={styles.dot}>.</span>
                               <span>{blog.readingTime} phút đọc</span>

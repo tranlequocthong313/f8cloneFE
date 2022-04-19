@@ -4,26 +4,26 @@ import { LearningContext } from '../../context/LearningContext'
 import styles from './VideoPlayer.module.scss'
 
 const VideoPlayer = ({ videoId, onClick, page }) => {
-  const opts = {
+  const { play, onEnd } = useContext(LearningContext)
+
+  const youtubeVideoOptions = {
     playerVars: {
       autoplay: 1,
     },
   }
 
-  const LearningCtx = useContext(LearningContext)
-
   return (
     <div className={styles.wrapper}>
       {page !== 'course-slug' && (
         <>
-          {LearningCtx.play && (
+          {play && (
             <Youtube
-              videoId={videoId || LearningCtx.videoId}
-              opts={opts}
-              onEnd={LearningCtx.onEndHandler}
+              videoId={videoId}
+              opts={youtubeVideoOptions}
+              onEnd={onEnd}
             />
           )}
-          {!LearningCtx.play && (
+          {!play && (
             <div className={styles.player} onClick={onClick}>
               <div className={styles.noVideo}>
                 <div className={styles.playButton}>
@@ -34,7 +34,9 @@ const VideoPlayer = ({ videoId, onClick, page }) => {
           )}
         </>
       )}
-      {page === 'course-slug' && <Youtube videoId={videoId} opts={opts} />}
+      {page === 'course-slug' && (
+        <Youtube videoId={videoId} opts={youtubeVideoOptions} />
+      )}
     </div>
   )
 }

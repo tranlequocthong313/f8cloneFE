@@ -46,10 +46,7 @@ const FieldInput = ({
             <div className={styles.description}>{description}</div>
             <form className={styles.photoForm}>
               <div className={styles.avatar} onClick={onShow}>
-                <img
-                  src={preview ? preview : photoURL ? photoURL : noPhotoURL}
-                  alt=""
-                />
+                <img src={preview ? preview : photoURL} alt="" />
               </div>
               <label htmlFor="avatar">
                 <div

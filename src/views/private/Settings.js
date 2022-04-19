@@ -39,11 +39,9 @@ const Settings = () => {
     document.title = 'Thiết lập về tôi tại F8'
   }, [])
 
-  const editModeHandler = (name) => {
-    if (!name) return
-
+  const editMode = (name) => {
     const isShow = isEditMode.includes(name)
-    console.log(isShow)
+
     isShow
       ? setIsEditMode((prev) => prev.filter((item) => item !== name))
       : setIsEditMode((prev) => [...prev, name])
@@ -55,7 +53,7 @@ const Settings = () => {
     }
   }, [image])
 
-  const getNewAvatarHandler = (e) => {
+  const getNewAvatar = (e) => {
     const image = URL.createObjectURL(e.target.files[0])
     setImage((prev) => {
       return {
@@ -66,7 +64,7 @@ const Settings = () => {
     })
   }
 
-  const changeNameHandler = async () => {
+  const changeName = async () => {
     try {
       const token = Cookies.get('token')
 
@@ -87,16 +85,17 @@ const Settings = () => {
     } catch (error) {
       console.log(error)
     } finally {
-      editModeHandler('name')
+      editMode('name')
     }
   }
 
-  const changeAvatarHandler = () => {
+  const changeAvatar = () => {
     try {
       const token = Cookies.get('token')
       if (!token) return
 
-      if (image.avatar) {
+      const hasAvatarImage = image.avatar
+      if (hasAvatarImage) {
         const storageRef = ref(
           storage,
           `uploads/${image.avatar && image.avatar.name}`,
@@ -132,11 +131,11 @@ const Settings = () => {
     } catch (error) {
       console.log(error)
     } finally {
-      editModeHandler('avatar')
+      editMode('avatar')
     }
   }
 
-  const bioChangeHandler = async () => {
+  const bioChange = async () => {
     try {
       const token = Cookies.get('token')
 
@@ -163,11 +162,11 @@ const Settings = () => {
     } catch (error) {
       console.log(error)
     } finally {
-      editModeHandler('bio')
+      editMode('bio')
     }
   }
 
-  const socialChangeHandler = async (socialName) => {
+  const socialChange = async (socialName) => {
     try {
       const token = Cookies.get('token')
 
@@ -198,7 +197,7 @@ const Settings = () => {
     } catch (error) {
       console.log(error)
     } finally {
-      editModeHandler(socialName)
+      editMode(socialName)
     }
   }
 
@@ -224,9 +223,9 @@ const Settings = () => {
                   placeholder={'Thêm tên của bạn'}
                   maxLength={50}
                   disabled={!isEditMode.includes('name')}
-                  onShow={() => editModeHandler('name')}
+                  onShow={() => editMode('name')}
                   isEditMode={isEditMode.includes('name')}
-                  onSave={changeNameHandler}
+                  onSave={changeName}
                 />
                 <FieldInput
                   title={'Bio'}
@@ -238,9 +237,9 @@ const Settings = () => {
                   placeholder={'Thêm giới thiệu'}
                   maxLength={150}
                   disabled={!isEditMode.includes('bio')}
-                  onShow={() => editModeHandler('bio')}
+                  onShow={() => editMode('bio')}
                   isEditMode={isEditMode.includes('bio')}
-                  onSave={bioChangeHandler}
+                  onSave={bioChange}
                 />
                 <FieldInput
                   title={'Avatar'}
@@ -250,10 +249,10 @@ const Settings = () => {
                   photoURL={user.photoURL}
                   preview={image.preview}
                   isImage={true}
-                  onFileChange={getNewAvatarHandler}
-                  onShow={() => editModeHandler('avatar')}
+                  onFileChange={getNewAvatar}
+                  onShow={() => editMode('avatar')}
                   isEditMode={isEditMode.includes('avatar')}
-                  onSave={changeAvatarHandler}
+                  onSave={changeAvatar}
                 />
                 <FieldInput
                   title={'Email'}
@@ -301,9 +300,9 @@ const Settings = () => {
                   }
                   placeholder={'Eg. https://www.facebook.com/hoclaptrinhf8'}
                   disabled={!isEditMode.includes('fb')}
-                  onShow={() => editModeHandler('fb')}
+                  onShow={() => editMode('fb')}
                   isEditMode={isEditMode.includes('fb')}
-                  onSave={() => socialChangeHandler('fb')}
+                  onSave={() => socialChange('fb')}
                   value={social.fb}
                 />
                 <FieldInput
@@ -319,9 +318,9 @@ const Settings = () => {
                     })
                   }
                   disabled={!isEditMode.includes('youtube')}
-                  onShow={() => editModeHandler('youtube')}
+                  onShow={() => editMode('youtube')}
                   isEditMode={isEditMode.includes('youtube')}
-                  onSave={() => socialChangeHandler('youtube')}
+                  onSave={() => socialChange('youtube')}
                   value={social.youtube}
                 />
                 <FieldInput
@@ -337,9 +336,9 @@ const Settings = () => {
                     })
                   }
                   disabled={!isEditMode.includes('linkedin')}
-                  onShow={() => editModeHandler('linkedin')}
+                  onShow={() => editMode('linkedin')}
                   isEditMode={isEditMode.includes('linkedin')}
-                  onSave={() => socialChangeHandler('linkedin')}
+                  onSave={() => socialChange('linkedin')}
                   value={social.linkedin}
                 />
                 <FieldInput
@@ -355,9 +354,9 @@ const Settings = () => {
                     })
                   }
                   disabled={!isEditMode.includes('instagram')}
-                  onShow={() => editModeHandler('instagram')}
+                  onShow={() => editMode('instagram')}
                   isEditMode={isEditMode.includes('instagram')}
-                  onSave={() => socialChangeHandler('instagram')}
+                  onSave={() => socialChange('instagram')}
                   value={social.instagram}
                 />
                 <FieldInput
@@ -373,9 +372,9 @@ const Settings = () => {
                     })
                   }
                   disabled={!isEditMode.includes('twitter')}
-                  onShow={() => editModeHandler('twitter')}
+                  onShow={() => editMode('twitter')}
                   isEditMode={isEditMode.includes('twitter')}
-                  onSave={() => socialChangeHandler('twitter')}
+                  onSave={() => socialChange('twitter')}
                   value={social.twitter}
                 />
               </div>

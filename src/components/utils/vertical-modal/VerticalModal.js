@@ -17,14 +17,14 @@ const VerticalModal = ({
 
   const handleShow = () => setShow((prev) => !prev)
 
-  // Listen window resize to hide mobile nav on computer
   useEffect(() => {
-    const resizeHandler = () => {
-      if (window.innerWidth >= 1024) return setShow(false)
+    const resize = () => {
+      const isWidthGreaterThanOrEqual1024px = window.innerWidth >= 1024
+      if (isWidthGreaterThanOrEqual1024px) return setShow(false)
     }
-    hideOnComputer && window.addEventListener('resize', resizeHandler)
+    hideOnComputer && window.addEventListener('resize', resize)
 
-    return () => window.removeEventListener('resize', resizeHandler)
+    return () => window.removeEventListener('resize', resize)
   }, [hideOnComputer])
 
   return (

@@ -6,24 +6,23 @@ import { auth } from '../../../firebase/config'
 import FormGroup from '../../utils/auth-form/FormGroup'
 import { apiURL } from '../../../context/constants'
 import Cookies from 'js-cookie'
+import userDefaultPhoto from '../../../asset/images/nobody_m.256x256.jpg'
 
 const LoginWithPhoneNumberForm = ({
-  switchPhoneAndEmailHandler,
-  dispatchAndNavigateHandler,
+  switchPhoneAndEmail,
+  dispatchAndNavigate,
   isLogin,
 }) => {
-  // Default country code and name is Vietnam because of website for Vietnamese
   const COUNTRY_NAME_DEFAULT = 'vn'
   const COUNTRY_CODE_DEFAULT = '84'
 
-  // Website F8 uses 60s for the resend button
-  const LIMITED_SECOND = 60
+  const LIMITED_COUNTER = 60
 
   const [countryName, setCountryName] = useState(COUNTRY_NAME_DEFAULT)
   const [countryCode, setCountryCode] = useState(COUNTRY_CODE_DEFAULT)
   const [isSendVerifyCode, setIsSentVerifyCode] = useState(false)
   const [verifyOTP, setVerifyOTP] = useState('')
-  const [counter, setCounter] = useState(LIMITED_SECOND)
+  const [counter, setCounter] = useState(LIMITED_COUNTER)
   const [userPhoneNumber, setUserPhoneNumber] = useState('')
   const [fullName, setFullName] = useState('')
   const [validatePhoneNumber, setValidatePhoneNumber] = useState(null)
@@ -32,7 +31,7 @@ const LoginWithPhoneNumberForm = ({
   const [disabled, setDisabled] = useState(true)
   const [loading, setLoading] = useState(false)
 
-  const getCountryNameHandler = (e) => {
+  const getCountryName = (e) => {
     const countryNameFormatted = e.target.value.split(' ')[0].toLowerCase()
     const countryCodeFormatted = e.target.value.split(' +')[1]
 
@@ -40,28 +39,26 @@ const LoginWithPhoneNumberForm = ({
     setCountryCode(countryCodeFormatted)
   }
 
-  // Call send verify code function to user's phone and set re-send button count back 60s for re-sending
-  const onSubmitHandler = () => {
-    sendOTPCodeHandler()
+  const onSubmitOTP = () => {
+    sendOTPCode()
     setIsSentVerifyCode(true)
-    counterHandler()
+    counterWhenSubmit()
   }
 
-  const counterHandler = () => {
+  const counterWhenSubmit = () => {
     let interval = setInterval(() => {
       setCounter((prev) => {
-        if (prev > 0) {
-          return prev - 1
-        }
+        const isCounterGreaterThanZero = prev > 0
+        if (isCounterGreaterThanZero) return prev - 1
+
         clearInterval(interval)
         setIsSentVerifyCode(false)
-        return LIMITED_SECOND
+        return LIMITED_COUNTER
       })
     }, 1000)
   }
 
-  const sendOTPCodeHandler = async () => {
-    // Auto recaptcha verify by firebase don't need show recaptcha widget
+  const sendOTPCode = async () => {
     window.recaptchaVerifier = new RecaptchaVerifier(
       'recaptcha-container',
       {
@@ -70,7 +67,6 @@ const LoginWithPhoneNumberForm = ({
       auth,
     )
 
-    // Format phone number to send to firebase
     const phoneNumber = `+${countryCode}${userPhoneNumber}`
     const appVerifier = window.recaptchaVerifier
 
@@ -86,55 +82,15 @@ const LoginWithPhoneNumberForm = ({
     }
   }
 
-  // Verify OTP code firebase have been sent to user's phone if true then login
-  const validateOTPHandler = async () => {
+  const validateOTPGetUserDataIfTrue = async () => {
     try {
       setLoading(true)
       const result = await window.confirmationResult.confirm(verifyOTP)
 
       let user = await result.user
+      const hasUserData = user
 
-      if (user && isLogin) {
-        const res = await fetch(`${apiURL}/login/provider`, {
-          method: 'POST',
-          body: JSON.stringify({
-            phoneNumber: userPhoneNumber,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-
-        const data = await res.json()
-        console.log(data)
-        Cookies.set('token', data.accessToken, { expires: 365 })
-
-        dispatchAndNavigateHandler({
-          ...data.user,
-          accessToken: data.accessToken,
-        })
-      } else if (user && !isLogin) {
-        const res = await fetch(`${apiURL}/register`, {
-          method: 'POST',
-          body: JSON.stringify({
-            fullName,
-            phoneNumber: userPhoneNumber,
-            activated: true,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-
-        const data = await res.json()
-
-        Cookies.set('token', data.accessToken, { expires: 365 })
-
-        dispatchAndNavigateHandler({
-          ...data.user,
-          accessToken: data.accessToken,
-        })
-      }
+      hasUserData && signInOrSignUp()
     } catch (error) {
       if (error.code === 'auth/invalid-verification-code')
         setInvalidOTP('Mã xác minh không hợp lệ')
@@ -143,11 +99,56 @@ const LoginWithPhoneNumberForm = ({
     }
   }
 
-  const checkNumberPhoneHandler = async (e) => {
+  const signInOrSignUp = async () => {
+    if (isLogin) {
+      const res = await fetch(`${apiURL}/login/provider`, {
+        method: 'POST',
+        body: JSON.stringify({
+          phoneNumber: userPhoneNumber,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      const data = await res.json()
+      Cookies.set('token', data.accessToken, { expires: 365 })
+      dispatchAndNavigate({
+        ...data.user,
+        accessToken: data.accessToken,
+      })
+    } else {
+      const userDefaultAvatar =
+        'https://firebasestorage.googleapis.com/v0/b/f8clone-3e404.appspot.com/o/uploads%2Fnobody_m.256x256.jpg?alt=media&token=8e617e21-795f-45ce-8340-955a5290e66f'
+
+      const res = await fetch(`${apiURL}/register`, {
+        method: 'POST',
+        body: JSON.stringify({
+          fullName,
+          photoURL: userDefaultAvatar,
+          phoneNumber: userPhoneNumber,
+          activated: true,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      const data = await res.json()
+      Cookies.set('token', data.accessToken, { expires: 365 })
+      dispatchAndNavigate({
+        ...data.user,
+        accessToken: data.accessToken,
+      })
+    }
+  }
+
+  const checkNumberPhone = async (e) => {
     try {
       const length = e.target.value.trim().length
+      const isPhoneNumberInputLengthEqualTen = length === 10
 
-      if (length === 10) {
+      if (isPhoneNumberInputLengthEqualTen) {
         const res = await fetch(`${apiURL}/login/phone-number`, {
           method: 'POST',
           body: JSON.stringify({ phoneNumber: e.target.value }),
@@ -166,27 +167,29 @@ const LoginWithPhoneNumberForm = ({
           : setValidatePhoneNumber(data.used ? data.used : null)
       }
 
-      length === 0 && setValidatePhoneNumber(null)
+      const isPhoneNumberInputLengthEqualZero = length === 0
+      isPhoneNumberInputLengthEqualZero && setValidatePhoneNumber(null)
     } catch (error) {
       console.log(error)
     }
   }
 
-  const validateFullNameHandler = () => {
-    if (fullName.length === 0) {
+  const handleValidateFullName = () => {
+    const isEmptyFullNameInput = fullName.length === 0
+    const isValidFullNameInput =
+      fullName.length > 1 && !fullName.match('[a-zA-Z][a-zA-Z ]{2,}')
+
+    if (isEmptyFullNameInput) {
       setValidateFullName('Tên không được để trống')
-    } else if (
-      fullName.length === 1 ||
-      !fullName.match('[a-zA-Z][a-zA-Z ]{2,}')
-    ) {
-      setValidateFullName('Tên của bạn không hợp lệ')
-    } else {
+    } else if (isValidFullNameInput) {
       setValidateFullName(null)
+    } else {
+      setValidateFullName('Tên của bạn không hợp lệ')
     }
   }
 
   useEffect(() => {
-    const disableHandler = () => {
+    const disableSendOTPButton = () => {
       if (!isLogin) {
         return (
           fullName.trim().indexOf(' ') === -1 ||
@@ -198,7 +201,7 @@ const LoginWithPhoneNumberForm = ({
       return userPhoneNumber.length !== 10 || validatePhoneNumber !== null
     }
 
-    setDisabled(disableHandler())
+    setDisabled(disableSendOTPButton())
   }, [
     fullName,
     isLogin,
@@ -208,7 +211,8 @@ const LoginWithPhoneNumberForm = ({
   ])
 
   useEffect(() => {
-    verifyOTP.length === 0 && setInvalidOTP(null)
+    const isEmptyOTPInput = verifyOTP.length === 0
+    isEmptyOTPInput && setInvalidOTP(null)
   }, [verifyOTP.length])
 
   return (
@@ -224,7 +228,7 @@ const LoginWithPhoneNumberForm = ({
               setValidateFullName(null)
             },
           }}
-          onBlur={() => validateFullNameHandler()}
+          onBlur={handleValidateFullName}
           inValid={validateFullName}
         />
       )}
@@ -235,10 +239,10 @@ const LoginWithPhoneNumberForm = ({
         isLogin={isLogin}
         phoneInput={true}
         maxLength={11}
-        onClick={() => switchPhoneAndEmailHandler('email')}
+        onClick={() => switchPhoneAndEmail('email')}
         onChange={{
-          selectCountry: getCountryNameHandler,
-          input: checkNumberPhoneHandler,
+          selectCountry: getCountryName,
+          input: checkNumberPhone,
         }}
         countryName={countryName}
         inValid={validatePhoneNumber}
@@ -252,10 +256,12 @@ const LoginWithPhoneNumberForm = ({
         counter={counter}
         disabled={disabled}
         inputDisabled={!isSendVerifyCode}
-        onClick={onSubmitHandler}
+        onClick={onSubmitOTP}
         inValid={invalidOTP}
         onKeyUp={(e) =>
-          e.keyCode === 13 && verifyOTP.length === 6 && validateOTPHandler()
+          e.keyCode === 13 &&
+          verifyOTP.length === 6 &&
+          validateOTPGetUserDataIfTrue()
         }
       />
       <div
@@ -264,7 +270,7 @@ const LoginWithPhoneNumberForm = ({
             ? styles.logInButton
             : `${styles.logInButton} ${styles.disabled}`
         }
-        onClick={validateOTPHandler}
+        onClick={validateOTPGetUserDataIfTrue}
       >
         {loading && (
           <Spinner

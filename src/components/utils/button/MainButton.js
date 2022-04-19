@@ -4,7 +4,7 @@ import styles from './MainButton.module.scss'
 const MainButton = ({ onClick, primary, outline, children, className }) => {
   return (
     <button
-      onClick={onClick}
+      onClick={onClick ? () => onClick() : null}
       className={`${
         primary
           ? `${styles.button} ${styles.primary}`

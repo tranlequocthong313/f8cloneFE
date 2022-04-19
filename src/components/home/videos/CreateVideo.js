@@ -16,25 +16,15 @@ const CreateVideo = () => {
     isSuccess: false,
     show: false,
   })
-  const [showModal, setShowModal] = useState(false)
+  const [isShowCreateModal, setIsShowCreateModal] = useState(false)
   const [isPopular, setIsPopular] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
-  const showModalHandler = () => setShowModal((prev) => !prev)
+  const showCreateVideoModal = () => setIsShowCreateModal((prev) => !prev)
 
-  const createStatusHandler = (isSuccess, show) => {
-    setCreateStatus((prev) => {
-      return {
-        ...prev,
-        isSuccess,
-        show,
-      }
-    })
-  }
-
-  const getYoutubeData = async () => {
-    showModalHandler()
-    setLoading(true)
+  const getYoutubeDataByAPI = async () => {
+    showCreateVideoModal()
+    setIsLoading(true)
     try {
       const res = await fetch(
         `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}&part=snippet,contentDetails,statistics,status`,
@@ -59,16 +49,22 @@ const CreateVideo = () => {
         isPopular,
       }
 
-      createVideoHandler(videoData)
+      createVideoByYoutubeAPIData(videoData)
     } catch (error) {
       console.log(error)
-      createStatus(false, true)
-      setLoading(false)
+      setCreateStatus((prev) => {
+        return {
+          ...prev,
+          isSuccess: false,
+          show: true,
+        }
+      })
+      setIsLoading(false)
       setIsPopular(false)
     }
   }
 
-  const createVideoHandler = async (videoData) => {
+  const createVideoByYoutubeAPIData = async (videoData) => {
     try {
       const res = await fetch(`${apiURL}/admin/video/create`, {
         method: 'POST',
@@ -81,12 +77,24 @@ const CreateVideo = () => {
       const data = await res.json()
 
       dispatch(createVideo({ videoData: data.video }))
-      createStatusHandler(true, true)
+      setCreateStatus((prev) => {
+        return {
+          ...prev,
+          isSuccess: true,
+          show: true,
+        }
+      })
     } catch (error) {
       console.log(error)
-      createStatusHandler(false, true)
+      setCreateStatus((prev) => {
+        return {
+          ...prev,
+          isSuccess: false,
+          show: true,
+        }
+      })
     } finally {
-      setLoading(false)
+      setIsLoading(false)
       setIsPopular(false)
     }
   }
@@ -96,14 +104,14 @@ const CreateVideo = () => {
       <MainButton
         outline={true}
         className={styles.videoCreate}
-        onClick={showModalHandler}
+        onClick={showCreateVideoModal}
       >
         <i className="fa-brands fa-youtube"></i>
         Tạo video
       </MainButton>
       <Modal
-        show={showModal}
-        onHide={showModalHandler}
+        show={isShowCreateModal}
+        onHide={showCreateVideoModal}
         className={styles.createModal}
       >
         <Modal.Header closeButton style={{ border: 'none' }}></Modal.Header>
@@ -131,14 +139,14 @@ const CreateVideo = () => {
         </Form>
         <Modal.Footer style={{ border: 'none' }}>
           <MainButton
-            onClick={getYoutubeData}
+            onClick={getYoutubeDataByAPI}
             primary={true}
             className={
-              !loading ? styles.button : `${styles.button} ${styles.disabled}`
+              !isLoading ? styles.button : `${styles.button} ${styles.disabled}`
             }
           >
             Thêm
-            {loading && (
+            {isLoading && (
               <Spinner
                 animation="border"
                 size="sm"
@@ -148,11 +156,11 @@ const CreateVideo = () => {
           </MainButton>
           <MainButton
             className={
-              !loading
+              !isLoading
                 ? `${styles.button} ${styles.cancel}`
                 : `${styles.button} ${styles.cancel} ${styles.disabled}`
             }
-            onClick={showModalHandler}
+            onClick={isShowCreateModal}
           >
             Hủy
           </MainButton>

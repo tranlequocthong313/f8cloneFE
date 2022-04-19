@@ -6,8 +6,8 @@ import wowEmoji from '../../../asset/images/wowemoji.png'
 import cryEmoji from '../../../asset/images/cryemoji.png'
 import angryEmoji from '../../../asset/images/angryemoji.png'
 
-const CommentReactionCounter = ({ showModalHandler, reactData }) => {
-  const checkEmojiHandler = emoji => {
+const CommentReactionCounter = ({ showModal, reactData }) => {
+  const checkEmoji = (emoji) => {
     switch (emoji) {
       case 'Thích':
         return { backgroundImage: `url(${likeEmoji})` }
@@ -32,14 +32,14 @@ const CommentReactionCounter = ({ showModalHandler, reactData }) => {
   }
 
   return (
-    <div className={styles.wrapper} onClick={showModalHandler}>
+    <div className={styles.wrapper} onClick={showModal}>
       <div className={styles.container}>
         {reactData &&
-          reactData.map(item => (
+          reactData.map((item) => (
             <div
               key={item._id}
               className={styles.icon}
-              style={checkEmojiHandler(item.emoji)}
+              style={checkEmoji(item.emoji)}
             ></div>
           ))}
         <div className={styles.count}>{reactData ? reactData.length : ''}</div>

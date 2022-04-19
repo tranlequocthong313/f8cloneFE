@@ -9,31 +9,18 @@ import { LearningContext } from '../../context/LearningContext'
 import styles from './Learning.module.scss'
 
 const Learning = () => {
-  const { show, showHandler, course, loading } = useContext(LearningContext)
+  const { isShowMenuTrack, handleIsShowMenuTrack, course, loading } =
+    useContext(LearningContext)
 
   return (
     <>
       <LearningHeader />
-      <LearningContent show={show} />
-      {show && (
-        <LearningTrack
-          // episodes={course.episode}
-          loading={loading}
-        />
-      )}
+      <LearningContent isShowMenuTrack={isShowMenuTrack} />
+      {isShowMenuTrack && <LearningTrack loading={loading} />}
 
-      {/* {showComment && (
-        <Comment
-          // setShowComment={() => setShowComment(false)}
-          // commentData={blog}
-          // setCommentData={setCommentData}
-          // blogId={blog._id}
-        /> */}
-      {/* )} */}
       <LearningActionBar
-        // episodes={course.episode}
-        show={show}
-        showHandler={showHandler}
+        handleIsShowMenuTrack={handleIsShowMenuTrack}
+        isShowMenuTrack={isShowMenuTrack}
         loading={loading}
       />
     </>

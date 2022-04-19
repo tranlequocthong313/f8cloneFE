@@ -1,66 +1,39 @@
-import { useState, useEffect } from 'react'
 import { Image, Dropdown } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './User.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
-import userDefaultImage from '../../../../asset/images/nobody_m.256x256.jpg'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../../../../actions/userAction'
 import Cookies from 'js-cookie'
-import removeActions from '../../../utils/remove-accents/removeActions'
 import Tippy from '../../../utils/tippy/Tippy'
 
-const User = ({ photoURL, displayName, email }) => {
+const User = ({ photoURL, displayName, email, slug }) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const user = useSelector((state) => state.user)
 
-  const [show, setShow] = useState(false)
-
-  const showHandler = () => setShow((prev) => !prev)
-
-  // Dispatch logout action and navigate user to login page after logout
-  const dispatchAndNavigateHandler = () => {
+  const dispatchAndNavigate = () => {
     dispatch(logout())
     navigate('/login')
   }
 
-  const singOutHandler = () => {
+  const singOut = () => {
     Cookies.remove('token')
-    dispatchAndNavigateHandler()
+    dispatchAndNavigate()
   }
-
-  // Listen window resize to hide mobile nav on computer
-  useEffect(() => {
-    const resizeHandler = () => {
-      if (window.innerWidth >= 1024) return setShow(false)
-    }
-    window.addEventListener('resize', resizeHandler)
-
-    return () => window.removeEventListener('resize', resizeHandler)
-  }, [])
 
   return (
     <Tippy
-      button={
-        <Image
-          className={styles.userPicture}
-          src={photoURL || userDefaultImage}
-          onClick={showHandler}
-        />
-      }
+      button={<Image className={styles.userPicture} src={photoURL} />}
       className={styles.menuWrapper}
     >
       <div className={styles.user}>
-        <Image src={photoURL || userDefaultImage} className={styles.avatar} />
+        <Image src={photoURL} className={styles.avatar} />
         <div className={styles.info}>
           <div className={styles.name}>{displayName}</div>
-          <div className={styles.fullName}>
-            {displayName &&
-              `@${removeActions(displayName.toLowerCase().replace(/\s/g, ''))}`}
-          </div>
+          <div className={styles.fullName}>{slug}</div>
         </div>
       </div>
       {user.isAdmin && (
@@ -71,6 +44,10 @@ const User = ({ photoURL, displayName, email }) => {
           </Link>
         </>
       )}
+      <Dropdown.Divider />
+      <Link className={styles.menuItem} to={`/${slug}`}>
+        Trang cá nhân
+      </Link>
       <Dropdown.Divider />
       <Link className={styles.menuItem} to="/new-post">
         Viết blog
@@ -86,7 +63,7 @@ const User = ({ photoURL, displayName, email }) => {
       <Link className={styles.menuItem} to="/settings">
         Cài đặt
       </Link>
-      <Link className={styles.menuItem} to="/login" onClick={singOutHandler}>
+      <Link className={styles.menuItem} to="/login" onClick={singOut}>
         Đăng xuất
       </Link>
     </Tippy>

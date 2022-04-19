@@ -1,9 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { Image } from 'react-bootstrap'
 import styles from './MyCourse.module.scss'
 import Tippy from '../../../utils/tippy/Tippy'
-// import BackDrop from '../../../utils/backdrop/BackDrop'
 
 const MyCourse = () => {
   return (

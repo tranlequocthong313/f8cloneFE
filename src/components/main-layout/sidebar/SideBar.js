@@ -6,7 +6,7 @@ import styles from './SideBar.module.scss'
 import { NavContext } from '../../../context/NavContext'
 
 const SideBar = ({ isHide }) => {
-  const { active, activeHandler } = useContext(NavContext)
+  const { activeTab, setActiveTab } = useContext(NavContext)
 
   return (
     <Navbar className={styles.wrapper}>
@@ -22,8 +22,8 @@ const SideBar = ({ isHide }) => {
           <li className={styles.item}>
             <Link
               to="/"
-              className={active === 'home' ? styles.active : ''}
-              onClick={() => activeHandler('home')}
+              className={activeTab === 'home' ? styles.active : ''}
+              onClick={() => setActiveTab('home')}
             >
               <i className="fa-solid fa-house"></i>
               <span>Home</span>
@@ -32,8 +32,8 @@ const SideBar = ({ isHide }) => {
           <li className={styles.item}>
             <Link
               to="/learning-path"
-              className={active === 'learning-path' ? styles.active : ''}
-              onClick={() => activeHandler('learning-path')}
+              className={activeTab === 'learning-path' ? styles.active : ''}
+              onClick={() => setActiveTab('learning-path')}
             >
               <i className="fa-solid fa-road"></i>
               <span>Lộ trình</span>
@@ -42,8 +42,8 @@ const SideBar = ({ isHide }) => {
           <li className={styles.item}>
             <Link
               to={'/courses' || '/courses/course-slug'}
-              className={active === 'courses' ? styles.active : ''}
-              onClick={() => activeHandler('courses')}
+              className={activeTab === 'courses' ? styles.active : ''}
+              onClick={() => setActiveTab('courses')}
             >
               <i className="fa-solid fa-lightbulb"></i>
               <span>Học</span>
@@ -52,8 +52,8 @@ const SideBar = ({ isHide }) => {
           <li className={styles.item}>
             <Link
               to="/blog"
-              className={active === 'blog' ? styles.active : ''}
-              onClick={() => activeHandler('blog')}
+              className={activeTab === 'blog' ? styles.active : ''}
+              onClick={() => setActiveTab('blog')}
             >
               <i className="fa-solid fa-newspaper"></i>
               <span>Blog</span>

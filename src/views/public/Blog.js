@@ -64,13 +64,12 @@ const Blog = () => {
               </div>
               <Col xs={12} lg={8} xl={8} className={styles.leftLayout}>
                 {blogs && blogs.length !== 0 && <NewBlogs blogs={blogs} />}
-                {!blogs ||
-                  (blogs.length === 0 && (
-                    <p>
-                      Không có bài viết nào{' '}
-                      <Link to="/new-post">thêm bài viết.</Link>
-                    </p>
-                  ))}
+                {(!blogs || blogs.length === 0) && (
+                  <p>
+                    Không có bài viết nào{' '}
+                    <Link to="/new-post">thêm bài viết.</Link>
+                  </p>
+                )}
               </Col>
               <Col xs={12} lg={4} xl={4} className={styles.rightLayout}>
                 <Topics />

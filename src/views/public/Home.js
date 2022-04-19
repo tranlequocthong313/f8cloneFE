@@ -61,9 +61,7 @@ const Home = () => {
     <>
       <Header />
       <Row>
-        {/* <Col xs={0} sm={0} md={1} lg={1} xl={1}> */}
         <SideBar />
-        {/* </Col> */}
         <Col xs={12} sm={12} md={12} lg={11} xl={11}>
           <div className="withSidebarContent">
             <Slide />

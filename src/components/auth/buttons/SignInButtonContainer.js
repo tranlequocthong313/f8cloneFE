@@ -6,10 +6,7 @@ import {
   githubProvider,
 } from '../../../firebase/config'
 
-const SignInButtonContainer = ({
-  switchPhoneAndEmailHandler,
-  loginWithProviderHandler,
-}) => {
+const SignInButtonContainer = ({ switchPhoneAndEmail, loginWithProvider }) => {
   return (
     <>
       <SigninButton
@@ -17,28 +14,28 @@ const SignInButtonContainer = ({
           'https://accounts.fullstack.edu.vn/assets/images/signin/personal-18px.svg'
         }
         text={'Sử dụng email / số điện thoại'}
-        onClick={() => switchPhoneAndEmailHandler('phone')}
+        onClick={() => switchPhoneAndEmail('phone')}
       />
       <SigninButton
         image={
           'https://accounts.fullstack.edu.vn/assets/images/signin/google-18px.svg'
         }
         text={'Tiếp tục với Google'}
-        onClick={() => loginWithProviderHandler(googleProvider)}
+        onClick={() => loginWithProvider(googleProvider)}
       />
       <SigninButton
         image={
           'https://accounts.fullstack.edu.vn/assets/images/signin/facebook-18px.svg'
         }
         text={'Tiếp tục với Facebook'}
-        onClick={() => loginWithProviderHandler(facebookProvider)}
+        onClick={() => loginWithProvider(facebookProvider)}
       />
       <SigninButton
         image={
           'https://accounts.fullstack.edu.vn/assets/images/signin/github-18px.svg'
         }
         text={'Tiếp tục với Github'}
-        onClick={() => loginWithProviderHandler(githubProvider)}
+        onClick={() => loginWithProvider(githubProvider)}
       />
     </>
   )

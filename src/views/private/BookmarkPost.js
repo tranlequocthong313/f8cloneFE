@@ -9,7 +9,7 @@ import Header from '../../components/main-layout/nav/Header'
 import SideBar from '../../components/main-layout/sidebar/SideBar'
 import Cookies from 'js-cookie'
 import { apiURL } from '../../context/constants'
-import timeSinceHandler from '../../components/utils/timeSinceHandler/timeSinceHandler'
+import timeSince from '../../components/utils/timeSince/timeSince'
 import Tabs from '../../components/utils/tabs/Tabs'
 
 const Footer = React.lazy(() =>
@@ -94,7 +94,7 @@ const BookmarkPost = () => {
                       </h3>
                       <div className={styles.author}>
                         <a href={`blog/${bookmark.slug}`}>
-                          Đã đăng {timeSinceHandler(bookmark.createdAt)}
+                          Đã đăng {timeSince(bookmark.createdAt)}
                         </a>
                         <span className={styles.dot}>.</span>
                         <span>

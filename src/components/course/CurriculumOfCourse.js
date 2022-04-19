@@ -4,35 +4,40 @@ import styles from './CurriculumOfCourse.module.scss'
 import '../../sass/_float.scss'
 
 const CurriculumOfCourse = ({ episodeList }) => {
-  const [open, setOpen] = useState([])
-  const [openAll, setOpenAll] = useState([])
-  const [isOpenAll, setIsOpenAll] = useState(false)
+  const [collapsedCurriculum, setCollapsedCurriculum] = useState([])
+  const [collapsedCurriculumAll, setCollapsedCurriculumAll] = useState([])
+  const [isCollapsedCurriculumAll, setIsCollapsedCurriculumAll] =
+    useState(false)
 
   useEffect(() => {
-    episodeList.map((episode) => setOpenAll((prev) => [...prev, episode.id]))
+    episodeList.map((episode) =>
+      setCollapsedCurriculumAll((prev) => [...prev, episode.id]),
+    )
   }, [episodeList])
 
-  const openHandler = (id) =>
-    setOpen((prev) => {
+  const collapseCurriculumSingle = (id) =>
+    setCollapsedCurriculum((prev) => {
       const isOpen = prev.includes(id)
       if (isOpen) {
-        const newArray = prev.filter((item) => item !== id)
-        newArray.length !== openAll.length && setIsOpenAll(false)
-        return newArray
+        const newCollapsed = prev.filter((item) => item !== id)
+        newCollapsed.length !== collapsedCurriculumAll.length &&
+          setIsCollapsedCurriculumAll(false)
+        return newCollapsed
       }
-      const newArray = [...prev, id]
-      newArray.length === openAll.length && setIsOpenAll(true)
-      return newArray
+      const newCollapsed = [...prev, id]
+      newCollapsed.length === collapsedCurriculumAll.length &&
+        setIsCollapsedCurriculumAll(true)
+      return newCollapsed
     })
 
-  const openAllHandler = () => {
-    if (!isOpenAll) {
-      setOpen((prev) => [...prev, ...openAll])
-      setIsOpenAll(true)
+  const handleCollapseCurriculumAll = () => {
+    if (!isCollapsedCurriculumAll) {
+      setCollapsedCurriculum((prev) => [...prev, ...collapsedCurriculumAll])
+      setIsCollapsedCurriculumAll(true)
       return
     }
-    setOpen([])
-    setIsOpenAll(false)
+    setCollapsedCurriculum([])
+    setIsCollapsedCurriculumAll(false)
   }
 
   return (
@@ -56,8 +61,8 @@ const CurriculumOfCourse = ({ episodeList }) => {
             Thời lượng <strong>03 giờ 25 phút</strong>
           </li>
         </ul>
-        <div className={styles.toggleBtn} onClick={openAllHandler}>
-          {!isOpenAll ? 'Mở rộng tất cả' : 'Thu nhỏ tất cả'}
+        <div className={styles.toggleBtn} onClick={handleCollapseCurriculumAll}>
+          {!isCollapsedCurriculumAll ? 'Mở rộng tất cả' : 'Thu nhỏ tất cả'}
         </div>
       </div>
       <div className={styles.curriculumPanel}>
@@ -66,11 +71,11 @@ const CurriculumOfCourse = ({ episodeList }) => {
             <div className={styles.panel} key={episode.id}>
               <div
                 className={styles.panelHeading}
-                onClick={() => openHandler(episode.id)}
+                onClick={() => collapseCurriculumSingle(episode.id)}
               >
                 <h5 className={styles.panelTitle}>
                   <div className={styles.headLine}>
-                    {open.includes(episode.id) ? (
+                    {collapsedCurriculum.includes(episode.id) ? (
                       <i className="fa-solid fa-dash"></i>
                     ) : (
                       <i className="fa-solid fa-plus"></i>
@@ -85,7 +90,7 @@ const CurriculumOfCourse = ({ episodeList }) => {
                 </h5>
               </div>
               <CourseCollapse
-                open={open}
+                collapseCurriculum={collapsedCurriculum}
                 episodeId={episode.id}
                 lessons={episode.lessons}
               />

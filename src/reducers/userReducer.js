@@ -4,8 +4,8 @@ const initialState = {
   displayName: null,
   photoURL: null,
   email: null,
+  slug: null,
   phoneNumber: null,
-  accessToken: null,
   isLoading: false,
   isLoggedIn: false,
   videoCreated: null,
@@ -36,6 +36,7 @@ const userReducer = (state = initialState, action) => {
         bio: action.payload.bio ? action.payload.bio : '',
         isAdmin: action.payload.isAdmin,
         socials: action.payload.socials ? action.payload.socials : {},
+        slug: action.payload.slug,
       }
 
     case 'SIGN_OUT':
@@ -67,6 +68,7 @@ const userReducer = (state = initialState, action) => {
         isLoggedIn: !!action.payload.accessToken,
         isAdmin: action.payload.isAdmin,
         socials: action.payload.socials ? action.payload.socials : {},
+        slug: action.payload.slug,
       }
 
     case 'CREATE_VIDEO':

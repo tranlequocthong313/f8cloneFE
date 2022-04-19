@@ -18,9 +18,11 @@ const CourseSlug = () => {
 
   const [course, setCourse] = useState()
   const [hasRequire, setHasRequire] = useState(false)
-  const [show, setShow] = useState(false)
+  const [isShowVideoPreviewCourse, setIsShowVideoPreviewCourse] =
+    useState(false)
 
-  const showHandler = () => setShow((prev) => !prev)
+  const showVideoPreviewCourse = () =>
+    setIsShowVideoPreviewCourse((prev) => !prev)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -31,7 +33,8 @@ const CourseSlug = () => {
           signal: controller.signal,
         })
         const data = await res.json()
-        data.require && setHasRequire(true)
+        const hasRequireKnowledgeForThisCourse = data.require
+        hasRequireKnowledgeForThisCourse && setHasRequire(true)
         setCourse(data)
         document.title = `${data.title} | by F8`
       } catch (error) {
@@ -104,7 +107,7 @@ const CourseSlug = () => {
               <Col lg={12} xl={4}>
                 <CourseEnroll
                   image={course ? course.image : ''}
-                  showHandler={showHandler}
+                  showVideo={showVideoPreviewCourse}
                   slug={course ? course.slug : ''}
                 />
               </Col>
@@ -123,10 +126,10 @@ const CourseSlug = () => {
       <Suspense fallback={<div>Loading...</div>}>
         <Footer />
       </Suspense>
-      {show && (
+      {isShowVideoPreviewCourse && (
         <PreviewCourse
           previewVideo={course.previewVideo}
-          showHandler={showHandler}
+          showVideo={showVideoPreviewCourse}
         />
       )}
     </>

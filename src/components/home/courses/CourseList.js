@@ -1,10 +1,5 @@
-import React from 'react'
 import CourseItem from './CourseItem'
 import ScrollHorizontal from '../../utils/scroll/ScrollHorizontal'
-import MainCard from '../../utils/card/MainCard'
-import { Link } from 'react-router-dom'
-import styles from './CourseList.module.scss'
-import MainButton from '../../utils/button/MainButton'
 import MainCardAdd from '../../utils/card/MainCardAdd'
 import { useSelector } from 'react-redux'
 

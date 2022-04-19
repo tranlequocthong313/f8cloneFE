@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom'
 import MainButton from '../utils/button/MainButton'
 import styles from './CourseEnroll.module.scss'
 
-const CourseEnroll = ({ image, showHandler, slug }) => {
+const CourseEnroll = ({ image, show, slug }) => {
   return (
     <div className={styles.purchaseBadge}>
-      <div className={styles.imgPreview} onClick={showHandler}>
+      <div className={styles.imgPreview} onClick={show}>
         <div
           className={styles.backgroundImg}
           style={{ backgroundImage: `url(${image})` }}

@@ -1,10 +1,14 @@
 @import '../../../../sass/color';
 
-.button {
-  padding: 7px 20px;
-  &:hover {
-    opacity: 0.9;
-    color: #fff;
+a {
+  text-decoration: none;
+
+  .button {
+    padding: 7px 20px;
+    &:hover {
+      opacity: 0.9;
+      color: #fff;
+    }
   }
 }
 

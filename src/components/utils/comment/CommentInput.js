@@ -23,10 +23,11 @@ const CommentInput = ({
   const [commentInput, setCommentInput] = useState('')
 
   useEffect(() => {
-    if (commentInput.length === 0) contentEditableRef.current.innerText = ''
+    const isEmptyCommentInput = commentInput.length === 0
+    if (isEmptyCommentInput) contentEditableRef.current.innerText = ''
   }, [commentInput])
 
-  const submitCommentHandler = async () => {
+  const submitComment = async () => {
     try {
       const token = Cookies.get('token')
       if (!token) return navigate('/login')
@@ -62,7 +63,7 @@ const CommentInput = ({
 
   return (
     <div className={styles.comment}>
-      <img src={userPhotoURL ? userPhotoURL : noPhotoURL} alt="" />
+      <img src={userPhotoURL} alt="" />
       <div onClick={() => setShowSubmit(true)}>
         <ContentEditable
           text={'Viết bình luận của bạn...'}
@@ -100,7 +101,7 @@ const CommentInput = ({
                   ? `${styles.submit} ${styles.active}`
                   : styles.submit
               }
-              onClick={submitCommentHandler}
+              onClick={submitComment}
             >
               Bình luận
             </button>

@@ -10,7 +10,7 @@ const apiURL =
     ? 'http://localhost:5000'
     : 'https://f8clone.herokuapp.com'
 
-const COUNTRY_CODE_DUMMY = {
+const COUNTRY_CODE = {
   AF: {
     country_name: 'Afghanistan',
     dialling_code: '+93',
@@ -941,7 +941,7 @@ const COUNTRY_CODE_DUMMY = {
   },
 }
 
-const emojies = [
+const EMOJIES = [
   {
     title: 'Thích',
     icon: likeEmoji,
@@ -968,4 +968,4 @@ const emojies = [
   },
 ]
 
-export { apiURL, COUNTRY_CODE_DUMMY, emojies }
+export { apiURL, COUNTRY_CODE, EMOJIES }

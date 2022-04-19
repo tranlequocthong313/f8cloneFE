@@ -3,14 +3,15 @@ import CommentReaction from './CommentReaction'
 import { apiURL } from '../../../context/constants'
 import Cookies from 'js-cookie'
 import { useSelector } from 'react-redux'
-import { reportCommentHandler } from '../report/Report'
+import { reportComment } from '../report/Report'
 import CommentInputSecondary from './CommentInputSecondary'
-import timeSinceHandler from '../../utils/timeSinceHandler/timeSinceHandler'
+import timeSince from '../../utils/timeSince/timeSince'
 import CommentReactionCounter from './CommentReactionCounter'
 import noPhotoURL from '../../../asset/images/nobody_m.256x256.jpg'
 import styles from './CommentBody.module.scss'
 import io from 'socket.io-client'
 import Tippy from '../tippy/Tippy'
+import { Link } from 'react-router-dom'
 
 const socket = io.connect(apiURL)
 
@@ -22,23 +23,24 @@ const CommentBody = ({
   blogId,
 }) => {
   const [showOption, setShowOption] = useState(null)
-  const [showEdit, setShowEdit] = useState([])
-  const [showReply, setShowReply] = useState([])
-  const [showCodeEdit, setShowCodeEdit] = useState([])
-  const [showCodeReply, setShowCodeReply] = useState([])
-  const [editComment, setEditComment] = useState('')
-  const [replyComment, setReplyComment] = useState('')
-  const [isCopy, setIsCopy] = useState([])
-  const [extend, setExtend] = useState([])
+  const [showEditInputById, setShowEditInputById] = useState([])
+  const [showReplyInputById, setShowReplyInputById] = useState([])
+  const [showCodeEditInputById, setShowCodeEditInputById] = useState([])
+  const [showCodeReplyInputById, setShowCodeReplyInputById] = useState([])
+  const [editCommentText, setEditCommentText] = useState('')
+  const [replyCommentText, setReplyCommentText] = useState('')
+  const [copyCommentHasCodeById, setCopyCommentHasCodeById] = useState([])
+  const [
+    showExtendButtonOnLongCommentWithId,
+    setShowExtendButtonOnLongCommentWithId,
+  ] = useState([])
+  const [showReplyContentById, setShowReplyContentById] = useState([])
   const [replyCommentData, setReplyCommentData] = useState({
     replies: [],
     commentId: '',
   })
-  const [showReplyBox, setShowReplyBox] = useState([])
 
   const user = useSelector((state) => state.user)
-
-  const STRING_LENGTH_EXTEND = 350 // Content length > 350 => show extend
 
   const reactCommentHandler = async (emoji, commentId) => {
     try {
@@ -71,8 +73,8 @@ const CommentBody = ({
         method: 'PUT',
         body: JSON.stringify({
           commentId,
-          content: replyComment,
-          isCode: showCodeReply.includes(commentId),
+          content: replyCommentText,
+          isCode: showCodeReplyInputById.includes(commentId),
           blogId,
         }),
         headers: {
@@ -140,8 +142,8 @@ const CommentBody = ({
         method: 'PUT',
         body: JSON.stringify({
           commentId: commentId,
-          content: editComment,
-          isCode: showCodeEdit.includes(commentId),
+          content: editCommentText,
+          isCode: showCodeEditInputById.includes(commentId),
         }),
         headers: {
           'Content-Type': 'application/json',
@@ -156,67 +158,81 @@ const CommentBody = ({
       console.log(error)
     }
 
-    setEditComment('')
-    setShowEdit((prev) => prev.filter((item) => item !== commentId))
-    setShowCodeEdit((prev) => prev.filter((item) => item !== commentId))
+    setEditCommentText('')
+    setShowEditInputById((prev) => prev.filter((item) => item !== commentId))
+    setShowCodeEditInputById((prev) =>
+      prev.filter((item) => item !== commentId),
+    )
   }
 
   const showInputHandler = (commentId, option) => {
-    const isReply = showReply.includes(commentId)
-    const isEdit = showEdit.includes(commentId)
+    const isReply = showReplyInputById.includes(commentId)
+    const isEdit = showEditInputById.includes(commentId)
 
     if (option === 'reply' && !isReply && !isEdit) {
-      setShowReply((prev) => [...prev, commentId])
+      setShowReplyInputById((prev) => [...prev, commentId])
     } else if (option === 'reply' && !isReply && isEdit) {
-      setShowReply((prev) => [...prev, commentId])
-      setShowEdit((prev) => prev.filter((item) => item !== commentId))
+      setShowReplyInputById((prev) => [...prev, commentId])
+      setShowEditInputById((prev) => prev.filter((item) => item !== commentId))
     } else if (option === 'reply' && isReply) {
-      setShowReply((prev) => prev.filter((item) => item !== commentId))
+      setShowReplyInputById((prev) => prev.filter((item) => item !== commentId))
     } else if (option === 'edit' && !isEdit && isReply) {
-      setShowEdit((prev) => [...prev, commentId])
-      setShowReply((prev) => prev.filter((item) => item !== commentId))
+      setShowEditInputById((prev) => [...prev, commentId])
+      setShowReplyInputById((prev) => prev.filter((item) => item !== commentId))
     } else if (option === 'edit' && !isEdit && !isReply) {
-      return setShowEdit((prev) => [...prev, commentId])
+      return setShowEditInputById((prev) => [...prev, commentId])
     }
-    setShowEdit((prev) => prev.filter((item) => item !== commentId))
+    setShowEditInputById((prev) => prev.filter((item) => item !== commentId))
   }
 
   const showCodeEditReplyHandler = (commentId, option) => {
-    const isReply = showCodeReply.includes(commentId)
-    const isEdit = showCodeEdit.includes(commentId)
+    const isReply = showCodeReplyInputById.includes(commentId)
+    const isEdit = showCodeEditInputById.includes(commentId)
 
     if (option === 'reply' && !isReply && !isEdit) {
-      setShowCodeReply((prev) => [...prev, commentId])
+      setShowCodeReplyInputById((prev) => [...prev, commentId])
     } else if (option === 'reply' && !isReply && isEdit) {
-      setShowCodeReply((prev) => [...prev, commentId])
-      setShowCodeEdit((prev) => prev.filter((item) => item !== commentId))
+      setShowCodeReplyInputById((prev) => [...prev, commentId])
+      setShowCodeEditInputById((prev) =>
+        prev.filter((item) => item !== commentId),
+      )
     } else if (option === 'reply' && isReply) {
-      setShowCodeReply((prev) => prev.filter((item) => item !== commentId))
+      setShowCodeReplyInputById((prev) =>
+        prev.filter((item) => item !== commentId),
+      )
     } else if (option === 'edit' && !isEdit && isReply) {
-      setShowCodeEdit((prev) => [...prev, commentId])
-      setShowCodeReply((prev) => prev.filter((item) => item !== commentId))
+      setShowCodeEditInputById((prev) => [...prev, commentId])
+      setShowCodeReplyInputById((prev) =>
+        prev.filter((item) => item !== commentId),
+      )
     } else if (option === 'edit' && !isEdit && !isReply) {
-      setShowCodeEdit((prev) => [...prev, commentId])
+      setShowCodeEditInputById((prev) => [...prev, commentId])
     } else {
-      setShowCodeEdit((prev) => prev.filter((item) => item !== commentId))
+      setShowCodeEditInputById((prev) =>
+        prev.filter((item) => item !== commentId),
+      )
     }
   }
 
   const copyHandler = (commentId, commentContent) => {
     navigator.clipboard.writeText(commentContent)
-    setIsCopy((prev) => {
+    setCopyCommentHasCodeById((prev) => {
       return [...prev, commentId]
     })
     const timer = setTimeout(() => {
-      setIsCopy([])
+      setCopyCommentHasCodeById([])
       clearTimeout(timer)
     }, 5000)
   }
 
+  const STRING_LENGTH_EXTEND = 350 // Content length > 350 => show extend
+
   const extendHandler = (commentId) =>
-    extend.includes(commentId)
-      ? setExtend((prev) => prev.filter((item) => item !== commentId))
-      : setExtend((prev) => [...prev, commentId])
+    showExtendButtonOnLongCommentWithId.includes(commentId)
+      ? setShowExtendButtonOnLongCommentWithId((prev) =>
+          prev.filter((item) => item !== commentId),
+        )
+      : setShowExtendButtonOnLongCommentWithId((prev) => [...prev, commentId])
 
   const showOptionHandler = (commentId) =>
     showOption === commentId ? setShowOption(null) : setShowOption(commentId)
@@ -226,7 +242,7 @@ const CommentBody = ({
       return styles.commentContent
     } else if (
       commentContent.length > STRING_LENGTH_EXTEND &&
-      extend.includes(commentId)
+      showExtendButtonOnLongCommentWithId.includes(commentId)
     ) {
       return styles.commentContent
     }
@@ -238,22 +254,17 @@ const CommentBody = ({
       {commentData.map((comment) => (
         <div key={comment._id}>
           <div className={styles.commentList}>
-            <div className={styles.avatar}>
-              <img
-                src={
-                  !comment.postedBy.photoURL
-                    ? noPhotoURL
-                    : comment.postedBy.photoURL
-                }
-                alt=""
-              />
-            </div>
+            <Link to={`/${comment.postedBy.slug}`} className={styles.avatar}>
+              <img src={comment.postedBy.photoURL} alt="" />
+            </Link>
             <div className={styles.commentBody}>
               <div
                 className={styleCommentContent(comment._id, comment.content)}
               >
                 <div>
-                  <h5>{comment.postedBy.fullName}</h5>
+                  <Link to={`/${comment.postedBy.slug}`}>
+                    <h5>{comment.postedBy.fullName}</h5>
+                  </Link>
                   {!comment.isCode && <span>{comment.content}</span>}
                   {comment.isCode && (
                     <pre tabIndex={0}>
@@ -264,7 +275,9 @@ const CommentBody = ({
                         }
                       >
                         <button className={styles.copyButton}>
-                          {!isCopy.includes(comment._id) ? 'Copy' : 'Copied!'}
+                          {!copyCommentHasCodeById.includes(comment._id)
+                            ? 'Copy'
+                            : 'Copied!'}
                         </button>
                       </div>
                       {comment.content}
@@ -276,11 +289,17 @@ const CommentBody = ({
                       onClick={() => extendHandler(comment._id)}
                     >
                       <strong>
-                        {!extend.includes(comment._id) ? 'Mở rộng' : 'Thu nhỏ'}
+                        {!showExtendButtonOnLongCommentWithId.includes(
+                          comment._id,
+                        )
+                          ? 'Mở rộng'
+                          : 'Thu nhỏ'}
                       </strong>
                       <i
                         className={
-                          !extend.includes(comment._id)
+                          !showExtendButtonOnLongCommentWithId.includes(
+                            comment._id,
+                          )
                             ? 'fa-regular fa-chevron-down'
                             : 'fa-regular fa-chevron-up'
                         }
@@ -322,7 +341,7 @@ const CommentBody = ({
                   </span>
                   <span className={styles.dot}>.</span>
                   <span className={styles.createdAt}>
-                    {timeSinceHandler(comment.createdAt)}
+                    {timeSince(comment.createdAt)}
                   </span>
 
                   <span className={styles.dot}>.</span>
@@ -359,7 +378,7 @@ const CommentBody = ({
                       <div
                         className={styles.optionItem}
                         onClick={() =>
-                          reportStatusHandler(reportCommentHandler(comment._id))
+                          reportStatusHandler(reportComment(comment._id))
                         }
                       >
                         <i className="fa-solid fa-flag"></i>
@@ -370,11 +389,11 @@ const CommentBody = ({
                 </div>
               </div>
 
-              {showReply.includes(comment._id) &&
-                !showEdit.includes(comment._id) && (
+              {showReplyInputById.includes(comment._id) &&
+                !showEditInputById.includes(comment._id) && (
                   <CommentInputSecondary
                     userPhotoURL={user.photoURL}
-                    showCode={showCodeReply.includes(comment._id)}
+                    showCode={showCodeReplyInputById.includes(comment._id)}
                     setShowCodeEditReply={() =>
                       showCodeEditReplyHandler(comment._id, 'reply')
                     }
@@ -384,16 +403,16 @@ const CommentBody = ({
                     }
                     buttonText={'Trả lời'}
                     firstString={comment.postedBy.fullName}
-                    onInput={(e) => setReplyComment(e.target.innerText)}
-                    commentInput={replyComment}
+                    onInput={(e) => setReplyCommentText(e.target.innerText)}
+                    commentInput={replyCommentText}
                   />
                 )}
 
-              {showEdit.includes(comment._id) &&
-                !showReply.includes(comment._id) && (
+              {showEditInputById.includes(comment._id) &&
+                !showReplyInputById.includes(comment._id) && (
                   <CommentInputSecondary
                     userPhotoURL={user.photoURL}
-                    showCode={showCodeEdit.includes(comment._id)}
+                    showCode={showCodeEditInputById.includes(comment._id)}
                     setShowCodeEditReply={() =>
                       showCodeEditReplyHandler(comment._id, 'edit')
                     }
@@ -403,8 +422,8 @@ const CommentBody = ({
                     buttonText={'Sửa'}
                     firstString={comment.content}
                     editCommentHandler={() => editCommentHandler(comment._id)}
-                    onInput={(e) => setEditComment(e.target.innerText)}
-                    commentInput={editComment}
+                    onInput={(e) => setEditCommentText(e.target.innerText)}
+                    commentInput={editCommentText}
                   />
                 )}
             </div>
@@ -414,20 +433,7 @@ const CommentBody = ({
               <div className={styles.viewReplies}>
                 <span
                   className={styles.repliesCount}
-                  onClick={() => {
-                    // if (comment._id === replyCommentData.commentId) {
-                    //   console.log('RUN')
-                    //   setReplyCommentData(prev => {
-                    //     return {
-                    //       ...prev,
-                    //       commentId: null,
-                    //     }
-                    //   })
-                    // } else {
-                    // }
-                    getReplyComment(comment._id)
-                    // console.log(comment._id === replyCommentData.commentId)
-                  }}
+                  onClick={() => getReplyComment(comment._id)}
                 >
                   {comment._id !== replyCommentData.commentId && (
                     <>
@@ -450,16 +456,12 @@ const CommentBody = ({
                     className={`${styles.commentList} ${styles.replyCommentList}`}
                     key={reply._id}
                   >
-                    <div className={styles.avatar}>
-                      <img
-                        src={
-                          !reply.postedBy.photoURL
-                            ? noPhotoURL
-                            : reply.postedBy.photoURL
-                        }
-                        alt=""
-                      />
-                    </div>
+                    <Link
+                      to={`/${reply.postedBy.slug}`}
+                      className={styles.avatar}
+                    >
+                      <img src={reply.postedBy.photoURL} alt="" />
+                    </Link>
                     <div className={styles.commentBody}>
                       <div
                         className={styleCommentContent(
@@ -468,7 +470,9 @@ const CommentBody = ({
                         )}
                       >
                         <div>
-                          <h5>{reply.postedBy.fullName}</h5>
+                          <Link to={`/${reply.postedBy.slug}`}>
+                            <h5>{reply.postedBy.fullName}</h5>
+                          </Link>
                           {!reply.isCode && <span>{reply.content}</span>}
                           {reply.isCode && (
                             <pre tabIndex="0">
@@ -479,7 +483,7 @@ const CommentBody = ({
                                 }
                               >
                                 <button className={styles.copyButton}>
-                                  {!isCopy.includes(reply._id)
+                                  {!copyCommentHasCodeById.includes(reply._id)
                                     ? 'Copy'
                                     : 'Copied!'}
                                 </button>
@@ -493,13 +497,17 @@ const CommentBody = ({
                               onClick={() => extendHandler(reply._id)}
                             >
                               <strong>
-                                {!extend.includes(reply._id)
+                                {!showExtendButtonOnLongCommentWithId.includes(
+                                  reply._id,
+                                )
                                   ? 'Mở rộng'
                                   : 'Thu nhỏ'}
                               </strong>
                               <i
                                 className={
-                                  !extend.includes(reply._id)
+                                  !showExtendButtonOnLongCommentWithId.includes(
+                                    reply._id,
+                                  )
                                     ? 'fa-regular fa-chevron-down'
                                     : 'fa-regular fa-chevron-up'
                                 }
@@ -541,7 +549,7 @@ const CommentBody = ({
                           </span>
                           <span className={styles.dot}>.</span>
                           <span className={styles.createdAt}>
-                            {timeSinceHandler(reply.createdAt)}
+                            {timeSince(reply.createdAt)}
                           </span>
                           <span
                             className={styles.optionButton}
@@ -576,7 +584,7 @@ const CommentBody = ({
                                     <li
                                       onClick={() =>
                                         reportStatusHandler(
-                                          reportCommentHandler(reply._id),
+                                          reportComment(reply._id),
                                         )
                                       }
                                     >
@@ -591,11 +599,13 @@ const CommentBody = ({
                         </div>
                       </div>
 
-                      {showReply.includes(reply._id) &&
-                        !showEdit.includes(reply._id) && (
+                      {showReplyInputById.includes(reply._id) &&
+                        !showEditInputById.includes(reply._id) && (
                           <CommentInputSecondary
                             userPhotoURL={user.photoURL}
-                            showCode={showCodeReply.includes(reply._id)}
+                            showCode={showCodeReplyInputById.includes(
+                              reply._id,
+                            )}
                             setShowCodeEditReply={() =>
                               showCodeEditReplyHandler(reply._id, 'reply')
                             }
@@ -607,11 +617,11 @@ const CommentBody = ({
                           />
                         )}
 
-                      {showEdit.includes(reply._id) &&
-                        !showReply.includes(reply._id) && (
+                      {showEditInputById.includes(reply._id) &&
+                        !showReplyInputById.includes(reply._id) && (
                           <CommentInputSecondary
                             userPhotoURL={user.photoURL}
-                            showCode={showCodeEdit.includes(reply._id)}
+                            showCode={showCodeEditInputById.includes(reply._id)}
                             setShowCodeEditReply={() =>
                               showCodeEditReplyHandler(reply._id, 'edit')
                             }
@@ -623,8 +633,10 @@ const CommentBody = ({
                             editCommentHandler={() =>
                               editCommentHandler(reply._id)
                             }
-                            onInput={(e) => setEditComment(e.target.innerText)}
-                            editComment={editComment}
+                            onInput={(e) =>
+                              setEditCommentText(e.target.innerText)
+                            }
+                            editComment={editCommentText}
                           />
                         )}
                     </div>

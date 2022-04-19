@@ -6,11 +6,11 @@ import ContentEditable from '../content-editable/ContentEditable'
 const CommentInputSecondary = ({
   userPhotoURL,
   showCode,
-  showInputHandler,
+  showInput,
   buttonText,
   firstString,
-  editCommentHandler,
-  replyCommentHandler,
+  editComment,
+  replyComment,
   onInput,
   commentInput,
   setShowCodeEditReply,
@@ -18,14 +18,14 @@ const CommentInputSecondary = ({
   const contentEditableRef = useRef()
 
   useEffect(() => {
-    if (commentInput && commentInput.length === 0)
-      contentEditableRef.current.innerText = ''
+    const isEmptyCommentInput = commentInput.length === 0
+    if (isEmptyCommentInput) contentEditableRef.current.innerText = ''
   }, [commentInput])
 
   return (
     <div className={styles.replyComment}>
       <div className={styles.comment}>
-        <img src={userPhotoURL ? userPhotoURL : noPhotoURL} alt="" />
+        <img src={userPhotoURL} alt="" />
         <ContentEditable
           text={'Bình luận công khai...'}
           onInput={onInput}
@@ -54,7 +54,7 @@ const CommentInputSecondary = ({
           <button
             className={styles.cancel}
             onClick={() => {
-              showInputHandler()
+              showInput()
               setShowCodeEditReply()
             }}
           >
@@ -66,9 +66,7 @@ const CommentInputSecondary = ({
                 ? `${styles.submit} ${styles.active}`
                 : styles.submit
             }
-            onClick={
-              buttonText === 'Sửa' ? editCommentHandler : replyCommentHandler
-            }
+            onClick={buttonText === 'Sửa' ? editComment : replyComment}
           >
             {buttonText}
           </button>

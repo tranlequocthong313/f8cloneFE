@@ -133,20 +133,68 @@
         margin-bottom: 8px;
       }
 
-      .tagsInput {
-        width: 100%;
+      .tagWrapper {
         align-items: center;
         background-color: #fafafa;
         border: 1px solid rgba(0, 0, 0, 0.15);
         display: flex;
         flex-wrap: wrap;
         min-height: 52px;
-        padding: 8px;
-        flex: 1 1;
-        height: 37px;
-        margin-top: 8px;
-        font-size: 14px;
-        outline: none;
+        padding-bottom: 8px;
+        position: relative;
+
+        &.invalid {
+          background-color: #fff4f6;
+          border-color: #f33a58;
+        }
+
+        .tagsInput {
+          background-color: transparent;
+          border: none;
+          flex: 1 1;
+          height: 37px;
+          margin-top: 8px;
+          outline: none;
+          padding-left: 8px;
+          font-size: 13px;
+        }
+
+        .tagCard {
+          align-items: center;
+          background-color: #fff;
+          border: 1px solid #f0f0f0;
+          border-radius: 3px;
+          display: flex;
+          font-size: 14px;
+          margin: 8px 0 0 8px;
+          outline: none;
+          padding: 6px 8px;
+
+          &.active {
+            border-color: grey;
+          }
+
+          span {
+            color: $text-color;
+            margin-bottom: 0;
+          }
+
+          button {
+            appearance: none;
+            background: transparent;
+            border: none;
+            color: $description-color;
+            font-size: 12px;
+            outline: none;
+            padding: 0 0 2px 8px;
+          }
+        }
+      }
+
+      .invalidText {
+        color: #f33a58;
+        margin-top: 4px;
+        font-size: 13px;
       }
 
       .allow {

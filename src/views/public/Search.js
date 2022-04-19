@@ -1,34 +1,73 @@
-import React, { Suspense, useState } from 'react'
+import React, { Suspense, useEffect, useRef, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import Header from '../../components/main-layout/nav/Header'
 import SideBar from '../../components/main-layout/sidebar/SideBar'
 import styles from './Search.module.scss'
 import ContentEditable from '../../components/utils/content-editable/ContentEditable'
 import { apiURL } from '../../context/constants'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import Tabs from '../../components/utils/tabs/Tabs'
+import f8Icon from '../../asset/images/f8_icon.png'
+import CoursesEnrolled from '../../components/profile/ProfileCourses'
 
 const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer')
+  import('../../components/main-layout/footer/Footer'),
 )
 
 const Search = () => {
+  const location = useLocation()
+
+  const searchInputRef = useRef()
+
   const [searchInput, setSearchInput] = useState('')
-  const [tabs, setTabs] = useState('courses')
+  const [tabs, setTabs] = useState(location.pathname)
   const [result, setResult] = useState({
     courses: [],
     blogs: [],
     videos: [],
   })
 
-  const searchHandler = async e => {
+  useEffect(() => {
+    const url = new URL(window.location.href)
+    const query = url.searchParams.get('q')
+    if (query) {
+      searchInputRef.current.innerText = query
+      setSearchInput(query)
+
+      const searchCourseBlogAndVideoByQueryParams = async () => {
+        try {
+          const res = await fetch(`${apiURL}/search/${query}`)
+          const data = await res.json()
+
+          setResult((prev) => {
+            return {
+              ...prev,
+              courses:
+                location.pathname === '/search/course' ? [...data.courses] : [],
+              blogs:
+                location.pathname === '/search/blog' ? [...data.blogs] : [],
+              videos:
+                location.pathname === '/search/video' ? [...data.videos] : [],
+            }
+          })
+        } catch (error) {
+          console.log(error)
+        }
+      }
+
+      searchCourseBlogAndVideoByQueryParams()
+    }
+  }, [])
+
+  const searchCourseBlogAndVideo = async (e) => {
     try {
       const length = e.target.innerText.trim().length
       let match = e.target.innerText.match(/^[a-zA-Z ]*/)
       setSearchInput(e.target.innerText)
 
-      length === 0 &&
-        setResult(prev => {
+      const isEmptySearchInput = length === 0
+      isEmptySearchInput &&
+        setResult((prev) => {
           return {
             ...prev,
             courses: [],
@@ -37,11 +76,12 @@ const Search = () => {
           }
         })
 
-      if (length >= 2 && match[0] === e.target.innerText) {
+      const isValidSearchInput = length >= 2 && match[0] === e.target.innerText
+      if (isValidSearchInput) {
         const res = await fetch(`${apiURL}/search/${e.target.innerText}`)
         const data = await res.json()
 
-        setResult(prev => {
+        setResult((prev) => {
           return {
             ...prev,
             courses: [...data.courses],
@@ -57,7 +97,7 @@ const Search = () => {
 
   return (
     <>
-      <Header />
+      <Header isSearchPage={true} />
       <Row>
         <Col xs={0} sm={0} md={1} lg={1} xl={1}>
           <SideBar />
@@ -65,39 +105,44 @@ const Search = () => {
         <Col xs={12} sm={12} md={12} lg={11} xl={11}>
           <div className="withSidebarContent">
             <Container fluid style={{ padding: 0 }}>
-              <Row style={{ marginTop: 0 }} className={styles.layout}>
-                <Col xs={12} lg={12} xl={12} className={styles.leftLayout}>
+              <Row style={{ marginTop: 0, height: '100vh' }}>
+                <Col xs={12} lg={12} xl={12}>
                   <ContentEditable
                     text={'Tìm kiếm...'}
                     maxLength={'100'}
                     className={styles.contentEditable}
-                    onInput={searchHandler}
+                    onInput={searchCourseBlogAndVideo}
+                    ref={searchInputRef}
                   />
                   {searchInput.length >= 1 && (
                     <Row style={{ marginTop: 0 }}>
                       <Col md={12} lg={8} xl={8}>
                         <div className={styles.tabs}>
                           <Tabs
-                            isActive={tabs === 'courses'}
-                            onActive={() => setTabs('courses')}
+                            path={'/search/course'}
+                            isActive={tabs === '/search/course'}
+                            onActive={() => setTabs('/search/course')}
                             tab={'Khóa học'}
                           />
                           <Tabs
-                            isActive={tabs === 'blogs'}
-                            onActive={() => setTabs('blogs')}
+                            path={'/search/blog'}
+                            isActive={tabs === '/search/blog'}
+                            onActive={() => setTabs('/search/blog')}
                             tab={'Bài viết'}
                           />
                           <Tabs
+                            path={'/search/video'}
                             tab={'Video'}
-                            isActive={tabs === 'videos'}
-                            onActive={() => setTabs('videos')}
+                            isActive={tabs === '/search/video'}
+                            onActive={() => setTabs('/search/video')}
                           />
                         </div>
 
-                        {tabs === 'courses' && (
+                        {tabs === '/search/course' && (
                           <div className={styles.contentWrapper}>
-                            {tabs === 'courses' && result.courses.length > 0 ? (
-                              result.courses.map(course => (
+                            {tabs === '/search/course' &&
+                            result.courses.length > 0 ? (
+                              result.courses.map((course) => (
                                 <div
                                   className={styles.contentContainer}
                                   key={course._id}
@@ -111,11 +156,11 @@ const Search = () => {
                                     ></div>
                                   </Link>
                                   <div className={styles.info}>
-                                    <h2>
+                                    <h3>
                                       <Link to={`courses/${course.slug}`}>
                                         {course.title}
                                       </Link>
-                                    </h2>
+                                    </h3>
                                     <p>{course.description}</p>
                                   </div>
                                 </div>
@@ -127,10 +172,11 @@ const Search = () => {
                             )}
                           </div>
                         )}
-                        {tabs === 'blogs' && (
+                        {tabs === '/search/blog' && (
                           <div className={styles.contentWrapper}>
-                            {tabs === 'blogs' && result.blogs.length > 0 ? (
-                              result.blogs.map(blog => (
+                            {tabs === '/search/blog' &&
+                            result.blogs.length > 0 ? (
+                              result.blogs.map((blog) => (
                                 <div
                                   className={`${styles.contentContainer} ${styles.blogContent}`}
                                   key={blog._id}
@@ -139,16 +185,18 @@ const Search = () => {
                                     <div
                                       className={styles.image}
                                       style={{
-                                        backgroundImage: `url(${blog.image})`,
+                                        backgroundImage: blog.image
+                                          ? `url(${blog.image})`
+                                          : `url(${f8Icon})`,
                                       }}
                                     ></div>
                                   </Link>
                                   <div className={styles.info}>
-                                    <h2>
+                                    <h3>
                                       <Link to={`/blog/${blog.slug}`}>
                                         {blog.titleDisplay}
                                       </Link>
-                                    </h2>
+                                    </h3>
                                     <p>Đọc tiếp...</p>
                                     <div className={styles.reaction}>
                                       <div className={styles.like}>
@@ -171,10 +219,11 @@ const Search = () => {
                             )}
                           </div>
                         )}
-                        {tabs === 'videos' && (
+                        {tabs === '/search/video' && (
                           <div className={styles.contentWrapper}>
-                            {tabs === 'videos' && result.videos.length > 0 ? (
-                              result.videos.map(video => (
+                            {tabs === '/search/video' &&
+                            result.videos.length > 0 ? (
+                              result.videos.map((video) => (
                                 <div
                                   className={styles.contentContainer}
                                   key={video._id}
@@ -192,7 +241,7 @@ const Search = () => {
                                     ></div>
                                   </a>
                                   <div className={styles.info}>
-                                    <h2>
+                                    <h3>
                                       <a
                                         rel="noopener noreferrer"
                                         target="_blank"
@@ -200,7 +249,7 @@ const Search = () => {
                                       >
                                         {video.title}
                                       </a>
-                                    </h2>
+                                    </h3>
                                     <p>Xem trên Youtube...</p>
                                   </div>
                                 </div>

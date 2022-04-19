@@ -1,11 +1,13 @@
-import React from 'react'
 import styles from './LearningActionBar.module.scss'
 import VerticalModal from '../utils/vertical-modal/VerticalModal'
-import LearningTrack from './LearningTrack'
-import { Spinner } from 'react-bootstrap'
 import LearningTrackItem from './LearningTrackItem'
 
-const LearningActionBar = ({ episodes, show, showHandler, loading }) => {
+const LearningActionBar = ({
+  episodes,
+  handleIsShowMenuTrack,
+  isShowMenuTrack,
+  loading,
+}) => {
   return (
     <div className={styles.wrapper}>
       <button className={styles.button}>
@@ -18,11 +20,11 @@ const LearningActionBar = ({ episodes, show, showHandler, loading }) => {
         <span>BÀI TIẾP THEO</span>
         <i className="fa-solid fa-chevron-right"></i>
       </button>
-      <div className={styles.toggleTrackMenu} onClick={showHandler}>
+      <div className={styles.toggleTrackMenu} onClick={handleIsShowMenuTrack}>
         <h4 className={styles.title}>1. Khái niệm kỹ thuật cần biết</h4>
         <button className={styles.toggleButton}>
-          {!show && <i className="fa-solid fa-bars"></i>}
-          {show && <i className="fa-solid fa-arrow-right"></i>}
+          {!isShowMenuTrack && <i className="fa-solid fa-bars"></i>}
+          {isShowMenuTrack && <i className="fa-solid fa-arrow-right"></i>}
         </button>
       </div>
 

@@ -1,7 +1,5 @@
 import removeAccents from 'vn-remove-accents'
 
-const removeActions = string => {
-  return removeAccents(string)
-}
+const removeActions = (string) => removeAccents(string)
 
 export default removeActions

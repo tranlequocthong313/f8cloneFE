@@ -6,12 +6,10 @@ import youtubeDurationFormat from 'youtube-duration-format'
 import MainButton from '../../utils/button/MainButton'
 
 const VideoItem = ({ video }) => {
-  // Format view, like, comment count
-  const formatNumber = (number) =>
+  const formatYoutubeStatistic = (number) =>
     new Intl.NumberFormat(['ban', 'id']).format(number)
 
-  // Format youtube duration time 0:0
-  const formatDuration = (duration) => {
+  const formatYoutubeDuration = (duration) => {
     const durationFormatted = youtubeDurationFormat(duration)
     return durationFormatted
   }
@@ -33,7 +31,7 @@ const VideoItem = ({ video }) => {
               <i className="fa-solid fa-play"></i>
             </div>
             <div className={styles.duration}>
-              {formatDuration(video.duration)}
+              {formatYoutubeDuration(video.duration)}
             </div>
             <div></div>
           </div>
@@ -51,15 +49,15 @@ const VideoItem = ({ video }) => {
       <ul className={styles.stats}>
         <li>
           <i className="fa-solid fa-eye"></i>
-          <span>{formatNumber(video.viewCount)}</span>
+          <span>{formatYoutubeStatistic(video.viewCount)}</span>
         </li>
         <li>
           <i className="fa-solid fa-thumbs-up"></i>
-          <span>{formatNumber(video.likeCount)}</span>
+          <span>{formatYoutubeStatistic(video.likeCount)}</span>
         </li>
         <li>
           <i className="fa-solid fa-comment"></i>
-          <span>{formatNumber(video.commentCount)}</span>
+          <span>{formatYoutubeStatistic(video.commentCount)}</span>
         </li>
       </ul>
     </MainCard>

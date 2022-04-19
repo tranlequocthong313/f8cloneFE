@@ -34,13 +34,11 @@ const EditPost = () => {
 
   const { showModal, setIsValid } = useContext(BlogContext)
 
-  // maxLengthContentEditable library require maxLength is string
   const LIMIT_TITLE_LENGTH = '190'
 
   useEffect(() => {
     document.title = title
 
-    // User has to enter title and content then the 'POST' button is active
     title && content ? setIsValid(true) : setIsValid(false)
   }, [title, content, setIsValid])
 
@@ -66,7 +64,7 @@ const EditPost = () => {
     return () => controller?.abort()
   }, [location.pathname])
 
-  const blogDataHandler = async () => {
+  const blogData = async () => {
     try {
       const token = Cookies.get('token')
       if (!token) return
@@ -85,34 +83,38 @@ const EditPost = () => {
 
       const data = await res.json()
 
-      if (data.success) {
+      const isEditBlogSuccess = data.success
+
+      if (isEditBlogSuccess) {
         navigate(-1)
-        editStatusHandler(true, true)
+        setEditStatus((prev) => {
+          return {
+            ...prev,
+            isSuccess: true,
+            show: true,
+          }
+        })
       } else {
-        editStatusHandler(false, false)
+        setEditStatus((prev) => {
+          return {
+            ...prev,
+            isSuccess: false,
+            show: true,
+          }
+        })
       }
     } catch (error) {
       console.log(error)
     }
   }
 
-  const editStatusHandler = (isSuccess, show) => {
-    setEditStatus((prev) => {
-      return {
-        ...prev,
-        isSuccess,
-        show,
-      }
-    })
-  }
-
-  const editorChangeHandler = ({ text }) => setContent(text)
+  const editorChange = ({ text }) => setContent(text)
 
   return (
     <>
       {!showModal && (
         <>
-          <Header blogDataHandler={blogDataHandler} />
+          <Header blogData={blogData} />
           <div className={styles.wrapper}>
             <ContentEditable
               text={'Tiêu đề'}
@@ -124,7 +126,7 @@ const EditPost = () => {
             <Editor
               ref={mdEditor}
               value={content}
-              onChange={editorChangeHandler}
+              onChange={editorChange}
               renderHTML={(text) => <ReactMarkdown children={text} />}
             />
           </div>

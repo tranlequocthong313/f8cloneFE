@@ -17,7 +17,7 @@ const Comment = ({
   setCommentData,
   blogId,
 }) => {
-  const userPhotoURL = useSelector((state) => state.user.photoURL)
+  const user = useSelector((state) => state.user)
   const commentRef = useRef()
 
   const [showSubmit, setShowSubmit] = useState(false)
@@ -29,20 +29,24 @@ const Comment = ({
   })
   const [visible, setVisible] = useState(false)
 
-  const createStatus = (isSuccess, show) => {
-    setReportStatus((prev) => {
-      return {
-        ...prev,
-        show,
-        isSuccess,
-      }
-    })
-  }
+  const handleReportStatus = (status) =>
+    status
+      ? setReportStatus((prev) => {
+          return {
+            ...prev,
+            show: true,
+            isSuccess: true,
+          }
+        })
+      : setReportStatus((prev) => {
+          return {
+            ...prev,
+            show: true,
+            isSuccess: false,
+          }
+        })
 
-  const reportStatusHandler = (status) =>
-    status ? createStatus(true, true) : createStatus(false, true)
-
-  const scrollToTopHandler = () => {
+  const scrollToTop = () => {
     const SHOW_SCROLL_TO_TOP_OFFSET = 1000
 
     commentRef.current.scrollTop >= SHOW_SCROLL_TO_TOP_OFFSET
@@ -52,35 +56,31 @@ const Comment = ({
 
   return (
     <>
-      {showModal && (
-        <CommentModal showModalHandler={() => setShowModal(false)} />
-      )}
+      {showModal && <CommentModal showModal={() => setShowModal(false)} />}
 
       <div className={styles.container}>
-        <div
-          className={styles.content}
-          ref={commentRef}
-          onScroll={scrollToTopHandler}
-        >
+        <div className={styles.content} ref={commentRef} onScroll={scrollToTop}>
           <CommentHeader commentData={commentData} />
-          <CommentInput
-            showCode={showCode}
-            showSubmit={showSubmit}
-            onInput={onInput}
-            setShowSubmit={setShowSubmit}
-            setShowCode={setShowCode}
-            commentInput={commentInput}
-            submitComment={submitComment}
-            userPhotoURL={userPhotoURL}
-            blogId={blogId}
-          />
+          {user.isLoggedIn && (
+            <CommentInput
+              showCode={showCode}
+              showSubmit={showSubmit}
+              onInput={onInput}
+              setShowSubmit={setShowSubmit}
+              setShowCode={setShowCode}
+              commentInput={commentInput}
+              submitComment={submitComment}
+              userPhotoURL={user.photoURL}
+              blogId={blogId}
+            />
+          )}
           {commentData.length > 0 && (
             <CommentBody
               commentData={commentData}
-              userPhotoURL={userPhotoURL}
-              showModalHandler={setShowModal}
+              userPhotoURL={user.photoURL}
+              showModal={setShowModal}
               setCommentData={setCommentData}
-              reportStatusHandler={reportStatusHandler}
+              handleReportStatus={handleReportStatus}
               blogId={blogId}
             />
           )}
@@ -94,7 +94,7 @@ const Comment = ({
         )}
       </div>
       <MainToast
-        createStatus={reportStatus}
+        status={reportStatus}
         setCreateStatus={() =>
           setReportStatus((prev) => {
             return {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Image } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { apiURL } from '../../context/constants'
-import timeSinceHandler from '../utils/timeSinceHandler/timeSinceHandler'
+import timeSince from '../utils/timeSince/timeSince'
 import styles from './BlogHighlights.module.scss'
 import f8Logo from '../../asset/images/f8_icon.png'
 
@@ -20,10 +20,13 @@ const BlogHighlights = ({ blogHighlight }) => {
         blogHighlight.map((blog) => (
           <div className={styles.post} key={blog._id}>
             <div className={styles.author}>
-              Đăng bởi <strong>{blog.postedBy.fullName}</strong>
+              Đăng bởi{' '}
+              <Link to={`/${blog.postedBy.slug}`}>
+                <strong>{blog.postedBy.fullName}</strong>
+              </Link>
               <span className={styles.dot}>.</span>
               <span className={styles.createdAt}>
-                {timeSinceHandler(blog.createdAt)}
+                {timeSince(blog.createdAt)}
               </span>
             </div>
             <Link to={`/blog/${blog.slug}`}>

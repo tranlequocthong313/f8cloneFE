@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import styles from './NewBlogs.module.scss'
 import { apiURL } from '../../context/constants'
 import noPhotoUser from '../../asset/images/nobody_m.256x256.jpg'
-import timeSinceHandler from '../utils/timeSinceHandler/timeSinceHandler'
+import timeSince from '../utils/timeSince/timeSince'
 import Cookies from 'js-cookie'
 import { useSelector } from 'react-redux'
 
@@ -20,7 +20,6 @@ const NewBlogs = ({ blogs }) => {
     ;(async () => {
       try {
         const token = Cookies.get('token')
-
         if (!token) return
 
         const res = await fetch(
@@ -45,13 +44,10 @@ const NewBlogs = ({ blogs }) => {
     return () => controller?.abort()
   }, [])
 
-  const bookmarkHandler = async (blogId) => {
+  const bookmark = async (blogId) => {
     try {
       const token = Cookies.get('token')
-
-      if (!token) {
-        return navigate('/login')
-      }
+      if (!token) return navigate('/login')
 
       const res = await fetch(`${apiURL}/me/bookmark`, {
         method: 'PUT',
@@ -63,8 +59,6 @@ const NewBlogs = ({ blogs }) => {
       })
 
       const data = await res.json()
-      console.log('bookmark', data)
-
       setBookmarkData(data.bookmark)
     } catch (error) {
       console.log(error)
@@ -77,23 +71,14 @@ const NewBlogs = ({ blogs }) => {
         <SecondaryCard key={blog._id}>
           <div className={styles.header}>
             <div className={styles.author}>
-              <Link to={`${blog.slug}`}>
-                <Image
-                  src={
-                    blog.postedBy.photoURL
-                      ? blog.postedBy.photoURL
-                      : noPhotoUser
-                  }
-                />
+              <Link to={`/blog/${blog.slug}`}>
+                <Image src={blog.postedBy.photoURL} />
               </Link>
-              <Link to={`${blog.slug}`}>
+              <Link to={`/blog/${blog.slug}`}>
                 <span>{blog.postedBy.fullName}</span>
               </Link>
             </div>
-            <div
-              className={styles.action}
-              onClick={() => bookmarkHandler(blog._id)}
-            >
+            <div className={styles.action} onClick={() => bookmark(blog._id)}>
               <i
                 className={
                   bookmarkData && bookmarkData.includes(blog._id)
@@ -106,19 +91,19 @@ const NewBlogs = ({ blogs }) => {
           </div>
           <div className={styles.body}>
             <div className={styles.content}>
-              <Link to={`${blog.slug}`}>
+              <Link to={`/blog/${blog.slug}`}>
                 <h3>{blog.titleDisplay}</h3>
                 <p>{blog.description ? blog.description : blog.content}</p>
               </Link>
               <div className={styles.info}>
-                <span>{timeSinceHandler(blog.createdAt)}</span>
+                <span>{timeSince(blog.createdAt)}</span>
                 <span className={styles.dot}>.</span>
                 {blog.readingTime} phút đọc
               </div>
             </div>
             {blog.image && (
               <div className={styles.image}>
-                <Link to={`${blog.slug}`}>
+                <Link to={`/blog/${blog.slug}`}>
                   <Image src={blog.image} />
                 </Link>
               </div>

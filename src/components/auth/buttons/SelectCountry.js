@@ -1,12 +1,12 @@
 import React, { useState, useEffect, memo } from 'react'
-import { COUNTRY_CODE_DUMMY } from '../../../context/constants'
+import { COUNTRY_CODE } from '../../../context/constants'
 import styles from './SelectCountry.module.scss'
 
 const SelectCountry = memo(({ onChange }) => {
   const [countryCode, setCountryCode] = useState([])
 
   useEffect(() => {
-    setCountryCode(COUNTRY_CODE_DUMMY)
+    setCountryCode(COUNTRY_CODE)
   }, [])
 
   return (

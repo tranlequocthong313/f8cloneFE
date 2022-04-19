@@ -1,5 +1,4 @@
-import { S } from 'maxlength-contenteditable'
-import React, { createContext, useEffect, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
 export const BlogContext = createContext()
@@ -14,10 +13,13 @@ const BlogContextProvider = ({ children }) => {
   const [isValid, setIsValid] = useState(false)
 
   useEffect(() => {
-    if (location.pathname.includes('/new-post')) {
+    const isNewPostPathName = location.pathname.includes('/new-post')
+    const isEditPostPathName = location.pathname.includes('/edit-blog/')
+
+    if (isNewPostPathName) {
       setIsNewBlog(true)
       setText('Xuất bản')
-    } else if (location.pathname.includes('/edit-blog/')) {
+    } else if (isEditPostPathName) {
       setIsEditBlog(true)
       setText('Lưu và xuất bản')
     } else {

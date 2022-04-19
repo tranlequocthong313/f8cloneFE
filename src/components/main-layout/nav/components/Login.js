@@ -5,9 +5,11 @@ import styles from './Login.module.scss'
 
 const Login = () => {
   return (
-    <MainButton primary={true} className={styles.button}>
-      <Link to="/login">Đăng nhập</Link>
-    </MainButton>
+    <Link to="/login">
+      <MainButton primary={true} className={styles.button}>
+        Đăng nhập
+      </MainButton>
+    </Link>
   )
 }
 
