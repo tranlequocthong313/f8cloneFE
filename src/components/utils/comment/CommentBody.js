@@ -311,81 +311,92 @@ const CommentBody = ({
 
               <div className={styles.commentAction}>
                 <div className={styles.action}>
-                  <span
-                    className={styles.reactionButton}
-                    onClick={() => {
-                      console.log('Onclick')
-                      reactCommentHandler('Thích', comment._id)
-                    }}
-                  >
-                    <div className={styles.reaction}>
-                      <CommentReaction
-                        reactCommentHandler={reactCommentHandler}
-                        commentId={comment._id}
-                      />
-                    </div>
-                    Thích
-                  </span>
+                  {user.isLoggedIn && (
+                    <>
+                      <span
+                        className={styles.reactionButton}
+                        onClick={() => {
+                          console.log('Onclick')
+                          reactCommentHandler('Thích', comment._id)
+                        }}
+                      >
+                        <div className={styles.reaction}>
+                          <CommentReaction
+                            reactCommentHandler={reactCommentHandler}
+                            commentId={comment._id}
+                          />
+                        </div>
+                        Thích
+                      </span>
+                      <span className={styles.dot}>.</span>
+                    </>
+                  )}
                   {comment && comment.reacts.length > 0 && (
                     <CommentReactionCounter
                       showModalHandler={showModalHandler}
                       reactData={comment.reacts}
                     />
                   )}
-                  <span className={styles.dot}>.</span>
-                  <span
-                    className={styles.reactionButton}
-                    onClick={() => showInputHandler(comment._id, 'reply')}
-                  >
-                    Trả lời
-                  </span>
-                  <span className={styles.dot}>.</span>
+                  {user.isLoggedIn && (
+                    <>
+                      <span
+                        className={styles.reactionButton}
+                        onClick={() => showInputHandler(comment._id, 'reply')}
+                      >
+                        Trả lời
+                      </span>
+                      <span className={styles.dot}>.</span>
+                    </>
+                  )}
                   <span className={styles.createdAt}>
                     {timeSince(comment.createdAt)}
                   </span>
 
-                  <span className={styles.dot}>.</span>
-
-                  <Tippy
-                    button={
-                      <i
-                        className={`fa-solid fa-ellipsis ${styles.optionIcon}`}
-                      ></i>
-                    }
-                    className={styles.optionWrapper}
-                  >
-                    {comment.postedBy._id === user.userId && (
-                      <>
-                        <div
-                          className={styles.optionItem}
-                          onClick={() => {
-                            showInputHandler(comment._id, 'edit')
-                          }}
-                        >
-                          <i className="fa-solid fa-pen"></i>
-                          <span>Sửa bình luận</span>
-                        </div>
-                        <div
-                          className={styles.optionItem}
-                          onClick={() => deleteComment(comment._id)}
-                        >
-                          <i className="fa-solid fa-trash"></i>
-                          <span>Xóa bình luận</span>
-                        </div>
-                      </>
-                    )}
-                    {comment.postedBy._id !== user.userId && (
-                      <div
-                        className={styles.optionItem}
-                        onClick={() =>
-                          reportStatusHandler(reportComment(comment._id))
+                  {user.isLoggedIn && (
+                    <>
+                      <span className={styles.dot}>.</span>
+                      <Tippy
+                        button={
+                          <i
+                            className={`fa-solid fa-ellipsis ${styles.optionIcon}`}
+                          ></i>
                         }
+                        className={styles.optionWrapper}
                       >
-                        <i className="fa-solid fa-flag"></i>
-                        <span>Báo cáo bình luận</span>
-                      </div>
-                    )}
-                  </Tippy>
+                        {comment.postedBy._id === user.userId && (
+                          <>
+                            <div
+                              className={styles.optionItem}
+                              onClick={() => {
+                                showInputHandler(comment._id, 'edit')
+                              }}
+                            >
+                              <i className="fa-solid fa-pen"></i>
+                              <span>Sửa bình luận</span>
+                            </div>
+                            <div
+                              className={styles.optionItem}
+                              onClick={() => deleteComment(comment._id)}
+                            >
+                              <i className="fa-solid fa-trash"></i>
+                              <span>Xóa bình luận</span>
+                            </div>
+                          </>
+                        )}
+                        {comment.postedBy._id !== user.userId && (
+                          <div
+                            className={styles.optionItem}
+                            onClick={() =>
+                              reportStatusHandler(reportComment(comment._id))
+                            }
+                          >
+                            <i className="fa-solid fa-flag"></i>
+                            <span>Báo cáo bình luận</span>
+                          </div>
+                        )}
+                      </Tippy>
+                    </>
+                  )}
                 </div>
               </div>
 
