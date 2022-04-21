@@ -1,62 +1,61 @@
-import React, { useEffect, useState } from 'react'
-import { Form, Spinner } from 'react-bootstrap'
-import styles from './AuthWithPhoneNumberForm.module.scss'
-import { signInWithPhoneNumber, RecaptchaVerifier } from 'firebase/auth'
-import { auth } from '../../../firebase/config'
-import FormGroup from '../../utils/auth-form/FormGroup'
-import { apiURL } from '../../../context/constants'
-import Cookies from 'js-cookie'
-import userDefaultPhoto from '../../../asset/images/nobody_m.256x256.jpg'
+import React, { useEffect, useState } from 'react';
+import { Form, Spinner } from 'react-bootstrap';
+import styles from './AuthWithPhoneNumberForm.module.scss';
+import { signInWithPhoneNumber, RecaptchaVerifier } from 'firebase/auth';
+import { auth } from '../../../firebase/config';
+import FormGroup from '../../utils/auth-form/FormGroup';
+import { apiURL } from '../../../context/constants';
+import Cookies from 'js-cookie';
 
 const LoginWithPhoneNumberForm = ({
   switchPhoneAndEmail,
   dispatchAndNavigate,
   isLogin,
 }) => {
-  const COUNTRY_NAME_DEFAULT = 'vn'
-  const COUNTRY_CODE_DEFAULT = '84'
+  const COUNTRY_NAME_DEFAULT = 'vn';
+  const COUNTRY_CODE_DEFAULT = '84';
 
-  const LIMITED_COUNTER = 60
+  const LIMITED_SECOND = 60;
 
-  const [countryName, setCountryName] = useState(COUNTRY_NAME_DEFAULT)
-  const [countryCode, setCountryCode] = useState(COUNTRY_CODE_DEFAULT)
-  const [isSendVerifyCode, setIsSentVerifyCode] = useState(false)
-  const [verifyOTP, setVerifyOTP] = useState('')
-  const [counter, setCounter] = useState(LIMITED_COUNTER)
-  const [userPhoneNumber, setUserPhoneNumber] = useState('')
-  const [fullName, setFullName] = useState('')
-  const [validatePhoneNumber, setValidatePhoneNumber] = useState(null)
-  const [validateFullName, setValidateFullName] = useState(null)
-  const [invalidOTP, setInvalidOTP] = useState(null)
-  const [disabled, setDisabled] = useState(true)
-  const [loading, setLoading] = useState(false)
+  const [countryName, setCountryName] = useState(COUNTRY_NAME_DEFAULT);
+  const [countryCode, setCountryCode] = useState(COUNTRY_CODE_DEFAULT);
+  const [isSendVerifyCode, setIsSentVerifyCode] = useState(false);
+  const [verifyOTP, setVerifyOTP] = useState('');
+  const [counter, setCounter] = useState(LIMITED_SECOND);
+  const [userPhoneNumber, setUserPhoneNumber] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [validatePhoneNumber, setValidatePhoneNumber] = useState(null);
+  const [validateFullName, setValidateFullName] = useState(null);
+  const [invalidOTP, setInvalidOTP] = useState(null);
+  const [disabled, setDisabled] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const getCountryName = (e) => {
-    const countryNameFormatted = e.target.value.split(' ')[0].toLowerCase()
-    const countryCodeFormatted = e.target.value.split(' +')[1]
+    const countryNameFormatted = e.target.value.split(' ')[0].toLowerCase();
+    const countryCodeFormatted = e.target.value.split(' +')[1];
 
-    setCountryName(countryNameFormatted)
-    setCountryCode(countryCodeFormatted)
-  }
+    setCountryName(countryNameFormatted);
+    setCountryCode(countryCodeFormatted);
+  };
 
   const onSubmitOTP = () => {
-    sendOTPCode()
-    setIsSentVerifyCode(true)
-    counterWhenSubmit()
-  }
+    sendOTPCode();
+    setIsSentVerifyCode(true);
+    counterWhenSubmit();
+  };
 
   const counterWhenSubmit = () => {
     let interval = setInterval(() => {
       setCounter((prev) => {
-        const isCounterGreaterThanZero = prev > 0
-        if (isCounterGreaterThanZero) return prev - 1
-
-        clearInterval(interval)
-        setIsSentVerifyCode(false)
-        return LIMITED_COUNTER
-      })
-    }, 1000)
-  }
+        if (prev > 0) {
+          return prev - 1;
+        }
+        clearInterval(interval);
+        setIsSentVerifyCode(false);
+        return LIMITED_SECOND;
+      });
+    }, 1000);
+  };
 
   const sendOTPCode = async () => {
     window.recaptchaVerifier = new RecaptchaVerifier(
@@ -64,156 +63,153 @@ const LoginWithPhoneNumberForm = ({
       {
         size: 'invisible',
       },
-      auth,
-    )
+      auth
+    );
 
-    const phoneNumber = `+${countryCode}${userPhoneNumber}`
-    const appVerifier = window.recaptchaVerifier
+    const phoneNumber = `+${countryCode}${userPhoneNumber}`;
+    const appVerifier = window.recaptchaVerifier;
 
     try {
       const confirmationResult = await signInWithPhoneNumber(
         auth,
         phoneNumber,
-        appVerifier,
-      )
-      window.confirmationResult = confirmationResult
+        appVerifier
+      );
+      window.confirmationResult = confirmationResult;
     } catch (error) {
-      console.log(error.message)
+      console.log(error.message);
     }
-  }
+  };
 
-  const validateOTPGetUserDataIfTrue = async () => {
+  const validateOTP = async () => {
     try {
-      setLoading(true)
-      const result = await window.confirmationResult.confirm(verifyOTP)
+      setLoading(true);
+      const result = await window.confirmationResult.confirm(verifyOTP);
 
-      let user = await result.user
-      const hasUserData = user
+      let user = await result.user;
 
-      hasUserData && signInOrSignUp()
+      if (user && isLogin) {
+        const res = await fetch(`${apiURL}/login/provider`, {
+          method: 'POST',
+          body: JSON.stringify({
+            phoneNumber: userPhoneNumber,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = await res.json();
+        console.log(data);
+        Cookies.set('token', data.accessToken, { expires: 365 });
+
+        dispatchAndNavigate({
+          ...data.user,
+          accessToken: data.accessToken,
+        });
+      } else if (user && !isLogin) {
+        const userDefaultAvatar =
+          'https://firebasestorage.googleapis.com/v0/b/f8clone-3e404.appspot.com/o/uploads%2Fnobody_m.256x256.jpg?alt=media&token=8e617e21-795f-45ce-8340-955a5290e66f';
+
+        const res = await fetch(`${apiURL}/register`, {
+          method: 'POST',
+          body: JSON.stringify({
+            fullName,
+            phoneNumber: userPhoneNumber,
+            photoURL: userDefaultAvatar,
+            activated: true,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = await res.json();
+
+        Cookies.set('token', data.accessToken, { expires: 365 });
+
+        dispatchAndNavigate({
+          ...data.user,
+          accessToken: data.accessToken,
+        });
+      }
     } catch (error) {
       if (error.code === 'auth/invalid-verification-code')
-        setInvalidOTP('Mã xác minh không hợp lệ')
+        setInvalidOTP('Mã xác minh không hợp lệ');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
-
-  const signInOrSignUp = async () => {
-    if (isLogin) {
-      const res = await fetch(`${apiURL}/login/provider`, {
-        method: 'POST',
-        body: JSON.stringify({
-          phoneNumber: userPhoneNumber,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-
-      const data = await res.json()
-      Cookies.set('token', data.accessToken, { expires: 365 })
-      dispatchAndNavigate({
-        ...data.user,
-        accessToken: data.accessToken,
-      })
-    } else {
-      const userDefaultAvatar =
-        'https://firebasestorage.googleapis.com/v0/b/f8clone-3e404.appspot.com/o/uploads%2Fnobody_m.256x256.jpg?alt=media&token=8e617e21-795f-45ce-8340-955a5290e66f'
-
-      const res = await fetch(`${apiURL}/register`, {
-        method: 'POST',
-        body: JSON.stringify({
-          fullName,
-          photoURL: userDefaultAvatar,
-          phoneNumber: userPhoneNumber,
-          activated: true,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-
-      const data = await res.json()
-      Cookies.set('token', data.accessToken, { expires: 365 })
-      dispatchAndNavigate({
-        ...data.user,
-        accessToken: data.accessToken,
-      })
-    }
-  }
+  };
 
   const checkNumberPhone = async (e) => {
     try {
-      const length = e.target.value.trim().length
-      const isPhoneNumberInputLengthEqualTen = length === 10
+      const length = e.target.value.trim().length;
+      setUserPhoneNumber(e.target.value);
 
-      if (isPhoneNumberInputLengthEqualTen) {
+      if (length === 10) {
         const res = await fetch(`${apiURL}/login/phone-number`, {
           method: 'POST',
           body: JSON.stringify({ phoneNumber: e.target.value }),
           headers: {
             'Content-Type': 'application/json',
           },
-        })
+        });
 
-        const data = await res.json()
-
-        !isLogin && data.notUsed && setUserPhoneNumber(e.target.value)
-        isLogin && data.used && setUserPhoneNumber(e.target.value)
+        const data = await res.json();
 
         isLogin
           ? setValidatePhoneNumber(data.notUsed ? data.notUsed : null)
-          : setValidatePhoneNumber(data.used ? data.used : null)
+          : setValidatePhoneNumber(data.used ? data.used : null);
       }
 
-      const isPhoneNumberInputLengthEqualZero = length === 0
-      isPhoneNumberInputLengthEqualZero && setValidatePhoneNumber(null)
+      length === 0 && setValidatePhoneNumber(null);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const handleValidateFullName = () => {
-    const isEmptyFullNameInput = fullName.length === 0
-    const isValidFullNameInput =
-      fullName.length > 1 && !fullName.match('[a-zA-Z][a-zA-Z ]{2,}')
+    const isEmptyFullNameInput = fullName.length === 0;
+    const inValidFullNameInput =
+      fullName.length === 1 ||
+      !fullName.match('[a-zA-Z][a-zA-Z ]{2,}') ||
+      fullName.trim().indexOf(' ') === -1;
 
     if (isEmptyFullNameInput) {
-      setValidateFullName('Tên không được để trống')
-    } else if (isValidFullNameInput) {
-      setValidateFullName(null)
+      setValidateFullName('Tên không được để trống');
+    } else if (inValidFullNameInput) {
+      setValidateFullName('Tên của bạn không hợp lệ');
     } else {
-      setValidateFullName('Tên của bạn không hợp lệ')
+      setValidateFullName(null);
     }
-  }
+  };
 
   useEffect(() => {
-    const disableSendOTPButton = () => {
+    const isDisable = () => {
       if (!isLogin) {
         return (
           fullName.trim().indexOf(' ') === -1 ||
           validateFullName !== null ||
           userPhoneNumber.length !== 10 ||
+          !userPhoneNumber.match(/^\d+$/) ||
           validatePhoneNumber !== null
-        )
+        );
       }
-      return userPhoneNumber.length !== 10 || validatePhoneNumber !== null
-    }
-
-    setDisabled(disableSendOTPButton())
+      return userPhoneNumber.length !== 10 || validatePhoneNumber !== null;
+    };
+    console.log(isDisable());
+    setDisabled(isDisable());
   }, [
     fullName,
     isLogin,
-    userPhoneNumber.length,
+    userPhoneNumber,
     validateFullName,
     validatePhoneNumber,
-  ])
+  ]);
 
   useEffect(() => {
-    const isEmptyOTPInput = verifyOTP.length === 0
-    isEmptyOTPInput && setInvalidOTP(null)
-  }, [verifyOTP.length])
+    verifyOTP.length === 0 && setInvalidOTP(null);
+  }, [verifyOTP.length]);
 
   return (
     <Form className={styles.formBody}>
@@ -224,8 +220,8 @@ const LoginWithPhoneNumberForm = ({
           placeholder={'Họ và tên của bạn'}
           onChange={{
             input: (e) => {
-              setFullName(e.target.value)
-              setValidateFullName(null)
+              setFullName(e.target.value);
+              setValidateFullName(null);
             },
           }}
           onBlur={handleValidateFullName}
@@ -259,9 +255,7 @@ const LoginWithPhoneNumberForm = ({
         onClick={onSubmitOTP}
         inValid={invalidOTP}
         onKeyUp={(e) =>
-          e.keyCode === 13 &&
-          verifyOTP.length === 6 &&
-          validateOTPGetUserDataIfTrue()
+          e.keyCode === 13 && verifyOTP.length === 6 && validateOTP()
         }
       />
       <div
@@ -270,7 +264,7 @@ const LoginWithPhoneNumberForm = ({
             ? styles.logInButton
             : `${styles.logInButton} ${styles.disabled}`
         }
-        onClick={validateOTPGetUserDataIfTrue}
+        onClick={validateOTP}
       >
         {loading && (
           <Spinner
@@ -281,7 +275,7 @@ const LoginWithPhoneNumberForm = ({
         {!loading && <span>{isLogin ? 'Đăng nhập' : 'Đăng ký'}</span>}
       </div>
     </Form>
-  )
-}
+  );
+};
 
-export default LoginWithPhoneNumberForm
+export default LoginWithPhoneNumberForm;

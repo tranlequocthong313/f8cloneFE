@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from 'react'
-import styles from './BlogSameAuthor.module.scss'
-import { Link } from 'react-router-dom'
-import { apiURL } from '../../context/constants'
+import React, { useEffect, useState } from 'react';
+import styles from './BlogSameAuthor.module.scss';
+import { Link } from 'react-router-dom';
+import { apiURL } from '../../context/constants';
 
 const BlogSameAuthor = ({ postedBy, blogId }) => {
-  const [blogSameAuthor, setBlogSameAuthor] = useState([])
+  const [blogSameAuthor, setBlogSameAuthor] = useState([]);
 
   useEffect(() => {
-    const controller = new AbortController()
+    const controller = new AbortController();
 
-    ;(async () => {
+    (async () => {
       try {
-        const res = await fetch(`${apiURL}/blog/${blogId}/${postedBy}`)
-        const data = await res.json()
-        setBlogSameAuthor(data)
+        const res = await fetch(`${apiURL}/blog/${blogId}/${postedBy}`);
+        const data = await res.json();
+        setBlogSameAuthor(data);
       } catch (error) {
-        console.log(error)
+        console.log(error.message);
       }
-    })()
+    })();
 
-    return () => controller?.abort()
-  }, [blogId, postedBy])
+    return () => controller?.abort();
+  }, [blogId, postedBy]);
 
   return (
     <div className={styles.wrapper}>
@@ -40,7 +40,7 @@ const BlogSameAuthor = ({ postedBy, blogId }) => {
           ))}
       </ul>
     </div>
-  )
-}
+  );
+};
 
-export default BlogSameAuthor
+export default BlogSameAuthor;

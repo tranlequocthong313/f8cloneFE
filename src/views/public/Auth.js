@@ -1,42 +1,42 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Image } from 'react-bootstrap'
-import styles from './Auth.module.scss'
-import f8Logo from '../../asset/images/f8_icon.png'
-import { signInWithPopup } from 'firebase/auth'
-import { auth } from '../../firebase/config'
-import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import AuthWithPhoneNumberForm from '../../components/auth/forms/AuthWithPhoneNumberForm'
-import AuthWithEmailAndPasswordForm from '../../components/auth/forms/AuthWithEmailAndPasswordForm'
-import { login } from '../../actions/userAction'
-import SignInButtonContainer from '../../components/auth/buttons/SignInButtonContainer'
-import { apiURL } from '../../context/constants'
-import Cookies from 'js-cookie'
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Image } from 'react-bootstrap';
+import styles from './Auth.module.scss';
+import f8Logo from '../../asset/images/f8_icon.png';
+import { signInWithPopup } from 'firebase/auth';
+import { auth } from '../../firebase/config';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import AuthWithPhoneNumberForm from '../../components/auth/forms/AuthWithPhoneNumberForm';
+import AuthWithEmailAndPasswordForm from '../../components/auth/forms/AuthWithEmailAndPasswordForm';
+import { login } from '../../actions/userAction';
+import SignInButtonContainer from '../../components/auth/buttons/SignInButtonContainer';
+import { apiURL } from '../../context/constants';
+import Cookies from 'js-cookie';
 
 const Auth = () => {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const [isLogin, setIsLogin] = useState(true)
-  const [loginOption, setLoginOption] = useState('')
-  const [forgotPassword, setForgotPassword] = useState(false)
-  const [inValid, setInValid] = useState(false)
+  const [isLogin, setIsLogin] = useState(true);
+  const [loginOption, setLoginOption] = useState('');
+  const [forgotPassword, setForgotPassword] = useState(false);
+  const [inValid, setInValid] = useState(false);
 
   const dispatchAndNavigate = (payload) => {
-    dispatch(login(payload))
-    navigate('/')
-  }
+    dispatch(login(payload));
+    navigate('/');
+  };
 
   const handleIsLogin = () => {
-    setIsLogin((prev) => !prev)
-    setLoginOption('')
-  }
+    setIsLogin((prev) => !prev);
+    setLoginOption('');
+  };
 
   const loginWithProvider = async (provider) => {
     try {
-      const res = await signInWithPopup(auth, provider)
-      const user = res.user
+      const res = await signInWithPopup(auth, provider);
+      const user = res.user;
 
       const apiRes = await fetch(`${apiURL}/login/provider`, {
         method: 'POST',
@@ -46,19 +46,19 @@ const Auth = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-      })
+      });
 
-      const apiData = await apiRes.json()
+      const apiData = await apiRes.json();
 
       if (apiData.hasUserCreatedAlready) {
-        Cookies.set('token', apiData.accessToken, { expires: 365 })
+        Cookies.set('token', apiData.accessToken, { expires: 365 });
         return dispatchAndNavigate({
           ...apiData.userCreated,
           accessToken: apiData.accessToken,
-        })
+        });
       }
 
-      console.log('CREATE NEW ACCOUNT WITH PROVIDER!')
+      console.log('CREATE NEW ACCOUNT WITH PROVIDER!');
       const newRes = await fetch(`${apiURL}/login/provider`, {
         method: 'POST',
         body: JSON.stringify({
@@ -71,26 +71,26 @@ const Auth = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-      })
+      });
 
-      const newData = await newRes.json()
-      Cookies.set('token', newData.accessToken, { expires: 365 })
-      console.log(newData)
+      const newData = await newRes.json();
+      Cookies.set('token', newData.accessToken, { expires: 365 });
+      console.log(newData);
       dispatchAndNavigate({
         ...newData.user,
         accessToken: newData.accessToken,
-      })
+      });
     } catch (error) {
       const isUsedEmailForOtherAuthProvider =
-        error.code === 'auth/account-exists-with-different-credential'
-      isUsedEmailForOtherAuthProvider && setInValid(true)
+        error.code === 'auth/account-exists-with-different-credential';
+      isUsedEmailForOtherAuthProvider && setInValid(true);
     }
-  }
+  };
 
-  const switchPhoneAndEmail = (option) => setLoginOption(option)
+  const switchPhoneAndEmail = (option) => setLoginOption(option);
 
-  let isShowAuthProviderOption
-  if (loginOption === '') isShowAuthProviderOption = true
+  let isShowAuthProviderOption;
+  if (loginOption === '') isShowAuthProviderOption = true;
 
   return (
     <div className={styles.wrapper}>
@@ -103,7 +103,7 @@ const Auth = () => {
                 onClick={() => {
                   forgotPassword
                     ? setForgotPassword(false)
-                    : switchPhoneAndEmail('')
+                    : switchPhoneAndEmail('');
                 }}
                 className={styles.backButton}
               >
@@ -154,7 +154,7 @@ const Auth = () => {
                   {isLogin && (
                     <>
                       Bạn chưa có tài khoản?{' '}
-                      <Link to="/register" onClick={isLogin}>
+                      <Link to="/register" onClick={handleIsLogin}>
                         Đăng ký
                       </Link>
                     </>
@@ -162,7 +162,7 @@ const Auth = () => {
                   {!isLogin && (
                     <>
                       Bạn đã có tài khoản?{' '}
-                      <Link to="/login" onClick={isLogin}>
+                      <Link to="/login" onClick={handleIsLogin}>
                         Đăng nhập
                       </Link>
                     </>
@@ -190,7 +190,7 @@ const Auth = () => {
       </div>
       <div id="recaptcha-container"></div>
     </div>
-  )
-}
+  );
+};
 
-export default Auth
+export default Auth;

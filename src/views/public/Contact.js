@@ -1,35 +1,35 @@
-import React, { Suspense, useEffect, useState } from 'react'
-import { Row, Col, Form } from 'react-bootstrap'
-import styles from './Contact.module.scss'
-import Header from '../../components/main-layout/nav/Header'
-import SideBar from '../../components/main-layout/sidebar/SideBar'
-import { apiURL } from '../../context/constants'
-import MainToast from '../../components/utils/toast/MainToast'
-import MainButton from '../../components/utils/button/MainButton'
+import React, { Suspense, useEffect, useState } from 'react';
+import { Row, Col, Form } from 'react-bootstrap';
+import styles from './Contact.module.scss';
+import Header from '../../components/main-layout/nav/Header';
+import SideBar from '../../components/main-layout/sidebar/SideBar';
+import { apiURL } from '../../context/constants';
+import MainToast from '../../components/utils/toast/MainToast';
+import MainButton from '../../components/utils/button/MainButton';
 
 const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer'),
-)
+  import('../../components/main-layout/footer/Footer')
+);
 
 const Contact = () => {
-  const [fullName, setFullName] = useState('')
-  const [email, setEmail] = useState('')
-  const [phoneNumber, setPhoneNumber] = useState('')
-  const [content, setContent] = useState('')
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [content, setContent] = useState('');
   const [contactStatus, setContactStatus] = useState({
     isSuccess: false,
     show: false,
-  })
+  });
 
   useEffect(() => {
-    document.title = 'Liên hệ với F8'
-  }, [])
+    document.title = 'Liên hệ với F8';
+  }, []);
 
   const submitContact = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     const isValidInput =
-      fullName !== '' || email !== '' || phoneNumber !== '' || content !== ''
+      fullName !== '' || email !== '' || phoneNumber !== '' || content !== '';
 
     if (isValidInput) {
       try {
@@ -44,29 +44,29 @@ const Contact = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-        })
+        });
 
-        const data = await res.json()
+        const data = await res.json();
         data.success
           ? setContactStatus((prev) => {
               return {
                 ...prev,
                 isSuccess: true,
                 show: true,
-              }
+              };
             })(true, true)
           : setContactStatus((prev) => {
               return {
                 ...prev,
                 isSuccess: false,
                 show: true,
-              }
-            })(false, true)
+              };
+            })(false, true);
       } catch (error) {
-        console.log(error)
+        console.log(error.message);
       }
     }
-  }
+  };
 
   return (
     <>
@@ -147,7 +147,7 @@ const Contact = () => {
             return {
               ...prev,
               show: false,
-            }
+            };
           })
         }
         successText={'Gửi thông tin liên hệ thành công'}
@@ -158,7 +158,7 @@ const Contact = () => {
         <Footer />
       </Suspense>
     </>
-  )
-}
+  );
+};
 
-export default Contact
+export default Contact;

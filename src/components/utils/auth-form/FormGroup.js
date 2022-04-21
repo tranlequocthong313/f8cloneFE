@@ -1,7 +1,7 @@
-import React from 'react'
-import { Form, Image } from 'react-bootstrap'
-import styles from './FormGroup.module.scss'
-import SelectCountry from '../../auth/buttons/SelectCountry'
+import React from 'react';
+import { Form, Image } from 'react-bootstrap';
+import styles from './FormGroup.module.scss';
+import SelectCountry from '../../auth/buttons/SelectCountry';
 
 const FormGroup = ({
   onClick,
@@ -94,7 +94,7 @@ const FormGroup = ({
         </div>
       )}
     </Form.Group>
-  )
-}
+  );
+};
 
-export default FormGroup
+export default FormGroup;

@@ -1,19 +1,19 @@
-import { useState } from 'react'
-import CommentReaction from './CommentReaction'
-import { apiURL } from '../../../context/constants'
-import Cookies from 'js-cookie'
-import { useSelector } from 'react-redux'
-import { reportComment } from '../report/Report'
-import CommentInputSecondary from './CommentInputSecondary'
-import timeSince from '../../utils/timeSince/timeSince'
-import CommentReactionCounter from './CommentReactionCounter'
-import noPhotoURL from '../../../asset/images/nobody_m.256x256.jpg'
-import styles from './CommentBody.module.scss'
-import io from 'socket.io-client'
-import Tippy from '../tippy/Tippy'
-import { Link } from 'react-router-dom'
+import { useState } from 'react';
+import CommentReaction from './CommentReaction';
+import { apiURL } from '../../../context/constants';
+import Cookies from 'js-cookie';
+import { useSelector } from 'react-redux';
+import { reportComment } from '../report/Report';
+import CommentInputSecondary from './CommentInputSecondary';
+import timeSince from '../../utils/timeSince/timeSince';
+import CommentReactionCounter from './CommentReactionCounter';
+import noPhotoURL from '../../../asset/images/nobody_m.256x256.jpg';
+import styles from './CommentBody.module.scss';
+import io from 'socket.io-client';
+import Tippy from '../tippy/Tippy';
+import { Link } from 'react-router-dom';
 
-const socket = io.connect(apiURL)
+const socket = io.connect(apiURL);
 
 const CommentBody = ({
   commentData,
@@ -22,30 +22,30 @@ const CommentBody = ({
   reportStatusHandler,
   blogId,
 }) => {
-  const [showOption, setShowOption] = useState(null)
-  const [showEditInputById, setShowEditInputById] = useState([])
-  const [showReplyInputById, setShowReplyInputById] = useState([])
-  const [showCodeEditInputById, setShowCodeEditInputById] = useState([])
-  const [showCodeReplyInputById, setShowCodeReplyInputById] = useState([])
-  const [editCommentText, setEditCommentText] = useState('')
-  const [replyCommentText, setReplyCommentText] = useState('')
-  const [copyCommentHasCodeById, setCopyCommentHasCodeById] = useState([])
+  const [showOption, setShowOption] = useState(null);
+  const [showEditInputById, setShowEditInputById] = useState([]);
+  const [showReplyInputById, setShowReplyInputById] = useState([]);
+  const [showCodeEditInputById, setShowCodeEditInputById] = useState([]);
+  const [showCodeReplyInputById, setShowCodeReplyInputById] = useState([]);
+  const [editCommentText, setEditCommentText] = useState('');
+  const [replyCommentText, setReplyCommentText] = useState('');
+  const [copyCommentHasCodeById, setCopyCommentHasCodeById] = useState([]);
   const [
     showExtendButtonOnLongCommentWithId,
     setShowExtendButtonOnLongCommentWithId,
-  ] = useState([])
-  const [showReplyContentById, setShowReplyContentById] = useState([])
+  ] = useState([]);
+  const [showReplyContentById, setShowReplyContentById] = useState([]);
   const [replyCommentData, setReplyCommentData] = useState({
     replies: [],
     commentId: '',
-  })
+  });
 
-  const user = useSelector((state) => state.user)
+  const user = useSelector((state) => state.user);
 
   const reactCommentHandler = async (emoji, commentId) => {
     try {
-      const token = Cookies.get('token')
-      if (!token) return
+      const token = Cookies.get('token');
+      if (!token) return;
 
       const res = await fetch(`${apiURL}/blog/comment/react`, {
         method: 'PUT',
@@ -54,20 +54,20 @@ const CommentBody = ({
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-      })
+      });
 
-      const data = await res.json()
-      console.log(data)
-      setCommentData(data.comments)
+      const data = await res.json();
+      console.log(data);
+      setCommentData(data.comments);
     } catch (error) {
-      console.log(error)
+      console.log(error.message);
     }
-  }
+  };
 
   const replyCommentHandler = async (commentId) => {
     try {
-      const token = Cookies.get('token')
-      if (!token) return
+      const token = Cookies.get('token');
+      if (!token) return;
 
       const res = await fetch(`${apiURL}/blog/comment/reply`, {
         method: 'PUT',
@@ -81,19 +81,19 @@ const CommentBody = ({
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-      })
+      });
 
-      const data = await res.json()
-      console.log(data)
+      const data = await res.json();
+      console.log(data);
     } catch (error) {
-      console.log(error)
+      console.log(error.message);
     }
-  }
+  };
 
   const getReplyComment = async (commentId) => {
     try {
-      const token = Cookies.get('token')
-      if (!token) return
+      const token = Cookies.get('token');
+      if (!token) return;
 
       const res = await fetch(`${apiURL}/blog/comment/get-reply`, {
         method: 'POST',
@@ -102,19 +102,19 @@ const CommentBody = ({
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-      })
+      });
 
-      const data = await res.json()
-      console.log(data.comments)
+      const data = await res.json();
+      console.log(data.comments);
     } catch (error) {
-      console.log(error)
+      console.log(error.message);
     }
-  }
+  };
 
   const deleteComment = async (commentId) => {
     try {
-      const token = Cookies.get('token')
-      if (!token) return
+      const token = Cookies.get('token');
+      if (!token) return;
 
       const res = await fetch(`${apiURL}/blog/comment/delete`, {
         method: 'PUT',
@@ -123,20 +123,20 @@ const CommentBody = ({
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-      })
+      });
 
-      const data = await res.json()
-      console.log(data)
-      setCommentData(data.comments)
+      const data = await res.json();
+      console.log(data);
+      setCommentData(data.comments);
     } catch (error) {
-      console.log(error)
+      console.log(error.message);
     }
-  }
+  };
 
   const editCommentHandler = async (commentId) => {
     try {
-      const token = Cookies.get('token')
-      if (!token) return
+      const token = Cookies.get('token');
+      if (!token) return;
 
       const res = await fetch(`${apiURL}/blog/comment/edit`, {
         method: 'PUT',
@@ -149,105 +149,109 @@ const CommentBody = ({
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-      })
+      });
 
-      const data = await res.json()
-      console.log(data)
-      setCommentData(data.comments)
+      const data = await res.json();
+      console.log(data);
+      setCommentData(data.comments);
     } catch (error) {
-      console.log(error)
+      console.log(error.message);
     }
 
-    setEditCommentText('')
-    setShowEditInputById((prev) => prev.filter((item) => item !== commentId))
+    setEditCommentText('');
+    setShowEditInputById((prev) => prev.filter((item) => item !== commentId));
     setShowCodeEditInputById((prev) =>
-      prev.filter((item) => item !== commentId),
-    )
-  }
+      prev.filter((item) => item !== commentId)
+    );
+  };
 
   const showInputHandler = (commentId, option) => {
-    const isReply = showReplyInputById.includes(commentId)
-    const isEdit = showEditInputById.includes(commentId)
+    const isReply = showReplyInputById.includes(commentId);
+    const isEdit = showEditInputById.includes(commentId);
 
     if (option === 'reply' && !isReply && !isEdit) {
-      setShowReplyInputById((prev) => [...prev, commentId])
+      setShowReplyInputById((prev) => [...prev, commentId]);
     } else if (option === 'reply' && !isReply && isEdit) {
-      setShowReplyInputById((prev) => [...prev, commentId])
-      setShowEditInputById((prev) => prev.filter((item) => item !== commentId))
+      setShowReplyInputById((prev) => [...prev, commentId]);
+      setShowEditInputById((prev) => prev.filter((item) => item !== commentId));
     } else if (option === 'reply' && isReply) {
-      setShowReplyInputById((prev) => prev.filter((item) => item !== commentId))
+      setShowReplyInputById((prev) =>
+        prev.filter((item) => item !== commentId)
+      );
     } else if (option === 'edit' && !isEdit && isReply) {
-      setShowEditInputById((prev) => [...prev, commentId])
-      setShowReplyInputById((prev) => prev.filter((item) => item !== commentId))
+      setShowEditInputById((prev) => [...prev, commentId]);
+      setShowReplyInputById((prev) =>
+        prev.filter((item) => item !== commentId)
+      );
     } else if (option === 'edit' && !isEdit && !isReply) {
-      return setShowEditInputById((prev) => [...prev, commentId])
+      return setShowEditInputById((prev) => [...prev, commentId]);
     }
-    setShowEditInputById((prev) => prev.filter((item) => item !== commentId))
-  }
+    setShowEditInputById((prev) => prev.filter((item) => item !== commentId));
+  };
 
   const showCodeEditReplyHandler = (commentId, option) => {
-    const isReply = showCodeReplyInputById.includes(commentId)
-    const isEdit = showCodeEditInputById.includes(commentId)
+    const isReply = showCodeReplyInputById.includes(commentId);
+    const isEdit = showCodeEditInputById.includes(commentId);
 
     if (option === 'reply' && !isReply && !isEdit) {
-      setShowCodeReplyInputById((prev) => [...prev, commentId])
+      setShowCodeReplyInputById((prev) => [...prev, commentId]);
     } else if (option === 'reply' && !isReply && isEdit) {
-      setShowCodeReplyInputById((prev) => [...prev, commentId])
+      setShowCodeReplyInputById((prev) => [...prev, commentId]);
       setShowCodeEditInputById((prev) =>
-        prev.filter((item) => item !== commentId),
-      )
+        prev.filter((item) => item !== commentId)
+      );
     } else if (option === 'reply' && isReply) {
       setShowCodeReplyInputById((prev) =>
-        prev.filter((item) => item !== commentId),
-      )
+        prev.filter((item) => item !== commentId)
+      );
     } else if (option === 'edit' && !isEdit && isReply) {
-      setShowCodeEditInputById((prev) => [...prev, commentId])
+      setShowCodeEditInputById((prev) => [...prev, commentId]);
       setShowCodeReplyInputById((prev) =>
-        prev.filter((item) => item !== commentId),
-      )
+        prev.filter((item) => item !== commentId)
+      );
     } else if (option === 'edit' && !isEdit && !isReply) {
-      setShowCodeEditInputById((prev) => [...prev, commentId])
+      setShowCodeEditInputById((prev) => [...prev, commentId]);
     } else {
       setShowCodeEditInputById((prev) =>
-        prev.filter((item) => item !== commentId),
-      )
+        prev.filter((item) => item !== commentId)
+      );
     }
-  }
+  };
 
   const copyHandler = (commentId, commentContent) => {
-    navigator.clipboard.writeText(commentContent)
+    navigator.clipboard.writeText(commentContent);
     setCopyCommentHasCodeById((prev) => {
-      return [...prev, commentId]
-    })
+      return [...prev, commentId];
+    });
     const timer = setTimeout(() => {
-      setCopyCommentHasCodeById([])
-      clearTimeout(timer)
-    }, 5000)
-  }
+      setCopyCommentHasCodeById([]);
+      clearTimeout(timer);
+    }, 5000);
+  };
 
-  const STRING_LENGTH_EXTEND = 350 // Content length > 350 => show extend
+  const STRING_LENGTH_EXTEND = 350; // Content length > 350 => show extend
 
   const extendHandler = (commentId) =>
     showExtendButtonOnLongCommentWithId.includes(commentId)
       ? setShowExtendButtonOnLongCommentWithId((prev) =>
-          prev.filter((item) => item !== commentId),
+          prev.filter((item) => item !== commentId)
         )
-      : setShowExtendButtonOnLongCommentWithId((prev) => [...prev, commentId])
+      : setShowExtendButtonOnLongCommentWithId((prev) => [...prev, commentId]);
 
   const showOptionHandler = (commentId) =>
-    showOption === commentId ? setShowOption(null) : setShowOption(commentId)
+    showOption === commentId ? setShowOption(null) : setShowOption(commentId);
 
   const styleCommentContent = (commentId, commentContent) => {
     if (commentContent.length < STRING_LENGTH_EXTEND) {
-      return styles.commentContent
+      return styles.commentContent;
     } else if (
       commentContent.length > STRING_LENGTH_EXTEND &&
       showExtendButtonOnLongCommentWithId.includes(commentId)
     ) {
-      return styles.commentContent
+      return styles.commentContent;
     }
-    return `${styles.commentContent} ${styles.extend}`
-  }
+    return `${styles.commentContent} ${styles.extend}`;
+  };
 
   return (
     <>
@@ -290,7 +294,7 @@ const CommentBody = ({
                     >
                       <strong>
                         {!showExtendButtonOnLongCommentWithId.includes(
-                          comment._id,
+                          comment._id
                         )
                           ? 'Mở rộng'
                           : 'Thu nhỏ'}
@@ -298,7 +302,7 @@ const CommentBody = ({
                       <i
                         className={
                           !showExtendButtonOnLongCommentWithId.includes(
-                            comment._id,
+                            comment._id
                           )
                             ? 'fa-regular fa-chevron-down'
                             : 'fa-regular fa-chevron-up'
@@ -316,8 +320,8 @@ const CommentBody = ({
                       <span
                         className={styles.reactionButton}
                         onClick={() => {
-                          console.log('Onclick')
-                          reactCommentHandler('Thích', comment._id)
+                          console.log('Onclick');
+                          reactCommentHandler('Thích', comment._id);
                         }}
                       >
                         <div className={styles.reaction}>
@@ -368,7 +372,7 @@ const CommentBody = ({
                             <div
                               className={styles.optionItem}
                               onClick={() => {
-                                showInputHandler(comment._id, 'edit')
+                                showInputHandler(comment._id, 'edit');
                               }}
                             >
                               <i className="fa-solid fa-pen"></i>
@@ -477,7 +481,7 @@ const CommentBody = ({
                       <div
                         className={styleCommentContent(
                           reply._id,
-                          reply.content,
+                          reply.content
                         )}
                       >
                         <div>
@@ -509,7 +513,7 @@ const CommentBody = ({
                             >
                               <strong>
                                 {!showExtendButtonOnLongCommentWithId.includes(
-                                  reply._id,
+                                  reply._id
                                 )
                                   ? 'Mở rộng'
                                   : 'Thu nhỏ'}
@@ -517,7 +521,7 @@ const CommentBody = ({
                               <i
                                 className={
                                   !showExtendButtonOnLongCommentWithId.includes(
-                                    reply._id,
+                                    reply._id
                                   )
                                     ? 'fa-regular fa-chevron-down'
                                     : 'fa-regular fa-chevron-up'
@@ -533,8 +537,8 @@ const CommentBody = ({
                           <span
                             className={styles.reactionButton}
                             onClick={() => {
-                              console.log('Onclick')
-                              reactCommentHandler('Thích', reply._id)
+                              console.log('Onclick');
+                              reactCommentHandler('Thích', reply._id);
                             }}
                           >
                             <div className={styles.reaction}>
@@ -577,7 +581,7 @@ const CommentBody = ({
                                     <>
                                       <li
                                         onClick={() => {
-                                          showInputHandler(reply._id, 'edit')
+                                          showInputHandler(reply._id, 'edit');
                                         }}
                                       >
                                         <i className="fa-solid fa-pen"></i>
@@ -595,7 +599,7 @@ const CommentBody = ({
                                     <li
                                       onClick={() =>
                                         reportStatusHandler(
-                                          reportComment(reply._id),
+                                          reportComment(reply._id)
                                         )
                                       }
                                     >
@@ -615,7 +619,7 @@ const CommentBody = ({
                           <CommentInputSecondary
                             userPhotoURL={user.photoURL}
                             showCode={showCodeReplyInputById.includes(
-                              reply._id,
+                              reply._id
                             )}
                             setShowCodeEditReply={() =>
                               showCodeEditReplyHandler(reply._id, 'reply')
@@ -658,7 +662,7 @@ const CommentBody = ({
         </div>
       ))}
     </>
-  )
-}
+  );
+};
 
-export default CommentBody
+export default CommentBody;

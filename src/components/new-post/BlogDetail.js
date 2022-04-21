@@ -1,56 +1,56 @@
-import { useState, useEffect } from 'react'
-import ReactMarkdown from 'react-markdown'
-import { Row, Col, Image } from 'react-bootstrap'
-import styles from './BlogDetail.module.scss'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import { Link, useNavigate } from 'react-router-dom'
-import BlogSameAuthor from './BlogSameAuthor'
-import BlogHighlights from './BlogHighlights'
-import Topics from '../blog/Topics'
-import timeSince from '../utils/timeSince/timeSince'
-import { apiURL } from '../../context/constants'
-import Cookies from 'js-cookie'
-import { useSelector } from 'react-redux'
-import Reaction from './Reaction'
-import Tippy from '../utils/tippy/Tippy'
-import MainButton from '../utils/button/MainButton'
-import io from 'socket.io-client'
-import remarkGfm from 'remark-gfm'
+import { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
+import { Row, Col, Image } from 'react-bootstrap';
+import styles from './BlogDetail.module.scss';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Link, useNavigate } from 'react-router-dom';
+import BlogSameAuthor from './BlogSameAuthor';
+import BlogHighlights from './BlogHighlights';
+import Topics from '../blog/Topics';
+import timeSince from '../utils/timeSince/timeSince';
+import { apiURL } from '../../context/constants';
+import Cookies from 'js-cookie';
+import { useSelector } from 'react-redux';
+import Reaction from './Reaction';
+import Tippy from '../utils/tippy/Tippy';
+import MainButton from '../utils/button/MainButton';
+import io from 'socket.io-client';
+import remarkGfm from 'remark-gfm';
 
-const socket = io.connect(apiURL)
+const socket = io.connect(apiURL);
 
 const BlogDetail = ({ blog, blogHighlight }) => {
-  const user = useSelector((state) => state.user)
-  const navigate = useNavigate()
+  const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
 
-  const [likeCount, setLikeCount] = useState(blog.likes)
-  const [isLike, setIsLike] = useState(blog.likes.includes(user.userId))
-  const [isShowComment, setIsShowComment] = useState(false)
-  const [commentData, setCommentData] = useState(blog.comments)
-  const [bookmarkData, setBookmarkData] = useState(null)
-  const [isShowVerifyBar, setIsShowVerifyBar] = useState(false)
-  const [tags, setTags] = useState(null)
+  const [likeCount, setLikeCount] = useState(blog.likes);
+  const [isLike, setIsLike] = useState(blog.likes.includes(user.userId));
+  const [isShowComment, setIsShowComment] = useState(false);
+  const [commentData, setCommentData] = useState(blog.comments);
+  const [bookmarkData, setBookmarkData] = useState(null);
+  const [isShowVerifyBar, setIsShowVerifyBar] = useState(false);
+  const [tags, setTags] = useState(null);
 
   useEffect(() => {
     socket.on('comment', (comment) => {
       setCommentData((prev) => {
-        return [comment, ...prev]
-      })
-    })
-  }, [])
+        return [comment, ...prev];
+      });
+    });
+  }, []);
 
   useEffect(() => {
-    document.body.style.overflow = isShowComment ? 'hidden' : 'overlay'
-  }, [isShowComment])
+    document.body.style.overflow = isShowComment ? 'hidden' : 'overlay';
+  }, [isShowComment]);
 
   useEffect(() => {
-    setIsLike(likeCount.includes(user.userId))
-  }, [user.userId, likeCount])
+    setIsLike(likeCount.includes(user.userId));
+  }, [user.userId, likeCount]);
 
   const like = async () => {
     try {
-      const token = Cookies.get('token')
-      if (!token) return navigate('/login')
+      const token = Cookies.get('token');
+      if (!token) return navigate('/login');
 
       const res = await fetch(`${apiURL}/blog/like`, {
         method: 'PUT',
@@ -59,16 +59,16 @@ const BlogDetail = ({ blog, blogHighlight }) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-      })
+      });
 
-      const data = await res.json()
-      data.likes.length === 0 ? setLikeCount([]) : setLikeCount(data.likes)
-      addNotification(data)
-      console.log(data)
+      const data = await res.json();
+      data.likes.length === 0 ? setLikeCount([]) : setLikeCount(data.likes);
+      addNotification(data);
+      console.log(data);
     } catch (error) {
-      console.log(error)
+      console.log(error.message);
     }
-  }
+  };
 
   const addNotification = async (data) => {
     try {
@@ -83,19 +83,19 @@ const BlogDetail = ({ blog, blogHighlight }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-      })
+      });
     } catch (error) {
-      console.log(error)
+      console.log(error.message);
     }
-  }
+  };
 
   useEffect(() => {
-    const controller = new AbortController()
+    const controller = new AbortController();
 
-    ;(async () => {
+    (async () => {
       try {
-        const token = Cookies.get('token')
-        if (!token) return
+        const token = Cookies.get('token');
+        if (!token) return;
 
         const res = await fetch(
           `${apiURL}/me/bookmark`,
@@ -107,22 +107,22 @@ const BlogDetail = ({ blog, blogHighlight }) => {
           },
           {
             signal: controller.signal,
-          },
-        )
-        const data = await res.json()
-        setBookmarkData(data.bookmark)
+          }
+        );
+        const data = await res.json();
+        setBookmarkData(data.bookmark);
       } catch (error) {
-        console.log(error)
+        console.log(error.message);
       }
-    })()
+    })();
 
-    return () => controller?.abort()
-  }, [])
+    return () => controller?.abort();
+  }, []);
 
   const bookmark = async (blogId) => {
     try {
-      const token = Cookies.get('token')
-      if (!token) return navigate('/login')
+      const token = Cookies.get('token');
+      if (!token) return navigate('/login');
 
       const res = await fetch(`${apiURL}/me/bookmark`, {
         method: 'PUT',
@@ -131,14 +131,14 @@ const BlogDetail = ({ blog, blogHighlight }) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-      })
+      });
 
-      const data = await res.json()
-      setBookmarkData(data.bookmark)
+      const data = await res.json();
+      setBookmarkData(data.bookmark);
     } catch (error) {
-      console.log(error)
+      console.log(error.message);
     }
-  }
+  };
 
   const verifyBlog = async (isVerified, blogId) => {
     try {
@@ -148,32 +148,32 @@ const BlogDetail = ({ blog, blogHighlight }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-      })
+      });
     } catch (error) {
-      console.log(error)
+      console.log(error.message);
     } finally {
-      setIsShowVerifyBar(false)
-      navigate('/admin/blog')
+      setIsShowVerifyBar(false);
+      navigate('/admin/blog');
     }
-  }
+  };
 
   useEffect(() => {
-    const controller = new AbortController()
+    const controller = new AbortController();
 
-    ;(async () => {
+    (async () => {
       try {
         const res = await fetch(`${apiURL}/blog/get-tag`, {
           signal: controller.signal,
-        })
-        const data = await res.json()
-        setTags(data)
+        });
+        const data = await res.json();
+        setTags(data);
       } catch (error) {
-        console.log(error.message)
+        console.log(error.message);
       }
-    })()
+    })();
 
-    return () => controller?.abort()
-  }, [])
+    return () => controller?.abort();
+  }, []);
 
   return (
     <Row className={styles.wrapper}>
@@ -338,7 +338,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
         {tags && tags.length > 0 && <Topics tags={tags} />}
       </Col>
     </Row>
-  )
-}
+  );
+};
 
-export default BlogDetail
+export default BlogDetail;

@@ -1,75 +1,75 @@
-import { useEffect, useState } from 'react'
-import { Form, Modal } from 'react-bootstrap'
-import { useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { createBlog } from '../../actions/userAction'
-import { apiURL } from '../../context/constants'
-import MainButton from '../utils/button/MainButton'
-import MainTable from '../utils/table/MainTable'
-import styles from './AdminBlog.module.scss'
+import { useEffect, useState } from 'react';
+import { Form, Modal } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { createBlog } from '../../actions/userAction';
+import { apiURL } from '../../context/constants';
+import MainButton from '../utils/button/MainButton';
+import MainTable from '../utils/table/MainTable';
+import styles from './AdminBlog.module.scss';
 
 const AdminBlog = ({ blogData }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const [isShowDeleteModal, setIsShowDeleteModal] = useState(false)
-  const [checkboxChosen, setCheckboxChosen] = useState([])
-  const [checkboxChosenAll, setCheckboxChosenAll] = useState([])
-  const [isCheckboxChosenAll, setIsCheckboxChosenAll] = useState(false)
+  const [isShowDeleteModal, setIsShowDeleteModal] = useState(false);
+  const [checkboxChosen, setCheckboxChosen] = useState([]);
+  const [checkboxChosenAll, setCheckboxChosenAll] = useState([]);
+  const [isCheckboxChosenAll, setIsCheckboxChosenAll] = useState(false);
 
   useEffect(() => {
-    const blogIds = blogData.map((blog) => blog._id)
-    setCheckboxChosenAll(blogIds)
-  }, [blogData])
+    const blogIds = blogData.map((blog) => blog._id);
+    setCheckboxChosenAll(blogIds);
+  }, [blogData]);
 
-  const showDeleteModal = () => setIsShowDeleteModal((prev) => !prev)
+  const showDeleteModal = () => setIsShowDeleteModal((prev) => !prev);
 
-  const formatDateToLocaleString = (date) => new Date(date).toLocaleString()
+  const formatDateToLocaleString = (date) => new Date(date).toLocaleString();
 
   const checkBoxChosenSingle = (id) =>
     setCheckboxChosen((prev) => {
-      const isChosen = prev.includes(id)
+      const isChosen = prev.includes(id);
 
       if (isChosen) {
-        const newChosen = prev.filter((item) => item !== id)
-        setIsCheckboxChosenAll(false)
-        return newChosen
+        const newChosen = prev.filter((item) => item !== id);
+        setIsCheckboxChosenAll(false);
+        return newChosen;
       }
-      const newChosen = [...prev, id]
-      const isChosenAllCheckbox = newChosen.length === checkboxChosenAll.length
-      isChosenAllCheckbox && setIsCheckboxChosenAll(true)
-      return newChosen
-    })
+      const newChosen = [...prev, id];
+      const isChosenAllCheckbox = newChosen.length === checkboxChosenAll.length;
+      isChosenAllCheckbox && setIsCheckboxChosenAll(true);
+      return newChosen;
+    });
 
   const handleCheckBoxChosenAll = () => {
     if (isCheckboxChosenAll) {
-      setCheckboxChosen([])
-      setIsCheckboxChosenAll(false)
+      setCheckboxChosen([]);
+      setIsCheckboxChosenAll(false);
     } else {
-      setCheckboxChosen(checkboxChosenAll)
-      setIsCheckboxChosenAll(true)
+      setCheckboxChosen(checkboxChosenAll);
+      setIsCheckboxChosenAll(true);
     }
-  }
+  };
 
   const deleteBlogIsChosen = async () => {
     try {
-      showDeleteModal()
+      showDeleteModal();
       const res = await fetch(`${apiURL}/admin/blog/delete-soft`, {
         method: 'POST',
         body: JSON.stringify({ blogId: checkboxChosen }),
         headers: {
           'Content-Type': 'application/json',
         },
-      })
+      });
 
-      const data = await res.json()
-      dispatch(createBlog({ blogData: data.blog }))
+      const data = await res.json();
+      dispatch(createBlog({ blogData: data.blog }));
     } catch (error) {
-      console.log(error)
+      console.log(error.message);
     } finally {
-      setCheckboxChosen([])
-      setIsCheckboxChosenAll(false)
+      setCheckboxChosen([]);
+      setIsCheckboxChosenAll(false);
     }
-  }
+  };
 
   const changePopularState = async (blogId, isPopular) => {
     try {
@@ -79,17 +79,17 @@ const AdminBlog = ({ blogData }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-      })
+      });
 
-      const data = await res.json()
-      dispatch(createBlog({ blogData: data.blog }))
+      const data = await res.json();
+      dispatch(createBlog({ blogData: data.blog }));
     } catch (error) {
-      console.log(error)
+      console.log(error.message);
     } finally {
-      setCheckboxChosen([])
-      setIsCheckboxChosenAll(false)
+      setCheckboxChosen([]);
+      setIsCheckboxChosenAll(false);
     }
-  }
+  };
 
   return (
     <>
@@ -222,7 +222,7 @@ const AdminBlog = ({ blogData }) => {
         </Modal.Footer>
       </Modal>
     </>
-  )
-}
+  );
+};
 
-export default AdminBlog
+export default AdminBlog;

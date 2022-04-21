@@ -1,60 +1,58 @@
-import React, { useState, useEffect } from 'react'
-import FormGroup from '../../utils/auth-form/FormGroup'
-import { Form, Spinner } from 'react-bootstrap'
-import styles from './AuthWithEmailAndPasswordForm.module.scss'
-import Cookies from 'js-cookie'
-import { apiURL } from '../../../context/constants'
-import AuthForgetPassword from './AuthForgetPassword'
-import userDefaultPhoto from '../../../asset/images/nobody_m.256x256.jpg'
+import React, { useState, useEffect } from 'react';
+import FormGroup from '../../utils/auth-form/FormGroup';
+import { Form, Spinner } from 'react-bootstrap';
+import styles from './AuthWithEmailAndPasswordForm.module.scss';
+import Cookies from 'js-cookie';
+import { apiURL } from '../../../context/constants';
+import AuthForgetPassword from './AuthForgetPassword';
 
 const LoginWithEmailAndPasswordForm = ({
   switchPhoneAndEmail,
   authEmailAndPassword,
-  handleIsLogin,
   isLogin,
   forgotPassword,
   setForgotPassword,
   dispatchAndNavigate,
 }) => {
-  const LIMITED_COUNTER_FOR_SIGNUP = 120
-  const LIMITED_COUNTER_FOR_FORGET_PWD = 60
+  const LIMITED_SECOND_FOR_SIGNUP = 120;
+  const LIMITED_SECOND_FOR_FORGET_PWD = 60;
 
-  const [fullName, setFullName] = useState('')
-  const [isSendVerifyCode, setIsSentVerifyCode] = useState(false)
-  const [counter, setCounter] = useState(LIMITED_COUNTER_FOR_SIGNUP)
+  const [fullName, setFullName] = useState('');
+  const [isSendVerifyCode, setIsSentVerifyCode] = useState(false);
+  const [counter, setCounter] = useState(LIMITED_SECOND_FOR_SIGNUP);
   const [verifyOTP, setVerifyOTP] = useState({
     input: '',
     create: '',
-  })
+  });
   const [userEmailAndPasswordInput, setUserEmailAndPasswordInput] = useState({
     email: '',
     password: '',
-  })
-  const [validateFullName, setValidateFullName] = useState(null)
-  const [validateEmail, setValidateEmail] = useState(null)
-  const [invalidEmailOrPassword, setInvalidEmailOrPassword] = useState(null)
-  const [invalidOTP, setInvalidOTP] = useState(null)
-  const [disabled, setDisabled] = useState(true)
-  const [loading, setLoading] = useState(false)
+  });
+  const [validateFullName, setValidateFullName] = useState(null);
+  const [validateEmail, setValidateEmail] = useState(null);
+  const [invalidEmailOrPassword, setInvalidEmailOrPassword] = useState(null);
+  const [invalidOTP, setInvalidOTP] = useState(null);
+  const [disabled, setDisabled] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setCounter(LIMITED_COUNTER_FOR_FORGET_PWD)
-  }, [forgotPassword])
+    setCounter(LIMITED_SECOND_FOR_FORGET_PWD);
+  }, [forgotPassword]);
 
   const createOTP = () => {
-    var digits = '0123456789'
-    let OTP = ''
+    var digits = '0123456789';
+    let OTP = '';
     for (let i = 0; i < 6; i++) {
-      OTP += digits[Math.floor(Math.random() * 10)]
+      OTP += digits[Math.floor(Math.random() * 10)];
     }
     setVerifyOTP((prev) => {
       return {
         ...prev,
         create: OTP,
-      }
-    })
-    return OTP
-  }
+      };
+    });
+    return OTP;
+  };
 
   const sendOTP = async (option) => {
     try {
@@ -68,37 +66,36 @@ const LoginWithEmailAndPasswordForm = ({
         headers: {
           'Content-Type': 'application/json',
         },
-      })
+      });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const onSubmitOTP = (option) => {
-    sendOTP(option)
-    setIsSentVerifyCode(true)
-    counterWhenSubmit()
-  }
+    sendOTP(option);
+    setIsSentVerifyCode(true);
+    counterWhenSubmit();
+  };
 
   const counterWhenSubmit = () => {
     let interval = setInterval(() => {
       setCounter((prev) => {
-        let isCounterGreaterThanZero = prev > 0
-
-        if (isCounterGreaterThanZero) return prev - 1
-
-        clearInterval(interval)
-        setIsSentVerifyCode(false)
+        if (prev > 0) {
+          return prev - 1;
+        }
+        clearInterval(interval);
+        setIsSentVerifyCode(false);
         return forgotPassword
-          ? LIMITED_COUNTER_FOR_FORGET_PWD
-          : LIMITED_COUNTER_FOR_SIGNUP
-      })
-    }, 1000)
-  }
+          ? LIMITED_SECOND_FOR_FORGET_PWD
+          : LIMITED_SECOND_FOR_SIGNUP;
+      });
+    }, 1000);
+  };
 
   const loginWithEmailAndPassword = async () => {
-    console.log('loading true')
-    setLoading(true)
+    console.log('loading true');
+    setLoading(true);
     try {
       if (isLogin) {
         const res = await fetch(`${apiURL}/login/email-password`, {
@@ -110,28 +107,30 @@ const LoginWithEmailAndPasswordForm = ({
           headers: {
             'Content-Type': 'application/json',
           },
-        })
+        });
 
-        const data = await res.json()
-        const isLoginSuccess = data.success
+        const data = await res.json();
 
-        if (isLoginSuccess) {
-          Cookies.set('token', data.accessToken, { expires: 365 })
+        console.log(data);
+
+        if (data.success) {
+          Cookies.set('token', data.accessToken, { expires: 365 });
           return dispatchAndNavigate({
             ...data.user,
             accessToken: data.accessToken,
             admin: data.admin,
-          })
+          });
         }
 
-        return !data.success && setInvalidEmailOrPassword(data.message)
+        return !data.success && setInvalidEmailOrPassword(data.message);
       }
 
-      const isMatchOTP = verifyOTP.input === verifyOTP.create
-      if (!isMatchOTP) return setInvalidOTP('Mã xác minh không hợp lệ')
+      const isMatchOTP = verifyOTP.input === verifyOTP.create;
+      if (!isMatchOTP) return setInvalidOTP('Mã xác minh không hợp lệ');
 
       const userDefaultAvatar =
-        'https://firebasestorage.googleapis.com/v0/b/f8clone-3e404.appspot.com/o/uploads%2Fnobody_m.256x256.jpg?alt=media&token=8e617e21-795f-45ce-8340-955a5290e66f'
+        'https://firebasestorage.googleapis.com/v0/b/f8clone-3e404.appspot.com/o/uploads%2Fnobody_m.256x256.jpg?alt=media&token=8e617e21-795f-45ce-8340-955a5290e66f';
+
       await fetch(`${apiURL}/register/`, {
         method: 'POST',
         body: JSON.stringify({
@@ -144,73 +143,76 @@ const LoginWithEmailAndPasswordForm = ({
         headers: {
           'Content-Type': 'application/json',
         },
-      })
+      });
 
       setUserEmailAndPasswordInput((prev) => {
         return {
           ...prev,
           email: '',
           password: '',
-        }
-      })
+        };
+      });
 
-      isLogin()
+      isLogin();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     } finally {
-      setLoading(false)
+      console.log('loading false');
+      setLoading(false);
     }
-  }
+  };
 
   const isValidEmail = (email) => {
-    const regex = /\S+@\S+\.\S+/
-    return regex.test(email)
-  }
+    const regex = /\S+@\S+\.\S+/;
+    return regex.test(email);
+  };
 
   const checkUserEmailExist = async (e) => {
-    if (isValidEmail(e.target.value)) {
+    if (e.target.value && isValidEmail(e.target.value)) {
       const res = await fetch(`${apiURL}/login/check-email`, {
         method: 'POST',
         body: JSON.stringify({ email: e.target.value }),
         headers: {
           'Content-Type': 'application/json',
         },
-      })
+      });
 
-      const data = await res.json()
+      const data = await res.json();
 
       !isLogin &&
         data.notUsed &&
         setUserEmailAndPasswordInput((prev) => {
-          return { ...prev, email: e.target.value }
-        })
+          return { ...prev, email: e.target.value };
+        });
       isLogin &&
         data.used &&
         setUserEmailAndPasswordInput((prev) => {
-          return { ...prev, email: e.target.value }
-        })
+          return { ...prev, email: e.target.value };
+        });
 
       isLogin
         ? setValidateEmail(data.notUsed ? data.notUsed : null)
-        : setValidateEmail(data.used ? data.used : null)
+        : setValidateEmail(data.used ? data.used : null);
     }
 
-    e.target.value.length === 0 && setValidateEmail(null)
-  }
+    e.target.value.length === 0 && setValidateEmail(null);
+  };
 
   const handleValidateFullName = () => {
-    const isEmptyFullNameInput = fullName.length === 0
-    const isValidFullNameInput =
-      fullName.length > 1 && !fullName.match('[a-zA-Z][a-zA-Z ]{2,}')
+    const isEmptyFullNameInput = fullName.length === 0;
+    const inValidFullNameInput =
+      fullName.length === 1 ||
+      !fullName.match('[a-zA-Z][a-zA-Z ]{2,}') ||
+      fullName.trim().indexOf(' ') === -1;
 
     if (isEmptyFullNameInput) {
-      setValidateFullName('Tên không được để trống')
-    } else if (isValidFullNameInput) {
-      setValidateFullName(null)
+      setValidateFullName('Tên không được để trống');
+    } else if (inValidFullNameInput) {
+      setValidateFullName('Tên của bạn không hợp lệ');
     } else {
-      setValidateFullName('Tên của bạn không hợp lệ')
+      setValidateFullName(null);
     }
-  }
+  };
 
   useEffect(() => {
     const disable = () => {
@@ -221,14 +223,14 @@ const LoginWithEmailAndPasswordForm = ({
           !isValidEmail(userEmailAndPasswordInput.email) ||
           userEmailAndPasswordInput.password.length < 8 ||
           validateEmail !== null
-        )
+        );
       }
       return (
         !isValidEmail(userEmailAndPasswordInput.email) || validateEmail !== null
-      )
-    }
+      );
+    };
 
-    setDisabled(disable())
+    setDisabled(disable());
   }, [
     fullName,
     isLogin,
@@ -236,14 +238,14 @@ const LoginWithEmailAndPasswordForm = ({
     userEmailAndPasswordInput.email,
     userEmailAndPasswordInput.password.length,
     validateEmail,
-  ])
+  ]);
 
   useEffect(() => {
     userEmailAndPasswordInput.password.length === 0 &&
-      setInvalidEmailOrPassword(null)
+      setInvalidEmailOrPassword(null);
 
-    verifyOTP.input.length === 0 && setInvalidOTP(null)
-  }, [userEmailAndPasswordInput.password.length, verifyOTP.input.length])
+    verifyOTP.input.length === 0 && setInvalidOTP(null);
+  }, [userEmailAndPasswordInput.password.length, verifyOTP.input.length]);
 
   return (
     <>
@@ -257,8 +259,8 @@ const LoginWithEmailAndPasswordForm = ({
               pattern={'[a-zA-Z][a-zA-Z ]{2,}'}
               onChange={{
                 input: (e) => {
-                  setFullName(e.target.value)
-                  setValidateFullName(null)
+                  setFullName(e.target.value);
+                  setValidateFullName(null);
                 },
               }}
               onBlur={handleValidateFullName}
@@ -286,7 +288,8 @@ const LoginWithEmailAndPasswordForm = ({
             onChange={{
               input: (e) =>
                 setUserEmailAndPasswordInput((prev) => {
-                  return { ...prev, password: e.target.value }
+                  setInvalidEmailOrPassword(null);
+                  return { ...prev, password: e.target.value };
                 }),
             }}
             onKeyUp={(e) =>
@@ -310,7 +313,7 @@ const LoginWithEmailAndPasswordForm = ({
                     return {
                       ...prev,
                       input: e.target.value,
-                    }
+                    };
                   }),
               }}
               disabled={disabled}
@@ -380,7 +383,7 @@ const LoginWithEmailAndPasswordForm = ({
               return {
                 ...prev,
                 input: e.target.value,
-              }
+              };
             })
           }
           setUserEmailAndPasswordInput={() =>
@@ -388,14 +391,14 @@ const LoginWithEmailAndPasswordForm = ({
               return {
                 ...prev,
                 email: userEmailAndPasswordInput.email,
-              }
+              };
             })
           }
           onSubmitOTP={() => onSubmitOTP('forgotPwd')}
         />
       )}
     </>
-  )
-}
+  );
+};
 
-export default LoginWithEmailAndPasswordForm
+export default LoginWithEmailAndPasswordForm;

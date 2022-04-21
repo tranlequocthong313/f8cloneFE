@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { apiURL } from '../../../context/constants'
-import { Form, Spinner } from 'react-bootstrap'
-import FormGroup from '../../utils/auth-form/FormGroup'
-import styles from './AuthForgetPassword.module.scss'
+import React, { useEffect, useState } from 'react';
+import { apiURL } from '../../../context/constants';
+import { Form, Spinner } from 'react-bootstrap';
+import FormGroup from '../../utils/auth-form/FormGroup';
+import styles from './AuthForgetPassword.module.scss';
 
 const AuthForgetPassword = ({
   setForgotPassword,
@@ -18,59 +18,58 @@ const AuthForgetPassword = ({
   validateEmail,
   setDisabled,
   disabled,
-  onSubmit,
+  onSubmitOTP,
   loading,
   setLoading,
 }) => {
-  const [passwordAndRePasswordText, setPasswordAndRePasswordText] = useState({
+  const [password, setPassword] = useState({
     pass: '',
     rePass: '',
-  })
-  const [isConfirmOTPSentToEmail, setIsConfirmOTPSentToEmail] = useState(false)
+  });
 
-  const resetPassword = async () => {
-    setLoading(true)
+  const [isConfirm, setIsConfirm] = useState(false);
+
+  const forgotPassword = async () => {
+    setLoading(true);
     try {
-      await fetch(`${apiURL}/login/reset-password`, {
+      const res = await fetch(`${apiURL}/login/reset-password`, {
         method: 'POST',
         body: JSON.stringify({
           email,
-          password: passwordAndRePasswordText.pass,
+          password: password.pass,
         }),
         headers: {
           'Content-Type': 'application/json',
         },
-      })
-
-      setForgotPassword(false)
+      });
+      const data = await res.json();
+      setForgotPassword(false);
+      console.log(data.message);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
-
+  };
   useEffect(() => {
-    const disableSendOTPButtonWhenInvalidInputEmail = () =>
-      !isValidEmail(email) || validateEmail !== null
+    const disable = () => {
+      return !isValidEmail(email) || validateEmail !== null;
+    };
 
-    setDisabled(disableSendOTPButtonWhenInvalidInputEmail())
-  }, [email, isValidEmail, setDisabled, validateEmail])
+    setDisabled(disable());
+  }, [email, isValidEmail, setDisabled, validateEmail]);
 
   const checkOTPValid = () => {
-    const isMatchOTP = verifyOTP.input === verifyOTP.create
-
-    if (isMatchOTP) {
-      setIsConfirmOTPSentToEmail(true)
-      setInvalidOTP(null)
-    } else {
-      setInvalidOTP('Mã xác minh không hợp lệ')
+    if (verifyOTP.input !== verifyOTP.create) {
+      return setInvalidOTP('Mã xác minh không hợp lệ');
     }
-  }
+    setIsConfirm(true);
+    setInvalidOTP(null);
+  };
 
   return (
     <Form className={styles.formBody}>
-      {!isConfirmOTPSentToEmail && (
+      {!isConfirm && (
         <>
           <FormGroup
             label={'Email'}
@@ -85,14 +84,13 @@ const AuthForgetPassword = ({
             placeholder={'Nhập mã xác nhận'}
             maxLength={6}
             OTPInput={true}
-            forgotPassword
             isSendVerifyCode={isSendVerifyCode}
             counter={counter}
             onChange={{
               input: setVerifyOTP,
             }}
             disabled={disabled}
-            onClick={onSubmit}
+            onClick={onSubmitOTP}
             onKeyUp={(e) =>
               e.keyCode === 13 &&
               verifyOTP.input.length === 6 &&
@@ -103,7 +101,7 @@ const AuthForgetPassword = ({
           />
         </>
       )}
-      {!isConfirmOTPSentToEmail && (
+      {!isConfirm && (
         <div
           className={
             verifyOTP.input.length === 6
@@ -116,7 +114,7 @@ const AuthForgetPassword = ({
         </div>
       )}
 
-      {isConfirmOTPSentToEmail && (
+      {isConfirm && (
         <>
           <FormGroup
             label={'Nhập mật khẩu mới'}
@@ -124,11 +122,11 @@ const AuthForgetPassword = ({
             placeholder={'Mật khẩu'}
             onChange={{
               input: (e) =>
-                setPasswordAndRePasswordText((prev) => {
+                setPassword((prev) => {
                   return {
                     ...prev,
                     pass: e.target.value,
-                  }
+                  };
                 }),
             }}
           />
@@ -138,37 +136,35 @@ const AuthForgetPassword = ({
             type={'password'}
             onChange={{
               input: (e) =>
-                setPasswordAndRePasswordText((prev) => {
+                setPassword((prev) => {
                   return {
                     ...prev,
                     rePass: e.target.value,
-                  }
+                  };
                 }),
             }}
             onKeyUp={(e) =>
               e.keyCode === 13 &&
-              passwordAndRePasswordText.pass.length >= 8 &&
-              passwordAndRePasswordText.rePass.length >= 8 &&
-              passwordAndRePasswordText.pass ===
-                passwordAndRePasswordText.rePass &&
-              resetPassword()
+              password.pass.length >= 8 &&
+              password.rePass.length >= 8 &&
+              password.pass === password.rePass &&
+              forgotPassword()
             }
           />
         </>
       )}
 
-      {isConfirmOTPSentToEmail && (
+      {isConfirm && (
         <div
           className={
-            passwordAndRePasswordText.pass.length >= 8 &&
-            passwordAndRePasswordText.rePass.length >= 8 &&
-            passwordAndRePasswordText.pass ===
-              passwordAndRePasswordText.rePass &&
+            password.pass.length >= 8 &&
+            password.rePass.length >= 8 &&
+            password.pass === password.rePass &&
             !loading
               ? styles.submitButton
               : `${styles.submitButton} ${styles.disabled}`
           }
-          onClick={resetPassword}
+          onClick={forgotPassword}
         >
           {loading && (
             <Spinner
@@ -180,7 +176,7 @@ const AuthForgetPassword = ({
         </div>
       )}
     </Form>
-  )
-}
+  );
+};
 
-export default AuthForgetPassword
+export default AuthForgetPassword;

@@ -1,52 +1,52 @@
-import Blog from './views/public/Blog'
-import Courses from './views/public/Courses'
-import LearningPath from './views/public/LearningPath'
-import Home from './views/public/Home'
-import Contact from './views/public/Contact'
-import Search from './views/public/Search'
-import Privacy from './views/public/Privacy'
-import About from './views/public/About'
-import Careers from './views/public/Careers'
-import Terms from './views/public/Terms'
-import { Routes, Route } from 'react-router-dom'
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import CourseSlug from './components/course/CourseSlug'
-import { useLocation } from 'react-router-dom'
-import Cookies from 'js-cookie'
-import { setAuth } from './actions/userAction'
-import { apiURL } from './context/constants'
-import BlogSlug from './components/blog/BlogSlug'
-import Auth from './views/public/Auth'
-import NotFound from './views/public/NotFound'
-import Learning from './views/private/Learning'
-import MyCourse from './views/private/MyCourse'
-import NewPost from './views/private/NewPost'
-import Settings from './views/private/Settings'
-import BookmarkPost from './views/private/BookmarkPost'
-import MyBlog from './views/private/MyBlog'
-import Admin from './views/admin/Admin'
-import EditPost from './views/private/EditPost'
-import BlogTag from './views/public/BlogTag'
-import Profile from './views/public/Profile'
+import Blog from './views/public/Blog';
+import Courses from './views/public/Courses';
+import LearningPath from './views/public/LearningPath';
+import Home from './views/public/Home';
+import Contact from './views/public/Contact';
+import Search from './views/public/Search';
+import Privacy from './views/public/Privacy';
+import About from './views/public/About';
+import Careers from './views/public/Careers';
+import Terms from './views/public/Terms';
+import { Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import CourseSlug from './components/course/CourseSlug';
+import { useLocation } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { setAuth } from './actions/userAction';
+import { apiURL } from './context/constants';
+import BlogSlug from './components/blog/BlogSlug';
+import Auth from './views/public/Auth';
+import NotFound from './views/public/NotFound';
+import Learning from './views/private/Learning';
+import MyCourse from './views/private/MyCourse';
+import NewPost from './views/private/NewPost';
+import Settings from './views/private/Settings';
+import BookmarkPost from './views/private/BookmarkPost';
+import MyBlog from './views/private/MyBlog';
+import Admin from './views/admin/Admin';
+import EditPost from './views/private/EditPost';
+import BlogTag from './views/public/BlogTag';
+import Profile from './views/public/Profile';
 
 function App() {
-  const dispatch = useDispatch()
-  const location = useLocation()
+  const dispatch = useDispatch();
+  const location = useLocation();
 
-  const user = useSelector((state) => state.user)
-
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [location.pathname])
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
-    const controller = new AbortController()
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
-    ;(async () => {
+  useEffect(() => {
+    const controller = new AbortController();
+
+    (async () => {
       try {
-        const token = Cookies.get('token')
-        if (!token) return
+        const token = Cookies.get('token');
+        if (!token) return;
 
         const res = await fetch(
           `${apiURL}/api/auth`,
@@ -58,35 +58,35 @@ function App() {
           },
           {
             signal: controller.signal,
-          },
-        )
+          }
+        );
 
-        const data = await res.json()
+        const data = await res.json();
 
         dispatch(
           setAuth({
             ...data.user,
             accessToken: token,
-          }),
-        )
+          })
+        );
       } catch (error) {
-        console.log(error)
+        console.log(error.message);
       }
-    })()
+    })();
 
-    return () => controller?.abort()
-  }, [])
+    return () => controller?.abort();
+  }, []);
 
   useEffect(() => {
     console.log(
       '%cHello! 🙋',
-      'font-size: 16px; font-weight: 600; color: #32c6a1',
-    )
+      'font-size: 16px; font-weight: 600; color: #32c6a1'
+    );
     console.log(
       '%cF8 front-end was built with Javascript, React, Redux, SASS, CSS module, webpack, and lots of love. \n \nF8 back-end was built with PHP, Laravel, Node, ExpressJS, MySQL, MongoDB, Redis, and lots of love. \n  \n👉 Want to work with us? Check out https://fullstack.edu.vn/careers/',
-      'font-size: 14px; font-weight: 500; color: #32c6a1',
-    )
-  }, [])
+      'font-size: 14px; font-weight: 500; color: #32c6a1'
+    );
+  }, []);
 
   return (
     <Routes>
@@ -165,7 +165,7 @@ function App() {
       <Route path="*" element={<NotFound />} />
       <Route path="/" element={<Home />} />
     </Routes>
-  )
+  );
 }
 
-export default App
+export default App;

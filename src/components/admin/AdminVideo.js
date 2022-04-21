@@ -1,79 +1,79 @@
-import { useEffect, useState } from 'react'
-import { Form, Modal } from 'react-bootstrap'
-import { useDispatch } from 'react-redux'
-import { createVideo } from '../../actions/userAction'
-import { apiURL } from '../../context/constants'
-import MainButton from '../utils/button/MainButton'
-import MainTable from '../utils/table/MainTable'
-import styles from './AdminVideo.module.scss'
-import youtubeDurationFormat from 'youtube-duration-format'
+import { useEffect, useState } from 'react';
+import { Form, Modal } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
+import { createVideo } from '../../actions/userAction';
+import { apiURL } from '../../context/constants';
+import MainButton from '../utils/button/MainButton';
+import MainTable from '../utils/table/MainTable';
+import styles from './AdminVideo.module.scss';
+import youtubeDurationFormat from 'youtube-duration-format';
 
 const AdminVideo = ({ videoData }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const [isShowDeleteModal, setIsShowDeleteModal] = useState(false)
-  const [checkboxChosen, setCheckboxChosen] = useState([])
-  const [checkboxChosenAll, setCheckboxChosenAll] = useState([])
-  const [isCheckboxChosenAll, setIsCheckboxChosenAll] = useState(false)
+  const [isShowDeleteModal, setIsShowDeleteModal] = useState(false);
+  const [checkboxChosen, setCheckboxChosen] = useState([]);
+  const [checkboxChosenAll, setCheckboxChosenAll] = useState([]);
+  const [isCheckboxChosenAll, setIsCheckboxChosenAll] = useState(false);
 
   useEffect(() => {
-    const videoId = videoData.map((video) => video._id)
-    setCheckboxChosenAll(videoId)
-  }, [videoData])
+    const videoId = videoData.map((video) => video._id);
+    setCheckboxChosenAll(videoId);
+  }, [videoData]);
 
-  const showDeleteModal = () => setIsShowDeleteModal((prev) => !prev)
+  const showDeleteModal = () => setIsShowDeleteModal((prev) => !prev);
 
   const formatYoutubeDuration = (duration) => {
-    const durationFormatted = youtubeDurationFormat(duration)
-    return durationFormatted
-  }
+    const durationFormatted = youtubeDurationFormat(duration);
+    return durationFormatted;
+  };
 
-  const formatDateToLocaleString = (date) => new Date(date).toLocaleString()
+  const formatDateToLocaleString = (date) => new Date(date).toLocaleString();
 
   const checkBoxChosenSingle = (id) =>
     setCheckboxChosen((prev) => {
-      const isChosen = prev.includes(id)
+      const isChosen = prev.includes(id);
       if (isChosen) {
-        const newChosen = prev.filter((item) => item !== id)
-        setIsCheckboxChosenAll(false)
-        return newChosen
+        const newChosen = prev.filter((item) => item !== id);
+        setIsCheckboxChosenAll(false);
+        return newChosen;
       }
-      const newChosen = [...prev, id]
+      const newChosen = [...prev, id];
       newChosen.length === checkboxChosenAll.length &&
-        setIsCheckboxChosenAll(true)
-      return newChosen
-    })
+        setIsCheckboxChosenAll(true);
+      return newChosen;
+    });
 
   const handleCheckBoxChosenAll = () => {
     if (!isCheckboxChosenAll) {
-      setCheckboxChosen(checkboxChosenAll)
-      setIsCheckboxChosenAll(true)
+      setCheckboxChosen(checkboxChosenAll);
+      setIsCheckboxChosenAll(true);
     } else {
-      setCheckboxChosen([])
-      setIsCheckboxChosenAll(false)
+      setCheckboxChosen([]);
+      setIsCheckboxChosenAll(false);
     }
-  }
+  };
 
   const deleteVideoIsChosen = async () => {
     try {
-      showDeleteModal()
+      showDeleteModal();
       const res = await fetch(`${apiURL}/admin/video/delete-soft`, {
         method: 'POST',
         body: JSON.stringify({ videoId: checkboxChosen }),
         headers: {
           'Content-Type': 'application/json',
         },
-      })
+      });
 
-      const data = await res.json()
-      dispatch(createVideo({ videoData: data.video }))
+      const data = await res.json();
+      dispatch(createVideo({ videoData: data.video }));
     } catch (error) {
-      console.log(error)
+      console.log(error.message);
     } finally {
-      setCheckboxChosen([])
-      setIsCheckboxChosenAll(false)
+      setCheckboxChosen([]);
+      setIsCheckboxChosenAll(false);
     }
-  }
+  };
 
   const changePopularState = async (videoId, isPopular) => {
     try {
@@ -83,17 +83,17 @@ const AdminVideo = ({ videoData }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-      })
+      });
 
-      const data = await res.json()
-      dispatch(createVideo({ videoData: data.video }))
+      const data = await res.json();
+      dispatch(createVideo({ videoData: data.video }));
     } catch (error) {
-      console.log(error)
+      console.log(error.message);
     } finally {
-      setCheckboxChosen([])
-      setIsCheckboxChosenAll(false)
+      setCheckboxChosen([]);
+      setIsCheckboxChosenAll(false);
     }
-  }
+  };
 
   return (
     <>
@@ -210,7 +210,7 @@ const AdminVideo = ({ videoData }) => {
         </Modal.Footer>
       </Modal>
     </>
-  )
-}
+  );
+};
 
-export default AdminVideo
+export default AdminVideo;

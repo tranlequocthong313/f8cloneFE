@@ -1,74 +1,74 @@
-import React, { useState, Suspense, useEffect } from 'react'
-import styles from './Settings.module.scss'
-import { Container, Row, Col } from 'react-bootstrap'
-import Header from '../../components/main-layout/nav/Header'
-import { useSelector } from 'react-redux'
-import FieldInput from '../../components/utils/field-input/FieldInput'
-import Cookies from 'js-cookie'
-import { apiURL } from '../../context/constants'
-import { useDispatch } from 'react-redux'
-import { settings } from '../../actions/userAction'
-import { ref, uploadBytesResumable, getDownloadURL } from '@firebase/storage'
-import { storage } from '../../firebase/config'
-import removeActions from '../../components/utils/remove-accents/removeActions'
+import React, { useState, Suspense, useEffect } from 'react';
+import styles from './Settings.module.scss';
+import { Container, Row, Col } from 'react-bootstrap';
+import Header from '../../components/main-layout/nav/Header';
+import { useSelector } from 'react-redux';
+import FieldInput from '../../components/utils/field-input/FieldInput';
+import Cookies from 'js-cookie';
+import { apiURL } from '../../context/constants';
+import { useDispatch } from 'react-redux';
+import { settings } from '../../actions/userAction';
+import { ref, uploadBytesResumable, getDownloadURL } from '@firebase/storage';
+import { storage } from '../../firebase/config';
+import removeActions from '../../components/utils/remove-accents/removeActions';
 
 const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer'),
-)
+  import('../../components/main-layout/footer/Footer')
+);
 
 const Settings = () => {
-  const dispatch = useDispatch()
-  const user = useSelector((state) => state.user)
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
 
-  const [isEditMode, setIsEditMode] = useState([])
-  const [fullName, setFullName] = useState(user.displayName)
-  const [bio, setBio] = useState(user.bio ? user.bio : '')
+  const [isEditMode, setIsEditMode] = useState([]);
+  const [fullName, setFullName] = useState(user.displayName);
+  const [bio, setBio] = useState(user.bio ? user.bio : '');
   const [image, setImage] = useState({
     preview: null,
     avatar: null,
-  })
+  });
   const [social, setSocial] = useState({
     fb: user.socials.fb ? user.socials.fb : '',
     youtube: user.socials.youtube ? user.socials.youtube : '',
     linkedin: user.socials.linkedin ? user.socials.linkedin : '',
     instagram: user.socials.instagram ? user.socials.instagram : '',
     twitter: user.socials.twitter ? user.socials.twitter : '',
-  })
+  });
 
   useEffect(() => {
-    document.title = 'Thiết lập về tôi tại F8'
-  }, [])
+    document.title = 'Thiết lập về tôi tại F8';
+  }, []);
 
   const editMode = (name) => {
-    const isShow = isEditMode.includes(name)
+    const isShow = isEditMode.includes(name);
 
     isShow
       ? setIsEditMode((prev) => prev.filter((item) => item !== name))
-      : setIsEditMode((prev) => [...prev, name])
-  }
+      : setIsEditMode((prev) => [...prev, name]);
+  };
 
   useEffect(() => {
     return () => {
-      image.preview && URL.revokeObjectURL(image)
-    }
-  }, [image])
+      image.preview && URL.revokeObjectURL(image);
+    };
+  }, [image]);
 
   const getNewAvatar = (e) => {
-    const image = URL.createObjectURL(e.target.files[0])
+    const image = URL.createObjectURL(e.target.files[0]);
     setImage((prev) => {
       return {
         ...prev,
         preview: image,
         avatar: e.target.files[0],
-      }
-    })
-  }
+      };
+    });
+  };
 
   const changeName = async () => {
     try {
-      const token = Cookies.get('token')
+      const token = Cookies.get('token');
 
-      if (!token) return
+      if (!token) return;
 
       const res = await fetch(`${apiURL}/help/setting/fullName`, {
         method: 'POST',
@@ -77,39 +77,39 @@ const Settings = () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-      })
+      });
 
-      const data = await res.json()
-      setFullName(data.fullName)
-      dispatch(settings({ fullName: data.fullName, photoURL: user.photoURL }))
+      const data = await res.json();
+      setFullName(data.fullName);
+      dispatch(settings({ fullName: data.fullName, photoURL: user.photoURL }));
     } catch (error) {
-      console.log(error)
+      console.log(error.message);
     } finally {
-      editMode('name')
+      editMode('name');
     }
-  }
+  };
 
   const changeAvatar = () => {
     try {
-      const token = Cookies.get('token')
-      if (!token) return
+      const token = Cookies.get('token');
+      if (!token) return;
 
-      const hasAvatarImage = image.avatar
+      const hasAvatarImage = image.avatar;
       if (hasAvatarImage) {
         const storageRef = ref(
           storage,
-          `uploads/${image.avatar && image.avatar.name}`,
-        )
-        const uploadTask = uploadBytesResumable(storageRef, image.avatar)
+          `uploads/${image.avatar && image.avatar.name}`
+        );
+        const uploadTask = uploadBytesResumable(storageRef, image.avatar);
 
         uploadTask.on(
           'state_changed',
           (snapshot) => {
-            Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+            Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
           },
           (err) => console.log(err),
           async () => {
-            const url = await getDownloadURL(uploadTask.snapshot.ref)
+            const url = await getDownloadURL(uploadTask.snapshot.ref);
 
             const res = await fetch(`${apiURL}/help/setting/avatar`, {
               method: 'POST',
@@ -118,28 +118,28 @@ const Settings = () => {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`,
               },
-            })
+            });
 
-            const data = await res.json()
-            setImage(data.photoURL)
+            const data = await res.json();
+            setImage(data.photoURL);
             dispatch(
-              settings({ fullName: user.displayName, photoURL: data.photoURL }),
-            )
-          },
-        )
+              settings({ fullName: user.displayName, photoURL: data.photoURL })
+            );
+          }
+        );
       }
     } catch (error) {
-      console.log(error)
+      console.log(error.message);
     } finally {
-      editMode('avatar')
+      editMode('avatar');
     }
-  }
+  };
 
   const bioChange = async () => {
     try {
-      const token = Cookies.get('token')
+      const token = Cookies.get('token');
 
-      if (!token) return
+      if (!token) return;
 
       const res = await fetch(`${apiURL}/help/setting/bio`, {
         method: 'POST',
@@ -148,29 +148,29 @@ const Settings = () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-      })
+      });
 
-      const data = await res.json()
-      setBio(data.bio)
+      const data = await res.json();
+      setBio(data.bio);
       dispatch(
         settings({
           fullName: user.displayName,
           photoURL: user.photoURL,
           bio: data.bio,
-        }),
-      )
+        })
+      );
     } catch (error) {
-      console.log(error)
+      console.log(error.message);
     } finally {
-      editMode('bio')
+      editMode('bio');
     }
-  }
+  };
 
   const socialChange = async (socialName) => {
     try {
-      const token = Cookies.get('token')
+      const token = Cookies.get('token');
 
-      if (!token) return
+      if (!token) return;
 
       const res = await fetch(`${apiURL}/help/setting/social`, {
         method: 'POST',
@@ -179,11 +179,11 @@ const Settings = () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-      })
+      });
 
-      const data = await res.json()
+      const data = await res.json();
 
-      console.log(data)
+      console.log(data);
       setSocial((prev) => {
         return {
           ...prev,
@@ -192,14 +192,14 @@ const Settings = () => {
           linkedin: data.socials.linkedin ? data.socials.linkedin : '',
           instagram: data.socials.instagram ? data.socials.instagram : '',
           twitter: data.socials.twitter ? data.socials.twitter : '',
-        }
-      })
+        };
+      });
     } catch (error) {
-      console.log(error)
+      console.log(error.message);
     } finally {
-      editMode(socialName)
+      editMode(socialName);
     }
-  }
+  };
 
   return (
     <>
@@ -264,13 +264,13 @@ const Settings = () => {
                 <FieldInput
                   title={'User Name'}
                   value={`${removeActions(
-                    user.displayName.toLowerCase().replace(/\s/g, ''),
+                    user.displayName.toLowerCase().replace(/\s/g, '')
                   )}`}
                   placeholder={'Thêm user name'}
                   isEdit={false}
                   disabled={true}
                   description={`URL: https://fullstack.edu.vn/@${removeActions(
-                    user.displayName.toLowerCase().replace(/\s/g, ''),
+                    user.displayName.toLowerCase().replace(/\s/g, '')
                   )}`}
                 />
                 <FieldInput
@@ -295,7 +295,7 @@ const Settings = () => {
                       return {
                         ...prev,
                         fb: e.target.value,
-                      }
+                      };
                     })
                   }
                   placeholder={'Eg. https://www.facebook.com/hoclaptrinhf8'}
@@ -314,7 +314,7 @@ const Settings = () => {
                       return {
                         ...prev,
                         youtube: e.target.value,
-                      }
+                      };
                     })
                   }
                   disabled={!isEditMode.includes('youtube')}
@@ -332,7 +332,7 @@ const Settings = () => {
                       return {
                         ...prev,
                         linkedin: e.target.value,
-                      }
+                      };
                     })
                   }
                   disabled={!isEditMode.includes('linkedin')}
@@ -350,7 +350,7 @@ const Settings = () => {
                       return {
                         ...prev,
                         instagram: e.target.value,
-                      }
+                      };
                     })
                   }
                   disabled={!isEditMode.includes('instagram')}
@@ -368,7 +368,7 @@ const Settings = () => {
                       return {
                         ...prev,
                         twitter: e.target.value,
-                      }
+                      };
                     })
                   }
                   disabled={!isEditMode.includes('twitter')}
@@ -386,7 +386,7 @@ const Settings = () => {
         <Footer />
       </Suspense>
     </>
-  )
-}
+  );
+};
 
-export default Settings
+export default Settings;

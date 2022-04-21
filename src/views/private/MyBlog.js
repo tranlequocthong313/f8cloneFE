@@ -1,38 +1,38 @@
-import React, { Suspense, useState, useEffect } from 'react'
-import { Container, Row, Col } from 'react-bootstrap'
-import Header from '../../components/main-layout/nav/Header'
-import SideBar from '../../components/main-layout/sidebar/SideBar'
-import '../../sass/_withSidebarContent.scss'
-import '../../sass/_container.scss'
-import styles from './MyBlog.module.scss'
-import { Link, useLocation } from 'react-router-dom'
-import { apiURL } from '../../context/constants'
-import Cookies from 'js-cookie'
-import timeSince from '../../components/utils/timeSince/timeSince'
-import Tabs from '../../components/utils/tabs/Tabs'
+import React, { Suspense, useState, useEffect } from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
+import Header from '../../components/main-layout/nav/Header';
+import SideBar from '../../components/main-layout/sidebar/SideBar';
+import '../../sass/_withSidebarContent.scss';
+import '../../sass/_container.scss';
+import styles from './MyBlog.module.scss';
+import { Link, useLocation } from 'react-router-dom';
+import { apiURL } from '../../context/constants';
+import Cookies from 'js-cookie';
+import timeSince from '../../components/utils/timeSince/timeSince';
+import Tabs from '../../components/utils/tabs/Tabs';
 
 const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer'),
-)
+  import('../../components/main-layout/footer/Footer')
+);
 
 const MyBlog = () => {
-  const location = useLocation()
+  const location = useLocation();
 
-  const [tabs, setTabs] = useState(location.pathname)
-  const [myBlog, setMyBlog] = useState([])
-  const [myDraftBlog, setMyDraftBlog] = useState([])
-
-  useEffect(() => {
-    document.title = 'Bài viết của tôi tại F8'
-  }, [])
+  const [tabs, setTabs] = useState(location.pathname);
+  const [myBlog, setMyBlog] = useState([]);
+  const [myDraftBlog, setMyDraftBlog] = useState([]);
 
   useEffect(() => {
-    const controller = new AbortController()
+    document.title = 'Bài viết của tôi tại F8';
+  }, []);
 
-    ;(async () => {
+  useEffect(() => {
+    const controller = new AbortController();
+
+    (async () => {
       try {
-        const token = Cookies.get('token')
-        if (!token) return
+        const token = Cookies.get('token');
+        if (!token) return;
 
         const res = await Promise.all([
           fetch(
@@ -45,7 +45,7 @@ const MyBlog = () => {
             },
             {
               signal: controller.signal,
-            },
+            }
           ),
           fetch(
             `${apiURL}/help/my-post`,
@@ -57,24 +57,24 @@ const MyBlog = () => {
             },
             {
               signal: controller.signal,
-            },
+            }
           ),
-        ])
+        ]);
 
-        const myDraftBlogData = await res[0].json()
-        const myBlogData = await res[1].json()
+        const myDraftBlogData = await res[0].json();
+        const myBlogData = await res[1].json();
 
-        console.log(myDraftBlogData)
+        console.log(myDraftBlogData);
 
-        setMyDraftBlog(myDraftBlogData)
-        setMyBlog(myBlogData)
+        setMyDraftBlog(myDraftBlogData);
+        setMyBlog(myBlogData);
       } catch (error) {
-        console.log(error)
+        console.log(error.message);
       }
-    })()
+    })();
 
-    return () => controller?.abort()
-  }, [])
+    return () => controller?.abort();
+  }, []);
 
   return (
     <>
@@ -186,7 +186,7 @@ const MyBlog = () => {
         <Footer />
       </Suspense>
     </>
-  )
-}
+  );
+};
 
-export default MyBlog
+export default MyBlog;

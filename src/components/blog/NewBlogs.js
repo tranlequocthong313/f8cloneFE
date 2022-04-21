@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from 'react'
-import SecondaryCard from '../utils/card/SecondaryCard'
-import { Image } from 'react-bootstrap'
-import { Link, useNavigate } from 'react-router-dom'
-import styles from './NewBlogs.module.scss'
-import { apiURL } from '../../context/constants'
-import noPhotoUser from '../../asset/images/nobody_m.256x256.jpg'
-import timeSince from '../utils/timeSince/timeSince'
-import Cookies from 'js-cookie'
-import { useSelector } from 'react-redux'
+import React, { useState, useEffect } from 'react';
+import SecondaryCard from '../utils/card/SecondaryCard';
+import { Image } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
+import styles from './NewBlogs.module.scss';
+import { apiURL } from '../../context/constants';
+import noPhotoUser from '../../asset/images/nobody_m.256x256.jpg';
+import timeSince from '../utils/timeSince/timeSince';
+import Cookies from 'js-cookie';
+import { useSelector } from 'react-redux';
 
 const NewBlogs = ({ blogs }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const [bookmarkData, setBookmarkData] = useState(null)
+  const [bookmarkData, setBookmarkData] = useState(null);
 
   useEffect(() => {
-    const controller = new AbortController()
+    const controller = new AbortController();
 
-    ;(async () => {
+    (async () => {
       try {
-        const token = Cookies.get('token')
-        if (!token) return
+        const token = Cookies.get('token');
+        if (!token) return;
 
         const res = await fetch(
           `${apiURL}/me/bookmark`,
@@ -32,22 +32,22 @@ const NewBlogs = ({ blogs }) => {
           },
           {
             signal: controller.signal,
-          },
-        )
-        const data = await res.json()
-        setBookmarkData(data.bookmark)
+          }
+        );
+        const data = await res.json();
+        setBookmarkData(data.bookmark);
       } catch (error) {
-        console.log(error)
+        console.log(error.message);
       }
-    })()
+    })();
 
-    return () => controller?.abort()
-  }, [])
+    return () => controller?.abort();
+  }, []);
 
   const bookmark = async (blogId) => {
     try {
-      const token = Cookies.get('token')
-      if (!token) return navigate('/login')
+      const token = Cookies.get('token');
+      if (!token) return navigate('/login');
 
       const res = await fetch(`${apiURL}/me/bookmark`, {
         method: 'PUT',
@@ -56,14 +56,14 @@ const NewBlogs = ({ blogs }) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-      })
+      });
 
-      const data = await res.json()
-      setBookmarkData(data.bookmark)
+      const data = await res.json();
+      setBookmarkData(data.bookmark);
     } catch (error) {
-      console.log(error)
+      console.log(error.message);
     }
-  }
+  };
 
   return (
     <>
@@ -112,7 +112,7 @@ const NewBlogs = ({ blogs }) => {
         </SecondaryCard>
       ))}
     </>
-  )
-}
+  );
+};
 
-export default NewBlogs
+export default NewBlogs;

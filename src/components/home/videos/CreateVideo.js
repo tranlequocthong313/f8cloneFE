@@ -1,37 +1,37 @@
-import { useState } from 'react'
-import { Modal, Button, Form, Spinner } from 'react-bootstrap'
-import { apiURL } from '../../../context/constants'
-import { useDispatch } from 'react-redux'
-import styles from './CreateVideo.module.scss'
-import { createVideo } from '../../../actions/userAction'
-import MainToast from '../../utils/toast/MainToast'
-import removeActions from '../../utils/remove-accents/removeActions'
-import MainButton from '../../utils/button/MainButton'
+import { useState } from 'react';
+import { Modal, Button, Form, Spinner } from 'react-bootstrap';
+import { apiURL } from '../../../context/constants';
+import { useDispatch } from 'react-redux';
+import styles from './CreateVideo.module.scss';
+import { createVideo } from '../../../actions/userAction';
+import MainToast from '../../utils/toast/MainToast';
+import removeActions from '../../utils/remove-accents/removeActions';
+import MainButton from '../../utils/button/MainButton';
 
 const CreateVideo = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const [videoId, setVideoId] = useState('')
+  const [videoId, setVideoId] = useState('');
   const [createStatus, setCreateStatus] = useState({
     isSuccess: false,
     show: false,
-  })
-  const [isShowCreateModal, setIsShowCreateModal] = useState(false)
-  const [isPopular, setIsPopular] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  });
+  const [isShowCreateModal, setIsShowCreateModal] = useState(false);
+  const [isPopular, setIsPopular] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const showCreateVideoModal = () => setIsShowCreateModal((prev) => !prev)
+  const showCreateVideoModal = () => setIsShowCreateModal((prev) => !prev);
 
   const getYoutubeDataByAPI = async () => {
-    showCreateVideoModal()
-    setIsLoading(true)
+    showCreateVideoModal();
+    setIsLoading(true);
     try {
       const res = await fetch(
-        `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}&part=snippet,contentDetails,statistics,status`,
-      )
+        `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}&part=snippet,contentDetails,statistics,status`
+      );
 
-      const data = await res.json()
-      const youtube = data.items[0]
+      const data = await res.json();
+      const youtube = data.items[0];
 
       const videoData = {
         videoId,
@@ -47,22 +47,22 @@ const CreateVideo = () => {
         likeCount: +youtube.statistics.likeCount,
         commentCount: +youtube.statistics.commentCount,
         isPopular,
-      }
+      };
 
-      createVideoByYoutubeAPIData(videoData)
+      createVideoByYoutubeAPIData(videoData);
     } catch (error) {
-      console.log(error)
+      console.log(error.message);
       setCreateStatus((prev) => {
         return {
           ...prev,
           isSuccess: false,
           show: true,
-        }
-      })
-      setIsLoading(false)
-      setIsPopular(false)
+        };
+      });
+      setIsLoading(false);
+      setIsPopular(false);
     }
-  }
+  };
 
   const createVideoByYoutubeAPIData = async (videoData) => {
     try {
@@ -72,32 +72,32 @@ const CreateVideo = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-      })
+      });
 
-      const data = await res.json()
+      const data = await res.json();
 
-      dispatch(createVideo({ videoData: data.video }))
+      dispatch(createVideo({ videoData: data.video }));
       setCreateStatus((prev) => {
         return {
           ...prev,
           isSuccess: true,
           show: true,
-        }
-      })
+        };
+      });
     } catch (error) {
-      console.log(error)
+      console.log(error.message);
       setCreateStatus((prev) => {
         return {
           ...prev,
           isSuccess: false,
           show: true,
-        }
-      })
+        };
+      });
     } finally {
-      setIsLoading(false)
-      setIsPopular(false)
+      setIsLoading(false);
+      setIsPopular(false);
     }
-  }
+  };
 
   return (
     <>
@@ -173,14 +173,14 @@ const CreateVideo = () => {
             return {
               ...prev,
               show: false,
-            }
+            };
           })
         }
         successText={'Tạo video thành công!'}
         failText={'Tạo video không thành công!'}
       />
     </>
-  )
-}
+  );
+};
 
-export default CreateVideo
+export default CreateVideo;

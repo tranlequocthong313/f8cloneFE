@@ -1,35 +1,35 @@
-import React, { Suspense, useEffect, useState } from 'react'
-import { Col } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
-import styles from './BookmarkPost.module.scss'
-import '../../sass/_withSidebarContent.scss'
-import '../../sass/_mainHeadingTitle.scss'
-import { Row } from 'react-bootstrap'
-import Header from '../../components/main-layout/nav/Header'
-import SideBar from '../../components/main-layout/sidebar/SideBar'
-import Cookies from 'js-cookie'
-import { apiURL } from '../../context/constants'
-import timeSince from '../../components/utils/timeSince/timeSince'
-import Tabs from '../../components/utils/tabs/Tabs'
+import React, { Suspense, useEffect, useState } from 'react';
+import { Col } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import styles from './BookmarkPost.module.scss';
+import '../../sass/_withSidebarContent.scss';
+import '../../sass/_mainHeadingTitle.scss';
+import { Row } from 'react-bootstrap';
+import Header from '../../components/main-layout/nav/Header';
+import SideBar from '../../components/main-layout/sidebar/SideBar';
+import Cookies from 'js-cookie';
+import { apiURL } from '../../context/constants';
+import timeSince from '../../components/utils/timeSince/timeSince';
+import Tabs from '../../components/utils/tabs/Tabs';
 
 const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer'),
-)
+  import('../../components/main-layout/footer/Footer')
+);
 
 const BookmarkPost = () => {
-  const [bookmarkData, setBookmarkData] = useState(null)
+  const [bookmarkData, setBookmarkData] = useState(null);
 
   useEffect(() => {
-    document.title = 'Bài viết đã lưu tại F8'
-  }, [])
+    document.title = 'Bài viết đã lưu tại F8';
+  }, []);
 
   useEffect(() => {
-    const controller = new AbortController()
+    const controller = new AbortController();
 
-    ;(async () => {
+    (async () => {
       try {
-        const token = Cookies.get('token')
-        if (!token) return
+        const token = Cookies.get('token');
+        if (!token) return;
 
         const res = await fetch(
           `${apiURL}/me/bookmark-post`,
@@ -41,19 +41,19 @@ const BookmarkPost = () => {
           },
           {
             signal: controller.signal,
-          },
-        )
+          }
+        );
 
-        const data = await res.json()
+        const data = await res.json();
 
-        setBookmarkData(data)
+        setBookmarkData(data);
       } catch (error) {
-        console.log(error)
+        console.log(error.message);
       }
-    })()
+    })();
 
-    return () => controller?.abort()
-  }, [])
+    return () => controller?.abort();
+  }, []);
 
   return (
     <>
@@ -115,7 +115,7 @@ const BookmarkPost = () => {
         <Footer />
       </Suspense>
     </>
-  )
-}
+  );
+};
 
-export default BookmarkPost
+export default BookmarkPost;

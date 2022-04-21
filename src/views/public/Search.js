@@ -1,43 +1,43 @@
-import React, { Suspense, useEffect, useRef, useState } from 'react'
-import { Col, Container, Row } from 'react-bootstrap'
-import Header from '../../components/main-layout/nav/Header'
-import SideBar from '../../components/main-layout/sidebar/SideBar'
-import styles from './Search.module.scss'
-import ContentEditable from '../../components/utils/content-editable/ContentEditable'
-import { apiURL } from '../../context/constants'
-import { Link, useLocation } from 'react-router-dom'
-import Tabs from '../../components/utils/tabs/Tabs'
-import f8Icon from '../../asset/images/f8_icon.png'
-import CoursesEnrolled from '../../components/profile/ProfileCourses'
+import React, { Suspense, useEffect, useRef, useState } from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
+import Header from '../../components/main-layout/nav/Header';
+import SideBar from '../../components/main-layout/sidebar/SideBar';
+import styles from './Search.module.scss';
+import ContentEditable from '../../components/utils/content-editable/ContentEditable';
+import { apiURL } from '../../context/constants';
+import { Link, useLocation } from 'react-router-dom';
+import Tabs from '../../components/utils/tabs/Tabs';
+import f8Icon from '../../asset/images/f8_icon.png';
+import CoursesEnrolled from '../../components/profile/ProfileCourses';
 
 const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer'),
-)
+  import('../../components/main-layout/footer/Footer')
+);
 
 const Search = () => {
-  const location = useLocation()
+  const location = useLocation();
 
-  const searchInputRef = useRef()
+  const searchInputRef = useRef();
 
-  const [searchInput, setSearchInput] = useState('')
-  const [tabs, setTabs] = useState(location.pathname)
+  const [searchInput, setSearchInput] = useState('');
+  const [tabs, setTabs] = useState(location.pathname);
   const [result, setResult] = useState({
     courses: [],
     blogs: [],
     videos: [],
-  })
+  });
 
   useEffect(() => {
-    const url = new URL(window.location.href)
-    const query = url.searchParams.get('q')
+    const url = new URL(window.location.href);
+    const query = url.searchParams.get('q');
     if (query) {
-      searchInputRef.current.innerText = query
-      setSearchInput(query)
+      searchInputRef.current.innerText = query;
+      setSearchInput(query);
 
       const searchCourseBlogAndVideoByQueryParams = async () => {
         try {
-          const res = await fetch(`${apiURL}/search/${query}`)
-          const data = await res.json()
+          const res = await fetch(`${apiURL}/search/${query}`);
+          const data = await res.json();
 
           setResult((prev) => {
             return {
@@ -48,24 +48,24 @@ const Search = () => {
                 location.pathname === '/search/blog' ? [...data.blogs] : [],
               videos:
                 location.pathname === '/search/video' ? [...data.videos] : [],
-            }
-          })
+            };
+          });
         } catch (error) {
-          console.log(error)
+          console.log(error.message);
         }
-      }
+      };
 
-      searchCourseBlogAndVideoByQueryParams()
+      searchCourseBlogAndVideoByQueryParams();
     }
-  }, [])
+  }, []);
 
   const searchCourseBlogAndVideo = async (e) => {
     try {
-      const length = e.target.innerText.trim().length
-      let match = e.target.innerText.match(/^[a-zA-Z ]*/)
-      setSearchInput(e.target.innerText)
+      const length = e.target.innerText.trim().length;
+      let match = e.target.innerText.match(/^[a-zA-Z ]*/);
+      setSearchInput(e.target.innerText);
 
-      const isEmptySearchInput = length === 0
+      const isEmptySearchInput = length === 0;
       isEmptySearchInput &&
         setResult((prev) => {
           return {
@@ -73,13 +73,13 @@ const Search = () => {
             courses: [],
             blogs: [],
             videos: [],
-          }
-        })
+          };
+        });
 
-      const isValidSearchInput = length >= 2 && match[0] === e.target.innerText
+      const isValidSearchInput = length >= 2 && match[0] === e.target.innerText;
       if (isValidSearchInput) {
-        const res = await fetch(`${apiURL}/search/${e.target.innerText}`)
-        const data = await res.json()
+        const res = await fetch(`${apiURL}/search/${e.target.innerText}`);
+        const data = await res.json();
 
         setResult((prev) => {
           return {
@@ -87,13 +87,13 @@ const Search = () => {
             courses: [...data.courses],
             blogs: [...data.blogs],
             videos: [...data.videos],
-          }
-        })
+          };
+        });
       }
     } catch (error) {
-      console.log(error)
+      console.log(error.message);
     }
-  }
+  };
 
   return (
     <>
@@ -274,7 +274,7 @@ const Search = () => {
         <Footer />
       </Suspense>
     </>
-  )
-}
+  );
+};
 
-export default Search
+export default Search;

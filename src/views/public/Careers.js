@@ -1,42 +1,42 @@
-import React, { Suspense, useEffect, useState } from 'react'
-import { Col, Row } from 'react-bootstrap'
-import styles from './Careers.module.scss'
-import CareerList from '../../components/career/CareerList'
-import Header from '../../components/main-layout/nav/Header'
-import SideBar from '../../components/main-layout/sidebar/SideBar'
-import { apiURL } from '../../context/constants'
+import React, { Suspense, useEffect, useState } from 'react';
+import { Col, Row } from 'react-bootstrap';
+import styles from './Careers.module.scss';
+import CareerList from '../../components/career/CareerList';
+import Header from '../../components/main-layout/nav/Header';
+import SideBar from '../../components/main-layout/sidebar/SideBar';
+import { apiURL } from '../../context/constants';
 
 const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer'),
-)
+  import('../../components/main-layout/footer/Footer')
+);
 
 const Careers = () => {
-  const [jobs, setJobs] = useState([])
+  const [jobs, setJobs] = useState([]);
 
   useEffect(() => {
     document.title =
-      'Tuyển dụng các vị trí làm việc tại F8 | Cơ hội việc làm IT | Đào tạo và phát triển nhân tài'
-  }, [])
+      'Tuyển dụng các vị trí làm việc tại F8 | Cơ hội việc làm IT | Đào tạo và phát triển nhân tài';
+  }, []);
 
   useEffect(() => {
-    const controller = new AbortController()
+    const controller = new AbortController();
 
-    ;(async () => {
+    (async () => {
       try {
         const res = await fetch(`${apiURL}/help/get-job`, {
           signal: controller.signal,
-        })
+        });
 
-        const data = await res.json()
+        const data = await res.json();
 
-        setJobs(data)
+        setJobs(data);
       } catch (error) {
-        console.log(error)
+        console.log(error.message);
       }
-    })()
+    })();
 
-    return () => controller?.abort()
-  }, [])
+    return () => controller?.abort();
+  }, []);
 
   return (
     <>
@@ -69,7 +69,7 @@ const Careers = () => {
         <Footer />
       </Suspense>
     </>
-  )
-}
+  );
+};
 
-export default Careers
+export default Careers;
