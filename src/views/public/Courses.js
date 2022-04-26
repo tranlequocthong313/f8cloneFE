@@ -17,29 +17,27 @@ const Courses = () => {
   const [courseFE, setCourseFE] = useState([])
   const [courseBE, setCourseBE] = useState([])
 
-  useEffect(() => {
-    document.title = 'Danh sách các khóa học lập trình tại F8 | by F8'
-  }, [])
+  useEffect(
+    () => (document.title = 'Danh sách các khóa học lập trình tại F8 | by F8'),
+    []
+  )
 
   useEffect(() => {
-    const controller = new AbortController()
-
     ;(async () => {
-      try {
-        const res = await fetch(`${apiURL}/courses`, {
-          signal: controller.signal,
-        })
-        const data = await res.json()
-
-        setCourseFE(data.courseFE)
-        setCourseBE(data.courseBE)
-      } catch (error) {
-        console.log(error.message)
-      }
+      const url = `${apiURL}/courses`
+      const data = await getCourses(url)
+      setCourseFE(data.courseFE)
+      setCourseBE(data.courseBE)
     })()
-
-    return () => controller?.abort()
   }, [])
+
+  const getCourses = async (url) => {
+    try {
+      return await fetch(url)
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 
   return (
     <>

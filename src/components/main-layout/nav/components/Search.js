@@ -1,26 +1,26 @@
-import { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import styles from './Search.module.scss';
-import { Link } from 'react-router-dom';
-import { apiURL } from '../../../../context/constants';
+import { useState } from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import styles from './Search.module.scss'
+import { Link } from 'react-router-dom'
+import { apiURL } from '../../../../context/constants'
 
 const Search = () => {
-  const [searchInput, setSearchInput] = useState('');
-  const [isFocus, setIsFocus] = useState(false);
+  const [searchInput, setSearchInput] = useState('')
+  const [isFocus, setIsFocus] = useState(false)
   const [result, setResult] = useState({
     courses: [],
     blogs: [],
     videos: [],
-  });
+  })
 
   const search = async (e) => {
     try {
-      setSearchInput(e.target.value);
+      setSearchInput(e.target.value)
 
-      const length = e.target.value.trim().length;
-      let match = e.target.value.match(/^[a-zA-Z ]*/);
+      const length = e.target.value.trim().length
+      let match = e.target.value.match(/^[a-zA-Z ]*/)
 
-      const isEmptySearchInput = length === 0;
+      const isEmptySearchInput = length === 0
       if (isEmptySearchInput)
         setResult((prev) => {
           return {
@@ -28,13 +28,13 @@ const Search = () => {
             courses: [],
             blogs: [],
             videos: [],
-          };
-        });
+          }
+        })
 
-      const isValidSearchInput = length >= 2 && match[0] === e.target.value;
+      const isValidSearchInput = length >= 2 && match[0] === e.target.value
       if (isValidSearchInput) {
-        const res = await fetch(`${apiURL}/search/${e.target.value}`);
-        const data = await res.json();
+        const res = await fetch(`${apiURL}/search/${e.target.value}`)
+        const data = await res.json()
 
         setResult((prev) => {
           return {
@@ -42,13 +42,13 @@ const Search = () => {
             courses: [...data.courses],
             blogs: [...data.blogs],
             videos: [...data.videos],
-          };
-        });
+          }
+        })
       }
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message)
     }
-  };
+  }
 
   return (
     <>
@@ -154,7 +154,7 @@ const Search = () => {
         )}
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Search;
+export default Search

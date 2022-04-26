@@ -1,69 +1,71 @@
-import React, { useState, useEffect } from 'react';
-import SecondaryCard from '../utils/card/SecondaryCard';
-import { Image } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
-import styles from './NewBlogs.module.scss';
-import { apiURL } from '../../context/constants';
-import noPhotoUser from '../../asset/images/nobody_m.256x256.jpg';
-import timeSince from '../utils/timeSince/timeSince';
-import Cookies from 'js-cookie';
-import { useSelector } from 'react-redux';
+import { useState, useEffect } from 'react'
+import SecondaryCard from '../utils/card/SecondaryCard'
+import { Image } from 'react-bootstrap'
+import { Link, useNavigate } from 'react-router-dom'
+import styles from './NewBlogs.module.scss'
+import { apiURL } from '../../context/constants'
+import timeSince from '../utils/timeSince/timeSince'
+import Cookies from 'js-cookie'
 
 const NewBlogs = ({ blogs }) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const [bookmarkData, setBookmarkData] = useState(null);
+  const [bookmarkData, setBookmarkData] = useState(null)
 
   useEffect(() => {
-    const controller = new AbortController();
+    ;(async () => {
+      const token = Cookies.get('token')
+      if (!token) return
 
-    (async () => {
-      try {
-        const token = Cookies.get('token');
-        if (!token) return;
+      const url = `${apiURL}/me/bookmark`
+      const data = await getBookmark(url, token)
+      if (data.status === 500) return
 
-        const res = await fetch(
-          `${apiURL}/me/bookmark`,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
+      setBookmarkData(data.bookmark)
+    })()
+  }, [])
+
+  const getBookmark = async (url, token) => {
+    try {
+      return (
+        await fetch(url, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
-          {
-            signal: controller.signal,
-          }
-        );
-        const data = await res.json();
-        setBookmarkData(data.bookmark);
-      } catch (error) {
-        console.log(error.message);
-      }
-    })();
-
-    return () => controller?.abort();
-  }, []);
+        })
+      ).json()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 
   const bookmark = async (blogId) => {
+    const token = Cookies.get('token')
+    if (!token) return navigate('/login')
+
+    const url = `${apiURL}/me/bookmark`
+    const data = await patchBookmark(url, blogId, token)
+
+    setBookmarkData(data.bookmark)
+  }
+
+  const patchBookmark = async (url, blogId, token) => {
     try {
-      const token = Cookies.get('token');
-      if (!token) return navigate('/login');
-
-      const res = await fetch(`${apiURL}/me/bookmark`, {
-        method: 'PUT',
-        body: JSON.stringify({ blogId }),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await res.json();
-      setBookmarkData(data.bookmark);
+      return (
+        await fetch(url, {
+          method: 'PATCH',
+          body: JSON.stringify({ blogId }),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      ).json()
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message)
     }
-  };
+  }
 
   return (
     <>
@@ -112,7 +114,7 @@ const NewBlogs = ({ blogs }) => {
         </SecondaryCard>
       ))}
     </>
-  );
-};
+  )
+}
 
-export default NewBlogs;
+export default NewBlogs

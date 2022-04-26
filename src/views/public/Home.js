@@ -13,13 +13,13 @@ import MainCardAdd from '../../components/utils/card/MainCardAdd'
 import { Link } from 'react-router-dom'
 
 const BlogList = React.lazy(() =>
-  import('../../components/home/blogs/BlogList'),
+  import('../../components/home/blogs/BlogList')
 )
 const VideoList = React.lazy(() =>
-  import('../../components/home/videos/VideoList'),
+  import('../../components/home/videos/VideoList')
 )
 const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer'),
+  import('../../components/main-layout/footer/Footer')
 )
 
 const Home = () => {
@@ -30,32 +30,31 @@ const Home = () => {
   const [blogData, setBlogData] = useState([])
   const [videoData, setVideoData] = useState([])
 
-  useEffect(() => {
-    document.title =
-      'F8 - học lập trình để đi làm! | Học lập trình online | Học lập trình Javascript'
-  }, [])
+  useEffect(
+    () =>
+      (document.title =
+        'F8 - học lập trình để đi làm! | Học lập trình online | Học lập trình Javascript'),
+    []
+  )
 
   useEffect(() => {
-    const controller = new AbortController()
-
     ;(async () => {
-      try {
-        const res = await fetch(`${apiURL}`, {
-          signal: controller.signal,
-        })
-        const data = await res.json()
+      const data = await getHomeData(`${apiURL}`)
 
-        setCourseFE(data.courseFE)
-        setCourseBE(data.courseBE)
-        setBlogData(data.blogs)
-        setVideoData(data.videos)
-      } catch (error) {
-        console.log(error.message)
-      }
+      setCourseFE(data.courseFE)
+      setCourseBE(data.courseBE)
+      setBlogData(data.blogs)
+      setVideoData(data.videos)
     })()
-
-    return () => controller?.abort()
   }, [])
+
+  const getHomeData = async (url) => {
+    try {
+      return await fetch(url)
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 
   return (
     <>

@@ -1,38 +1,57 @@
-import { useState } from 'react';
-import { Modal, Button, Form, Spinner } from 'react-bootstrap';
-import { apiURL } from '../../../context/constants';
-import { useDispatch } from 'react-redux';
-import styles from './CreateVideo.module.scss';
-import { createVideo } from '../../../actions/userAction';
-import MainToast from '../../utils/toast/MainToast';
-import removeActions from '../../utils/remove-accents/removeActions';
-import MainButton from '../../utils/button/MainButton';
+import { useState } from 'react'
+import { Modal, Form, Spinner } from 'react-bootstrap'
+import { apiURL } from '../../../context/constants'
+import { useDispatch } from 'react-redux'
+import styles from './CreateVideo.module.scss'
+import { createVideo } from '../../../actions/userAction'
+import MainToast from '../../utils/toast/MainToast'
+import removeActions from '../../utils/remove-accents/removeActions'
+import MainButton from '../../utils/button/MainButton'
 
 const CreateVideo = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
-  const [videoId, setVideoId] = useState('');
+  const [videoId, setVideoId] = useState('')
+  const [isShowCreateModal, setIsShowCreateModal] = useState(false)
+  const [isPopular, setIsPopular] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [createStatus, setCreateStatus] = useState({
     isSuccess: false,
     show: false,
-  });
-  const [isShowCreateModal, setIsShowCreateModal] = useState(false);
-  const [isPopular, setIsPopular] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  })
 
-  const showCreateVideoModal = () => setIsShowCreateModal((prev) => !prev);
+  const showCreateVideoModal = () => setIsShowCreateModal((prev) => !prev)
+
+  const setCreateVideoStatusTrue = () =>
+    setCreateStatus((prev) => {
+      return {
+        ...prev,
+        isSuccess: true,
+        show: true,
+      }
+    })
+  const setCreateVideoStatusFalse = () =>
+    setCreateStatus((prev) => {
+      return {
+        ...prev,
+        isSuccess: false,
+        show: true,
+      }
+    })
+
+  const setLoadingAndPopularFalse = () => {
+    setIsLoading(false)
+    setIsPopular(false)
+  }
 
   const getYoutubeDataByAPI = async () => {
-    showCreateVideoModal();
-    setIsLoading(true);
-    try {
-      const res = await fetch(
-        `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}&part=snippet,contentDetails,statistics,status`
-      );
+    showCreateVideoModal()
+    setIsLoading(true)
 
-      const data = await res.json();
-      const youtube = data.items[0];
-
+    const url = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}&part=snippet,contentDetails,statistics,status`
+    const data = await getYoutubeVideo(url)
+    if (data) {
+      const youtube = data.items[0]
       const videoData = {
         videoId,
         duration: youtube.contentDetails.duration,
@@ -47,57 +66,48 @@ const CreateVideo = () => {
         likeCount: +youtube.statistics.likeCount,
         commentCount: +youtube.statistics.commentCount,
         isPopular,
-      };
+      }
 
-      createVideoByYoutubeAPIData(videoData);
-    } catch (error) {
-      console.log(error.message);
-      setCreateStatus((prev) => {
-        return {
-          ...prev,
-          isSuccess: false,
-          show: true,
-        };
-      });
-      setIsLoading(false);
-      setIsPopular(false);
+      createVideoByYoutubeAPIData(videoData)
     }
-  };
+  }
+
+  const getYoutubeVideo = async (url) => {
+    try {
+      return (await fetch(url)).json()
+    } catch (error) {
+      console.log(error.message)
+      setLoadingAndPopularFalse()
+    }
+  }
 
   const createVideoByYoutubeAPIData = async (videoData) => {
+    const url = `${apiURL}/admin/video/create`
+    const data = await postCreateVideo(url, videoData)
+    if (!data.success) return
+
+    dispatch(createVideo({ videoData: data.video }))
+    setCreateVideoStatusTrue()
+  }
+
+  const postCreateVideo = async (url, videoData) => {
     try {
-      const res = await fetch(`${apiURL}/admin/video/create`, {
-        method: 'POST',
-        body: JSON.stringify(videoData),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const data = await res.json();
-
-      dispatch(createVideo({ videoData: data.video }));
-      setCreateStatus((prev) => {
-        return {
-          ...prev,
-          isSuccess: true,
-          show: true,
-        };
-      });
+      return (
+        await fetch(url, {
+          method: 'POST',
+          body: JSON.stringify(videoData),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+      ).json()
     } catch (error) {
-      console.log(error.message);
-      setCreateStatus((prev) => {
-        return {
-          ...prev,
-          isSuccess: false,
-          show: true,
-        };
-      });
+      console.log(error.message)
+      setCreateVideoStatusFalse()
     } finally {
-      setIsLoading(false);
-      setIsPopular(false);
+      setLoadingAndPopularFalse()
     }
-  };
+  }
 
   return (
     <>
@@ -173,14 +183,14 @@ const CreateVideo = () => {
             return {
               ...prev,
               show: false,
-            };
+            }
           })
         }
         successText={'Tạo video thành công!'}
         failText={'Tạo video không thành công!'}
       />
     </>
-  );
-};
+  )
+}
 
-export default CreateVideo;
+export default CreateVideo

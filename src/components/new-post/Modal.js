@@ -1,156 +1,155 @@
-import { useState, useEffect, useCallback, useContext, useRef } from 'react';
-import { Row, Col, Spinner } from 'react-bootstrap';
-import { useDropzone } from 'react-dropzone';
-import ContentEditable from '../utils/content-editable/ContentEditable';
-import moment from 'moment';
-import { apiURL } from '../../context/constants';
-import styles from './Modal.module.scss';
-import { useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
-import { ref, uploadBytesResumable, getDownloadURL } from '@firebase/storage';
-import { storage } from '../../firebase/config';
-import { createBlog } from '../../actions/userAction';
-import removeActions from '../utils/remove-accents/removeActions';
-import { useSelector } from 'react-redux';
-import { BlogContext } from '../../context/BlogContext';
-import io from 'socket.io-client';
-
-const socket = io.connect(apiURL);
+import { useState, useEffect, useCallback, useContext, useRef } from 'react'
+import { Row, Col, Spinner } from 'react-bootstrap'
+import { useDropzone } from 'react-dropzone'
+import ContentEditable from '../utils/content-editable/ContentEditable'
+import moment from 'moment'
+import { apiURL } from '../../context/constants'
+import styles from './Modal.module.scss'
+import { useNavigate } from 'react-router-dom'
+import Cookies from 'js-cookie'
+import { ref, uploadBytesResumable, getDownloadURL } from '@firebase/storage'
+import { storage } from '../../firebase/config'
+import { createBlog } from '../../actions/userAction'
+import removeActions from '../utils/remove-accents/removeActions'
+import { useSelector } from 'react-redux'
+import { PostContext } from '../../context/PostContext'
 
 const Modal = ({ blogContent }) => {
-  const navigate = useNavigate();
-  const user = useSelector((state) => state.user);
+  const navigate = useNavigate()
+  const titleDisplayRef = useRef()
+  const { setShowModal } = useContext(PostContext)
+  const user = useSelector((state) => state.user)
 
-  const { setShowModal } = useContext(BlogContext);
+  const LIMIT_TITLE_DISPLAY_LENGTH = '100'
+  const LIMIT_DESCRIPTION_LENGTH = '160'
+  const SHOW_HELP_NUMBER_TITLE_DISPLAY = 67
+  const SHOW_HELP_NUMBER_DESCRIPTION = 108
 
-  const titleDisplayRef = useRef();
+  const date = moment().add(1, 'hours').format('yyyy-MM-DDTHH:mm')
 
-  // Get city living
+  const [schedule, setSchedule] = useState(date)
+  const [preview, setPreview] = useState(null)
+  const [isSchedule, setIsSchedule] = useState(false)
+  const [allowRecommend, setAllowRecommend] = useState(true)
+  const [titleDisplay, setTitleDisplay] = useState('')
+  const [description, setDescription] = useState('')
+  const [image, setImage] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [tags, setTags] = useState(null)
+  const [tag, setTag] = useState('')
+  const [invalidTag, setInvalidTag] = useState(null)
+
   const timezone = Intl.DateTimeFormat()
     .resolvedOptions()
-    .timeZone.split('/')[1];
+    .timeZone.split('/')[1]
 
-  const date = moment().add(1, 'hours').format('yyyy-MM-DDTHH:mm');
+  useEffect(() => () => preview && URL.revokeObjectURL(preview), [preview])
 
-  const [preview, setPreview] = useState(null);
-  const [isSchedule, setIsSchedule] = useState(false);
-  const [schedule, setSchedule] = useState(date);
-  const [allowRecommend, setAllowRecommend] = useState(true);
-  const [titleDisplay, setTitleDisplay] = useState('');
-  const [description, setDescription] = useState('');
-  const [image, setImage] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [tags, setTags] = useState(null);
-  const [tag, setTag] = useState('');
-  const [invalidTag, setInvalidTag] = useState(null);
-
-  const LIMIT_TITLE_DISPLAY_LENGTH = '100';
-  const LIMIT_DESCRIPTION_LENGTH = '160';
-
-  const SHOW_HELP_NUMBER_TITLE_DISPLAY = 67;
-  const SHOW_HELP_NUMBER_DESCRIPTION = 108;
-
-  useEffect(() => {
-    return () => preview && URL.revokeObjectURL(preview);
-  }, [preview]);
-
-  const onDrop = useCallback((acceptedFiles) => {
-    const image = URL.createObjectURL(acceptedFiles[0]);
-    setPreview(image);
-    setImage(acceptedFiles[0]);
-  }, []);
+  const onDropImageFile = useCallback((acceptedFiles) => {
+    const image = URL.createObjectURL(acceptedFiles[0])
+    setPreview(image)
+    setImage(acceptedFiles[0])
+  }, [])
 
   const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
+    onDropImageFile,
     accept: 'image/*',
     name: 'image',
-  });
+  })
 
-  useEffect(() => {
-    titleDisplayRef.current.innerText = blogContent.title;
-  }, [blogContent.title]);
+  useEffect(
+    () => (titleDisplayRef.current.innerText = blogContent.title),
+    [blogContent.title]
+  )
 
   const readingTime = (content) => {
-    const WORDS_PER_MINUTE = 200; // People read 200 words/min https://infusion.media/content-marketing/how-to-calculate-reading-time/
-    const SMALLEST_READING_TIME = 1;
+    const AVERAGE_WORDS_PER_MINUTE = 200 //People read average 200 words/min https://infusion.media/content-marketing/how-to-calculate-reading-time/
+    const SHORTEST_READING_TIME = 1
 
-    const wordCount = content.split(' ').length;
-    const minute = Math.floor(wordCount / WORDS_PER_MINUTE);
+    const wordCount = content.split(' ').length
+    const minute = Math.floor(wordCount / AVERAGE_WORDS_PER_MINUTE)
 
-    return minute <= SMALLEST_READING_TIME ? SMALLEST_READING_TIME : minute;
-  };
+    return minute <= SHORTEST_READING_TIME ? SHORTEST_READING_TIME : minute
+  }
 
   const uploadImageToStorage = () => {
-    setLoading(true);
-    if (image) {
-      const storageRef = ref(storage, `uploads/${image.name}`);
-      const uploadTask = uploadBytesResumable(storageRef, image);
+    setLoading(true)
 
-      return uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-        },
-        (err) => console.log(err),
-        async () => {
-          try {
-            const url = await getDownloadURL(uploadTask.snapshot.ref);
-            postBlog(url);
-          } catch (error) {
-            console.log(error.message);
-            setLoading(false);
-          }
+    if (!image) return postBlog()
+
+    const storageRef = ref(storage, `uploads/${image.name}`)
+    const uploadTask = uploadBytesResumable(storageRef, image)
+    uploadTask.on(
+      'state_changed',
+      () => {},
+      (err) => console.log(err),
+      async () => {
+        try {
+          const url = await getDownloadURL(uploadTask.snapshot.ref)
+          postBlog(url)
+        } catch (error) {
+          console.error(error.message)
+          setLoading(false)
         }
-      );
-    } else {
-      postBlog();
-    }
-  };
+      }
+    )
+  }
+
+  const dispatchAndNavigate = (data) => {
+    createBlog({ blogData: data.blog })
+    navigate(
+      !data.blog.schedule ? `/blog/${data.blog.slug}` : '/my-post/published'
+    )
+  }
 
   const postBlog = async (image) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
+    const blogData = {
+      image,
+      tags,
+      schedule: isSchedule ? schedule : null,
+      allowRecommend,
+      description,
+      title: blogContent.title,
+      content: blogContent.content,
+      readingTime: readingTime(blogContent.content),
+      search: removeActions(
+        titleDisplay.length === 0 ? blogContent.title : titleDisplay
+      ),
+      titleDisplay:
+        titleDisplay.length === 0 ? blogContent.title : titleDisplay,
+      isPopular: false,
+      isVerified: user.isAdmin ? true : false,
+      isPosted: true,
+    }
+
+    const url = `${apiURL}/new-post`
+    const data = await postNewPost(url, blogData, token)
+
+    if (!user.isAdmin) addNotification(data)
+
+    dispatchAndNavigate(data)
+    setShowModal(false)
+  }
+
+  const postNewPost = async (url, blogData, token) => {
     try {
-      const token = Cookies.get('token');
-      if (!token) return;
-
-      const blogData = {
-        image,
-        tags,
-        schedule: isSchedule ? schedule : null,
-        allowRecommend,
-        description,
-        title: blogContent.title,
-        content: blogContent.content,
-        readingTime: readingTime(blogContent.content),
-        search: removeActions(
-          titleDisplay.length === 0 ? blogContent.title : titleDisplay
-        ),
-        titleDisplay:
-          titleDisplay.length === 0 ? blogContent.title : titleDisplay,
-        isPopular: false,
-        isVerified: user.isAdmin ? true : false,
-        isPosted: true,
-      };
-
-      const res = await fetch(`${apiURL}/new-post`, {
+      return await fetch(url, {
         method: 'POST',
         body: JSON.stringify(blogData),
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-      });
-
-      const data = await res.json();
-
-      user.userId !== process.env.REACT_APP_ADMIN_ID && addNotification(data);
-      dispatchAndNavigate(data);
-      setShowModal(false);
+      })
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const addNotification = async (data) => {
     try {
@@ -167,44 +166,37 @@ const Modal = ({ blogContent }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-      });
+      })
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message)
     }
-  };
-
-  const dispatchAndNavigate = (data) => {
-    createBlog({ blogData: data.blog });
-    navigate(
-      !data.blog.schedule ? `/blog/${data.blog.slug}` : '/my-post/published'
-    );
-  };
+  }
 
   const addTag = (e) => {
-    const isFullTagsSize = tags && tags.length === 5;
-    if (isFullTagsSize) return;
+    const isFullTagsSize = tags && tags.length === 5
+    if (isFullTagsSize) return
 
-    const isEnterPressed = e.keyCode === 13;
+    const isEnterPressed = e.keyCode === 13
     if (isEnterPressed) {
-      const isExistTagAlready = tags.includes(tag);
-      if (isExistTagAlready) return setInvalidTag('Bạn đã thêm thẻ này');
+      const isExistTagAlready = tags.includes(tag)
+      if (isExistTagAlready) return setInvalidTag('Bạn đã thêm thẻ này')
 
       const isValidTagAddInput = !tag.match(
         /[`!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?~]/
-      );
+      )
       if (!isValidTagAddInput)
         return setInvalidTag(
           'Thẻ chỉ hỗ trợ chữ cái, số, dấu cách và dấu gạch ngang'
-        );
+        )
 
-      setInvalidTag(null);
-      setTags((prev) => [...prev, tag.trim()]);
-      setTag('');
+      setInvalidTag(null)
+      setTags((prev) => [...prev, tag.trim()])
+      setTag('')
     }
-  };
+  }
 
   const removeTag = (tag) =>
-    setTags((prev) => prev.filter((item) => item !== tag));
+    setTags((prev) => prev.filter((item) => item !== tag))
 
   return (
     <div className={styles.modal}>
@@ -366,7 +358,7 @@ const Modal = ({ blogContent }) => {
         </Col>
       </Row>
     </div>
-  );
-};
+  )
+}
 
-export default Modal;
+export default Modal

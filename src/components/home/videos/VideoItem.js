@@ -1,5 +1,3 @@
-import React from 'react'
-import CardButton from '../../utils/card/CardButton'
 import MainCard from '../../utils/card/MainCard'
 import styles from './VideoItem.module.scss'
 import youtubeDurationFormat from 'youtube-duration-format'
@@ -9,10 +7,7 @@ const VideoItem = ({ video }) => {
   const formatYoutubeStatistic = (number) =>
     new Intl.NumberFormat(['ban', 'id']).format(number)
 
-  const formatYoutubeDuration = (duration) => {
-    const durationFormatted = youtubeDurationFormat(duration)
-    return durationFormatted
-  }
+  const formatYoutubeDuration = (duration) => youtubeDurationFormat(duration)
 
   return (
     <MainCard>

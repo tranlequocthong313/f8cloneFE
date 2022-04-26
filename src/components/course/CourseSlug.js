@@ -25,25 +25,25 @@ const CourseSlug = () => {
     setIsShowVideoPreviewCourse((prev) => !prev)
 
   useEffect(() => {
-    const controller = new AbortController()
-
     ;(async () => {
-      try {
-        const res = await fetch(`${apiURL}${location.pathname}`, {
-          signal: controller.signal,
-        })
-        const data = await res.json()
-        const hasRequireKnowledgeForThisCourse = data.require
-        hasRequireKnowledgeForThisCourse && setHasRequire(true)
-        setCourse(data)
-        document.title = `${data.title} | by F8`
-      } catch (error) {
-        console.log(error.message)
-      }
-    })()
+      const url = `${apiURL}${location.pathname}`
+      const data = await getCourseBySlug(url)
+      if (data.status === 500) return
 
-    return () => controller?.abort()
-  }, [])
+      if (data.require) setHasRequire(true)
+
+      setCourse(data)
+      document.title = `${data.title} | by F8`
+    })()
+  }, [location.pathname])
+
+  const getCourseBySlug = async (url) => {
+    try {
+      return (await fetch(url)).json()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 
   return (
     <>

@@ -5,13 +5,11 @@ import SideBar from '../../components/main-layout/sidebar/SideBar'
 import { Row, Col, Container } from 'react-bootstrap'
 
 const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer'),
+  import('../../components/main-layout/footer/Footer')
 )
 
 const Terms = () => {
-  useEffect(() => {
-    document.title = 'Điều khoản sử dụng'
-  }, [])
+  useEffect(() => (document.title = 'Điều khoản sử dụng'), [])
 
   return (
     <>

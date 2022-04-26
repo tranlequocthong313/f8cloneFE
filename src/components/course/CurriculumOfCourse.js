@@ -11,19 +11,21 @@ const CurriculumOfCourse = ({ episodeList }) => {
 
   useEffect(() => {
     episodeList.map((episode) =>
-      setCollapsedCurriculumAll((prev) => [...prev, episode.id]),
+      setCollapsedCurriculumAll((prev) => [...prev, episode.id])
     )
   }, [episodeList])
 
   const collapseCurriculumSingle = (id) =>
     setCollapsedCurriculum((prev) => {
       const isOpen = prev.includes(id)
+
       if (isOpen) {
         const newCollapsed = prev.filter((item) => item !== id)
         newCollapsed.length !== collapsedCurriculumAll.length &&
           setIsCollapsedCurriculumAll(false)
         return newCollapsed
       }
+
       const newCollapsed = [...prev, id]
       newCollapsed.length === collapsedCurriculumAll.length &&
         setIsCollapsedCurriculumAll(true)
@@ -34,10 +36,10 @@ const CurriculumOfCourse = ({ episodeList }) => {
     if (!isCollapsedCurriculumAll) {
       setCollapsedCurriculum((prev) => [...prev, ...collapsedCurriculumAll])
       setIsCollapsedCurriculumAll(true)
-      return
+    } else {
+      setCollapsedCurriculum([])
+      setIsCollapsedCurriculumAll(false)
     }
-    setCollapsedCurriculum([])
-    setIsCollapsedCurriculumAll(false)
   }
 
   return (

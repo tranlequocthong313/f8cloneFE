@@ -7,7 +7,7 @@ import styles from './Reaction.module.scss'
 const Reaction = ({
   isLike,
   commentData,
-  like,
+  handleLike,
   setShowComment,
   likeCount,
   setCommentData,
@@ -15,7 +15,7 @@ const Reaction = ({
 }) => {
   return (
     <div className={styles.reaction}>
-      <div className={styles.reactButton} onClick={like}>
+      <div className={styles.reactButton} onClick={handleLike}>
         <i
           className={
             isLike

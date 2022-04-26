@@ -1,80 +1,81 @@
-import React, { Suspense, useState, useEffect } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
-import Header from '../../components/main-layout/nav/Header';
-import SideBar from '../../components/main-layout/sidebar/SideBar';
-import '../../sass/_withSidebarContent.scss';
-import '../../sass/_container.scss';
-import styles from './MyBlog.module.scss';
-import { Link, useLocation } from 'react-router-dom';
-import { apiURL } from '../../context/constants';
-import Cookies from 'js-cookie';
-import timeSince from '../../components/utils/timeSince/timeSince';
-import Tabs from '../../components/utils/tabs/Tabs';
+import React, { Suspense, useState, useEffect } from 'react'
+import { Container, Row, Col } from 'react-bootstrap'
+import Header from '../../components/main-layout/nav/Header'
+import SideBar from '../../components/main-layout/sidebar/SideBar'
+import '../../sass/_withSidebarContent.scss'
+import '../../sass/_container.scss'
+import styles from './MyBlog.module.scss'
+import { Link, useLocation } from 'react-router-dom'
+import { apiURL } from '../../context/constants'
+import Cookies from 'js-cookie'
+import timeSince from '../../components/utils/timeSince/timeSince'
+import Tabs from '../../components/utils/tabs/Tabs'
+import Tippy from '../../components/utils/tippy/Tippy'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer')
-);
+)
 
 const MyBlog = () => {
-  const location = useLocation();
+  const location = useLocation()
 
-  const [tabs, setTabs] = useState(location.pathname);
-  const [myBlog, setMyBlog] = useState([]);
-  const [myDraftBlog, setMyDraftBlog] = useState([]);
+  const [tabs, setTabs] = useState(location.pathname)
+  const [myBlog, setMyBlog] = useState([])
 
-  useEffect(() => {
-    document.title = 'Bài viết của tôi tại F8';
-  }, []);
+  useEffect(() => (document.title = 'Bài viết của tôi tại F8'), [])
 
   useEffect(() => {
-    const controller = new AbortController();
+    ;(async () => {
+      const token = Cookies.get('token')
+      if (!token) return
 
-    (async () => {
-      try {
-        const token = Cookies.get('token');
-        if (!token) return;
+      const url = `${apiURL}/help/my-post`
+      const data = await getMyPost(url, token)
 
-        const res = await Promise.all([
-          fetch(
-            `${apiURL}/blog/draft`,
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
-              },
-            },
-            {
-              signal: controller.signal,
-            }
-          ),
-          fetch(
-            `${apiURL}/help/my-post`,
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
-              },
-            },
-            {
-              signal: controller.signal,
-            }
-          ),
-        ]);
+      setMyBlog(data)
+    })()
+  }, [])
 
-        const myDraftBlogData = await res[0].json();
-        const myBlogData = await res[1].json();
+  const getMyPost = async (url, token) => {
+    try {
+      return (
+        await fetch(url, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      ).json()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 
-        console.log(myDraftBlogData);
+  const deleteBlogById = async (id) => {
+    const token = Cookies.get('token')
+    if (!token) return
 
-        setMyDraftBlog(myDraftBlogData);
-        setMyBlog(myBlogData);
-      } catch (error) {
-        console.log(error.message);
-      }
-    })();
+    const url = `${apiURL}/blog/delete-blog/${id}`
+    const data = await deleteBlog(url, token)
 
-    return () => controller?.abort();
-  }, []);
+    setMyBlog(data)
+  }
+
+  const deleteBlog = async (url, token) => {
+    try {
+      return (
+        await fetch(url, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      ).json()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 
   return (
     <>
@@ -92,13 +93,6 @@ const MyBlog = () => {
                   <Col xs={12} md={12} xl={8}>
                     <div className={styles.tabs}>
                       <Tabs
-                        path={'/my-post/drafts'}
-                        tab={'Bản nháp'}
-                        quantity={`(${myDraftBlog.length})`}
-                        onActive={() => setTabs('/my-post/drafts')}
-                        isActive={tabs === '/my-post/drafts'}
-                      />
-                      <Tabs
                         path={'/my-post/published'}
                         tab={'Đã xuất bản'}
                         quantity={`(${myBlog.length})`}
@@ -106,38 +100,6 @@ const MyBlog = () => {
                         isActive={tabs === '/my-post/published'}
                       />
                     </div>
-                    {tabs === '/my-post/drafts' && myDraftBlog.length === 0 && (
-                      <div className={styles.message}>
-                        <p>Chưa có bản nháp nào.</p>
-                        <p>
-                          Bấm vào đây để{' '}
-                          <Link to="/blog">xem các bài viết nổi bật.</Link>
-                        </p>
-                      </div>
-                    )}
-                    {tabs === '/my-post/drafts' &&
-                      myDraftBlog &&
-                      myDraftBlog.map((blog) => (
-                        <ul key={blog._id} className={styles.blogList}>
-                          <li>
-                            <h3>
-                              <Link to={`/new-post/${blog._id}`}>
-                                <span>{blog.title}</span>
-                              </Link>
-                            </h3>
-                            <div className={styles.author}>
-                              <Link to={`/new-post/${blog._id}`}>
-                                Chỉnh sửa {timeSince(blog.createdAt)}
-                              </Link>
-                              <span className={styles.dot}>.</span>
-                              <span>{blog.readingTime} phút đọc</span>
-                            </div>
-                            <span className={styles.option}>
-                              <i className="fa-solid fa-ellipsis"></i>
-                            </span>
-                          </li>
-                        </ul>
-                      ))}
                     {tabs === '/my-post/published' && myBlog.length === 0 && (
                       <div className={styles.message}>
                         <p>Chưa có xuất bản nào.</p>
@@ -148,20 +110,38 @@ const MyBlog = () => {
                       </div>
                     )}
                     {tabs === '/my-post/published' &&
-                      myBlog &&
+                      myBlog.length > 0 &&
                       myBlog.map((blog) => (
                         <ul key={blog._id} className={styles.blogList}>
                           <li>
-                            <h3>
-                              <a href={`/blog/${blog.slug}`}>
-                                {blog.schedule !== null && (
-                                  <i
-                                    className={`fa-solid fa-clock ${styles.clockIcon}`}
-                                  ></i>
-                                )}
-                                <span>{blog.titleDisplay}</span>
-                              </a>
-                            </h3>
+                            <div className={styles.heading}>
+                              <h3>
+                                <Link to={`/new-post/${blog._id}`}>
+                                  <span>{blog.title}</span>
+                                </Link>
+                              </h3>
+                              <Tippy
+                                button={
+                                  <span className={styles.option}>
+                                    <i className={`fa-solid fa-ellipsis`}></i>
+                                  </span>
+                                }
+                                className={styles.optionWrapper}
+                              >
+                                <Link
+                                  to={`/edit-post/${blog._id}`}
+                                  className={styles.optionItem}
+                                >
+                                  Chỉnh sửa
+                                </Link>
+                                <div
+                                  onClick={() => deleteBlogById(blog._id)}
+                                  className={styles.optionItem}
+                                >
+                                  Xóa
+                                </div>
+                              </Tippy>
+                            </div>
                             <div className={styles.author}>
                               <a href={`/blog/${blog.slug}`}>
                                 Chỉnh sửa {timeSince(blog.createdAt)}
@@ -169,9 +149,6 @@ const MyBlog = () => {
                               <span className={styles.dot}>.</span>
                               <span>{blog.readingTime} phút đọc</span>
                             </div>
-                            <span className={styles.option}>
-                              <i className="fa-solid fa-ellipsis"></i>
-                            </span>
                           </li>
                         </ul>
                       ))}
@@ -186,7 +163,7 @@ const MyBlog = () => {
         <Footer />
       </Suspense>
     </>
-  );
-};
+  )
+}
 
-export default MyBlog;
+export default MyBlog

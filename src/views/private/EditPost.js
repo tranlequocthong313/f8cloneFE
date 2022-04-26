@@ -1,81 +1,104 @@
-import React, {
-  useRef,
-  useState,
-  useEffect,
-  Suspense,
-  useContext,
-} from 'react';
-import styles from './EditPost.module.scss';
-import Editor from 'react-markdown-editor-lite';
-import ReactMarkdown from 'react-markdown';
-import 'react-markdown-editor-lite/lib/index.css';
-import '../../sass/_myIcon.scss';
-import Header from '../../components/main-layout/nav/Header';
-import '../../sass/_markdownEditor.scss';
-import ContentEditable from '../../components/utils/content-editable/ContentEditable';
-import Modal from '../../components/new-post/Modal';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { apiURL } from '../../context/constants';
-import { BlogContext } from '../../context/BlogContext';
-import Cookies from 'js-cookie';
-import MainToast from '../../components/utils/toast/MainToast';
+import React, { useRef, useState, useEffect, Suspense, useContext } from 'react'
+import styles from './EditPost.module.scss'
+import Editor from 'react-markdown-editor-lite'
+import ReactMarkdown from 'react-markdown'
+import 'react-markdown-editor-lite/lib/index.css'
+import '../../sass/_myIcon.scss'
+import Header from '../../components/main-layout/nav/Header'
+import '../../sass/_markdownEditor.scss'
+import ContentEditable from '../../components/utils/content-editable/ContentEditable'
+import Modal from '../../components/new-post/Modal'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { apiURL } from '../../context/constants'
+import { PostContext } from '../../context/PostContext'
+import Cookies from 'js-cookie'
+import MainToast from '../../components/utils/toast/MainToast'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer')
-);
+)
 
 const EditPost = () => {
-  const mdEditor = useRef(null);
-  const titleRef = useRef(null);
+  const mdEditor = useRef(null)
+  const titleRef = useRef(null)
 
-  const location = useLocation();
-  const navigate = useNavigate();
+  const location = useLocation()
+  const navigate = useNavigate()
+  const { showModal, setIsValid } = useContext(PostContext)
 
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const [title, setTitle] = useState('')
+  const [content, setContent] = useState('')
   const [editStatus, setEditStatus] = useState({
     isSuccess: false,
     show: false,
-  });
+  })
 
-  const { showModal, setIsValid } = useContext(BlogContext);
-
-  const LIMIT_TITLE_LENGTH = '190';
+  const LIMIT_TITLE_LENGTH = '190'
 
   useEffect(() => {
-    document.title = title;
+    document.title = title
 
-    title && content ? setIsValid(true) : setIsValid(false);
-  }, [title, content, setIsValid]);
+    title && content ? setIsValid(true) : setIsValid(false)
+  }, [title, content, setIsValid])
+
+  console.log(location.pathname)
 
   useEffect(() => {
-    const controller = new AbortController();
+    ;(async () => {
+      const url = `${apiURL}/blog${location.pathname}`
+      const data = await getPost(url)
 
-    (async () => {
-      try {
-        const res = await fetch(`${apiURL}/blog/${location.pathname}`);
+      setTitle(data.title)
+      setContent(data.content)
+      titleRef.current.innerText = data.title
+    })()
+  }, [location.pathname])
 
-        const data = await res.json();
-
-        titleRef.current.innerText = data.blogSlug.title;
-        setTitle(data.blogSlug.title);
-        setContent(data.blogSlug.content);
-
-        document.title = data.blogSlug.title;
-      } catch (error) {
-        console.log(error.message);
-      }
-    })();
-
-    return () => controller?.abort();
-  }, [location.pathname]);
-
-  const blogData = async () => {
+  const getPost = async (url) => {
     try {
-      const token = Cookies.get('token');
-      if (!token) return;
+      return (await fetch(url)).json()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 
-      const res = await fetch(`${apiURL}/blog/${location.pathname}`, {
+  const setEditStatusTrue = () =>
+    setEditStatus((prev) => {
+      return {
+        ...prev,
+        isSuccess: true,
+        show: true,
+      }
+    })
+
+  const setEditStatusFalse = () =>
+    setEditStatus((prev) => {
+      return {
+        ...prev,
+        isSuccess: false,
+        show: true,
+      }
+    })
+
+  const submitEditPost = async () => {
+    const token = Cookies.get('token')
+    if (!token) return
+
+    const url = `${apiURL}/blog${location.pathname}`
+    const data = await putEditPost(url, token)
+
+    if (data.success) {
+      navigate(-1)
+      setEditStatusTrue()
+    } else {
+      setEditStatusFalse()
+    }
+  }
+
+  const putEditPost = async (url, token) => {
+    try {
+      return (await fetch(url),
+      {
         method: 'PUT',
         body: JSON.stringify({
           title: titleRef.current.innerText,
@@ -85,42 +108,17 @@ const EditPost = () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-      });
-
-      const data = await res.json();
-
-      const isEditBlogSuccess = data.success;
-
-      if (isEditBlogSuccess) {
-        navigate(-1);
-        setEditStatus((prev) => {
-          return {
-            ...prev,
-            isSuccess: true,
-            show: true,
-          };
-        });
-      } else {
-        setEditStatus((prev) => {
-          return {
-            ...prev,
-            isSuccess: false,
-            show: true,
-          };
-        });
-      }
+      }).json()
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message)
     }
-  };
-
-  const editorChange = ({ text }) => setContent(text);
+  }
 
   return (
     <>
       {!showModal && (
         <>
-          <Header blogData={blogData} />
+          <Header submitEditPost={submitEditPost} />
           <div className={styles.wrapper}>
             <ContentEditable
               text={'Tiêu đề'}
@@ -132,7 +130,7 @@ const EditPost = () => {
             <Editor
               ref={mdEditor}
               value={content}
-              onChange={editorChange}
+              onChange={({ text }) => setContent(text)}
               renderHTML={(text) => <ReactMarkdown children={text} />}
             />
           </div>
@@ -145,7 +143,7 @@ const EditPost = () => {
             return {
               ...prev,
               show: false,
-            };
+            }
           })
         }
         successText={'Chỉnh sửa bài viết thành công!'}
@@ -155,7 +153,7 @@ const EditPost = () => {
         <Footer />
       </Suspense>
     </>
-  );
-};
+  )
+}
 
-export default EditPost;
+export default EditPost

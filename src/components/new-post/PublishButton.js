@@ -1,11 +1,14 @@
 import React, { useContext } from 'react'
 import styles from './PublishButton.module.scss'
 import MainButton from '../utils/button/MainButton'
-import { BlogContext } from '../../context/BlogContext'
+import { PostContext } from '../../context/PostContext'
 
-const PublishButton = ({ blogData }) => {
-  const { isValid, isNewBlog, isEditBlog, text, setShowModal } =
-    useContext(BlogContext)
+const PublishButton = ({ submitEditPost }) => {
+  const { isValid, isNewPost, text, setShowModal } = useContext(PostContext)
+
+  const saveNewOrEditPost = () => {
+    if (isValid) isNewPost ? setShowModal(true) : submitEditPost()
+  }
 
   return (
     <MainButton
@@ -13,16 +16,7 @@ const PublishButton = ({ blogData }) => {
       className={
         isValid ? styles.button : `${styles.disabled} ${styles.button}`
       }
-      onClick={
-        isValid && isNewBlog
-          ? () => {
-              blogData()
-              setShowModal(true)
-            }
-          : isValid && isEditBlog
-          ? () => blogData()
-          : null
-      }
+      onClick={saveNewOrEditPost}
     >
       {text}
     </MainButton>

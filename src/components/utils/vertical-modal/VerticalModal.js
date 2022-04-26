@@ -18,10 +18,7 @@ const VerticalModal = ({
   const handleShow = () => setShow((prev) => !prev)
 
   useEffect(() => {
-    const resize = () => {
-      const isWidthGreaterThanOrEqual1024px = window.innerWidth >= 1024
-      if (isWidthGreaterThanOrEqual1024px) return setShow(false)
-    }
+    const resize = () => window.innerWidth >= 1024 && setShow(false)
     hideOnComputer && window.addEventListener('resize', resize)
 
     return () => window.removeEventListener('resize', resize)

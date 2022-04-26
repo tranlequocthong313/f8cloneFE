@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import styles from './Comment.module.scss'
 import CommentHeader from './CommentHeader'
 import CommentInput from './CommentInput'
@@ -9,7 +9,6 @@ import MainToast from '../toast/MainToast'
 import ScrollToTop from '../scroll/ScrollToTop'
 
 const Comment = ({
-  setShowComment,
   submitComment,
   commentData,
   commentInput,
@@ -17,42 +16,23 @@ const Comment = ({
   setCommentData,
   blogId,
 }) => {
-  const user = useSelector((state) => state.user)
   const commentRef = useRef()
+  const user = useSelector((state) => state.user)
 
   const [showSubmit, setShowSubmit] = useState(false)
   const [showCode, setShowCode] = useState(false)
   const [showModal, setShowModal] = useState(false)
+  const [visible, setVisible] = useState(false)
   const [reportStatus, setReportStatus] = useState({
     isSuccess: false,
     show: false,
   })
-  const [visible, setVisible] = useState(false)
 
-  const handleReportStatus = (status) =>
-    status
-      ? setReportStatus((prev) => {
-          return {
-            ...prev,
-            show: true,
-            isSuccess: true,
-          }
-        })
-      : setReportStatus((prev) => {
-          return {
-            ...prev,
-            show: true,
-            isSuccess: false,
-          }
-        })
-
-  const scrollToTop = () => {
-    const SHOW_SCROLL_TO_TOP_OFFSET = 1000
-
+  const SHOW_SCROLL_TO_TOP_OFFSET = 1000
+  const scrollToTop = () =>
     commentRef.current.scrollTop >= SHOW_SCROLL_TO_TOP_OFFSET
       ? setVisible(true)
       : setVisible(false)
-  }
 
   return (
     <>
@@ -80,8 +60,8 @@ const Comment = ({
               userPhotoURL={user.photoURL}
               showModal={setShowModal}
               setCommentData={setCommentData}
-              handleReportStatus={handleReportStatus}
               blogId={blogId}
+              s
             />
           )}
         </div>

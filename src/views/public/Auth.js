@@ -1,96 +1,118 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Image } from 'react-bootstrap';
-import styles from './Auth.module.scss';
-import f8Logo from '../../asset/images/f8_icon.png';
-import { signInWithPopup } from 'firebase/auth';
-import { auth } from '../../firebase/config';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import AuthWithPhoneNumberForm from '../../components/auth/forms/AuthWithPhoneNumberForm';
-import AuthWithEmailAndPasswordForm from '../../components/auth/forms/AuthWithEmailAndPasswordForm';
-import { login } from '../../actions/userAction';
-import SignInButtonContainer from '../../components/auth/buttons/SignInButtonContainer';
-import { apiURL } from '../../context/constants';
-import Cookies from 'js-cookie';
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Image } from 'react-bootstrap'
+import styles from './Auth.module.scss'
+import f8Logo from '../../asset/images/f8_icon.png'
+import { signInWithPopup } from 'firebase/auth'
+import { auth } from '../../firebase/config'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import AuthWithPhoneNumberForm from '../../components/auth/forms/AuthWithPhoneNumberForm'
+import AuthWithEmailAndPasswordForm from '../../components/auth/forms/AuthWithEmailAndPasswordForm'
+import { login } from '../../actions/userAction'
+import SignInButtonContainer from '../../components/auth/buttons/SignInButtonContainer'
+import { apiURL } from '../../context/constants'
+import Cookies from 'js-cookie'
 
 const Auth = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
-  const [isLogin, setIsLogin] = useState(true);
-  const [loginOption, setLoginOption] = useState('');
-  const [forgotPassword, setForgotPassword] = useState(false);
-  const [inValid, setInValid] = useState(false);
+  const [isLogin, setIsLogin] = useState(true)
+  const [loginOption, setLoginOption] = useState('')
+  const [forgotPassword, setForgotPassword] = useState(false)
+  const [inValid, setInValid] = useState(false)
+  const [isShowAuthProviderOption, setIsShowAuthProviderOption] = useState(true)
+
+  useEffect(
+    () => loginOption === '' && setIsShowAuthProviderOption(true),
+    [loginOption]
+  )
 
   const dispatchAndNavigate = (payload) => {
-    dispatch(login(payload));
-    navigate('/');
-  };
+    dispatch(login(payload))
+    navigate('/')
+  }
 
   const handleIsLogin = () => {
-    setIsLogin((prev) => !prev);
-    setLoginOption('');
-  };
+    setIsLogin((prev) => !prev)
+    setLoginOption('')
+  }
 
   const loginWithProvider = async (provider) => {
-    try {
-      const res = await signInWithPopup(auth, provider);
-      const user = res.user;
+    const res = await signInWithPopup(auth, provider)
+    const user = res.user
 
-      const apiRes = await fetch(`${apiURL}/login/provider`, {
-        method: 'POST',
-        body: JSON.stringify({
-          email: user.email,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+    const userData = loginIfEmailExist(user.email)
 
-      const apiData = await apiRes.json();
-
-      if (apiData.hasUserCreatedAlready) {
-        Cookies.set('token', apiData.accessToken, { expires: 365 });
-        return dispatchAndNavigate({
-          ...apiData.userCreated,
-          accessToken: apiData.accessToken,
-        });
-      }
-
-      console.log('CREATE NEW ACCOUNT WITH PROVIDER!');
-      const newRes = await fetch(`${apiURL}/login/provider`, {
-        method: 'POST',
-        body: JSON.stringify({
-          fullName: user.displayName,
-          email: user.email,
-          photoURL: user.photoURL,
-          provider: user.providerData[0].providerId,
-          activated: true,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const newData = await newRes.json();
-      Cookies.set('token', newData.accessToken, { expires: 365 });
-      console.log(newData);
+    if (userData) {
+      Cookies.set('token', userData.accessToken, { expires: 365 })
       dispatchAndNavigate({
-        ...newData.user,
-        accessToken: newData.accessToken,
-      });
-    } catch (error) {
-      const isUsedEmailForOtherAuthProvider =
-        error.code === 'auth/account-exists-with-different-credential';
-      isUsedEmailForOtherAuthProvider && setInValid(true);
+        ...userData.userCreated,
+        accessToken: userData.accessToken,
+      })
+      return
     }
-  };
 
-  const switchPhoneAndEmail = (option) => setLoginOption(option);
+    const url = `${apiURL}/login/provider`
+    const data = await registerNewAccount(url, {
+      fullName: user.displayName,
+      email: user.email,
+      photoURL: user.photoURL,
+      provider: user.providerData[0].providerId,
+      activated: true,
+    })
 
-  let isShowAuthProviderOption;
-  if (loginOption === '') isShowAuthProviderOption = true;
+    Cookies.set('token', data.accessToken, { expires: 365 })
+    dispatchAndNavigate({
+      ...data.user,
+      accessToken: data.accessToken,
+    })
+  }
+
+  const loginIfEmailExist = async (email) => {
+    const url = `${apiURL}/login/provider`
+    const data = await postCheckEmail(url, email)
+    return data
+  }
+
+  const postCheckEmail = async (url, email) => {
+    try {
+      return (
+        await fetch(url, {
+          method: 'POST',
+          body: JSON.stringify({
+            email,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+      ).json()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
+  const registerNewAccount = async (url, data) => {
+    try {
+      return (
+        await fetch(url, {
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+      ).json()
+    } catch (error) {
+      console.log(error.message)
+      if (error.code === 'auth/account-exists-with-different-credential')
+        setInValid(true)
+    }
+  }
+
+  const switchPhoneAndEmail = (option) => setLoginOption(option)
 
   return (
     <div className={styles.wrapper}>
@@ -103,7 +125,7 @@ const Auth = () => {
                 onClick={() => {
                   forgotPassword
                     ? setForgotPassword(false)
-                    : switchPhoneAndEmail('');
+                    : switchPhoneAndEmail('')
                 }}
                 className={styles.backButton}
               >
@@ -190,7 +212,7 @@ const Auth = () => {
       </div>
       <div id="recaptcha-container"></div>
     </div>
-  );
-};
+  )
+}
 
-export default Auth;
+export default Auth

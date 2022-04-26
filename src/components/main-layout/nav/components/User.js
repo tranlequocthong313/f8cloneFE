@@ -52,7 +52,7 @@ const User = ({ photoURL, displayName, email, slug }) => {
       <Link className={styles.menuItem} to="/new-post">
         Viết blog
       </Link>
-      <Link className={styles.menuItem} to="/my-post/drafts">
+      <Link className={styles.menuItem} to="/my-post/published">
         Bài viết của tôi
       </Link>
       <Dropdown.Divider />

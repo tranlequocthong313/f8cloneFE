@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { apiURL } from '../../../context/constants';
-import { Form, Spinner } from 'react-bootstrap';
-import FormGroup from '../../utils/auth-form/FormGroup';
-import styles from './AuthForgetPassword.module.scss';
+import React, { useEffect, useState } from 'react'
+import { apiURL } from '../../../context/constants'
+import { Form, Spinner } from 'react-bootstrap'
+import FormGroup from '../../utils/auth-form/FormGroup'
+import styles from './AuthForgetPassword.module.scss'
 
 const AuthForgetPassword = ({
   setForgotPassword,
@@ -13,7 +13,6 @@ const AuthForgetPassword = ({
   setInvalidOTP,
   isSendVerifyCode,
   checkUserEmailExist,
-  isValidEmail,
   counter,
   validateEmail,
   setDisabled,
@@ -22,51 +21,54 @@ const AuthForgetPassword = ({
   loading,
   setLoading,
 }) => {
+  const [isConfirm, setIsConfirm] = useState(false)
   const [password, setPassword] = useState({
     pass: '',
-    rePass: '',
-  });
-
-  const [isConfirm, setIsConfirm] = useState(false);
+    rePassword: '',
+  })
 
   const forgotPassword = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(`${apiURL}/login/reset-password`, {
-        method: 'POST',
-        body: JSON.stringify({
-          email,
-          password: password.pass,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      const data = await res.json();
-      setForgotPassword(false);
-      console.log(data.message);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    const disable = () => {
-      return !isValidEmail(email) || validateEmail !== null;
-    };
+    setLoading(true)
 
-    setDisabled(disable());
-  }, [email, isValidEmail, setDisabled, validateEmail]);
+    const url = `${apiURL}/login/reset-password`
+    await postForgetPassword(url)
+
+    setForgotPassword(false)
+    setLoading(false)
+  }
+
+  const postForgetPassword = async (url) => {
+    try {
+      return (
+        await fetch(url, {
+          method: 'POST',
+          body: JSON.stringify({
+            email,
+            password: password.pass,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+      ).json()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
+  useEffect(() => {
+    const validEmail = validateEmail === null
+    setDisabled(!validEmail)
+  }, [email, setDisabled, validateEmail])
 
   const checkOTPValid = () => {
-    if (verifyOTP.input !== verifyOTP.create) {
-      return setInvalidOTP('Mã xác minh không hợp lệ');
-    }
-    setIsConfirm(true);
-    setInvalidOTP(null);
-  };
+    const validOTPInput = verifyOTP && verifyOTP.input === verifyOTP.create
+    if (!validOTPInput) return setInvalidOTP('Mã xác minh không hợp lệ')
 
+    setIsConfirm(true)
+    setInvalidOTP(null)
+  }
+  console.log(disabled)
   return (
     <Form className={styles.formBody}>
       {!isConfirm && (
@@ -87,10 +89,16 @@ const AuthForgetPassword = ({
             isSendVerifyCode={isSendVerifyCode}
             counter={counter}
             onChange={{
-              input: setVerifyOTP,
+              input: (e) =>
+                setVerifyOTP((prev) => {
+                  return {
+                    ...prev,
+                    input: e.target.value,
+                  }
+                }),
             }}
             disabled={disabled}
-            onClick={onSubmitOTP}
+            onClick={() => onSubmitOTP('forgotPwd')}
             onKeyUp={(e) =>
               e.keyCode === 13 &&
               verifyOTP.input.length === 6 &&
@@ -126,7 +134,7 @@ const AuthForgetPassword = ({
                   return {
                     ...prev,
                     pass: e.target.value,
-                  };
+                  }
                 }),
             }}
           />
@@ -139,15 +147,15 @@ const AuthForgetPassword = ({
                 setPassword((prev) => {
                   return {
                     ...prev,
-                    rePass: e.target.value,
-                  };
+                    rePassword: e.target.value,
+                  }
                 }),
             }}
             onKeyUp={(e) =>
               e.keyCode === 13 &&
               password.pass.length >= 8 &&
-              password.rePass.length >= 8 &&
-              password.pass === password.rePass &&
+              password.rePassword.length >= 8 &&
+              password.pass === password.rePassword &&
               forgotPassword()
             }
           />
@@ -158,8 +166,8 @@ const AuthForgetPassword = ({
         <div
           className={
             password.pass.length >= 8 &&
-            password.rePass.length >= 8 &&
-            password.pass === password.rePass &&
+            password.rePassword.length >= 8 &&
+            password.pass === password.rePassword &&
             !loading
               ? styles.submitButton
               : `${styles.submitButton} ${styles.disabled}`
@@ -176,7 +184,7 @@ const AuthForgetPassword = ({
         </div>
       )}
     </Form>
-  );
-};
+  )
+}
 
-export default AuthForgetPassword;
+export default AuthForgetPassword

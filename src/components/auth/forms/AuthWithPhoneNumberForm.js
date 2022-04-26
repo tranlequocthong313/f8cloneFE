@@ -22,7 +22,7 @@ const LoginWithPhoneNumberForm = ({
   const [isSendVerifyCode, setIsSentVerifyCode] = useState(false)
   const [verifyOTP, setVerifyOTP] = useState('')
   const [counter, setCounter] = useState(LIMITED_SECOND)
-  const [userPhoneNumber, setUserPhoneNumber] = useState('')
+  const [phoneNumber, setPhoneNumber] = useState('')
   const [fullName, setFullName] = useState('')
   const [validatePhoneNumber, setValidatePhoneNumber] = useState(null)
   const [validateFullName, setValidateFullName] = useState(null)
@@ -47,9 +47,8 @@ const LoginWithPhoneNumberForm = ({
   const counterWhenSubmit = () => {
     let interval = setInterval(() => {
       setCounter((prev) => {
-        if (prev > 0) {
-          return prev - 1
-        }
+        if (prev > 0) return prev - 1
+
         clearInterval(interval)
         setIsSentVerifyCode(false)
         return LIMITED_SECOND
@@ -66,72 +65,48 @@ const LoginWithPhoneNumberForm = ({
       auth
     )
 
-    const phoneNumber = `+${countryCode}${userPhoneNumber}`
+    const phoneNumberFormatted = `+${countryCode}${phoneNumber}`
     const appVerifier = window.recaptchaVerifier
 
     try {
       const confirmationResult = await signInWithPhoneNumber(
         auth,
-        phoneNumber,
+        phoneNumberFormatted,
         appVerifier
       )
       window.confirmationResult = confirmationResult
     } catch (error) {
-      console.log(error.message)
+      console.error(error.message)
     }
   }
 
-  const validateOTP = async () => {
-    try {
-      setLoading(true)
-      const result = await window.confirmationResult.confirm(verifyOTP)
+  const setCookieAndDispatchAfterFetch = (data) => {
+    Cookies.set('token', data.accessToken, { expires: 365 })
+    dispatchAndNavigate({
+      ...data.user,
+      accessToken: data.accessToken,
+    })
+  }
 
-      let user = await result.user
+  const validateOTP = async () => {
+    setLoading(true)
+    try {
+      const result = await window.confirmationResult.confirm(verifyOTP)
+      const user = await result.user
 
       if (user && isLogin) {
-        const res = await fetch(`${apiURL}/login/provider`, {
-          method: 'POST',
-          body: JSON.stringify({
-            phoneNumber: userPhoneNumber,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
+        const url = `${apiURL}/login/provider`
+        const data = await postLoginProvider(url)
+        if (!data.success) return
 
-        const data = await res.json()
-        console.log(data)
-        Cookies.set('token', data.accessToken, { expires: 365 })
-
-        dispatchAndNavigate({
-          ...data.user,
-          accessToken: data.accessToken,
-        })
+        setCookieAndDispatchAfterFetch(data)
       } else if (user && !isLogin) {
         const userDefaultAvatar =
           'https://firebasestorage.googleapis.com/v0/b/f8clone-3e404.appspot.com/o/uploads%2Fnobody_m.256x256.jpg?alt=media&token=8e617e21-795f-45ce-8340-955a5290e66f'
+        const url = `${apiURL}/register`
+        const data = await postRegister(url, userDefaultAvatar)
 
-        const res = await fetch(`${apiURL}/register`, {
-          method: 'POST',
-          body: JSON.stringify({
-            fullName,
-            phoneNumber: userPhoneNumber,
-            photoURL: userDefaultAvatar,
-            activated: true,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-
-        const data = await res.json()
-
-        Cookies.set('token', data.accessToken, { expires: 365 })
-
-        dispatchAndNavigate({
-          ...data.user,
-          accessToken: data.accessToken,
-        })
+        setCookieAndDispatchAfterFetch(data)
       }
     } catch (error) {
       if (error.code === 'auth/invalid-verification-code')
@@ -141,43 +116,87 @@ const LoginWithPhoneNumberForm = ({
     }
   }
 
-  const checkNumberPhone = async (e) => {
+  const postLoginProvider = async (url) => {
     try {
-      const length = e.target.value.trim().length
-      setUserPhoneNumber(e.target.value)
-
-      if (length === 10) {
-        const res = await fetch(`${apiURL}/login/phone-number`, {
+      return (
+        await fetch(url, {
           method: 'POST',
-          body: JSON.stringify({ phoneNumber: e.target.value }),
+          body: JSON.stringify({
+            phoneNumber,
+          }),
           headers: {
             'Content-Type': 'application/json',
           },
         })
-
-        const data = await res.json()
-
-        isLogin
-          ? setValidatePhoneNumber(data.notUsed ? data.notUsed : null)
-          : setValidatePhoneNumber(data.used ? data.used : null)
-      }
-
-      length === 0 && setValidatePhoneNumber(null)
+      ).json()
     } catch (error) {
-      console.log(error)
+      console.log(error.message)
+    }
+  }
+
+  const postRegister = async (url, photoURL) => {
+    try {
+      return (
+        await fetch(url, {
+          method: 'POST',
+          body: JSON.stringify({
+            fullName,
+            phoneNumber,
+            photoURL,
+            activated: true,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+      ).json()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
+  const checkNumberPhone = async (e) => {
+    setPhoneNumber(e.target.value)
+
+    const length = e.target.value.trim().length
+    if (length === 0) return setValidatePhoneNumber(null)
+
+    if (length === 10) {
+      const url = `${apiURL}/login/phone-number`
+      const data = await postCheckPhoneNumber(url, e.target.value)
+
+      isLogin
+        ? setValidatePhoneNumber(data.notUsed ? data.notUsed : null)
+        : setValidatePhoneNumber(data.used ? data.used : null)
+    }
+  }
+
+  const postCheckPhoneNumber = async (url, phoneNumber) => {
+    try {
+      return (
+        await fetch(url, {
+          method: 'POST',
+          body: JSON.stringify({ phoneNumber }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+      ).json()
+    } catch (error) {
+      console.log(error.message)
     }
   }
 
   const handleValidateFullName = () => {
     const isEmptyFullNameInput = fullName.length === 0
-    const inValidFullNameInput =
-      fullName.length === 1 ||
-      !fullName.match('[a-zA-Z][a-zA-Z ]{2,}') ||
-      fullName.trim().indexOf(' ') === -1
+    const isValidFullNameInput =
+      fullName.length > 1 ||
+      fullName.match('[a-zA-Z][a-zA-Z ]{2,}') ||
+      fullName.trim().indexOf(' ') !== -1
 
     if (isEmptyFullNameInput) {
       setValidateFullName('Tên không được để trống')
-    } else if (inValidFullNameInput) {
+    } else if (isValidFullNameInput) {
       setValidateFullName('Tên của bạn không hợp lệ')
     } else {
       setValidateFullName(null)
@@ -185,31 +204,22 @@ const LoginWithPhoneNumberForm = ({
   }
 
   useEffect(() => {
-    const isDisable = () => {
-      if (!isLogin) {
-        return (
-          fullName.trim().indexOf(' ') === -1 ||
-          validateFullName !== null ||
-          userPhoneNumber.length !== 10 ||
-          !userPhoneNumber.match(/^\d+$/) ||
-          validatePhoneNumber !== null
-        )
-      }
-      return userPhoneNumber.length !== 10 || validatePhoneNumber !== null
+    const requirementsForm = () => {
+      return !isLogin
+        ? fullName.trim().indexOf(' ') === -1 ||
+            validateFullName !== null ||
+            phoneNumber.length !== 10 ||
+            !phoneNumber.match(/^\d+$/) ||
+            validatePhoneNumber !== null
+        : phoneNumber.length !== 10 || validatePhoneNumber !== null
     }
-    console.log(isDisable())
-    setDisabled(isDisable())
-  }, [
-    fullName,
-    isLogin,
-    userPhoneNumber,
-    validateFullName,
-    validatePhoneNumber,
-  ])
+    setDisabled(requirementsForm())
+  }, [fullName, isLogin, phoneNumber, validateFullName, validatePhoneNumber])
 
   useEffect(() => {
-    verifyOTP.length === 0 && setInvalidOTP(null)
-  }, [verifyOTP.length])
+    const isEmptyOTPInput = verifyOTP.input.length === 0
+    isEmptyOTPInput && setInvalidOTP(null)
+  }, [verifyOTP])
 
   return (
     <Form className={styles.formBody}>

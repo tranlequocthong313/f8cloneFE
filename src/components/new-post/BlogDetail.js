@@ -1,179 +1,183 @@
-import { useState, useEffect } from 'react';
-import ReactMarkdown from 'react-markdown';
-import { Row, Col, Image } from 'react-bootstrap';
-import styles from './BlogDetail.module.scss';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link, useNavigate } from 'react-router-dom';
-import BlogSameAuthor from './BlogSameAuthor';
-import BlogHighlights from './BlogHighlights';
-import Topics from '../blog/Topics';
-import timeSince from '../utils/timeSince/timeSince';
-import { apiURL } from '../../context/constants';
-import Cookies from 'js-cookie';
-import { useSelector } from 'react-redux';
-import Reaction from './Reaction';
-import Tippy from '../utils/tippy/Tippy';
-import MainButton from '../utils/button/MainButton';
-import io from 'socket.io-client';
-import remarkGfm from 'remark-gfm';
+import { useState, useEffect } from 'react'
+import ReactMarkdown from 'react-markdown'
+import { Row, Col, Image } from 'react-bootstrap'
+import styles from './BlogDetail.module.scss'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import { Link, useNavigate } from 'react-router-dom'
+import BlogSameAuthor from './BlogSameAuthor'
+import BlogHighlights from './BlogHighlights'
+import timeSince from '../utils/timeSince/timeSince'
+import { apiURL } from '../../context/constants'
+import Cookies from 'js-cookie'
+import { useSelector } from 'react-redux'
+import Reaction from './Reaction'
+import Tippy from '../utils/tippy/Tippy'
+import MainButton from '../utils/button/MainButton'
+import io from 'socket.io-client'
+import remarkGfm from 'remark-gfm'
 
-const socket = io.connect(apiURL);
+const socket = io.connect(apiURL)
 
 const BlogDetail = ({ blog, blogHighlight }) => {
-  const user = useSelector((state) => state.user);
-  const navigate = useNavigate();
+  const user = useSelector((state) => state.user)
+  const navigate = useNavigate()
 
-  const [likeCount, setLikeCount] = useState(blog.likes);
-  const [isLike, setIsLike] = useState(blog.likes.includes(user.userId));
-  const [isShowComment, setIsShowComment] = useState(false);
-  const [commentData, setCommentData] = useState(blog.comments);
-  const [bookmarkData, setBookmarkData] = useState(null);
-  const [isShowVerifyBar, setIsShowVerifyBar] = useState(false);
-  const [tags, setTags] = useState(null);
+  const [likeCount, setLikeCount] = useState(blog.likes)
+  const [isLike, setIsLike] = useState(blog.likes.includes(user.userId))
+  const [isShowComment, setIsShowComment] = useState(false)
+  const [commentData, setCommentData] = useState(blog.comments)
+  const [bookmarkData, setBookmarkData] = useState(null)
+  const [isShowVerifyBar, setIsShowVerifyBar] = useState(false)
+  const [isVerified, setIsVerified] = useState(false)
 
   useEffect(() => {
     socket.on('comment', (comment) => {
       setCommentData((prev) => {
-        return [comment, ...prev];
-      });
-    });
-  }, []);
+        return [comment, ...prev]
+      })
+    })
+  }, [])
+
+  useEffect(
+    () => (document.body.style.overflow = isShowComment ? 'hidden' : 'overlay'),
+    [isShowComment]
+  )
+
+  useEffect(
+    () => setIsLike(likeCount.includes(user.userId)),
+    [user.userId, likeCount]
+  )
 
   useEffect(() => {
-    document.body.style.overflow = isShowComment ? 'hidden' : 'overlay';
-  }, [isShowComment]);
+    ;(async () => {
+      const token = Cookies.get('token')
+      if (!token) return
 
-  useEffect(() => {
-    setIsLike(likeCount.includes(user.userId));
-  }, [user.userId, likeCount]);
+      const url = `${apiURL}/me/bookmark`
+      const data = await getBookmark(url, token)
 
-  const like = async () => {
+      setBookmarkData(data.bookmark)
+    })()
+  }, [])
+
+  const getBookmark = async (url, token) => {
     try {
-      const token = Cookies.get('token');
-      if (!token) return navigate('/login');
-
-      const res = await fetch(`${apiURL}/blog/like`, {
-        method: 'PUT',
-        body: JSON.stringify({ blogId: blog._id }),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await res.json();
-      data.likes.length === 0 ? setLikeCount([]) : setLikeCount(data.likes);
-      addNotification(data);
-      console.log(data);
+      return (
+        await fetch(url, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      ).json()
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message)
     }
-  };
+  }
 
-  const addNotification = async (data) => {
+  const bookmark = async (blogId) => {
+    const token = Cookies.get('token')
+    if (!token) return navigate('/login')
+
+    const url = `${apiURL}/me/bookmark`
+    const data = await patchBookmark(url, blogId, token)
+    if (data.status === 500) return
+
+    setBookmarkData(data.bookmark)
+  }
+
+  const patchBookmark = async (url, blogId, token) => {
     try {
-      await fetch(`${apiURL}/notification/new-notification`, {
+      return (
+        await fetch(url, {
+          method: 'PATCH',
+          body: JSON.stringify({ blogId }),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      ).json()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
+  const handleLike = async () => {
+    const token = Cookies.get('token')
+    if (!token) return navigate('/login')
+
+    const url = `${apiURL}/blog/like`
+    const data = await patchLike(url, token)
+    if (!data.success) return
+
+    const hasLike = data.likes && data.likes.length !== 0
+    hasLike ? setLikeCount(data.likes) : setLikeCount([])
+    addNotification(data)
+  }
+
+  const patchLike = async (url, token) => {
+    try {
+      return (
+        await fetch(url, {
+          method: 'PATCH',
+          body: JSON.stringify({ blogId: blog._id }),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      ).json()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
+  const addNotification = async (blog) => {
+    const url = `${apiURL}/notification/new-notification`
+    await postNotification(url, blog)
+  }
+
+  const postNotification = async (url, blog) => {
+    try {
+      return await fetch(url, {
         method: 'POST',
         body: JSON.stringify({
           description: 'đã yêu thích bài viết của bạn.',
-          slug: data.slug,
+          slug: blog.slug,
           notifiedBy: user.userId,
-          sendFor: user.userId === data.postedBy ? null : data.postedBy,
+          sendFor: user.userId === blog.postedBy ? null : blog.postedBy,
         }),
         headers: {
           'Content-Type': 'application/json',
         },
-      });
+      })
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message)
     }
-  };
+  }
 
-  useEffect(() => {
-    const controller = new AbortController();
+  const verifyBlog = async (blogId) => {
+    const url = `${apiURL}/admin/blog/verify`
+    patchVerifyBlog(url, blogId)
+  }
 
-    (async () => {
-      try {
-        const token = Cookies.get('token');
-        if (!token) return;
-
-        const res = await fetch(
-          `${apiURL}/me/bookmark`,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-          },
-          {
-            signal: controller.signal,
-          }
-        );
-        const data = await res.json();
-        setBookmarkData(data.bookmark);
-      } catch (error) {
-        console.log(error.message);
-      }
-    })();
-
-    return () => controller?.abort();
-  }, []);
-
-  const bookmark = async (blogId) => {
+  const patchVerifyBlog = async (url, blogId) => {
     try {
-      const token = Cookies.get('token');
-      if (!token) return navigate('/login');
-
-      const res = await fetch(`${apiURL}/me/bookmark`, {
-        method: 'PUT',
-        body: JSON.stringify({ blogId }),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await res.json();
-      setBookmarkData(data.bookmark);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  const verifyBlog = async (isVerified, blogId) => {
-    try {
-      await fetch(`${apiURL}/admin/blog/verify`, {
-        method: 'POST',
+      return await fetch(url, {
+        method: 'PATCH',
         body: JSON.stringify({ isVerified, blogId }),
         headers: {
           'Content-Type': 'application/json',
         },
-      });
+      })
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message)
     } finally {
-      setIsShowVerifyBar(false);
-      navigate('/admin/blog');
+      setIsShowVerifyBar(false)
+      navigate('/admin/blog')
     }
-  };
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    (async () => {
-      try {
-        const res = await fetch(`${apiURL}/blog/get-tag`, {
-          signal: controller.signal,
-        });
-        const data = await res.json();
-        setTags(data);
-      } catch (error) {
-        console.log(error.message);
-      }
-    })();
-
-    return () => controller?.abort();
-  }, []);
+  }
 
   return (
     <Row className={styles.wrapper}>
@@ -182,14 +186,20 @@ const BlogDetail = ({ blog, blogHighlight }) => {
           <MainButton
             primary={true}
             className={`${styles.button} ${styles.cancel}`}
-            onClick={() => verifyBlog(false, blog._id)}
+            onClick={() => {
+              setIsVerified(false)
+              verifyBlog(blog._id)
+            }}
           >
             Không xét duyệt
           </MainButton>
           <MainButton
             primary={true}
             className={styles.button}
-            onClick={() => verifyBlog(true, blog._id)}
+            onClick={() => {
+              setIsVerified(true)
+              verifyBlog(blog._id)
+            }}
           >
             Xét duyệt bài viết
           </MainButton>
@@ -212,7 +222,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
             commentData={commentData}
             isLike={isLike}
             likeCount={likeCount.length}
-            like={like}
+            handleLike={handleLike}
             setShowComment={() => setIsShowComment(true)}
             blogId={blog._id}
             setCommentData={setCommentData}
@@ -318,7 +328,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
           commentData={commentData}
           isLike={isLike}
           likeCount={likeCount.length}
-          like={like}
+          handleLike={handleLike}
           setShowComment={() => setIsShowComment(true)}
           blogId={blog._id}
           setCommentData={setCommentData}
@@ -335,10 +345,9 @@ const BlogDetail = ({ blog, blogHighlight }) => {
 
         <BlogSameAuthor postedBy={blog.postedBy._id} blogId={blog._id} />
         <BlogHighlights blogHighlight={blogHighlight} />
-        {tags && tags.length > 0 && <Topics tags={tags} />}
       </Col>
     </Row>
-  );
-};
+  )
+}
 
-export default BlogDetail;
+export default BlogDetail

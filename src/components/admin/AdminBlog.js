@@ -1,95 +1,114 @@
-import { useEffect, useState } from 'react';
-import { Form, Modal } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { createBlog } from '../../actions/userAction';
-import { apiURL } from '../../context/constants';
-import MainButton from '../utils/button/MainButton';
-import MainTable from '../utils/table/MainTable';
-import styles from './AdminBlog.module.scss';
+import { useEffect, useState } from 'react'
+import { Form, Modal } from 'react-bootstrap'
+import { useDispatch } from 'react-redux'
+import { Link } from 'react-router-dom'
+import { createBlog } from '../../actions/userAction'
+import { apiURL } from '../../context/constants'
+import MainButton from '../utils/button/MainButton'
+import MainTable from '../utils/table/MainTable'
+import styles from './AdminBlog.module.scss'
 
 const AdminBlog = ({ blogData }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
-  const [isShowDeleteModal, setIsShowDeleteModal] = useState(false);
-  const [checkboxChosen, setCheckboxChosen] = useState([]);
-  const [checkboxChosenAll, setCheckboxChosenAll] = useState([]);
-  const [isCheckboxChosenAll, setIsCheckboxChosenAll] = useState(false);
+  const [isShowDeleteModal, setIsShowDeleteModal] = useState(false)
+  const [checkboxChosen, setCheckboxChosen] = useState([])
+  const [checkboxChosenAll, setCheckboxChosenAll] = useState([])
+  const [isCheckboxChosenAll, setIsCheckboxChosenAll] = useState(false)
 
   useEffect(() => {
-    const blogIds = blogData.map((blog) => blog._id);
-    setCheckboxChosenAll(blogIds);
-  }, [blogData]);
+    const blogIds = blogData.map((blog) => blog._id)
+    setCheckboxChosenAll(blogIds)
+  }, [blogData])
 
-  const showDeleteModal = () => setIsShowDeleteModal((prev) => !prev);
+  const showDeleteModal = () => setIsShowDeleteModal((prev) => !prev)
 
-  const formatDateToLocaleString = (date) => new Date(date).toLocaleString();
+  const formatDateToLocaleString = (date) => new Date(date).toLocaleString()
 
   const checkBoxChosenSingle = (id) =>
     setCheckboxChosen((prev) => {
-      const isChosen = prev.includes(id);
+      const isChosen = prev.includes(id)
 
       if (isChosen) {
-        const newChosen = prev.filter((item) => item !== id);
-        setIsCheckboxChosenAll(false);
-        return newChosen;
+        const newChosen = prev.filter((item) => item !== id)
+        setIsCheckboxChosenAll(false)
+        return newChosen
       }
-      const newChosen = [...prev, id];
-      const isChosenAllCheckbox = newChosen.length === checkboxChosenAll.length;
-      isChosenAllCheckbox && setIsCheckboxChosenAll(true);
-      return newChosen;
-    });
+      const newChosen = [...prev, id]
+      const isChosenAllCheckbox = newChosen.length === checkboxChosenAll.length
+      isChosenAllCheckbox && setIsCheckboxChosenAll(true)
+      return newChosen
+    })
 
-  const handleCheckBoxChosenAll = () => {
-    if (isCheckboxChosenAll) {
-      setCheckboxChosen([]);
-      setIsCheckboxChosenAll(false);
+  const uncheckAll = () => {
+    setCheckboxChosen([])
+    setIsCheckboxChosenAll(false)
+  }
+
+  const checkAll = () => {
+    setCheckboxChosen(checkboxChosenAll)
+    setIsCheckboxChosenAll(true)
+  }
+
+  const handleCheckBoxChosenAll = () =>
+    isCheckboxChosenAll ? uncheckAll() : checkAll
+
+  const uncheckAllAndDispatchAfterFetch = (data) => {
+    if (data) {
+      dispatch(createBlog({ blogData: data.blog }))
+      uncheckAll()
     } else {
-      setCheckboxChosen(checkboxChosenAll);
-      setIsCheckboxChosenAll(true);
+      console.log('No data.')
     }
-  };
+  }
 
   const deleteBlogIsChosen = async () => {
-    try {
-      showDeleteModal();
-      const res = await fetch(`${apiURL}/admin/blog/delete-soft`, {
-        method: 'POST',
-        body: JSON.stringify({ blogId: checkboxChosen }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+    showDeleteModal()
 
-      const data = await res.json();
-      dispatch(createBlog({ blogData: data.blog }));
+    const url = `${apiURL}/admin/blog/delete-soft`
+    const data = await deleteBlog(url)
+
+    uncheckAllAndDispatchAfterFetch(data)
+  }
+
+  const deleteBlog = async (url) => {
+    try {
+      return (
+        await fetch(url, {
+          method: 'DELETE',
+          body: JSON.stringify({ blogId: checkboxChosen }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+      ).json()
     } catch (error) {
-      console.log(error.message);
-    } finally {
-      setCheckboxChosen([]);
-      setIsCheckboxChosenAll(false);
+      console.log(error.message)
     }
-  };
+  }
 
   const changePopularState = async (blogId, isPopular) => {
-    try {
-      const res = await fetch(`${apiURL}/admin/blog/add-popular`, {
-        method: 'POST',
-        body: JSON.stringify({ blogId, isPopular }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+    const url = `${apiURL}/admin/blog/add-popular`
+    const data = await patchPopular(url, blogId, isPopular)
 
-      const data = await res.json();
-      dispatch(createBlog({ blogData: data.blog }));
+    uncheckAllAndDispatchAfterFetch(data)
+  }
+
+  const patchPopular = async (url, blogId, isPopular) => {
+    try {
+      return (
+        await fetch(url, {
+          method: 'PATCH',
+          body: JSON.stringify({ blogId, isPopular }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+      ).json()
     } catch (error) {
-      console.log(error.message);
-    } finally {
-      setCheckboxChosen([]);
-      setIsCheckboxChosenAll(false);
+      console.log(error.message)
     }
-  };
+  }
 
   return (
     <>
@@ -104,14 +123,14 @@ const AdminBlog = ({ blogData }) => {
                 />
               </Form>
             </th>
-            <th className={styles.tableItem}>STT</th>
-            <th className={styles.tableItem}>Tên bài viết</th>
-            <th className={styles.tableItem}>Tác giả</th>
-            <th className={styles.tableItem}>Được phép đề xuất</th>
-            <th className={styles.tableItem}>Tình trạng</th>
-            <th className={styles.tableItem}>Đã xét duyệt</th>
-            <th className={styles.tableItem}>Thời gian tạo</th>
-            <th className={styles.tableItem}>Thời gian sửa</th>
+            <th>STT</th>
+            <th>Tên bài viết</th>
+            <th>Tác giả</th>
+            <th>Được phép đề xuất</th>
+            <th>Tình trạng</th>
+            <th>Đã xét duyệt</th>
+            <th>Thời gian tạo</th>
+            <th>Thời gian sửa</th>
           </tr>
         </thead>
         <tbody>
@@ -126,24 +145,14 @@ const AdminBlog = ({ blogData }) => {
                   />
                 </Form>
               </td>
-              <td className={styles.tableItem}>{index + 1}</td>
+              <td>{index + 1}</td>
               <td className={styles.breakWord}>{blog.title}</td>
-              <td className={styles.tableItem}>{blog.postedBy.fullName}</td>
-              <td className={styles.tableItem}>
-                {blog.allowRecommend ? 'Yes' : 'No'}
-              </td>
-              <td className={styles.tableItem}>
-                {blog.isPopular ? 'Hiện' : 'Ẩn'}
-              </td>
-              <td className={styles.tableItem}>
-                {blog.isVerified ? 'Yes' : 'No'}
-              </td>
-              <td className={styles.tableItem}>
-                {formatDateToLocaleString(blog.createdAt)}
-              </td>
-              <td className={styles.tableItem}>
-                {formatDateToLocaleString(blog.updatedAt)}
-              </td>
+              <td>{blog.postedBy.fullName}</td>
+              <td>{blog.allowRecommend ? 'Yes' : 'No'}</td>
+              <td>{blog.isPopular ? 'Hiện' : 'Ẩn'}</td>
+              <td>{blog.isVerified ? 'Yes' : 'No'}</td>
+              <td>{formatDateToLocaleString(blog.createdAt)}</td>
+              <td>{formatDateToLocaleString(blog.updatedAt)}</td>
               <td>
                 {blog.allowRecommend && blog.isVerified && (
                   <>
@@ -196,9 +205,7 @@ const AdminBlog = ({ blogData }) => {
           ))}
           {blogData.length === 0 && (
             <tr>
-              <td colSpan="10" className={styles.tableItem}>
-                Không có dữ liệu.
-              </td>
+              <td colSpan="10">Không có dữ liệu.</td>
             </tr>
           )}
         </tbody>
@@ -222,7 +229,7 @@ const AdminBlog = ({ blogData }) => {
         </Modal.Footer>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default AdminBlog;
+export default AdminBlog

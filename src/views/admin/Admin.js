@@ -14,7 +14,7 @@ import { apiURL } from '../../context/constants'
 import MainButton from '../../components/utils/button/MainButton'
 
 const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer'),
+  import('../../components/main-layout/footer/Footer')
 )
 
 const Admin = () => {
@@ -25,32 +25,27 @@ const Admin = () => {
   const [courseData, setCourseData] = useState([])
   const [blogData, setBlogData] = useState([])
   const [videoData, setVideoData] = useState([])
-  const [addVideo, setAddVideo] = useState(false)
+
+  useEffect(() => (document.title = 'Quản lý F8'), [])
 
   useEffect(() => {
-    document.title = 'Quản lý F8'
-  }, [])
-
-  useEffect(() => {
-    const controller = new AbortController()
-
     ;(async () => {
-      try {
-        const res = await fetch(`${apiURL}/admin`, {
-          signal: controller.signal,
-        })
-        const data = await res.json()
+      const url = `${apiURL}/admin`
+      const data = await getDataForAdmin(url)
 
-        setCourseData(data.course)
-        setBlogData(data.blogs)
-        setVideoData(data.videos)
-      } catch (error) {
-        console.log(error.message)
-      }
+      setCourseData(data.course)
+      setBlogData(data.blogs)
+      setVideoData(data.videos)
     })()
-
-    return () => controller?.abort()
   }, [user.videoCreated, user.blogCreated])
+
+  const getDataForAdmin = async (url) => {
+    try {
+      return (await fetch(url)).json()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 
   return (
     <>

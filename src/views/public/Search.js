@@ -1,99 +1,94 @@
-import React, { Suspense, useEffect, useRef, useState } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
-import Header from '../../components/main-layout/nav/Header';
-import SideBar from '../../components/main-layout/sidebar/SideBar';
-import styles from './Search.module.scss';
-import ContentEditable from '../../components/utils/content-editable/ContentEditable';
-import { apiURL } from '../../context/constants';
-import { Link, useLocation } from 'react-router-dom';
-import Tabs from '../../components/utils/tabs/Tabs';
-import f8Icon from '../../asset/images/f8_icon.png';
-import CoursesEnrolled from '../../components/profile/ProfileCourses';
+import React, { Suspense, useEffect, useRef, useState } from 'react'
+import { Col, Container, Row } from 'react-bootstrap'
+import Header from '../../components/main-layout/nav/Header'
+import SideBar from '../../components/main-layout/sidebar/SideBar'
+import styles from './Search.module.scss'
+import ContentEditable from '../../components/utils/content-editable/ContentEditable'
+import { apiURL } from '../../context/constants'
+import { Link, useLocation } from 'react-router-dom'
+import Tabs from '../../components/utils/tabs/Tabs'
+import f8Icon from '../../asset/images/f8_icon.png'
+import CoursesEnrolled from '../../components/profile/ProfileCourses'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer')
-);
+)
 
 const Search = () => {
-  const location = useLocation();
+  const location = useLocation()
+  const searchInputRef = useRef()
 
-  const searchInputRef = useRef();
-
-  const [searchInput, setSearchInput] = useState('');
-  const [tabs, setTabs] = useState(location.pathname);
+  const [searchInput, setSearchInput] = useState('')
+  const [tabs, setTabs] = useState(location.pathname)
   const [result, setResult] = useState({
     courses: [],
     blogs: [],
     videos: [],
-  });
+  })
 
   useEffect(() => {
-    const url = new URL(window.location.href);
-    const query = url.searchParams.get('q');
+    const url = new URL(window.location.href)
+    const query = url.searchParams.get('q')
+
     if (query) {
-      searchInputRef.current.innerText = query;
-      setSearchInput(query);
+      searchInputRef.current.innerText = query
+      setSearchInput(query)
+      ;(async () => {
+        const url = `${apiURL}/search/${query}`
+        const data = await getSearch(url)
 
-      const searchCourseBlogAndVideoByQueryParams = async () => {
-        try {
-          const res = await fetch(`${apiURL}/search/${query}`);
-          const data = await res.json();
-
-          setResult((prev) => {
-            return {
-              ...prev,
-              courses:
-                location.pathname === '/search/course' ? [...data.courses] : [],
-              blogs:
-                location.pathname === '/search/blog' ? [...data.blogs] : [],
-              videos:
-                location.pathname === '/search/video' ? [...data.videos] : [],
-            };
-          });
-        } catch (error) {
-          console.log(error.message);
-        }
-      };
-
-      searchCourseBlogAndVideoByQueryParams();
+        setResult((prev) => {
+          return {
+            ...prev,
+            courses:
+              location.pathname === '/search/course' ? [...data.courses] : [],
+            blogs: location.pathname === '/search/blog' ? [...data.blogs] : [],
+            videos:
+              location.pathname === '/search/video' ? [...data.videos] : [],
+          }
+        })
+      })()
     }
-  }, []);
+  }, [location.pathname])
 
   const searchCourseBlogAndVideo = async (e) => {
-    try {
-      const length = e.target.innerText.trim().length;
-      let match = e.target.innerText.match(/^[a-zA-Z ]*/);
-      setSearchInput(e.target.innerText);
+    const length = e.target.innerText.trim().length
+    let match = e.target.innerText.match(/^[a-zA-Z ]*/)
+    setSearchInput(e.target.innerText)
 
-      const isEmptySearchInput = length === 0;
-      isEmptySearchInput &&
-        setResult((prev) => {
-          return {
-            ...prev,
-            courses: [],
-            blogs: [],
-            videos: [],
-          };
-        });
+    if (length === 0)
+      setResult((prev) => {
+        return {
+          ...prev,
+          courses: [],
+          blogs: [],
+          videos: [],
+        }
+      })
 
-      const isValidSearchInput = length >= 2 && match[0] === e.target.innerText;
-      if (isValidSearchInput) {
-        const res = await fetch(`${apiURL}/search/${e.target.innerText}`);
-        const data = await res.json();
+    const isValidSearchInput = length >= 2 && match[0] === e.target.innerText
+    if (isValidSearchInput) {
+      const url = `${apiURL}/search/${e.target.innerText}`
+      const data = await getSearch(url)
 
-        setResult((prev) => {
-          return {
-            ...prev,
-            courses: [...data.courses],
-            blogs: [...data.blogs],
-            videos: [...data.videos],
-          };
-        });
-      }
-    } catch (error) {
-      console.log(error.message);
+      setResult((prev) => {
+        return {
+          ...prev,
+          courses: [...data.courses],
+          blogs: [...data.blogs],
+          videos: [...data.videos],
+        }
+      })
     }
-  };
+  }
+
+  const getSearch = async (url) => {
+    try {
+      return await fetch(url)
+    } catch (error) {
+      console.error(error.message)
+    }
+  }
 
   return (
     <>
@@ -274,7 +269,7 @@ const Search = () => {
         <Footer />
       </Suspense>
     </>
-  );
-};
+  )
+}
 
-export default Search;
+export default Search

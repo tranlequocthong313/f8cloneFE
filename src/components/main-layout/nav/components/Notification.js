@@ -1,65 +1,55 @@
-import { useEffect, useState } from 'react';
-import styles from './Notification.module.scss';
-import '../../../../sass/_custom.scss';
-import Tippy from '../../../utils/tippy/Tippy';
-import { Link } from 'react-router-dom';
-import f8logo from '../../../../asset/images/f8_icon.png';
-import { apiURL } from '../../../../context/constants';
-import timeSince from '../../../utils/timeSince/timeSince';
-import Cookies from 'js-cookie';
+import { useEffect, useState } from 'react'
+import styles from './Notification.module.scss'
+import '../../../../sass/_custom.scss'
+import Tippy from '../../../utils/tippy/Tippy'
+import { Link } from 'react-router-dom'
+import f8logo from '../../../../asset/images/f8_icon.png'
+import { apiURL } from '../../../../context/constants'
+import timeSince from '../../../utils/timeSince/timeSince'
+import Cookies from 'js-cookie'
 
 const Notification = () => {
-  const [seenAll, setSeenAll] = useState([]);
-  const [notifications, setNotifications] = useState([]);
-  const [noSeenCount, setNoSeenCount] = useState([]);
+  const [seenAll, setSeenAll] = useState([])
+  const [notifications, setNotifications] = useState([])
+  const [noSeenCount, setNoSeenCount] = useState([])
 
   useEffect(() => {
-    const controller = new AbortController();
-
-    (async () => {
+    ;(async () => {
       try {
-        const token = Cookies.get('token');
-        if (!token) return;
+        const token = Cookies.get('token')
+        if (!token) return
 
-        const res = await fetch(
-          `${apiURL}/notification/`,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
+        const res = await fetch(`${apiURL}/notification/`, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
-          {
-            signal: controller.signal,
-          }
-        );
+        })
 
-        const data = await res.json();
+        const data = await res.json()
         data.forEach((item) => {
-          !item.isSeen && setNoSeenCount((prev) => [...prev, item._id]);
-          setSeenAll((prev) => [...prev, item._id]);
-        });
-        setNotifications(data);
+          !item.isSeen && setNoSeenCount((prev) => [...prev, item._id])
+          setSeenAll((prev) => [...prev, item._id])
+        })
+        setNotifications(data)
       } catch (error) {
-        console.log(error.message);
+        console.error(error.message)
       }
-    })();
-
-    return () => controller?.abort();
-  }, []);
+    })()
+  }, [])
 
   const countNoSeen = (id) => {
-    const isSeenCount = noSeenCount.includes(id);
-    isSeenCount && setNoSeenCount((prev) => prev.filter((item) => item !== id));
-  };
+    const isSeenCount = noSeenCount.includes(id)
+    isSeenCount && setNoSeenCount((prev) => prev.filter((item) => item !== id))
+  }
 
   const seen = async (notificationId) => {
     try {
-      const token = Cookies.get('token');
-      if (!token) return;
+      const token = Cookies.get('token')
+      if (!token) return
 
       const res = await fetch(`${apiURL}/notification/seen-notification`, {
-        method: 'POST',
+        method: 'PUT',
         body: JSON.stringify({
           notificationId: notificationId ? [notificationId] : seenAll,
         }),
@@ -67,14 +57,14 @@ const Notification = () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-      });
-      const data = await res.json();
-      notificationId ? countNoSeen(notificationId) : setNoSeenCount([]);
-      setNotifications(data);
+      })
+      const data = await res.json()
+      notificationId ? countNoSeen(notificationId) : setNoSeenCount([])
+      setNotifications(data)
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message)
     }
-  };
+  }
 
   return (
     <Tippy
@@ -163,7 +153,7 @@ const Notification = () => {
         </ul>
       </div>
     </Tippy>
-  );
-};
+  )
+}
 
-export default Notification;
+export default Notification

@@ -8,7 +8,6 @@ import AuthForgetPassword from './AuthForgetPassword'
 
 const LoginWithEmailAndPasswordForm = ({
   switchPhoneAndEmail,
-  authEmailAndPassword,
   handleIsLogin,
   isLogin,
   forgotPassword,
@@ -21,37 +20,34 @@ const LoginWithEmailAndPasswordForm = ({
   const [fullName, setFullName] = useState('')
   const [isSendVerifyCode, setIsSentVerifyCode] = useState(false)
   const [counter, setCounter] = useState(LIMITED_SECOND_FOR_SIGNUP)
-  const [verifyOTP, setVerifyOTP] = useState({
-    input: '',
-    create: '',
-  })
-  const [userEmailAndPasswordInput, setUserEmailAndPasswordInput] = useState({
-    email: '',
-    password: '',
-  })
   const [validateFullName, setValidateFullName] = useState(null)
   const [validateEmail, setValidateEmail] = useState(null)
   const [invalidEmailOrPassword, setInvalidEmailOrPassword] = useState(null)
   const [invalidOTP, setInvalidOTP] = useState(null)
   const [disabled, setDisabled] = useState(true)
   const [loading, setLoading] = useState(false)
+  const [verifyOTP, setVerifyOTP] = useState({
+    input: '',
+    create: '',
+  })
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
-  useEffect(() => {
-    setCounter(LIMITED_SECOND_FOR_FORGET_PWD)
-  }, [forgotPassword])
+  useEffect(() => setCounter(LIMITED_SECOND_FOR_FORGET_PWD), [forgotPassword])
 
   const createOTP = () => {
-    var digits = '0123456789'
+    const digits = '0123456789'
     let OTP = ''
-    for (let i = 0; i < 6; i++) {
-      OTP += digits[Math.floor(Math.random() * 10)]
-    }
+
+    for (let i = 0; i < 6; i++) OTP += digits[Math.floor(Math.random() * 10)]
+
     setVerifyOTP((prev) => {
       return {
         ...prev,
         create: OTP,
       }
     })
+
     return OTP
   }
 
@@ -64,9 +60,8 @@ const LoginWithEmailAndPasswordForm = ({
   const counterWhenSubmit = () => {
     let interval = setInterval(() => {
       setCounter((prev) => {
-        if (prev > 0) {
-          return prev - 1
-        }
+        if (prev > 0) return prev - 1
+
         clearInterval(interval)
         setIsSentVerifyCode(false)
         return forgotPassword
@@ -77,11 +72,16 @@ const LoginWithEmailAndPasswordForm = ({
   }
 
   const sendOTPCode = async (option) => {
+    const url = `${apiURL}/register/verify`
+    if (option) await postOTP(url, option)
+  }
+
+  const postOTP = async (url, option) => {
     try {
-      await fetch(`${apiURL}/register/verify`, {
+      await fetch(url, {
         method: 'POST',
         body: JSON.stringify({
-          email: userEmailAndPasswordInput.email,
+          email,
           otp: createOTP(),
           option,
         }),
@@ -90,125 +90,125 @@ const LoginWithEmailAndPasswordForm = ({
         },
       })
     } catch (error) {
-      console.log(error)
+      console.log(error.message)
     }
   }
 
   const loginWithEmailAndPassword = async () => {
-    console.log('loading true')
     setLoading(true)
+
+    if (isLogin) {
+      let url = `${apiURL}/login/email-password`
+      const data = await postLogin(url)
+      if (!data.success) return setInvalidEmailOrPassword(data.message)
+
+      Cookies.set('token', data.accessToken, { expires: 365 })
+      dispatchAndNavigate({
+        ...data.user,
+        accessToken: data.accessToken,
+        admin: data.admin,
+      })
+    } else {
+      const validOTP = verifyOTP.input === verifyOTP.create
+      if (!validOTP) return setInvalidOTP('Mã xác minh không hợp lệ')
+
+      const userDefaultAvatar =
+        'https://firebasestorage.googleapis.com/v0/b/f8clone-3e404.appspot.com/o/uploads%2Fnobody_m.256x256.jpg?alt=media&token=8e617e21-795f-45ce-8340-955a5290e66f'
+
+      let url = `${apiURL}/register/`
+      const data = await postRegister(url, userDefaultAvatar)
+      if (data.status === 500) return
+
+      setEmail('')
+      setPassword('')
+      setLoading(false)
+      handleIsLogin()
+    }
+  }
+
+  const postLogin = async (url) => {
     try {
-      if (isLogin) {
-        const res = await fetch(`${apiURL}/login/email-password`, {
+      return (
+        await fetch(url, {
           method: 'POST',
           body: JSON.stringify({
-            email: userEmailAndPasswordInput.email,
-            password: userEmailAndPasswordInput.password,
+            email,
+            password,
           }),
           headers: {
             'Content-Type': 'application/json',
           },
         })
+      ).json()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 
-        const data = await res.json()
-
-        console.log(data)
-
-        if (data.success) {
-          Cookies.set('token', data.accessToken, { expires: 365 })
-          return dispatchAndNavigate({
-            ...data.user,
-            accessToken: data.accessToken,
-            admin: data.admin,
-          })
-        }
-
-        return !data.success && setInvalidEmailOrPassword(data.message)
-      }
-
-      const isMatchOTP = verifyOTP.input === verifyOTP.create
-      if (!isMatchOTP) return setInvalidOTP('Mã xác minh không hợp lệ')
-
-      const userDefaultAvatar =
-        'https://firebasestorage.googleapis.com/v0/b/f8clone-3e404.appspot.com/o/uploads%2Fnobody_m.256x256.jpg?alt=media&token=8e617e21-795f-45ce-8340-955a5290e66f'
-
-      await fetch(`${apiURL}/register/`, {
+  const postRegister = async (url, photoURL) => {
+    try {
+      await fetch(url, {
         method: 'POST',
         body: JSON.stringify({
           fullName,
-          photoURL: userDefaultAvatar,
-          email: userEmailAndPasswordInput.email,
-          password: userEmailAndPasswordInput.password,
+          photoURL,
+          email,
+          password,
           activated: true,
         }),
         headers: {
           'Content-Type': 'application/json',
         },
       })
-
-      setUserEmailAndPasswordInput((prev) => {
-        return {
-          ...prev,
-          email: '',
-          password: '',
-        }
-      })
-
-      handleIsLogin()
     } catch (error) {
-      console.log(error)
-    } finally {
-      console.log('loading false')
-      setLoading(false)
+      console.log(error.message)
     }
   }
 
-  const isValidEmail = (email) => {
-    const regex = /\S+@\S+\.\S+/
-    return regex.test(email)
-  }
+  const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email)
 
   const checkUserEmailExist = async (e) => {
-    if (e.target.value && isValidEmail(e.target.value)) {
-      const res = await fetch(`${apiURL}/login/check-email`, {
-        method: 'POST',
-        body: JSON.stringify({ email: e.target.value }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+    setEmail(e.target.value)
 
-      const data = await res.json()
+    const length = e.target.value.trim().length
+    if (length === 0) return setValidateEmail(null)
 
-      !isLogin &&
-        data.notUsed &&
-        setUserEmailAndPasswordInput((prev) => {
-          return { ...prev, email: e.target.value }
-        })
-      isLogin &&
-        data.used &&
-        setUserEmailAndPasswordInput((prev) => {
-          return { ...prev, email: e.target.value }
-        })
+    if (isValidEmail(e.target.value)) {
+      const url = `${apiURL}/login/check-email`
+      const data = await postCheckEmail(url, e.target.value)
 
       isLogin
         ? setValidateEmail(data.notUsed ? data.notUsed : null)
         : setValidateEmail(data.used ? data.used : null)
     }
+  }
 
-    e.target.value.length === 0 && setValidateEmail(null)
+  const postCheckEmail = async (url, email) => {
+    try {
+      return (
+        await fetch(url, {
+          method: 'POST',
+          body: JSON.stringify({ email }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+      ).json()
+    } catch (error) {
+      console.log(error.message)
+    }
   }
 
   const handleValidateFullName = () => {
     const isEmptyFullNameInput = fullName.length === 0
-    const inValidFullNameInput =
-      fullName.length === 1 ||
-      !fullName.match('[a-zA-Z][a-zA-Z ]{2,}') ||
-      fullName.trim().indexOf(' ') === -1
+    const isValidFullNameInput =
+      fullName.length > 1 ||
+      fullName.match('[a-zA-Z][a-zA-Z ]{2,}') ||
+      fullName.trim().indexOf(' ') !== -1
 
     if (isEmptyFullNameInput) {
       setValidateFullName('Tên không được để trống')
-    } else if (inValidFullNameInput) {
+    } else if (!isValidFullNameInput) {
       setValidateFullName('Tên của bạn không hợp lệ')
     } else {
       setValidateFullName(null)
@@ -216,37 +216,31 @@ const LoginWithEmailAndPasswordForm = ({
   }
 
   useEffect(() => {
-    const disable = () => {
-      if (!isLogin) {
-        return (
-          fullName.trim().indexOf(' ') === -1 ||
+    const requirementsForm = () =>
+      !isLogin
+        ? fullName.trim().indexOf(' ') === -1 ||
           validateFullName !== null ||
-          !isValidEmail(userEmailAndPasswordInput.email) ||
-          userEmailAndPasswordInput.password.length < 8 ||
-          validateEmail !== null
-        )
-      }
-      return (
-        !isValidEmail(userEmailAndPasswordInput.email) || validateEmail !== null
-      )
-    }
+          validateEmail !== null ||
+          password.length < 8
+        : validateEmail !== null || password.length < 8
 
-    setDisabled(disable())
+    setDisabled(requirementsForm())
   }, [
     fullName,
     isLogin,
     validateFullName,
-    userEmailAndPasswordInput.email,
-    userEmailAndPasswordInput.password.length,
+    email,
+    password.length,
     validateEmail,
   ])
 
   useEffect(() => {
-    userEmailAndPasswordInput.password.length === 0 &&
-      setInvalidEmailOrPassword(null)
+    const isEmptyPasswordInput = password.length === 0
+    const isEmptyOTPInput = verifyOTP.input.length === 0
 
-    verifyOTP.input.length === 0 && setInvalidOTP(null)
-  }, [userEmailAndPasswordInput.password.length, verifyOTP.input.length])
+    isEmptyPasswordInput && setInvalidEmailOrPassword(null)
+    isEmptyOTPInput && setInvalidOTP(null)
+  }, [password.length, verifyOTP.input.length])
 
   return (
     <>
@@ -285,18 +279,17 @@ const LoginWithEmailAndPasswordForm = ({
             type={'password'}
             placeholder={'Mật khẩu'}
             isLoginEmailOption={'email'}
-            value={userEmailAndPasswordInput.password}
+            value={password}
             onChange={{
-              input: (e) =>
-                setUserEmailAndPasswordInput((prev) => {
-                  setInvalidEmailOrPassword(null)
-                  return { ...prev, password: e.target.value }
-                }),
+              input: (e) => {
+                setInvalidEmailOrPassword(null)
+                setPassword(e.target.value)
+              },
             }}
             onKeyUp={(e) =>
               e.keyCode === 13 &&
               validateEmail === null &&
-              userEmailAndPasswordInput.password.length >= 8 &&
+              password.length >= 8 &&
               loginWithEmailAndPassword()
             }
             inValid={invalidEmailOrPassword}
@@ -344,9 +337,7 @@ const LoginWithEmailAndPasswordForm = ({
           {isLogin && (
             <div
               className={
-                validateEmail === null &&
-                userEmailAndPasswordInput.password.length >= 8 &&
-                !loading
+                validateEmail === null && password.length >= 8 && !loading
                   ? styles.logInButton
                   : `${styles.logInButton} ${styles.disabled}`
               }
@@ -369,8 +360,7 @@ const LoginWithEmailAndPasswordForm = ({
           checkUserEmailExist={checkUserEmailExist}
           counter={counter}
           validateEmail={validateEmail}
-          email={userEmailAndPasswordInput.email}
-          isValidEmail={isValidEmail}
+          email={email}
           verifyOTP={verifyOTP}
           invalidOTP={invalidOTP}
           setInvalidOTP={setInvalidOTP}
@@ -379,23 +369,8 @@ const LoginWithEmailAndPasswordForm = ({
           setDisabled={setDisabled}
           loading={loading}
           setLoading={setLoading}
-          setVerifyOTP={(e) =>
-            setVerifyOTP((prev) => {
-              return {
-                ...prev,
-                input: e.target.value,
-              }
-            })
-          }
-          setUserEmailAndPasswordInput={() =>
-            setUserEmailAndPasswordInput((prev) => {
-              return {
-                ...prev,
-                email: userEmailAndPasswordInput.email,
-              }
-            })
-          }
-          onSubmitOTP={() => onSubmitOTP('forgotPwd')}
+          setVerifyOTP={setVerifyOTP}
+          onSubmitOTP={onSubmitOTP}
         />
       )}
     </>

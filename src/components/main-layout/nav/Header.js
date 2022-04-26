@@ -12,22 +12,24 @@ import { Link } from 'react-router-dom'
 import User from './components/User'
 import MyCourse from './components/MyCourse'
 import Notification from './components/Notification'
-import { BlogContext } from '../../../context/BlogContext'
+import { PostContext } from '../../../context/PostContext'
 
 const Login = React.lazy(() => import('./components/Login'))
 
-const Header = ({ blogData, className, isProfile, isSearchPage }) => {
+const Header = ({ className, isProfile, isSearchPage, submitEditPost }) => {
   const user = useSelector((state) => state.user)
-  const { isEditBlog, isNewBlog } = useContext(BlogContext)
+  const { isEditPost, isNewPost } = useContext(PostContext)
 
   return (
     <Navbar className={`${styles.navHeader} ${className}`}>
       <Container fluid style={{ padding: 0 }}>
         <MobileNav photoURL={user.photoURL} />
         <Logo />
-        {!isEditBlog && !isNewBlog && !isProfile && !isSearchPage && <Search />}
+        {!isEditPost && !isNewPost && !isProfile && !isSearchPage && <Search />}
         <div className={styles.userAction}>
-          {(isNewBlog || isEditBlog) && <PublishButton blogData={blogData} />}
+          {(isNewPost || isEditPost) && (
+            <PublishButton submitEditPost={submitEditPost} />
+          )}
           {!isProfile && (
             <Link to="/search" className={styles.searchMobileWrapper}>
               <div className={styles.searchMobileIcon}></div>

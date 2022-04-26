@@ -7,19 +7,19 @@ import NavContextProvider from './context/NavContext'
 import { Provider } from 'react-redux'
 import store from './reducers/index'
 import LearningContextProvider from './context/LearningContext'
-import BlogContextProvider from './context/BlogContext'
+import PostContextProvider from './context/PostContext'
 
 ReactDOM.render(
   <BrowserRouter>
     <Provider store={store}>
       <NavContextProvider>
         <LearningContextProvider>
-          <BlogContextProvider>
+          <PostContextProvider>
             <App />
-          </BlogContextProvider>
+          </PostContextProvider>
         </LearningContextProvider>
       </NavContextProvider>
     </Provider>
   </BrowserRouter>,
-  document.getElementById('root'),
+  document.getElementById('root')
 )

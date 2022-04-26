@@ -10,34 +10,30 @@ import { useLocation } from 'react-router-dom'
 import bannerProfileImage from '../../asset/images/cover-profile.3fb9fed576da4b28386a.png'
 
 const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer'),
+  import('../../components/main-layout/footer/Footer')
 )
 
 const Profile = () => {
   const location = useLocation()
 
-  console.log(location.pathname)
   const [user, setUser] = useState(null)
 
   useEffect(() => {
-    const controller = new AbortController()
-
     ;(async () => {
-      try {
-        const res = await fetch(`${apiURL}/me/${location.pathname}`, {
-          signal: controller.signal,
-        })
-        const data = await res.json()
-        setUser(data)
-      } catch (error) {
-        console.log(error.message)
-      }
+      const url = `${apiURL}/me/${location.pathname}`
+      const data = await getProfile(url)
+
+      setUser(data)
     })()
+  }, [location.pathname])
 
-    return () => controller?.abort()
-  }, [])
-
-  console.log(user)
+  const getProfile = async (url) => {
+    try {
+      return await fetch(url)
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 
   return (
     <>

@@ -9,14 +9,16 @@ import Header from '../../components/main-layout/nav/Header'
 import styles from './LearningPath.module.scss'
 
 const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer'),
+  import('../../components/main-layout/footer/Footer')
 )
 
 const LearningPath = () => {
-  useEffect(() => {
-    document.title =
-      'Lộ trình học lập trình cho người mới tại F8 | Tự học lập trình từ đầu ở nhà'
-  }, [])
+  useEffect(
+    () =>
+      (document.title =
+        'Lộ trình học lập trình cho người mới tại F8 | Tự học lập trình từ đầu ở nhà'),
+    []
+  )
 
   return (
     <>

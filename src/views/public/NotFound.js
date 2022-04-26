@@ -5,9 +5,7 @@ import styles from './NotFound.module.scss'
 import logo from '../../asset/images/f8_icon.png'
 
 const NotFound = () => {
-  useEffect(() => {
-    document.title = 'Trang này không tồn tại'
-  }, [])
+  useEffect(() => (document.title = 'Trang này không tồn tại'), [])
 
   return (
     <>

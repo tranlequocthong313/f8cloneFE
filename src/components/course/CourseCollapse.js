@@ -3,11 +3,11 @@ import { Collapse } from 'react-bootstrap'
 import styles from './CourseCollapse.module.scss'
 import '../../sass/_float.scss'
 
-const CourseCollapse = ({ open, openAll, lessons, episodeId }) => {
+const CourseCollapse = ({ open, lessons, episodeId }) => {
   return (
     <Collapse in={open.includes(episodeId)}>
       <div className={styles.panelBody}>
-        {lessons.map(lesson => (
+        {lessons.map((lesson) => (
           <div className={styles.lessonItem} key={lesson.id}>
             <span className="floatLeft">
               <i className={`${styles.icon} fa-regular fa-circle-play`}></i>

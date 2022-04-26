@@ -7,7 +7,7 @@ import CourseList from '../../components/home/courses/CourseList'
 import MainCardAdd from '../../components/utils/card/MainCardAdd'
 
 const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer'),
+  import('../../components/main-layout/footer/Footer')
 )
 
 const MyCourse = () => {
@@ -18,23 +18,19 @@ const MyCourse = () => {
   }, [])
 
   useEffect(() => {
-    const controller = new AbortController()
-
     ;(async () => {
-      try {
-        const res = await fetch(`${apiURL}`, {
-          signal: controller.signal,
-        })
-        const data = await res.json()
-
-        setCourseFE(data.courseFE)
-      } catch (error) {
-        console.log(error.message)
-      }
+      const data = await getCourse(`${apiURL}`)
+      setCourseFE(data.courseFE)
     })()
-
-    return () => controller?.abort()
   }, [])
+
+  const getCourse = async (url) => {
+    try {
+      return (await fetch(url)).json()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 
   return (
     <>

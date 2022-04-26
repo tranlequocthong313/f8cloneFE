@@ -3,7 +3,7 @@ import styles from './ContentEditable.module.scss'
 import { maxlengthContentEditable } from 'maxlength-contenteditable'
 
 const ContentEditable = (
-  { onInput, text, className, maxLength, showCode, children },
+  { text, className, maxLength, showCode, children, onInput, onKeyUp },
   ref
 ) => {
   maxlengthContentEditable()
@@ -16,6 +16,7 @@ const ContentEditable = (
       data-empty-text={text}
       className={`${styles.contentEditable} ${className}`}
       onInput={onInput}
+      onKeyUp={onKeyUp}
       tabIndex={'0'}
       ref={ref}
       data-max-length={maxLength}

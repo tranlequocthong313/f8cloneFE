@@ -5,13 +5,11 @@ import SideBar from '../../components/main-layout/sidebar/SideBar'
 import { Row, Col, Container } from 'react-bootstrap'
 
 const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer'),
+  import('../../components/main-layout/footer/Footer')
 )
 
 const Privacy = () => {
-  useEffect(() => {
-    document.title = 'Chính sách bảo mật'
-  }, [])
+  useEffect(() => (document.title = 'Chính sách bảo mật'), [])
 
   return (
     <>

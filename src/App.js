@@ -1,92 +1,84 @@
-import Blog from './views/public/Blog';
-import Courses from './views/public/Courses';
-import LearningPath from './views/public/LearningPath';
-import Home from './views/public/Home';
-import Contact from './views/public/Contact';
-import Search from './views/public/Search';
-import Privacy from './views/public/Privacy';
-import About from './views/public/About';
-import Careers from './views/public/Careers';
-import Terms from './views/public/Terms';
-import { Routes, Route } from 'react-router-dom';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import CourseSlug from './components/course/CourseSlug';
-import { useLocation } from 'react-router-dom';
-import Cookies from 'js-cookie';
-import { setAuth } from './actions/userAction';
-import { apiURL } from './context/constants';
-import BlogSlug from './components/blog/BlogSlug';
-import Auth from './views/public/Auth';
-import NotFound from './views/public/NotFound';
-import Learning from './views/private/Learning';
-import MyCourse from './views/private/MyCourse';
-import NewPost from './views/private/NewPost';
-import Settings from './views/private/Settings';
-import BookmarkPost from './views/private/BookmarkPost';
-import MyBlog from './views/private/MyBlog';
-import Admin from './views/admin/Admin';
-import EditPost from './views/private/EditPost';
-import BlogTag from './views/public/BlogTag';
-import Profile from './views/public/Profile';
+import Blog from './views/public/Blog'
+import Courses from './views/public/Courses'
+import LearningPath from './views/public/LearningPath'
+import Home from './views/public/Home'
+import Contact from './views/public/Contact'
+import Search from './views/public/Search'
+import Privacy from './views/public/Privacy'
+import About from './views/public/About'
+import Careers from './views/public/Careers'
+import Terms from './views/public/Terms'
+import { Routes, Route } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import CourseSlug from './components/course/CourseSlug'
+import { useLocation } from 'react-router-dom'
+import Cookies from 'js-cookie'
+import { setAuth } from './actions/userAction'
+import { apiURL } from './context/constants'
+import BlogSlug from './components/blog/BlogSlug'
+import Auth from './views/public/Auth'
+import NotFound from './views/public/NotFound'
+import Learning from './views/private/Learning'
+import MyCourse from './views/private/MyCourse'
+import NewPost from './views/private/NewPost'
+import Settings from './views/private/Settings'
+import BookmarkPost from './views/private/BookmarkPost'
+import MyBlog from './views/private/MyBlog'
+import Admin from './views/admin/Admin'
+import EditPost from './views/private/EditPost'
+import BlogTag from './views/public/BlogTag'
+import Profile from './views/public/Profile'
 
 function App() {
-  const dispatch = useDispatch();
-  const location = useLocation();
+  const dispatch = useDispatch()
+  const location = useLocation()
+  const user = useSelector((state) => state.user)
 
-  const user = useSelector((state) => state.user);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location.pathname]);
+  useEffect(() => window.scrollTo(0, 0), [location.pathname])
 
   useEffect(() => {
-    const controller = new AbortController();
+    ;(async () => {
+      const token = Cookies.get('token')
+      if (!token) return
 
-    (async () => {
-      try {
-        const token = Cookies.get('token');
-        if (!token) return;
+      const url = `${apiURL}/api/auth`
+      const data = await getAuth(url)
 
-        const res = await fetch(
-          `${apiURL}/api/auth`,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
+      dispatch(
+        setAuth({
+          ...data.user,
+          accessToken: token,
+        })
+      )
+    })()
+  }, [dispatch])
+
+  const getAuth = async (url, token) => {
+    try {
+      return (
+        await fetch(url, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
-          {
-            signal: controller.signal,
-          }
-        );
-
-        const data = await res.json();
-
-        dispatch(
-          setAuth({
-            ...data.user,
-            accessToken: token,
-          })
-        );
-      } catch (error) {
-        console.log(error.message);
-      }
-    })();
-
-    return () => controller?.abort();
-  }, []);
+        })
+      ).json()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 
   useEffect(() => {
     console.log(
       '%cHello! 🙋',
       'font-size: 16px; font-weight: 600; color: #32c6a1'
-    );
+    )
     console.log(
       '%cF8 front-end was built with Javascript, React, Redux, SASS, CSS module, webpack, and lots of love. \n \nF8 back-end was built with PHP, Laravel, Node, ExpressJS, MySQL, MongoDB, Redis, and lots of love. \n  \n👉 Want to work with us? Check out https://fullstack.edu.vn/careers/',
       'font-size: 14px; font-weight: 500; color: #32c6a1'
-    );
-  }, []);
+    )
+  }, [])
 
   return (
     <Routes>
@@ -115,7 +107,7 @@ function App() {
         element={user.isLoggedIn ? <NewPost /> : <Auth />}
       />
       <Route
-        path="/edit-blog/:slug"
+        path="/edit-post/:slug"
         element={user.isLoggedIn ? <EditPost /> : <Auth />}
       />
       <Route
@@ -125,10 +117,6 @@ function App() {
       <Route
         path="/bookmark-post"
         element={user.isLoggedIn ? <BookmarkPost /> : <Auth />}
-      />
-      <Route
-        path="/my-post/drafts"
-        element={user.isLoggedIn ? <MyBlog /> : <Auth />}
       />
       <Route
         path="/my-post/published"
@@ -165,7 +153,7 @@ function App() {
       <Route path="*" element={<NotFound />} />
       <Route path="/" element={<Home />} />
     </Routes>
-  );
+  )
 }
 
-export default App;
+export default App

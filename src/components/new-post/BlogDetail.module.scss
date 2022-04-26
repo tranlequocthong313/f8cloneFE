@@ -50,6 +50,7 @@
 
   .colRight {
     word-wrap: break-word;
+
     .heading {
       color: #222;
       font-size: 40px;
@@ -71,18 +72,24 @@
           height: 48px;
           width: 48px;
         }
+
         .info {
           display: flex;
           flex-direction: column;
           font-size: 14px;
           justify-content: center;
           margin-left: 12px;
-        }
-        .name {
-          color: #292929;
-          font-size: 16px;
-          font-weight: 600;
-          margin: 0;
+
+          a {
+            text-decoration: none;
+
+            .name {
+              color: #292929;
+              font-size: 16px;
+              font-weight: 600;
+              margin: 0;
+            }
+          }
         }
       }
       .time {

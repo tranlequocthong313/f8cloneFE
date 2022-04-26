@@ -16,14 +16,14 @@ const AdminCourse = ({ courseData }) => {
               <Form.Check type={'checkbox'} />
             </Form>
           </th>
-          <th className={styles.tableItem}>STT</th>
+          <th>STT</th>
           <th>Tên khóa học</th>
-          <th className={styles.tableItem}>Cấp độ</th>
-          <th className={styles.tableItem}>Vai trò</th>
-          <th className={styles.tableItem}>Yêu cầu</th>
-          <th className={styles.tableItem}>Số lượng học sinh</th>
-          <th className={styles.tableItem}>Thời gian tạo</th>
-          <th className={styles.tableItem}>Thời gian sửa</th>
+          <th>Cấp độ</th>
+          <th>Vai trò</th>
+          <th>Yêu cầu</th>
+          <th>Số lượng học sinh</th>
+          <th>Thời gian tạo</th>
+          <th>Thời gian sửa</th>
         </tr>
       </thead>
       <tbody>
@@ -34,22 +34,18 @@ const AdminCourse = ({ courseData }) => {
                 <Form.Check type={'checkbox'} />
               </Form>
             </td>
-            <td className={styles.tableItem}>{index + 1}</td>
+            <td>{index + 1}</td>
             <td>{course.title}</td>
-            <td className={styles.tableItem}>{course.level}</td>
-            <td className={styles.tableItem}>
+            <td>{course.level}</td>
+            <td>
               {course.role.FE && course.role.BE
                 ? 'Fullstack'
                 : course.role.FE || course.role.BE}
             </td>
-            <td className={styles.tableItem}>
-              {course.requirement ? 'Yes' : 'No'}
-            </td>
-            <td className={styles.tableItem}>
-              {formatStudentCount(course.studentCount)}
-            </td>
-            <td className={styles.tableItem}>{course.createdAt}</td>
-            <td className={styles.tableItem}>{course.updatedAt}</td>
+            <td>{course.requirement ? 'Yes' : 'No'}</td>
+            <td>{formatStudentCount(course.studentCount)}</td>
+            <td>{course.createdAt}</td>
+            <td>{course.updatedAt}</td>
           </tr>
         ))}
       </tbody>

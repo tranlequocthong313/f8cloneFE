@@ -1,13 +1,13 @@
-import { useState, useRef, useEffect } from 'react';
-import styles from './CommentInput.module.scss';
-import noPhotoURL from '../../../asset/images/nobody_m.256x256.jpg';
-import ContentEditable from '../content-editable/ContentEditable';
-import Cookies from 'js-cookie';
-import { useNavigate } from 'react-router-dom';
-import { apiURL } from '../../../context/constants';
-import io from 'socket.io-client';
+import { useState, useRef, useEffect } from 'react'
+import styles from './CommentInput.module.scss'
+import noPhotoURL from '../../../asset/images/nobody_m.256x256.jpg'
+import ContentEditable from '../content-editable/ContentEditable'
+import Cookies from 'js-cookie'
+import { useNavigate } from 'react-router-dom'
+import { apiURL } from '../../../context/constants'
+import io from 'socket.io-client'
 
-const socket = io.connect(apiURL);
+const socket = io.connect(apiURL)
 
 const CommentInput = ({
   showCode,
@@ -17,49 +17,55 @@ const CommentInput = ({
   userPhotoURL,
   blogId,
 }) => {
-  const contentEditableRef = useRef();
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  const contentEditableRef = useRef()
 
-  const [commentInput, setCommentInput] = useState('');
+  const [commentInput, setCommentInput] = useState('')
 
   useEffect(() => {
-    const isEmptyCommentInput = commentInput.length === 0;
-    if (isEmptyCommentInput) contentEditableRef.current.innerText = '';
-  }, [commentInput]);
+    const isEmptyCommentInput = commentInput.length === 0
+    if (isEmptyCommentInput) contentEditableRef.current.innerText = ''
+  }, [commentInput])
 
   const submitComment = async () => {
-    try {
-      const token = Cookies.get('token');
-      if (!token) return navigate('/login');
+    const token = Cookies.get('token')
+    if (!token) return navigate('/login')
 
-      const res = await fetch(`${apiURL}/blog/comment`, {
-        method: 'PUT',
-        body: JSON.stringify({
-          blogId,
-          content: commentInput,
-          isCode: showCode ? true : false,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    const url = `${apiURL}/blog/comment`
+    const data = await putComment(url, token)
 
-      const data = await res.json();
-
+    if (data.comment) {
       const comment = {
         ...data.comments[0],
-      };
-
-      socket.emit('comment', comment);
-    } catch (error) {
-      console.log(error.message);
+      }
+      socket.emit('comment', comment)
     }
+  }
 
-    setCommentInput('');
-    setShowSubmit(false);
-    setShowCode(false);
-  };
+  const putComment = async (url, token) => {
+    try {
+      return (
+        await fetch(url, {
+          method: 'PUT',
+          body: JSON.stringify({
+            blogId,
+            content: commentInput,
+            isCode: showCode ? true : false,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      ).json()
+    } catch (error) {
+      console.log(error.message)
+    } finally {
+      setCommentInput('')
+      setShowSubmit(false)
+      setShowCode(false)
+    }
+  }
 
   return (
     <div className={styles.comment}>
@@ -89,8 +95,8 @@ const CommentInput = ({
             <button
               className={styles.cancel}
               onClick={() => {
-                setShowSubmit(false);
-                setShowCode(false);
+                setShowSubmit(false)
+                setShowCode(false)
               }}
             >
               Hủy
@@ -109,7 +115,7 @@ const CommentInput = ({
         </>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default CommentInput;
+export default CommentInput

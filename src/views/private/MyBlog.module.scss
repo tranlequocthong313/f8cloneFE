@@ -68,20 +68,57 @@
   position: relative;
   list-style-type: none;
 
-  h3 {
-    margin-top: 0;
-    padding-right: 24px;
+  .heading {
+    display: flex;
+    justify-content: space-between;
+    word-break: break-all;
 
-    a {
-      color: $text-color;
-      font-size: 19px;
-      line-height: 1.6;
-      text-decoration: none;
-      font-weight: 600;
+    h3 {
+      margin-top: 0;
+      padding-right: 24px;
 
-      .clockIcon {
-        color: #757575;
-        margin-right: 8px;
+      a {
+        color: $text-color;
+        font-size: 19px;
+        line-height: 1.6;
+        text-decoration: none;
+        font-weight: 600;
+
+        .clockIcon {
+          color: #757575;
+          margin-right: 8px;
+        }
+      }
+    }
+
+    .optionWrapper {
+      min-width: 200px;
+      padding: 8px 0;
+      right: -8px;
+      z-index: 1;
+
+      .optionItem {
+        color: #444;
+        cursor: pointer;
+        display: block;
+        font-size: 14px;
+        padding: 12px 20px;
+        transition: 0.3s;
+
+        &:hover {
+          background-color: #f0f0f0;
+          color: #292929;
+        }
+      }
+
+      .option {
+        color: #666;
+        font-size: 16px;
+        margin-left: 4px;
+        padding: 4px 8px;
+        position: absolute;
+        right: 16px;
+        top: 8px;
       }
     }
   }
@@ -98,16 +135,6 @@
     .dot {
       padding: 0 6px;
     }
-  }
-
-  .option {
-    color: #666;
-    font-size: 16px;
-    margin-left: 4px;
-    padding: 4px 8px;
-    position: absolute;
-    right: 16px;
-    top: 8px;
   }
 }
 

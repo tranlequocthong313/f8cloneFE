@@ -1,43 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
-import styles from './About.module.scss';
-import banner1 from '../../asset/images/f8-og-image.jpg';
-import banner2 from '../../asset/images/about-1.c8179beb513c0a025314.png';
-import banner3 from '../../asset/images/about-2.9172a49089c8c29156f7.png';
-import banner4 from '../../asset/images/about-3.61ca6adf22cc550c0c03.png';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Header from '../../components/main-layout/nav/Header';
-import Footer from '../../components/main-layout/footer/Footer';
-import CareerList from '../../components/career/CareerList';
-import { apiURL } from '../../context/constants';
+import React, { useState, useEffect } from 'react'
+import { Col, Container, Row } from 'react-bootstrap'
+import styles from './About.module.scss'
+import banner1 from '../../asset/images/f8-og-image.jpg'
+import banner2 from '../../asset/images/about-1.c8179beb513c0a025314.png'
+import banner3 from '../../asset/images/about-2.9172a49089c8c29156f7.png'
+import banner4 from '../../asset/images/about-3.61ca6adf22cc550c0c03.png'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import Header from '../../components/main-layout/nav/Header'
+import Footer from '../../components/main-layout/footer/Footer'
+import CareerList from '../../components/career/CareerList'
+import { apiURL } from '../../context/constants'
 
 const About = () => {
-  const [jobs, setJobs] = useState([]);
+  const [jobs, setJobs] = useState([])
+
+  useEffect(
+    () =>
+      (document.title =
+        'Giới thiệu về F8 | Nơi có những khóa học lập trình online chất lượng'),
+    []
+  )
 
   useEffect(() => {
-    document.title =
-      'Giới thiệu về F8 | Nơi có những khóa học lập trình online chất lượng';
-  }, []);
+    ;(async () => {
+      const url = `${apiURL}/help/get-job`
+      const data = await getJob(url)
 
-  useEffect(() => {
-    const controller = new AbortController();
+      setJobs(data)
+    })()
+  }, [])
 
-    (async () => {
-      try {
-        const res = await fetch(`${apiURL}/help/get-job`, {
-          signal: controller.signal,
-        });
-
-        const data = await res.json();
-
-        setJobs(data);
-      } catch (error) {
-        console.log(error.message);
-      }
-    })();
-
-    return () => controller?.abort();
-  }, []);
+  const getJob = async (url) => {
+    try {
+      return await fetch(url)
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 
   return (
     <>
@@ -367,7 +366,7 @@ const About = () => {
       </Container>
       <Footer />
     </>
-  );
-};
+  )
+}
 
-export default About;
+export default About

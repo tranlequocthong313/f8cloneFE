@@ -1,37 +1,37 @@
 import { createContext, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
-export const BlogContext = createContext()
+export const PostContext = createContext()
 
-const BlogContextProvider = ({ children }) => {
+const PostContextProvider = ({ children }) => {
   const location = useLocation()
 
-  const [isEditBlog, setIsEditBlog] = useState(false)
-  const [isNewBlog, setIsNewBlog] = useState(false)
+  const [isEditPost, setIsEditPost] = useState(false)
+  const [isNewPost, setIsNewPost] = useState(false)
   const [text, setText] = useState('')
   const [showModal, setShowModal] = useState(false)
   const [isValid, setIsValid] = useState(false)
 
   useEffect(() => {
     const isNewPostPathName = location.pathname.includes('/new-post')
-    const isEditPostPathName = location.pathname.includes('/edit-blog/')
+    const isEditPostPathName = location.pathname.includes('/edit-post/')
 
     if (isNewPostPathName) {
-      setIsNewBlog(true)
+      setIsNewPost(true)
       setText('Xuất bản')
     } else if (isEditPostPathName) {
-      setIsEditBlog(true)
+      setIsEditPost(true)
       setText('Lưu và xuất bản')
     } else {
-      setIsNewBlog(false)
-      setIsEditBlog(false)
+      setIsNewPost(false)
+      setIsEditPost(false)
       setText(null)
     }
   }, [location.pathname])
 
   const value = {
-    isEditBlog,
-    isNewBlog,
+    isEditPost,
+    isNewPost,
     showModal,
     setShowModal,
     isValid,
@@ -39,7 +39,7 @@ const BlogContextProvider = ({ children }) => {
     text,
   }
 
-  return <BlogContext.Provider value={value}>{children}</BlogContext.Provider>
+  return <PostContext.Provider value={value}>{children}</PostContext.Provider>
 }
 
-export default BlogContextProvider
+export default PostContextProvider

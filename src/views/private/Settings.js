@@ -1,205 +1,202 @@
-import React, { useState, Suspense, useEffect } from 'react';
-import styles from './Settings.module.scss';
-import { Container, Row, Col } from 'react-bootstrap';
-import Header from '../../components/main-layout/nav/Header';
-import { useSelector } from 'react-redux';
-import FieldInput from '../../components/utils/field-input/FieldInput';
-import Cookies from 'js-cookie';
-import { apiURL } from '../../context/constants';
-import { useDispatch } from 'react-redux';
-import { settings } from '../../actions/userAction';
-import { ref, uploadBytesResumable, getDownloadURL } from '@firebase/storage';
-import { storage } from '../../firebase/config';
-import removeActions from '../../components/utils/remove-accents/removeActions';
+import React, { useState, Suspense, useEffect } from 'react'
+import styles from './Settings.module.scss'
+import { Container, Row, Col } from 'react-bootstrap'
+import Header from '../../components/main-layout/nav/Header'
+import { useSelector } from 'react-redux'
+import FieldInput from '../../components/utils/field-input/FieldInput'
+import Cookies from 'js-cookie'
+import { apiURL } from '../../context/constants'
+import { useDispatch } from 'react-redux'
+import { settings } from '../../actions/userAction'
+import { ref, uploadBytesResumable, getDownloadURL } from '@firebase/storage'
+import { storage } from '../../firebase/config'
+import removeActions from '../../components/utils/remove-accents/removeActions'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer')
-);
+)
 
 const Settings = () => {
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch()
+  const user = useSelector((state) => state.user)
 
-  const [isEditMode, setIsEditMode] = useState([]);
-  const [fullName, setFullName] = useState(user.displayName);
-  const [bio, setBio] = useState(user.bio ? user.bio : '');
+  const [settingMode, setSettingMode] = useState([])
+  const [fullName, setFullName] = useState(user.displayName)
+  const [bio, setBio] = useState(user.bio ? user.bio : '')
   const [image, setImage] = useState({
     preview: null,
     avatar: null,
-  });
+  })
   const [social, setSocial] = useState({
     fb: user.socials.fb ? user.socials.fb : '',
     youtube: user.socials.youtube ? user.socials.youtube : '',
     linkedin: user.socials.linkedin ? user.socials.linkedin : '',
     instagram: user.socials.instagram ? user.socials.instagram : '',
     twitter: user.socials.twitter ? user.socials.twitter : '',
-  });
+  })
 
-  useEffect(() => {
-    document.title = 'Thiết lập về tôi tại F8';
-  }, []);
+  useEffect(() => (document.title = 'Thiết lập về tôi tại F8'), [])
 
-  const editMode = (name) => {
-    const isShow = isEditMode.includes(name);
+  const settingModeChosen = (option) => settingMode.includes(option)
 
-    isShow
-      ? setIsEditMode((prev) => prev.filter((item) => item !== name))
-      : setIsEditMode((prev) => [...prev, name]);
-  };
+  const handleSettingMode = (option) =>
+    settingModeChosen(option)
+      ? setSettingMode((prev) => prev.filter((item) => item !== option))
+      : setSettingMode((prev) => [...prev, option])
 
-  useEffect(() => {
-    return () => {
-      image.preview && URL.revokeObjectURL(image);
-    };
-  }, [image]);
+  useEffect(() => () => image.preview && URL.revokeObjectURL(image), [image])
 
   const getNewAvatar = (e) => {
-    const image = URL.createObjectURL(e.target.files[0]);
+    const image = URL.createObjectURL(e.target.files[0])
     setImage((prev) => {
       return {
         ...prev,
         preview: image,
         avatar: e.target.files[0],
-      };
-    });
-  };
+      }
+    })
+  }
 
   const changeName = async () => {
+    const token = Cookies.get('token')
+    if (!token) return
+
+    const url = `${apiURL}/help/setting/fullName`
+    const data = await patchFullName(url, token)
+
+    setFullName(data.fullName)
+    dispatch(settings({ fullName: data.fullName, photoURL: user.photoURL }))
+  }
+
+  const patchFullName = async (url, token) => {
     try {
-      const token = Cookies.get('token');
-
-      if (!token) return;
-
-      const res = await fetch(`${apiURL}/help/setting/fullName`, {
-        method: 'POST',
+      return await fetch(url, {
+        method: 'PATCH',
         body: JSON.stringify({ fullName }),
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-      });
-
-      const data = await res.json();
-      setFullName(data.fullName);
-      dispatch(settings({ fullName: data.fullName, photoURL: user.photoURL }));
+      })
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message)
     } finally {
-      editMode('name');
+      handleSettingMode('name')
     }
-  };
+  }
 
   const changeAvatar = () => {
-    try {
-      const token = Cookies.get('token');
-      if (!token) return;
+    const token = Cookies.get('token')
+    if (!token) return
 
-      const hasAvatarImage = image.avatar;
-      if (hasAvatarImage) {
-        const storageRef = ref(
-          storage,
-          `uploads/${image.avatar && image.avatar.name}`
-        );
-        const uploadTask = uploadBytesResumable(storageRef, image.avatar);
+    if (image.avatar) {
+      const storageRef = ref(storage, `uploads/${image.avatar.name}`)
+      const uploadTask = uploadBytesResumable(storageRef, image.avatar)
 
-        uploadTask.on(
-          'state_changed',
-          (snapshot) => {
-            Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-          },
-          (err) => console.log(err),
-          async () => {
-            const url = await getDownloadURL(uploadTask.snapshot.ref);
+      uploadTask.on(
+        'state_changed',
+        () => {},
+        (err) => console.log(err),
+        async () => {
+          const photoURL = await getDownloadURL(uploadTask.snapshot.ref)
+          const url = `${apiURL}/help/setting/avatar`
+          const data = await patchAvatar(url, photoURL, token)
 
-            const res = await fetch(`${apiURL}/help/setting/avatar`, {
-              method: 'POST',
-              body: JSON.stringify({ photoURL: url }),
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
-              },
-            });
-
-            const data = await res.json();
-            setImage(data.photoURL);
-            dispatch(
-              settings({ fullName: user.displayName, photoURL: data.photoURL })
-            );
-          }
-        );
-      }
-    } catch (error) {
-      console.log(error.message);
-    } finally {
-      editMode('avatar');
+          setImage(data.photoURL)
+          dispatch(
+            settings({ fullName: user.displayName, photoURL: data.photoURL })
+          )
+        }
+      )
     }
-  };
+  }
+
+  const patchAvatar = async (url, photoURL, token) => {
+    try {
+      return await fetch(url, {
+        method: 'PATCH',
+        body: JSON.stringify({ photoURL }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+    } catch (error) {
+      console.log(error.message)
+    } finally {
+      handleSettingMode('avatar')
+    }
+  }
 
   const bioChange = async () => {
+    const token = Cookies.get('token')
+    if (!token) return
+
+    const url = `${apiURL}/help/setting/bio`
+    const data = await patchBio(url, token)
+
+    setBio(data.bio)
+    dispatch(
+      settings({
+        fullName: user.displayName,
+        photoURL: user.photoURL,
+        bio: data.bio,
+      })
+    )
+  }
+
+  const patchBio = async (url, token) => {
     try {
-      const token = Cookies.get('token');
-
-      if (!token) return;
-
-      const res = await fetch(`${apiURL}/help/setting/bio`, {
-        method: 'POST',
+      return await fetch(url, {
+        method: 'PATCH',
         body: JSON.stringify({ bio }),
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-      });
-
-      const data = await res.json();
-      setBio(data.bio);
-      dispatch(
-        settings({
-          fullName: user.displayName,
-          photoURL: user.photoURL,
-          bio: data.bio,
-        })
-      );
+      })
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message)
     } finally {
-      editMode('bio');
+      handleSettingMode('bio')
     }
-  };
+  }
 
   const socialChange = async (socialName) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
+    const url = `${apiURL}/help/setting/social`
+    const data = await patchSocial(url, socialName, token)
+
+    setSocial((prev) => {
+      return {
+        ...prev,
+        fb: data.socials.fb ? data.socials.fb : '',
+        youtube: data.socials.youtube ? data.socials.youtube : '',
+        linkedin: data.socials.linkedin ? data.socials.linkedin : '',
+        instagram: data.socials.instagram ? data.socials.instagram : '',
+        twitter: data.socials.twitter ? data.socials.twitter : '',
+      }
+    })
+  }
+
+  const patchSocial = async (url, socialName, token) => {
     try {
-      const token = Cookies.get('token');
-
-      if (!token) return;
-
-      const res = await fetch(`${apiURL}/help/setting/social`, {
-        method: 'POST',
+      return await fetch(url, {
+        method: 'PATCH',
         body: JSON.stringify(social),
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-      });
-
-      const data = await res.json();
-
-      console.log(data);
-      setSocial((prev) => {
-        return {
-          ...prev,
-          fb: data.socials.fb ? data.socials.fb : '',
-          youtube: data.socials.youtube ? data.socials.youtube : '',
-          linkedin: data.socials.linkedin ? data.socials.linkedin : '',
-          instagram: data.socials.instagram ? data.socials.instagram : '',
-          twitter: data.socials.twitter ? data.socials.twitter : '',
-        };
-      });
+      })
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message)
     } finally {
-      editMode(socialName);
+      handleSettingMode(socialName)
     }
-  };
+  }
 
   return (
     <>
@@ -222,9 +219,9 @@ const Settings = () => {
                   }
                   placeholder={'Thêm tên của bạn'}
                   maxLength={50}
-                  disabled={!isEditMode.includes('name')}
-                  onShow={() => editMode('name')}
-                  isEditMode={isEditMode.includes('name')}
+                  disabled={!settingMode.includes('name')}
+                  onShow={() => handleSettingMode('name')}
+                  settingMode={settingMode.includes('name')}
                   onSave={changeName}
                 />
                 <FieldInput
@@ -236,9 +233,9 @@ const Settings = () => {
                   }
                   placeholder={'Thêm giới thiệu'}
                   maxLength={150}
-                  disabled={!isEditMode.includes('bio')}
-                  onShow={() => editMode('bio')}
-                  isEditMode={isEditMode.includes('bio')}
+                  disabled={!settingMode.includes('bio')}
+                  onShow={() => handleSettingMode('bio')}
+                  settingMode={settingMode.includes('bio')}
                   onSave={bioChange}
                 />
                 <FieldInput
@@ -250,8 +247,8 @@ const Settings = () => {
                   preview={image.preview}
                   isImage={true}
                   onFileChange={getNewAvatar}
-                  onShow={() => editMode('avatar')}
-                  isEditMode={isEditMode.includes('avatar')}
+                  onShow={() => handleSettingMode('avatar')}
+                  settingMode={settingMode.includes('avatar')}
                   onSave={changeAvatar}
                 />
                 <FieldInput
@@ -295,13 +292,13 @@ const Settings = () => {
                       return {
                         ...prev,
                         fb: e.target.value,
-                      };
+                      }
                     })
                   }
                   placeholder={'Eg. https://www.facebook.com/hoclaptrinhf8'}
-                  disabled={!isEditMode.includes('fb')}
-                  onShow={() => editMode('fb')}
-                  isEditMode={isEditMode.includes('fb')}
+                  disabled={!settingMode.includes('fb')}
+                  onShow={() => handleSettingMode('fb')}
+                  settingMode={settingMode.includes('fb')}
                   onSave={() => socialChange('fb')}
                   value={social.fb}
                 />
@@ -314,12 +311,12 @@ const Settings = () => {
                       return {
                         ...prev,
                         youtube: e.target.value,
-                      };
+                      }
                     })
                   }
-                  disabled={!isEditMode.includes('youtube')}
-                  onShow={() => editMode('youtube')}
-                  isEditMode={isEditMode.includes('youtube')}
+                  disabled={!settingMode.includes('youtube')}
+                  onShow={() => handleSettingMode('youtube')}
+                  settingMode={settingMode.includes('youtube')}
                   onSave={() => socialChange('youtube')}
                   value={social.youtube}
                 />
@@ -332,12 +329,12 @@ const Settings = () => {
                       return {
                         ...prev,
                         linkedin: e.target.value,
-                      };
+                      }
                     })
                   }
-                  disabled={!isEditMode.includes('linkedin')}
-                  onShow={() => editMode('linkedin')}
-                  isEditMode={isEditMode.includes('linkedin')}
+                  disabled={!settingMode.includes('linkedin')}
+                  onShow={() => handleSettingMode('linkedin')}
+                  settingMode={settingMode.includes('linkedin')}
                   onSave={() => socialChange('linkedin')}
                   value={social.linkedin}
                 />
@@ -350,12 +347,12 @@ const Settings = () => {
                       return {
                         ...prev,
                         instagram: e.target.value,
-                      };
+                      }
                     })
                   }
-                  disabled={!isEditMode.includes('instagram')}
-                  onShow={() => editMode('instagram')}
-                  isEditMode={isEditMode.includes('instagram')}
+                  disabled={!settingMode.includes('instagram')}
+                  onShow={() => handleSettingMode('instagram')}
+                  settingMode={settingMode.includes('instagram')}
                   onSave={() => socialChange('instagram')}
                   value={social.instagram}
                 />
@@ -368,12 +365,12 @@ const Settings = () => {
                       return {
                         ...prev,
                         twitter: e.target.value,
-                      };
+                      }
                     })
                   }
-                  disabled={!isEditMode.includes('twitter')}
-                  onShow={() => editMode('twitter')}
-                  isEditMode={isEditMode.includes('twitter')}
+                  disabled={!settingMode.includes('twitter')}
+                  onShow={() => handleSettingMode('twitter')}
+                  settingMode={settingMode.includes('twitter')}
                   onSave={() => socialChange('twitter')}
                   value={social.twitter}
                 />
@@ -386,7 +383,7 @@ const Settings = () => {
         <Footer />
       </Suspense>
     </>
-  );
-};
+  )
+}
 
-export default Settings;
+export default Settings

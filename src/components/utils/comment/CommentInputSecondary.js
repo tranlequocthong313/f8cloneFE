@@ -1,6 +1,5 @@
 import { useRef, useEffect } from 'react'
 import styles from './CommentInputSecondary.module.scss'
-import noPhotoURL from '../../../asset/images/nobody_m.256x256.jpg'
 import ContentEditable from '../content-editable/ContentEditable'
 
 const CommentInputSecondary = ({
@@ -8,19 +7,18 @@ const CommentInputSecondary = ({
   showCode,
   showInput,
   buttonText,
-  firstString,
+  currentComment,
   editComment,
-  replyComment,
   onInput,
-  commentInput,
+  editCommentText,
   setShowCodeEditReply,
 }) => {
   const contentEditableRef = useRef()
 
   useEffect(() => {
-    const isEmptyCommentInput = commentInput.length === 0
-    if (isEmptyCommentInput) contentEditableRef.current.innerText = ''
-  }, [commentInput])
+    const isEmptyEditCommentText = editCommentText.length === 0
+    if (isEmptyEditCommentText) contentEditableRef.current.innerText = ''
+  }, [editCommentText])
 
   return (
     <div className={styles.replyComment}>
@@ -34,13 +32,7 @@ const CommentInputSecondary = ({
           showCode={showCode}
           ref={contentEditableRef}
         >
-          <span
-            className={
-              buttonText !== 'Sửa' ? styles.replyUserName : styles.editComment
-            }
-          >
-            {firstString}
-          </span>
+          <span className={styles.editComment}>{currentComment}</span>
           <span>&nbsp;</span>
         </ContentEditable>
         {!showCode && (
@@ -62,11 +54,11 @@ const CommentInputSecondary = ({
           </button>
           <button
             className={
-              commentInput && commentInput.length >= 1
+              editCommentText && editCommentText.length >= 1
                 ? `${styles.submit} ${styles.active}`
                 : styles.submit
             }
-            onClick={buttonText === 'Sửa' ? editComment : replyComment}
+            onClick={editComment}
           >
             {buttonText}
           </button>

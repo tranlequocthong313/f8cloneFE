@@ -14,24 +14,24 @@ const BlogSlug = () => {
   const [blogHighlight, setBlogHighlight] = useState(null)
 
   useEffect(() => {
-    const controller = new AbortController()
-
     ;(async () => {
-      try {
-        const res = await fetch(`${apiURL}${location.pathname}`)
-        const data = await res.json()
+      const url = `${apiURL}${location.pathname}`
+      const data = await getBlogBySlug(url)
 
-        setBlog(data.blogSlug)
-        setBlogHighlight(data.blogHighlight)
+      setBlog(data.blogSlug)
+      setBlogHighlight(data.blogHighlight)
 
-        document.title = `${data.blogSlug.titleDisplay} | by F8`
-      } catch (error) {
-        console.log(error.message)
-      }
+      document.title = `${data.blogSlug.titleDisplay} | by F8`
     })()
-
-    return () => controller?.abort()
   }, [location.pathname])
+
+  const getBlogBySlug = async (url) => {
+    try {
+      return (await fetch(url)).json()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 
   return (
     <>

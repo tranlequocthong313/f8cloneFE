@@ -1,26 +1,31 @@
-import Cookies from 'js-cookie';
-import { apiURL } from '../../../context/constants';
+import Cookies from 'js-cookie'
+import { apiURL } from '../../../context/constants'
 
 const reportComment = async (commentId) => {
+  const token = Cookies.get('token')
+  if (!token) return
+
+  const url = `${apiURL}/report/comment`
+  const data = await putReport(url, commentId, token)
+
+  return data.success
+}
+
+const putReport = async (url, commentId, token) => {
   try {
-    const token = Cookies.get('token');
-    if (!token) return;
-
-    const res = await fetch(`${apiURL}/report/comment`, {
-      method: 'PUT',
-      body: JSON.stringify({ commentId }),
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const data = await res.json();
-    return data.success;
+    return (
+      await fetch(url, {
+        method: 'PUT',
+        body: JSON.stringify({ commentId }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+    ).json()
   } catch (error) {
-    console.log(error.message);
-    return false;
+    console.log(error.message)
   }
-};
+}
 
-export { reportComment };
+export { reportComment }
