@@ -33,7 +33,7 @@ const Courses = () => {
 
   const getCourses = async (url) => {
     try {
-      return await fetch(url)
+      return (await fetch(url)).json()
     } catch (error) {
       console.log(error.message)
     }

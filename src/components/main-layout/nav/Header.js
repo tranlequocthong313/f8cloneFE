@@ -37,7 +37,7 @@ const Header = ({ className, isProfile, isSearchPage, submitEditPost }) => {
           )}
 
           <Suspense fallback={<User />}>
-            {user.isLoggedIn && (
+            {user.isLoggedIn ? (
               <>
                 {!isProfile && <MyCourse />}
                 <Notification />
@@ -48,8 +48,9 @@ const Header = ({ className, isProfile, isSearchPage, submitEditPost }) => {
                   slug={user.slug}
                 />
               </>
+            ) : (
+              <Login />
             )}
-            {!user.isLoggedIn && <Login />}
           </Suspense>
         </div>
       </Container>

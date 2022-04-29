@@ -5,7 +5,7 @@ import ContentEditable from '../utils/content-editable/ContentEditable'
 import moment from 'moment'
 import { apiURL } from '../../context/constants'
 import styles from './Modal.module.scss'
-import { useNavigate } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import { ref, uploadBytesResumable, getDownloadURL } from '@firebase/storage'
 import { storage } from '../../firebase/config'
@@ -13,12 +13,14 @@ import { createBlog } from '../../actions/userAction'
 import removeActions from '../utils/remove-accents/removeActions'
 import { useSelector } from 'react-redux'
 import { PostContext } from '../../context/PostContext'
+import { SocketContext } from '../../context/SocketContext'
 
 const Modal = ({ blogContent }) => {
-  const navigate = useNavigate()
+  const history = useHistory()
   const titleDisplayRef = useRef()
   const { setShowModal } = useContext(PostContext)
   const user = useSelector((state) => state.user)
+  const { current } = useContext(SocketContext).socket
 
   const LIMIT_TITLE_DISPLAY_LENGTH = '100'
   const LIMIT_DESCRIPTION_LENGTH = '160'
@@ -35,7 +37,7 @@ const Modal = ({ blogContent }) => {
   const [description, setDescription] = useState('')
   const [image, setImage] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [tags, setTags] = useState(null)
+  const [tags, setTags] = useState([])
   const [tag, setTag] = useState('')
   const [invalidTag, setInvalidTag] = useState(null)
 
@@ -43,24 +45,21 @@ const Modal = ({ blogContent }) => {
     .resolvedOptions()
     .timeZone.split('/')[1]
 
-  useEffect(() => () => preview && URL.revokeObjectURL(preview), [preview])
+  useEffect(() => {
+    return () => preview && URL.revokeObjectURL(preview)
+  }, [preview])
 
-  const onDropImageFile = useCallback((acceptedFiles) => {
+  const onDrop = useCallback((acceptedFiles) => {
     const image = URL.createObjectURL(acceptedFiles[0])
     setPreview(image)
     setImage(acceptedFiles[0])
   }, [])
 
   const { getRootProps, getInputProps } = useDropzone({
-    onDropImageFile,
+    onDrop,
     accept: 'image/*',
     name: 'image',
   })
-
-  useEffect(
-    () => (titleDisplayRef.current.innerText = blogContent.title),
-    [blogContent.title]
-  )
 
   const readingTime = (content) => {
     const AVERAGE_WORDS_PER_MINUTE = 200 //People read average 200 words/min https://infusion.media/content-marketing/how-to-calculate-reading-time/
@@ -95,16 +94,16 @@ const Modal = ({ blogContent }) => {
     )
   }
 
-  const dispatchAndNavigate = (data) => {
+  const dispatchAndHistory = (data) => {
     createBlog({ blogData: data.blog })
-    navigate(
-      !data.blog.schedule ? `/blog/${data.blog.slug}` : '/my-post/published'
+    history.push(
+      !data.blog.schedule ? `/blog/${data.blog._id}` : '/my-post/published'
     )
   }
 
   const postBlog = async (image) => {
-    const token = Cookies.get('token')
-    if (!token) return
+    const { accessToken } = JSON.parse(Cookies.get('userData'))
+    if (!accessToken) return
 
     const blogData = {
       image,
@@ -126,49 +125,40 @@ const Modal = ({ blogContent }) => {
     }
 
     const url = `${apiURL}/new-post`
-    const data = await postNewPost(url, blogData, token)
+    const data = await postNewPost(url, blogData, accessToken)
 
-    if (!user.isAdmin) addNotification(data)
+    if (current && !user.isAdmin) {
+      current.emit('post', {
+        sender: user,
+        postId: data.blog._id,
+        receiverId: process.env.REACT_APP_ADMIN_ID,
+        post: data.blog,
+        description: 'có bài viết chờ được xét duyệt',
+        notificationType: 'post',
+        createdAt: new Date(),
+      })
+    }
 
-    dispatchAndNavigate(data)
+    dispatchAndHistory(data)
     setShowModal(false)
   }
 
   const postNewPost = async (url, blogData, token) => {
     try {
-      return await fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(blogData),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      return (
+        await fetch(url, {
+          method: 'POST',
+          body: JSON.stringify(blogData),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      ).json()
     } catch (error) {
       console.log(error.message)
     } finally {
       setLoading(false)
-    }
-  }
-
-  const addNotification = async (data) => {
-    try {
-      await fetch(`${apiURL}/notification/new-notification`, {
-        method: 'POST',
-        body: JSON.stringify({
-          description: 'đang chờ được xét duyệt',
-          slug: data.blog.slug,
-          title: data.blog.title,
-          image: data.blog.image,
-          notifiedBy: data.blog.postedBy,
-          sendFor: process.env.REACT_APP_ADMIN_ID,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-    } catch (error) {
-      console.error(error.message)
     }
   }
 

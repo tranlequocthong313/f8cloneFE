@@ -1,27 +1,20 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import styles from './Comment.module.scss'
 import CommentHeader from './CommentHeader'
 import CommentInput from './CommentInput'
 import CommentBody from './CommentBody'
-import CommentModal from './CommentModal'
 import { useSelector } from 'react-redux'
 import MainToast from '../toast/MainToast'
 import ScrollToTop from '../scroll/ScrollToTop'
+import { apiURL } from '../../../context/constants'
 
-const Comment = ({
-  submitComment,
-  commentData,
-  commentInput,
-  onInput,
-  setCommentData,
-  blogId,
-}) => {
+const Comment = ({ submitComment, commentInput, onInput, blog }) => {
   const commentRef = useRef()
   const user = useSelector((state) => state.user)
 
+  const [commentData, setCommentData] = useState([])
   const [showSubmit, setShowSubmit] = useState(false)
   const [showCode, setShowCode] = useState(false)
-  const [showModal, setShowModal] = useState(false)
   const [visible, setVisible] = useState(false)
   const [reportStatus, setReportStatus] = useState({
     isSuccess: false,
@@ -34,13 +27,28 @@ const Comment = ({
       ? setVisible(true)
       : setVisible(false)
 
+  useEffect(() => {
+    ;(async () => {
+      const url = `${apiURL}/comment/${blog._id}`
+      const comments = await getCommentByBLogId(url)
+
+      setCommentData(comments)
+    })()
+  }, [blog._id, commentData])
+
+  const getCommentByBLogId = async (url) => {
+    try {
+      return (await fetch(url)).json()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
   return (
     <>
-      {showModal && <CommentModal showModal={() => setShowModal(false)} />}
-
       <div className={styles.container}>
         <div className={styles.content} ref={commentRef} onScroll={scrollToTop}>
-          <CommentHeader commentData={commentData} />
+          <CommentHeader commentCount={blog.comments} />
           {user.isLoggedIn && (
             <CommentInput
               showCode={showCode}
@@ -51,17 +59,17 @@ const Comment = ({
               commentInput={commentInput}
               submitComment={submitComment}
               userPhotoURL={user.photoURL}
-              blogId={blogId}
+              blog={blog}
+              setCommentData={setCommentData}
             />
           )}
           {commentData.length > 0 && (
             <CommentBody
               commentData={commentData}
               userPhotoURL={user.photoURL}
-              showModal={setShowModal}
               setCommentData={setCommentData}
-              blogId={blogId}
-              s
+              blogId={blog._id}
+              getCommentByBLogId={getCommentByBLogId}
             />
           )}
         </div>

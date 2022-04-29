@@ -13,17 +13,18 @@ const Learning = () => {
     useContext(LearningContext)
 
   return (
-    <>
-      <LearningHeader />
-      <LearningContent isShowMenuTrack={isShowMenuTrack} />
-      {isShowMenuTrack && <LearningTrack loading={loading} />}
+    // <>
+    //   <LearningHeader />
+    //   <LearningContent isShowMenuTrack={isShowMenuTrack} />
+    //   {isShowMenuTrack && <LearningTrack loading={loading} />}
 
-      <LearningActionBar
-        handleIsShowMenuTrack={handleIsShowMenuTrack}
-        isShowMenuTrack={isShowMenuTrack}
-        loading={loading}
-      />
-    </>
+    //   <LearningActionBar
+    //     handleIsShowMenuTrack={handleIsShowMenuTrack}
+    //     isShowMenuTrack={isShowMenuTrack}
+    //     loading={loading}
+    //   />
+    // </>
+    <h1>Learning</h1>
   )
 }
 

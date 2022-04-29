@@ -2,11 +2,11 @@ import Cookies from 'js-cookie'
 import { apiURL } from '../../../context/constants'
 
 const reportComment = async (commentId) => {
-  const token = Cookies.get('token')
-  if (!token) return
+  const { accessToken } = JSON.parse(Cookies.get('userData'))
+  if (!accessToken) return
 
   const url = `${apiURL}/report/comment`
-  const data = await putReport(url, commentId, token)
+  const data = await putReport(url, commentId, accessToken)
 
   return data.success
 }

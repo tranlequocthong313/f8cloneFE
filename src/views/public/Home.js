@@ -41,6 +41,8 @@ const Home = () => {
     ;(async () => {
       const data = await getHomeData(`${apiURL}`)
 
+      console.log(data)
+
       setCourseFE(data.courseFE)
       setCourseBE(data.courseBE)
       setBlogData(data.blogs)
@@ -50,7 +52,7 @@ const Home = () => {
 
   const getHomeData = async (url) => {
     try {
-      return await fetch(url)
+      return (await fetch(url)).json()
     } catch (error) {
       console.log(error.message)
     }

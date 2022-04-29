@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import { apiURL } from '../../context/constants'
 import Header from '../main-layout/nav/Header'
-import BlogDetail from '../new-post/BlogDetail'
 import styles from './BlogSlug.module.scss'
 import SideBar from '../main-layout/sidebar/SideBar'
 import { useLocation } from 'react-router-dom'
 import Footer from '../main-layout/footer/Footer'
+import BlogDetail from '../new-post/BlogDetail'
 
 const BlogSlug = () => {
   const location = useLocation()
@@ -17,6 +17,8 @@ const BlogSlug = () => {
     ;(async () => {
       const url = `${apiURL}${location.pathname}`
       const data = await getBlogBySlug(url)
+
+      console.log(data)
 
       setBlog(data.blogSlug)
       setBlogHighlight(data.blogHighlight)

@@ -194,7 +194,7 @@ const AdminBlog = ({ blogData }) => {
                       : `fa-solid fa-trash ${styles.buttonIcon} ${styles.delete} ${styles.disabled}`
                   }
                 ></i>
-                <Link to={`/blog/${blog.slug}`}>
+                <Link to={`/blog/${blog._id}`}>
                   <i
                     title={'Truy cập bài viết'}
                     className={`fa-solid fa-arrow-up-right-from-square ${styles.buttonIcon}`}

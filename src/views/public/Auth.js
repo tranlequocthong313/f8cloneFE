@@ -6,7 +6,7 @@ import f8Logo from '../../asset/images/f8_icon.png'
 import { signInWithPopup } from 'firebase/auth'
 import { auth } from '../../firebase/config'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import AuthWithPhoneNumberForm from '../../components/auth/forms/AuthWithPhoneNumberForm'
 import AuthWithEmailAndPasswordForm from '../../components/auth/forms/AuthWithEmailAndPasswordForm'
 import { login } from '../../actions/userAction'
@@ -15,23 +15,19 @@ import { apiURL } from '../../context/constants'
 import Cookies from 'js-cookie'
 
 const Auth = () => {
-  const navigate = useNavigate()
+  const history = useHistory()
   const dispatch = useDispatch()
 
   const [isLogin, setIsLogin] = useState(true)
   const [loginOption, setLoginOption] = useState('')
   const [forgotPassword, setForgotPassword] = useState(false)
   const [inValid, setInValid] = useState(false)
-  const [isShowAuthProviderOption, setIsShowAuthProviderOption] = useState(true)
 
-  useEffect(
-    () => loginOption === '' && setIsShowAuthProviderOption(true),
-    [loginOption]
-  )
+  const isShowAuthProviderOption = () => (loginOption === '' ? true : false)
 
-  const dispatchAndNavigate = (payload) => {
+  const dispatchAndHistory = (payload) => {
     dispatch(login(payload))
-    navigate('/')
+    history.push('/')
   }
 
   const handleIsLogin = () => {
@@ -43,19 +39,8 @@ const Auth = () => {
     const res = await signInWithPopup(auth, provider)
     const user = res.user
 
-    const userData = loginIfEmailExist(user.email)
-
-    if (userData) {
-      Cookies.set('token', userData.accessToken, { expires: 365 })
-      dispatchAndNavigate({
-        ...userData.userCreated,
-        accessToken: userData.accessToken,
-      })
-      return
-    }
-
     const url = `${apiURL}/login/provider`
-    const data = await registerNewAccount(url, {
+    const data = await postLoginProvider(url, {
       fullName: user.displayName,
       email: user.email,
       photoURL: user.photoURL,
@@ -63,38 +48,21 @@ const Auth = () => {
       activated: true,
     })
 
-    Cookies.set('token', data.accessToken, { expires: 365 })
-    dispatchAndNavigate({
+    Cookies.set(
+      'userData',
+      JSON.stringify({
+        ...data.user,
+        accessToken: data.accessToken,
+      }),
+      { expires: 365 }
+    )
+    dispatchAndHistory({
       ...data.user,
       accessToken: data.accessToken,
     })
   }
 
-  const loginIfEmailExist = async (email) => {
-    const url = `${apiURL}/login/provider`
-    const data = await postCheckEmail(url, email)
-    return data
-  }
-
-  const postCheckEmail = async (url, email) => {
-    try {
-      return (
-        await fetch(url, {
-          method: 'POST',
-          body: JSON.stringify({
-            email,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-      ).json()
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
-
-  const registerNewAccount = async (url, data) => {
+  const postLoginProvider = async (url, data) => {
     try {
       return (
         await fetch(url, {
@@ -119,7 +87,7 @@ const Auth = () => {
       <div className={styles.container}>
         <div className={styles.content}>
           <div className={styles.header}>
-            {!isShowAuthProviderOption && (
+            {!isShowAuthProviderOption() && (
               <Link
                 to="/login"
                 onClick={() => {
@@ -141,7 +109,7 @@ const Auth = () => {
             {forgotPassword && <h3>Lấy lại mật khẩu</h3>}
           </div>
           <div className={styles.body}>
-            {isShowAuthProviderOption && (
+            {isShowAuthProviderOption() && (
               <SignInButtonContainer
                 switchPhoneAndEmail={switchPhoneAndEmail}
                 loginWithProvider={loginWithProvider}
@@ -149,7 +117,7 @@ const Auth = () => {
             )}
             {loginOption === 'phone' && (
               <AuthWithPhoneNumberForm
-                dispatchAndNavigate={dispatchAndNavigate}
+                dispatchAndHistory={dispatchAndHistory}
                 switchPhoneAndEmail={switchPhoneAndEmail}
                 isLogin={isLogin}
               />
@@ -162,10 +130,10 @@ const Auth = () => {
                 handleIsLogin={handleIsLogin}
                 forgotPassword={forgotPassword}
                 setForgotPassword={setForgotPassword}
-                dispatchAndNavigate={dispatchAndNavigate}
+                dispatchAndHistory={dispatchAndHistory}
               />
             )}
-            {inValid && isShowAuthProviderOption && (
+            {inValid && isShowAuthProviderOption() && (
               <p className={styles.validate}>
                 Email đã được sử dụng bởi một phương thức đăng nhập khác.
               </p>

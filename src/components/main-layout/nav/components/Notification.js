@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import styles from './Notification.module.scss'
 import '../../../../sass/_custom.scss'
 import Tippy from '../../../utils/tippy/Tippy'
@@ -7,30 +7,68 @@ import f8logo from '../../../../asset/images/f8_icon.png'
 import { apiURL } from '../../../../context/constants'
 import timeSince from '../../../utils/timeSince/timeSince'
 import Cookies from 'js-cookie'
+import { SocketContext } from '../../../../context/SocketContext'
+import { Dropdown } from 'react-bootstrap'
 
 const Notification = () => {
   const [seenAll, setSeenAll] = useState([])
   const [notifications, setNotifications] = useState([])
-  const [noSeenCount, setNoSeenCount] = useState([])
+
+  const { current } = useContext(SocketContext).socket
+
+  useEffect(() => {
+    current?.on('notificationReceived', async (data) => {
+      console.log('SOCKET: ', data)
+
+      const url = `${apiURL}/notification/new-notification`
+      const notifications = await createNotification(url, data)
+
+      console.log('SAVED', notifications)
+
+      setNotifications((prev) => [notifications, ...prev])
+      handleSetSeenAll([notifications])
+    })
+  }, [current])
+
+  const createNotification = async (url, notificationData) => {
+    try {
+      return (
+        await fetch(url, {
+          method: 'POST',
+          body: JSON.stringify(notificationData),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+      ).json()
+    } catch (error) {
+      console.error(error.message)
+    }
+  }
+
+  const handleSetSeenAll = (notificationData) =>
+    notificationData.forEach((item) =>
+      setSeenAll((prev) => [...prev, item._id])
+    )
 
   useEffect(() => {
     ;(async () => {
       try {
-        const token = Cookies.get('token')
-        if (!token) return
+        const { accessToken } = JSON.parse(Cookies.get('userData'))
+        if (!accessToken) return
 
         const res = await fetch(`${apiURL}/notification/`, {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         })
 
         const data = await res.json()
-        data.forEach((item) => {
-          !item.isSeen && setNoSeenCount((prev) => [...prev, item._id])
-          setSeenAll((prev) => [...prev, item._id])
-        })
+
+        console.log('FETCH:', data)
+
+        handleSetSeenAll(data)
         setNotifications(data)
       } catch (error) {
         console.error(error.message)
@@ -38,29 +76,31 @@ const Notification = () => {
     })()
   }, [])
 
-  const countNoSeen = (id) => {
-    const isSeenCount = noSeenCount.includes(id)
-    isSeenCount && setNoSeenCount((prev) => prev.filter((item) => item !== id))
+  const seenOrSeenAll = async (notificationId) => {
+    const { accessToken } = JSON.parse(Cookies.get('userData'))
+    if (!accessToken) return
+
+    const url = `${apiURL}/notification/seen-notification`
+    const data = await deleteNotification(url, notificationId, accessToken)
+
+    setNotifications(data)
+    handleSetSeenAll(data)
   }
 
-  const seen = async (notificationId) => {
+  const deleteNotification = async (url, notificationId, accessToken) => {
     try {
-      const token = Cookies.get('token')
-      if (!token) return
-
-      const res = await fetch(`${apiURL}/notification/seen-notification`, {
-        method: 'PUT',
-        body: JSON.stringify({
-          notificationId: notificationId ? [notificationId] : seenAll,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      const data = await res.json()
-      notificationId ? countNoSeen(notificationId) : setNoSeenCount([])
-      setNotifications(data)
+      return (
+        await fetch(url, {
+          method: 'DELETE',
+          body: JSON.stringify({
+            notificationId,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+      ).json()
     } catch (error) {
       console.error(error.message)
     }
@@ -72,9 +112,9 @@ const Notification = () => {
         <i className={`${styles.userNotification} fa-solid fa-bell`}>
           {notifications &&
             notifications.length > 0 &&
-            noSeenCount.length > 0 && (
+            notifications.length > 0 && (
               <div className={styles.notificationCount}>
-                {noSeenCount.length}
+                {notifications.length}
               </div>
             )}
         </i>
@@ -87,10 +127,13 @@ const Notification = () => {
           button={<i className="bi bi-three-dots"></i>}
           className={styles.markAll}
         >
-          <div className={styles.markAllItem} onClick={() => seen(null)}>
+          <Dropdown.Item
+            className={styles.markAllItem}
+            onClick={() => seenOrSeenAll(seenAll)}
+          >
             <i className="bi bi-check"></i>
             <span>Đánh dấu tất cả đẫ đọc</span>
-          </div>
+          </Dropdown.Item>
         </Tippy>
       </header>
       <div className={styles.body}>
@@ -104,28 +147,18 @@ const Notification = () => {
                     ? styles.item
                     : `${styles.item} ${styles.noSeen}`
                 }
+                href={`/blog/${notification.postId}`}
                 key={notification._id}
-                onClick={() => seen(notification._id)}
+                onClick={() => seenOrSeenAll([notification._id])}
               >
-                <Link to={`/blog/${notification.slug}`}>
+                <Link to={`/blog/${notification.postId}`}>
                   <div className={styles.avatar}>
-                    <img
-                      alt=""
-                      src={
-                        notification.image
-                          ? notification.image
-                          : notification.notifiedBy.photoURL
-                          ? notification.notifiedBy.photoURL
-                          : f8logo
-                      }
-                    />
+                    <img alt="" src={notification.senderImage} />
                   </div>
                   <div className={styles.content}>
                     <div>
                       <span className={styles.name}>
-                        {notification.title
-                          ? notification.title
-                          : notification.notifiedBy.fullName}
+                        {notification.senderName}
                       </span>{' '}
                       {notification.description}
                     </div>

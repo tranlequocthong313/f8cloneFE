@@ -1,24 +1,24 @@
 import { useState, useEffect } from 'react'
 import SecondaryCard from '../utils/card/SecondaryCard'
 import { Image } from 'react-bootstrap'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import styles from './NewBlogs.module.scss'
 import { apiURL } from '../../context/constants'
 import timeSince from '../utils/timeSince/timeSince'
 import Cookies from 'js-cookie'
 
 const NewBlogs = ({ blogs }) => {
-  const navigate = useNavigate()
+  const history = useHistory()
 
   const [bookmarkData, setBookmarkData] = useState(null)
 
   useEffect(() => {
     ;(async () => {
-      const token = Cookies.get('token')
-      if (!token) return
+      const { accessToken } = JSON.parse(Cookies.get('userData'))
+      if (!accessToken) return
 
       const url = `${apiURL}/me/bookmark`
-      const data = await getBookmark(url, token)
+      const data = await getBookmark(url, accessToken)
       if (data.status === 500) return
 
       setBookmarkData(data.bookmark)
@@ -41,11 +41,11 @@ const NewBlogs = ({ blogs }) => {
   }
 
   const bookmark = async (blogId) => {
-    const token = Cookies.get('token')
-    if (!token) return navigate('/login')
+    const { accessToken } = JSON.parse(Cookies.get('userData'))
+    if (!accessToken) return history.push('/login')
 
     const url = `${apiURL}/me/bookmark`
-    const data = await patchBookmark(url, blogId, token)
+    const data = await patchBookmark(url, blogId, accessToken)
 
     setBookmarkData(data.bookmark)
   }
@@ -73,10 +73,10 @@ const NewBlogs = ({ blogs }) => {
         <SecondaryCard key={blog._id}>
           <div className={styles.header}>
             <div className={styles.author}>
-              <Link to={`/blog/${blog.slug}`}>
+              <Link to={`/blog/${blog._id}`}>
                 <Image src={blog.postedBy.photoURL} />
               </Link>
-              <Link to={`/blog/${blog.slug}`}>
+              <Link to={`/blog/${blog._id}`}>
                 <span>{blog.postedBy.fullName}</span>
               </Link>
             </div>
@@ -93,7 +93,7 @@ const NewBlogs = ({ blogs }) => {
           </div>
           <div className={styles.body}>
             <div className={styles.content}>
-              <Link to={`/blog/${blog.slug}`}>
+              <Link to={`/blog/${blog._id}`}>
                 <h3>{blog.titleDisplay}</h3>
                 <p>{blog.description ? blog.description : blog.content}</p>
               </Link>
@@ -105,7 +105,7 @@ const NewBlogs = ({ blogs }) => {
             </div>
             {blog.image && (
               <div className={styles.image}>
-                <Link to={`/blog/${blog.slug}`}>
+                <Link to={`/blog/${blog._id}`}>
                   <Image src={blog.image} />
                 </Link>
               </div>

@@ -8,7 +8,7 @@ import Header from '../../components/main-layout/nav/Header'
 import '../../sass/_markdownEditor.scss'
 import ContentEditable from '../../components/utils/content-editable/ContentEditable'
 import Modal from '../../components/new-post/Modal'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useHistory } from 'react-router-dom'
 import { apiURL } from '../../context/constants'
 import { PostContext } from '../../context/PostContext'
 import Cookies from 'js-cookie'
@@ -23,7 +23,7 @@ const EditPost = () => {
   const titleRef = useRef(null)
 
   const location = useLocation()
-  const navigate = useNavigate()
+  const history = useHistory()
   const { showModal, setIsValid } = useContext(PostContext)
 
   const [title, setTitle] = useState('')
@@ -81,14 +81,14 @@ const EditPost = () => {
     })
 
   const submitEditPost = async () => {
-    const token = Cookies.get('token')
-    if (!token) return
+    const { accessToken } = JSON.parse(Cookies.get('userData'))
+    if (!accessToken) return
 
     const url = `${apiURL}/blog${location.pathname}`
-    const data = await putEditPost(url, token)
+    const data = await putEditPost(url, accessToken)
 
     if (data.success) {
-      navigate(-1)
+      history.push(-1)
       setEditStatusTrue()
     } else {
       setEditStatusFalse()

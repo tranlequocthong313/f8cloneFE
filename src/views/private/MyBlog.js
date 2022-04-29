@@ -26,11 +26,11 @@ const MyBlog = () => {
 
   useEffect(() => {
     ;(async () => {
-      const token = Cookies.get('token')
-      if (!token) return
+      const { accessToken } = JSON.parse(Cookies.get('userData'))
+      if (!accessToken) return
 
       const url = `${apiURL}/help/my-post`
-      const data = await getMyPost(url, token)
+      const data = await getMyPost(url, accessToken)
 
       setMyBlog(data)
     })()
@@ -52,11 +52,11 @@ const MyBlog = () => {
   }
 
   const deleteBlogById = async (id) => {
-    const token = Cookies.get('token')
-    if (!token) return
+    const { accessToken } = JSON.parse(Cookies.get('userData'))
+    if (!accessToken) return
 
     const url = `${apiURL}/blog/delete-blog/${id}`
-    const data = await deleteBlog(url, token)
+    const data = await deleteBlog(url, accessToken)
 
     setMyBlog(data)
   }
@@ -143,7 +143,7 @@ const MyBlog = () => {
                               </Tippy>
                             </div>
                             <div className={styles.author}>
-                              <a href={`/blog/${blog.slug}`}>
+                              <a href={`/blog/${blog._id}`}>
                                 Chỉnh sửa {timeSince(blog.createdAt)}
                               </a>
                               <span className={styles.dot}>.</span>

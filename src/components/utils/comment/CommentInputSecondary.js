@@ -1,24 +1,18 @@
-import { useRef, useEffect } from 'react'
+import { useRef } from 'react'
 import styles from './CommentInputSecondary.module.scss'
 import ContentEditable from '../content-editable/ContentEditable'
 
 const CommentInputSecondary = ({
   userPhotoURL,
-  showCode,
-  showInput,
+  setIsCode,
+  cancelInput,
   buttonText,
-  currentComment,
-  editComment,
+  submitComment,
   onInput,
-  editCommentText,
-  setShowCodeEditReply,
+  commentText,
+  isCode,
 }) => {
   const contentEditableRef = useRef()
-
-  useEffect(() => {
-    const isEmptyEditCommentText = editCommentText.length === 0
-    if (isEmptyEditCommentText) contentEditableRef.current.innerText = ''
-  }, [editCommentText])
 
   return (
     <div className={styles.replyComment}>
@@ -29,14 +23,11 @@ const CommentInputSecondary = ({
           onInput={onInput}
           maxLength={'3000'}
           className={styles.commentInput}
-          showCode={showCode}
+          showCode={isCode}
           ref={contentEditableRef}
-        >
-          <span className={styles.editComment}>{currentComment}</span>
-          <span>&nbsp;</span>
-        </ContentEditable>
-        {!showCode && (
-          <div className={styles.commentCode} onClick={setShowCodeEditReply}>
+        />
+        {!isCode && (
+          <div className={styles.commentCode} onClick={() => setIsCode(true)}>
             <i className="fa-solid fa-code"></i>
             <span>Chèn code</span>
           </div>
@@ -46,19 +37,19 @@ const CommentInputSecondary = ({
           <button
             className={styles.cancel}
             onClick={() => {
-              showInput()
-              setShowCodeEditReply()
+              cancelInput()
+              setIsCode(false)
             }}
           >
             Hủy
           </button>
           <button
             className={
-              editCommentText && editCommentText.length >= 1
+              commentText && commentText.length >= 1
                 ? `${styles.submit} ${styles.active}`
                 : styles.submit
             }
-            onClick={editComment}
+            onClick={submitComment}
           >
             {buttonText}
           </button>

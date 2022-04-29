@@ -1,13 +1,11 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useContext } from 'react'
 import styles from './CommentInput.module.scss'
-import noPhotoURL from '../../../asset/images/nobody_m.256x256.jpg'
 import ContentEditable from '../content-editable/ContentEditable'
 import Cookies from 'js-cookie'
-import { useNavigate } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { apiURL } from '../../../context/constants'
-import io from 'socket.io-client'
-
-const socket = io.connect(apiURL)
+import { SocketContext } from '../../../context/SocketContext'
+import { useSelector } from 'react-redux'
 
 const CommentInput = ({
   showCode,
@@ -15,10 +13,15 @@ const CommentInput = ({
   setShowSubmit,
   setShowCode,
   userPhotoURL,
-  blogId,
+  blog,
+  setCommentData,
 }) => {
-  const navigate = useNavigate()
+  const history = useHistory()
   const contentEditableRef = useRef()
+
+  const user = useSelector((state) => state.user)
+
+  const { current } = useContext(SocketContext).socket
 
   const [commentInput, setCommentInput] = useState('')
 
@@ -28,29 +31,40 @@ const CommentInput = ({
   }, [commentInput])
 
   const submitComment = async () => {
-    const token = Cookies.get('token')
-    if (!token) return navigate('/login')
+    const { accessToken } = JSON.parse(Cookies.get('userData'))
+    if (!accessToken) return history.push('/login')
 
-    const url = `${apiURL}/blog/comment`
-    const data = await putComment(url, token)
+    const url = `${apiURL}/comment`
+    const data = await postComment(url, accessToken)
 
-    if (data.comment) {
-      const comment = {
-        ...data.comments[0],
-      }
-      socket.emit('comment', comment)
+    setCommentData(data.comment)
+
+    const isCommentByBlogAuthor = data.comment.postedBy === blog.postedBy._id
+    if (current && !isCommentByBlogAuthor) {
+      current.emit('comment', {
+        sender: user,
+        postId: blog._id,
+        receiver: blog,
+        receiverId: blog.postedBy._id,
+        commentContent: data.comment,
+        description: 'đã trả lời vào bình luận của bạn',
+        notificationType: 'comment',
+        createdAt: new Date(),
+      })
     }
   }
 
-  const putComment = async (url, token) => {
+  const postComment = async (url, token) => {
     try {
       return (
         await fetch(url, {
-          method: 'PUT',
+          method: 'POST',
           body: JSON.stringify({
-            blogId,
+            post: blog._id,
             content: commentInput,
-            isCode: showCode ? true : false,
+            isCode: showCode,
+            commentType: 'blogs',
+            postedBy: user.userId,
           }),
           headers: {
             'Content-Type': 'application/json',

@@ -5,27 +5,6 @@
   margin-top: 16px;
   position: relative;
 
-  &.replyCommentList {
-    margin-top: 8px;
-    padding-top: 8px;
-    border-left: 1px solid $primary-color;
-    margin: 0 0 0 55px;
-    padding: 10px 0 0 16px;
-    width: calc(100% - 160px);
-
-    .avatar {
-      flex-shrink: 0;
-      width: 32px;
-
-      img {
-        border-radius: 50%;
-        height: 32px;
-        text-align: center;
-        width: 100%;
-      }
-    }
-  }
-
   .avatar {
     flex-shrink: 0;
     width: 36px;
@@ -87,14 +66,11 @@
         display: block;
         font-family: Fira Code, monospace;
         font-size: 14px;
-        // hyphens: none;
         line-height: 1.8;
         overflow-x: auto;
         padding: 6px 8px;
         tab-size: 4;
         white-space: pre;
-        // word-break: normal;
-        // word-spacing: normal;
         margin: 7px 0;
         color: #a6e22e;
         word-break: break-all !important;
@@ -148,6 +124,52 @@
         i {
           margin-left: 8px;
           color: $text-color;
+        }
+      }
+
+      .reactCounterWrapper {
+        align-items: center;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 1px 3px 0 #00000033;
+        display: flex;
+        padding: 2px 4px 2px 2px;
+        position: absolute;
+        bottom: -10px;
+        right: 0;
+        z-index: 99;
+
+        .reactCounterContainer {
+          display: flex;
+          cursor: pointer;
+          color: rgb(54, 88, 153);
+          font-family: 'San Francisco', -apple-system, BlinkMacSystemFont,
+            '.SFNSText-Regular', sans-serif;
+          font-size: 12px;
+          font-weight: 500;
+        }
+
+        .icon {
+          width: 18px;
+          height: 18px;
+          background-size: 100% 100%;
+          border-radius: 8px;
+          box-shadow: #fff 0px 0px 0px 2px;
+          position: relative;
+          z-index: 3;
+        }
+
+        .count {
+          color: #65676b;
+          font-size: 13px;
+          font-weight: 500;
+          margin: 0 3px;
+
+          img {
+            margin-left: 3px;
+            width: 13px;
+            height: 13px;
+          }
         }
       }
     }

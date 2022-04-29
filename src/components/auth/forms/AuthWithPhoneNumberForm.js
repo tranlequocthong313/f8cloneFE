@@ -9,7 +9,7 @@ import Cookies from 'js-cookie'
 
 const LoginWithPhoneNumberForm = ({
   switchPhoneAndEmail,
-  dispatchAndNavigate,
+  dispatchAndHistory,
   isLogin,
 }) => {
   const COUNTRY_NAME_DEFAULT = 'vn'
@@ -80,9 +80,16 @@ const LoginWithPhoneNumberForm = ({
     }
   }
 
-  const setCookieAndDispatchAfterFetch = (data) => {
-    Cookies.set('token', data.accessToken, { expires: 365 })
-    dispatchAndNavigate({
+  const setCookieAndDispatchAfterLogin = (data) => {
+    Cookies.set(
+      'userData',
+      JSON.stringify({
+        ...data.user,
+        accessToken: data.accessToken,
+      }),
+      { expires: 365 }
+    )
+    dispatchAndHistory({
       ...data.user,
       accessToken: data.accessToken,
     })
@@ -99,14 +106,14 @@ const LoginWithPhoneNumberForm = ({
         const data = await postLoginProvider(url)
         if (!data.success) return
 
-        setCookieAndDispatchAfterFetch(data)
+        setCookieAndDispatchAfterLogin(data)
       } else if (user && !isLogin) {
         const userDefaultAvatar =
           'https://firebasestorage.googleapis.com/v0/b/f8clone-3e404.appspot.com/o/uploads%2Fnobody_m.256x256.jpg?alt=media&token=8e617e21-795f-45ce-8340-955a5290e66f'
         const url = `${apiURL}/register`
         const data = await postRegister(url, userDefaultAvatar)
 
-        setCookieAndDispatchAfterFetch(data)
+        setCookieAndDispatchAfterLogin(data)
       }
     } catch (error) {
       if (error.code === 'auth/invalid-verification-code')
@@ -217,7 +224,7 @@ const LoginWithPhoneNumberForm = ({
   }, [fullName, isLogin, phoneNumber, validateFullName, validatePhoneNumber])
 
   useEffect(() => {
-    const isEmptyOTPInput = verifyOTP.input.length === 0
+    const isEmptyOTPInput = verifyOTP.length === 0
     isEmptyOTPInput && setInvalidOTP(null)
   }, [verifyOTP])
 

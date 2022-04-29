@@ -45,7 +45,7 @@ const userReducer = (state = initialState, action) => {
         photoURL: null,
         displayName: null,
         email: null,
-        isLoggedIn: false,
+        isLoggedIn: null,
       }
 
     case 'SET_LOADING':

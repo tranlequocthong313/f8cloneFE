@@ -80,15 +80,11 @@
           justify-content: center;
           margin-left: 12px;
 
-          a {
-            text-decoration: none;
-
-            .name {
-              color: #292929;
-              font-size: 16px;
-              font-weight: 600;
-              margin: 0;
-            }
+          .name {
+            color: #292929;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
           }
         }
       }
@@ -202,13 +198,14 @@
   right: 0;
   top: 40px;
   width: 230px;
+  z-index: 1;
 
   .menuItem {
     color: #444;
     cursor: pointer;
     display: block;
     font-size: 14px;
-    padding: 12px 20px;
+    padding: 4px 20px;
     transition: 0.3s;
     border: none;
     outline: none;

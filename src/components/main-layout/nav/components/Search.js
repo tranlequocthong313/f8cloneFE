@@ -117,7 +117,7 @@ const Search = () => {
                   {result.blogs.map((blog) => (
                     <Link
                       className={styles.searchItem}
-                      to={`/blog/${blog.slug}`}
+                      to={`/blog/${blog._id}`}
                       key={blog._id}
                     >
                       <img

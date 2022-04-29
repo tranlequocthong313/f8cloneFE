@@ -8,7 +8,7 @@ import f8Logo from '../../../asset/images/f8_icon.png'
 const BlogItem = ({ blog }) => {
   return (
     <MainCard>
-      <Link to={`blog/${blog.slug}`}>
+      <Link to={`blog/${blog._id}`}>
         <section
           title={blog.title}
           style={{
@@ -21,14 +21,14 @@ const BlogItem = ({ blog }) => {
         </section>
       </Link>
       <h4 className={styles.title}>
-        <Link to={`blog/${blog.slug}`}>{blog.titleDisplay}</Link>
+        <Link to={`blog/${blog._id}`}>{blog.titleDisplay}</Link>
       </h4>
       <div className={styles.author}>
-        <Link to={`blog/${blog.slug}`}>
+        <Link to={`blog/${blog._id}`}>
           <Image src={blog.postedBy.photoURL} />
         </Link>
         <Link to={`/${blog.postedBy.slug}`}>{blog.postedBy.fullName}</Link>
-        <Link to={`blog/${blog.slug}`}>
+        <Link to={`blog/${blog._id}`}>
           <span className={styles.dot}>.</span>
           <span>{blog.readingTime} phút đọc</span>
         </Link>

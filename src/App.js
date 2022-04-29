@@ -1,34 +1,31 @@
-import Blog from './views/public/Blog'
-import Courses from './views/public/Courses'
-import LearningPath from './views/public/LearningPath'
-import Home from './views/public/Home'
-import Contact from './views/public/Contact'
-import Search from './views/public/Search'
-import Privacy from './views/public/Privacy'
-import About from './views/public/About'
-import Careers from './views/public/Careers'
-import Terms from './views/public/Terms'
-import { Routes, Route } from 'react-router-dom'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import CourseSlug from './components/course/CourseSlug'
-import { useLocation } from 'react-router-dom'
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import { setAuth } from './actions/userAction'
-import { apiURL } from './context/constants'
-import BlogSlug from './components/blog/BlogSlug'
+import NewPost from './views/private/NewPost'
 import Auth from './views/public/Auth'
+import Home from './views/public/Home'
 import NotFound from './views/public/NotFound'
 import Learning from './views/private/Learning'
 import MyCourse from './views/private/MyCourse'
-import NewPost from './views/private/NewPost'
-import Settings from './views/private/Settings'
+import EditPost from './views/private/EditPost'
 import BookmarkPost from './views/private/BookmarkPost'
+import Settings from './views/private/Settings'
 import MyBlog from './views/private/MyBlog'
 import Admin from './views/admin/Admin'
-import EditPost from './views/private/EditPost'
+import Courses from './views/public/Courses'
+import CourseSlug from './components/course/CourseSlug'
+import BlogSlug from './components/blog/BlogSlug'
+import LearningPath from './views/public/LearningPath'
+import Blog from './views/public/Blog'
 import BlogTag from './views/public/BlogTag'
-import Profile from './views/public/Profile'
+import Search from './views/public/Search'
+import Contact from './views/public/Contact'
+import Privacy from './views/public/Privacy'
+import Terms from './views/public/Terms'
+import Careers from './views/public/Careers'
+import About from './views/public/About'
 
 function App() {
   const dispatch = useDispatch()
@@ -39,35 +36,12 @@ function App() {
 
   useEffect(() => {
     ;(async () => {
-      const token = Cookies.get('token')
-      if (!token) return
+      const userData = Cookies.get('userData')
+      if (!userData) return
 
-      const url = `${apiURL}/api/auth`
-      const data = await getAuth(url)
-
-      dispatch(
-        setAuth({
-          ...data.user,
-          accessToken: token,
-        })
-      )
+      dispatch(setAuth(JSON.parse(userData)))
     })()
   }, [dispatch])
-
-  const getAuth = async (url, token) => {
-    try {
-      return (
-        await fetch(url, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        })
-      ).json()
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
 
   useEffect(() => {
     console.log(
@@ -80,80 +54,266 @@ function App() {
     )
   }, [])
 
-  return (
-    <Routes>
-      <Route
-        path="/login"
-        element={!user.isLoggedIn ? <Auth /> : <NotFound />}
-      />
-      <Route
-        path="/register"
-        element={!user.isLoggedIn ? <Auth /> : <NotFound />}
-      />
-      <Route
-        path="/learning/:slug"
-        element={user.isLoggedIn ? <Learning /> : <Auth />}
-      />
-      <Route
-        path="/my-course"
-        element={user.isLoggedIn ? <MyCourse /> : <Auth />}
-      />
-      <Route
-        path="/new-post"
-        element={user.isLoggedIn ? <NewPost /> : <Auth />}
-      />
-      <Route
-        path="/new-post/:id"
-        element={user.isLoggedIn ? <NewPost /> : <Auth />}
-      />
-      <Route
-        path="/edit-post/:slug"
-        element={user.isLoggedIn ? <EditPost /> : <Auth />}
-      />
-      <Route
-        path="/settings"
-        element={user.isLoggedIn ? <Settings /> : <Auth />}
-      />
-      <Route
-        path="/bookmark-post"
-        element={user.isLoggedIn ? <BookmarkPost /> : <Auth />}
-      />
-      <Route
-        path="/my-post/published"
-        element={user.isLoggedIn ? <MyBlog /> : <Auth />}
-      />
-      <Route
-        path="/admin/course"
-        element={user.isLoggedIn && user.isAdmin ? <Admin /> : <NotFound />}
-      />
-      <Route
-        path="/admin/blog"
-        element={user.isLoggedIn && user.isAdmin ? <Admin /> : <NotFound />}
-      />
-      <Route
-        path="/admin/video"
-        element={user.isLoggedIn && user.isAdmin ? <Admin /> : <NotFound />}
-      />
-      <Route path="/courses" element={<Courses />} />
-      <Route path="/courses/:slug" element={<CourseSlug />} />
-      <Route path="/blog/:slug" element={<BlogSlug />} />
-      <Route path="/learning-path" element={<LearningPath />} />
-      <Route path="/blog" element={<Blog />} />
-      <Route path="/blog/tag/:tag" element={<BlogTag />} />
-      <Route path="/search" element={<Search />} />
-      <Route path="/search/course" element={<Search />} />
-      <Route path="/search/blog" element={<Search />} />
-      <Route path="/search/video" element={<Search />} />
-      <Route path="/contact-us" element={<Contact />} />
-      <Route path="/privacy" element={<Privacy />} />
-      <Route path="/terms" element={<Terms />} />
-      <Route path="/careers" element={<Careers />} />
-      <Route path="/about-us" element={<About />} />
-      <Route path="/:userSlug" element={<Profile />} />
-      <Route path="*" element={<NotFound />} />
-      <Route path="/" element={<Home />} />
-    </Routes>
-  )
+  let routes
+  if (user.isLoggedIn && user.isAdmin) {
+    routes = (
+      <>
+        <Switch>
+          <Route path="/admin/course" exact>
+            <Admin />
+          </Route>
+          <Route path="/admin/blog" exact>
+            <Admin />
+          </Route>
+          <Route path="/admin/video" exact>
+            <Admin />
+          </Route>
+          <Route path="/new-post" exact>
+            <NewPost />
+          </Route>
+          <Route path="/login" exact>
+            <NotFound />
+          </Route>
+          <Route path="/register" exact>
+            <NotFound />
+          </Route>
+          <Route path="/learning/:slug" exact>
+            <Learning />
+          </Route>
+          <Route path="/my-course" exact>
+            <MyCourse />
+          </Route>
+          <Route path="/new-post" exact>
+            <NewPost />
+          </Route>
+          <Route path="/new-post/:id" exact>
+            <NewPost />
+          </Route>
+          <Route path="/edit-post/:id">
+            <EditPost />
+          </Route>
+          <Route path="/settings" exact>
+            <Settings />
+          </Route>
+          <Route path="/bookmark-post" exact>
+            <BookmarkPost />
+          </Route>
+          <Route path="/my-post/published" exact>
+            <MyBlog />
+          </Route>
+          <Route path="/courses" exact>
+            <Courses />
+          </Route>
+          <Route path="/courses/:slug" exact>
+            <CourseSlug />
+          </Route>
+          <Route path="/blog/:id" exact>
+            <BlogSlug />
+          </Route>
+          <Route path="/learning-path" exact>
+            <LearningPath />
+          </Route>
+          <Route path="/blog">
+            <Blog />
+          </Route>
+          <Route path="/blog/tag/:tag" exact>
+            <BlogTag />
+          </Route>
+          <Route path="/search">
+            <Search />
+          </Route>
+          <Route path="/Search/course" exact>
+            <Search />
+          </Route>
+          <Route path="/search/blog" exact>
+            <Search />
+          </Route>
+          <Route path="/search/video" exact>
+            <Search />
+          </Route>
+          <Route path="/contact-us" exact>
+            <Contact />
+          </Route>
+          <Route path="/privacy" exact>
+            <Privacy />
+          </Route>
+          <Route path="/terms" exact>
+            <Terms />
+          </Route>
+          <Route path="/careers" exact>
+            <Careers />
+          </Route>
+          <Route path="/about-us" exact>
+            <About />
+          </Route>
+          <Route path="/" exact>
+            <Home />
+          </Route>
+          <Route path="*" exact>
+            <NotFound />
+          </Route>
+        </Switch>
+      </>
+    )
+  } else if (user.isLoggedIn) {
+    routes = (
+      <>
+        <Switch>
+          <Route path="/new-post" exact>
+            <NewPost />
+          </Route>
+          <Route path="/login" exact>
+            <NotFound />
+          </Route>
+          <Route path="/register" exact>
+            <NotFound />
+          </Route>
+          <Route path="/learning/:slug" exact>
+            <Learning />
+          </Route>
+          <Route path="/my-course" exact>
+            <MyCourse />
+          </Route>
+          <Route path="/new-post" exact>
+            <NewPost />
+          </Route>
+          <Route path="/new-post/:id" exact>
+            <NewPost />
+          </Route>
+          <Route path="/edit-post/:id">
+            <EditPost />
+          </Route>
+          <Route path="/settings" exact>
+            <Settings />
+          </Route>
+          <Route path="/bookmark-post" exact>
+            <BookmarkPost />
+          </Route>
+          <Route path="/my-post/published" exact>
+            <MyBlog />
+          </Route>
+          <Route path="/courses" exact>
+            <Courses />
+          </Route>
+          <Route path="/courses/:slug" exact>
+            <CourseSlug />
+          </Route>
+          <Route path="/blog/:id" exact>
+            <BlogSlug />
+          </Route>
+          <Route path="/learning-path" exact>
+            <LearningPath />
+          </Route>
+          <Route path="/blog">
+            <Blog />
+          </Route>
+          <Route path="/blog/tag/:tag" exact>
+            <BlogTag />
+          </Route>
+          <Route path="/search">
+            <Search />
+          </Route>
+          <Route path="/Search/course" exact>
+            <Search />
+          </Route>
+          <Route path="/search/blog" exact>
+            <Search />
+          </Route>
+          <Route path="/search/video" exact>
+            <Search />
+          </Route>
+          <Route path="/contact-us" exact>
+            <Contact />
+          </Route>
+          <Route path="/privacy" exact>
+            <Privacy />
+          </Route>
+          <Route path="/terms" exact>
+            <Terms />
+          </Route>
+          <Route path="/careers" exact>
+            <Careers />
+          </Route>
+          <Route path="/about-us" exact>
+            <About />
+          </Route>
+          <Route path="/" exact>
+            <Home />
+          </Route>
+          <Route path="*" exact>
+            <NotFound />
+          </Route>
+        </Switch>
+      </>
+    )
+  } else {
+    routes = (
+      <>
+        <Switch>
+          <Route path="/login" exact>
+            <Auth />
+          </Route>
+          <Route path="/register" exact>
+            <Auth />
+          </Route>
+          <Route path="/courses" exact>
+            <Courses />
+          </Route>
+          <Route path="/courses/:slug" exact>
+            <CourseSlug />
+          </Route>
+          <Route path="/blog/:id" exact>
+            <BlogSlug />
+          </Route>
+          <Route path="/learning-path" exact>
+            <LearningPath />
+          </Route>
+          <Route path="/blog">
+            <Blog />
+          </Route>
+          <Route path="/blog/tag/:tag" exact>
+            <BlogTag />
+          </Route>
+          <Route path="/search">
+            <Search />
+          </Route>
+          <Route path="/search/course" exact>
+            <Search />
+          </Route>
+          <Route path="/search/blog" exact>
+            <Search />
+          </Route>
+          <Route path="/search/video" exact>
+            <Search />
+          </Route>
+          <Route path="/contact-us" exact>
+            <Contact />
+          </Route>
+          <Route path="/privacy" exact>
+            <Privacy />
+          </Route>
+          <Route path="/terms" exact>
+            <Terms />
+          </Route>
+          <Route path="/careers" exact>
+            <Careers />
+          </Route>
+          <Route path="/about-us" exact>
+            <About />
+          </Route>
+          <Route path="/" exact>
+            <Home />
+          </Route>
+          <Route path="*" exact>
+            <NotFound />
+          </Route>
+          <Redirect to="/login" />
+        </Switch>
+      </>
+    )
+  }
+
+  return routes
 }
 
 export default App

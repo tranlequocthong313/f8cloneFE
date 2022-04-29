@@ -58,11 +58,11 @@ const Settings = () => {
   }
 
   const changeName = async () => {
-    const token = Cookies.get('token')
-    if (!token) return
+    const { accessToken } = JSON.parse(Cookies.get('userData'))
+    if (!accessToken) return
 
     const url = `${apiURL}/help/setting/fullName`
-    const data = await patchFullName(url, token)
+    const data = await patchFullName(url, accessToken)
 
     setFullName(data.fullName)
     dispatch(settings({ fullName: data.fullName, photoURL: user.photoURL }))
@@ -86,8 +86,8 @@ const Settings = () => {
   }
 
   const changeAvatar = () => {
-    const token = Cookies.get('token')
-    if (!token) return
+    const { accessToken } = JSON.parse(Cookies.get('userData'))
+    if (!accessToken) return
 
     if (image.avatar) {
       const storageRef = ref(storage, `uploads/${image.avatar.name}`)
@@ -100,7 +100,7 @@ const Settings = () => {
         async () => {
           const photoURL = await getDownloadURL(uploadTask.snapshot.ref)
           const url = `${apiURL}/help/setting/avatar`
-          const data = await patchAvatar(url, photoURL, token)
+          const data = await patchAvatar(url, photoURL, accessToken)
 
           setImage(data.photoURL)
           dispatch(
@@ -129,11 +129,11 @@ const Settings = () => {
   }
 
   const bioChange = async () => {
-    const token = Cookies.get('token')
-    if (!token) return
+    const { accessToken } = JSON.parse(Cookies.get('userData'))
+    if (!accessToken) return
 
     const url = `${apiURL}/help/setting/bio`
-    const data = await patchBio(url, token)
+    const data = await patchBio(url, accessToken)
 
     setBio(data.bio)
     dispatch(
@@ -163,11 +163,11 @@ const Settings = () => {
   }
 
   const socialChange = async (socialName) => {
-    const token = Cookies.get('token')
-    if (!token) return
+    const { accessToken } = JSON.parse(Cookies.get('userData'))
+    if (!accessToken) return
 
     const url = `${apiURL}/help/setting/social`
-    const data = await patchSocial(url, socialName, token)
+    const data = await patchSocial(url, socialName, accessToken)
 
     setSocial((prev) => {
       return {

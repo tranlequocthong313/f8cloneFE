@@ -176,7 +176,7 @@ const Search = () => {
                                   className={`${styles.contentContainer} ${styles.blogContent}`}
                                   key={blog._id}
                                 >
-                                  <Link to={`/blog/${blog.slug}`}>
+                                  <Link to={`/blog/${blog._id}`}>
                                     <div
                                       className={styles.image}
                                       style={{
@@ -188,7 +188,7 @@ const Search = () => {
                                   </Link>
                                   <div className={styles.info}>
                                     <h3>
-                                      <Link to={`/blog/${blog.slug}`}>
+                                      <Link to={`/blog/${blog._id}`}>
                                         {blog.titleDisplay}
                                       </Link>
                                     </h3>

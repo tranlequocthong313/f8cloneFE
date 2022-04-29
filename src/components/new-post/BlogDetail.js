@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
-import { Row, Col, Image } from 'react-bootstrap'
+import { Row, Col, Image, Dropdown } from 'react-bootstrap'
 import styles from './BlogDetail.module.scss'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import BlogSameAuthor from './BlogSameAuthor'
 import BlogHighlights from './BlogHighlights'
 import timeSince from '../utils/timeSince/timeSince'
@@ -13,48 +13,23 @@ import { useSelector } from 'react-redux'
 import Reaction from './Reaction'
 import Tippy from '../utils/tippy/Tippy'
 import MainButton from '../utils/button/MainButton'
-import io from 'socket.io-client'
 import remarkGfm from 'remark-gfm'
-
-const socket = io.connect(apiURL)
 
 const BlogDetail = ({ blog, blogHighlight }) => {
   const user = useSelector((state) => state.user)
-  const navigate = useNavigate()
+  const history = useHistory()
 
   const [likeCount, setLikeCount] = useState(blog.likes)
   const [isLike, setIsLike] = useState(blog.likes.includes(user.userId))
-  const [isShowComment, setIsShowComment] = useState(false)
-  const [commentData, setCommentData] = useState(blog.comments)
   const [bookmarkData, setBookmarkData] = useState(null)
-  const [isShowVerifyBar, setIsShowVerifyBar] = useState(false)
-  const [isVerified, setIsVerified] = useState(false)
-
-  useEffect(() => {
-    socket.on('comment', (comment) => {
-      setCommentData((prev) => {
-        return [comment, ...prev]
-      })
-    })
-  }, [])
-
-  useEffect(
-    () => (document.body.style.overflow = isShowComment ? 'hidden' : 'overlay'),
-    [isShowComment]
-  )
-
-  useEffect(
-    () => setIsLike(likeCount.includes(user.userId)),
-    [user.userId, likeCount]
-  )
 
   useEffect(() => {
     ;(async () => {
-      const token = Cookies.get('token')
-      if (!token) return
+      const { accessToken } = JSON.parse(Cookies.get('userData'))
+      if (!accessToken) return
 
       const url = `${apiURL}/me/bookmark`
-      const data = await getBookmark(url, token)
+      const data = await getBookmark(url, accessToken)
 
       setBookmarkData(data.bookmark)
     })()
@@ -76,11 +51,11 @@ const BlogDetail = ({ blog, blogHighlight }) => {
   }
 
   const bookmark = async (blogId) => {
-    const token = Cookies.get('token')
-    if (!token) return navigate('/login')
+    const { accessToken } = JSON.parse(Cookies.get('userData'))
+    if (!accessToken) return history.push('/login')
 
     const url = `${apiURL}/me/bookmark`
-    const data = await patchBookmark(url, blogId, token)
+    const data = await patchBookmark(url, blogId, accessToken)
     if (data.status === 500) return
 
     setBookmarkData(data.bookmark)
@@ -104,16 +79,21 @@ const BlogDetail = ({ blog, blogHighlight }) => {
   }
 
   const handleLike = async () => {
-    const token = Cookies.get('token')
-    if (!token) return navigate('/login')
+    const { accessToken } = JSON.parse(Cookies.get('userData'))
+    if (!accessToken) return history.push('/login')
 
-    const url = `${apiURL}/blog/like`
-    const data = await patchLike(url, token)
-    if (!data.success) return
+    const url = isLike
+      ? `${apiURL}/blog/unlike/${blog._id}`
+      : `${apiURL}/blog/like/${blog._id}`
+    const data = await patchLike(url, accessToken)
 
-    const hasLike = data.likes && data.likes.length !== 0
-    hasLike ? setLikeCount(data.likes) : setLikeCount([])
-    addNotification(data)
+    if (data.likes && data.likes.length > 0) {
+      setLikeCount(data.likes)
+      setIsLike(data.likes.includes(user.userId))
+    } else {
+      setIsLike(false)
+      setLikeCount([])
+    }
   }
 
   const patchLike = async (url, token) => {
@@ -121,7 +101,6 @@ const BlogDetail = ({ blog, blogHighlight }) => {
       return (
         await fetch(url, {
           method: 'PATCH',
-          body: JSON.stringify({ blogId: blog._id }),
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
@@ -133,40 +112,21 @@ const BlogDetail = ({ blog, blogHighlight }) => {
     }
   }
 
-  const addNotification = async (blog) => {
-    const url = `${apiURL}/notification/new-notification`
-    await postNotification(url, blog)
-  }
-
-  const postNotification = async (url, blog) => {
-    try {
-      return await fetch(url, {
-        method: 'POST',
-        body: JSON.stringify({
-          description: 'đã yêu thích bài viết của bạn.',
-          slug: blog.slug,
-          notifiedBy: user.userId,
-          sendFor: user.userId === blog.postedBy ? null : blog.postedBy,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
-
-  const verifyBlog = async (blogId) => {
+  const notAllowBlog = async () => {
     const url = `${apiURL}/admin/blog/verify`
-    patchVerifyBlog(url, blogId)
+    patchVerifyBlog(url, false)
   }
 
-  const patchVerifyBlog = async (url, blogId) => {
+  const allowBlog = async () => {
+    const url = `${apiURL}/admin/blog/verify`
+    patchVerifyBlog(url, true)
+  }
+
+  const patchVerifyBlog = async (url, isVerified) => {
     try {
       return await fetch(url, {
         method: 'PATCH',
-        body: JSON.stringify({ isVerified, blogId }),
+        body: JSON.stringify({ isVerified, blogId: blog._id }),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -174,32 +134,25 @@ const BlogDetail = ({ blog, blogHighlight }) => {
     } catch (error) {
       console.log(error.message)
     } finally {
-      setIsShowVerifyBar(false)
-      navigate('/admin/blog')
+      history.push('/admin/blog')
     }
   }
 
   return (
     <Row className={styles.wrapper}>
-      {!blog.isVerified && user.isAdmin && !isShowVerifyBar && (
+      {!blog.isVerified && user.isAdmin && (
         <div className={styles.verifyBar}>
           <MainButton
             primary={true}
             className={`${styles.button} ${styles.cancel}`}
-            onClick={() => {
-              setIsVerified(false)
-              verifyBlog(blog._id)
-            }}
+            onClick={notAllowBlog}
           >
             Không xét duyệt
           </MainButton>
           <MainButton
             primary={true}
             className={styles.button}
-            onClick={() => {
-              setIsVerified(true)
-              verifyBlog(blog._id)
-            }}
+            onClick={allowBlog}
           >
             Xét duyệt bài viết
           </MainButton>
@@ -219,13 +172,10 @@ const BlogDetail = ({ blog, blogHighlight }) => {
           <p className={styles.userTitle}>{blog.postedBy.bio}</p>
           <hr />
           <Reaction
-            commentData={commentData}
             isLike={isLike}
             likeCount={likeCount.length}
             handleLike={handleLike}
-            setShowComment={() => setIsShowComment(true)}
-            blogId={blog._id}
-            setCommentData={setCommentData}
+            blog={blog}
           />
         </div>
       </Col>
@@ -233,13 +183,11 @@ const BlogDetail = ({ blog, blogHighlight }) => {
         <h3 className={styles.heading}>{blog.title}</h3>
         <div className={styles.header}>
           <div className={styles.user}>
-            <Link to={`/${blog.postedBy.slug}`}>
-              <Image src={blog.postedBy.photoURL} className={styles.avatar} />
-            </Link>
+            <Image src={blog.postedBy.photoURL} className={styles.avatar} />
+
             <div className={styles.info}>
-              <Link to={`/${blog.postedBy.slug}`}>
-                <p className={styles.name}>{blog.postedBy.fullName}</p>
-              </Link>
+              <p className={styles.name}>{blog.postedBy.fullName}</p>
+
               <p className={styles.time}>
                 {timeSince(blog.createdAt)}{' '}
                 <span className={styles.dot}>.</span>
@@ -264,58 +212,56 @@ const BlogDetail = ({ blog, blogHighlight }) => {
               className={styles.menuWrapper}
             >
               {user.userId === blog.postedBy._id && (
-                <Link
-                  to={`/edit-blog/${blog.slug}`}
-                  className={styles.menuItem}
-                >
-                  <i className="fa-solid fa-pen"></i>
-                  <span>Sửa bài viết</span>
-                </Link>
+                <Dropdown.Item className={styles.menuItem}>
+                  <Link to={`/edit-post/${blog._id}`}>
+                    <i className="fa-solid fa-pen"></i>
+                    <span>Sửa bài viết</span>
+                  </Link>
+                </Dropdown.Item>
               )}
-              <div data-href={window.location.href} className="fb-share-button">
+              <Dropdown.Item className={styles.menuItem}>
+                <div
+                  data-href={window.location.href}
+                  className="fb-share-button"
+                >
+                  <a
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Ff8clone.tk%2F&amp;src=sdkpreparse"
+                  >
+                    <i className="fa-brands fa-facebook"></i>
+                    <span>Chia sẻ lên Facebook</span>
+                  </a>
+                </div>
+              </Dropdown.Item>
+              <Dropdown.Item className={styles.menuItem}>
                 <a
                   rel="noopener noreferrer"
                   target="_blank"
-                  href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Ff8clone.tk%2F&amp;src=sdkpreparse"
-                  className={styles.menuItem}
+                  href={`https://twitter.com/share?ref_src=twsrc%5Etfw&url=${window.location.href}`}
+                  data-show-count="false"
                 >
-                  <i className="fa-brands fa-facebook"></i>
-                  <span>Chia sẻ lên Facebook</span>
+                  <i className="fa-brands fa-twitter"></i>
+                  <span>Chia sẻ lên Twitter</span>
                 </a>
-              </div>
-              <a
-                rel="noopener noreferrer"
-                target="_blank"
-                href={`https://twitter.com/share?ref_src=twsrc%5Etfw&url=${window.location.href}`}
-                className={styles.menuItem}
-                data-show-count="false"
-              >
-                <i className="fa-brands fa-twitter"></i>
-                <span>Chia sẻ lên Twitter</span>
-              </a>
-
-              <a
-                href={`mailto:mail@mail.com;body=${window.location.href}`}
-                className={styles.menuItem}
-              >
-                <i className="fa-solid fa-envelope"></i>
-                <span>Chia sẻ tới Email</span>
-              </a>
-              <div
-                className={styles.menuItem}
-                onClick={() =>
-                  navigator.clipboard.writeText(window.location.href)
-                }
-              >
-                <i className="fa-solid fa-link"></i>
-                <span>Sao chép liên kết</span>
-              </div>
-              {user.userId !== blog.postedBy._id && (
-                <div className={styles.menuItem}>
-                  <i className="fa-solid fa-flag"></i>
-                  <span>Báo cáo bài viết</span>
+              </Dropdown.Item>
+              <Dropdown.Item className={styles.menuItem}>
+                <a href={`mailto:mail@mail.com;body=${window.location.href}`}>
+                  <i className="fa-solid fa-envelope"></i>
+                  <span>Chia sẻ tới Email</span>
+                </a>
+              </Dropdown.Item>
+              <Dropdown.Item className={styles.menuItem}>
+                <div
+                  onClick={() =>
+                    navigator.clipboard.writeText(window.location.href)
+                  }
+                  style={{ padding: '10px 0' }}
+                >
+                  <i className="fa-solid fa-link"></i>
+                  <span>Sao chép liên kết</span>
                 </div>
-              )}
+              </Dropdown.Item>
             </Tippy>
           </div>
         </div>
@@ -325,13 +271,10 @@ const BlogDetail = ({ blog, blogHighlight }) => {
           remarkPlugins={[remarkGfm]}
         />
         <Reaction
-          commentData={commentData}
           isLike={isLike}
           likeCount={likeCount.length}
           handleLike={handleLike}
-          setShowComment={() => setIsShowComment(true)}
-          blogId={blog._id}
-          setCommentData={setCommentData}
+          blog={blog}
         />
         {blog.tags && (
           <div className={styles.tags}>

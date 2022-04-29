@@ -29,10 +29,10 @@ const BlogHighlights = ({ blogHighlight }) => {
                 {timeSince(blog.createdAt)}
               </span>
             </div>
-            <Link to={`/blog/${blog.slug}`}>
+            <Link to={`/blog/${blog._id}`}>
               <h3 className={styles.title}>{blog.titleDisplay}</h3>
             </Link>
-            <Link to={`/blog/${blog.slug}`}>
+            <Link to={`/blog/${blog._id}`}>
               <Image
                 src={blog.image ? blog.image : f8Logo}
                 className={styles.thumb}
