@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 import { Form, Modal } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
-import { createVideo } from '../../actions/userAction'
+import { createVideo } from '../../actions/videoAction'
 import { apiURL } from '../../context/constants'
 import MainButton from '../utils/button/MainButton'
 import MainTable from '../utils/table/MainTable'
 import styles from './AdminVideo.module.scss'
 import youtubeDurationFormat from 'youtube-duration-format'
 
-const AdminVideo = ({ videoData }) => {
+const AdminVideo = ({ videoData, setVideoData }) => {
   const dispatch = useDispatch()
 
   const [isShowDeleteModal, setIsShowDeleteModal] = useState(false)
@@ -56,16 +56,7 @@ const AdminVideo = ({ videoData }) => {
   }
 
   const handleCheckBoxChosenAll = () =>
-    isCheckboxChosenAll ? uncheckAll() : checkAll
-
-  const uncheckAllAndDispatchAfterFetch = (data) => {
-    if (data) {
-      dispatch(createVideo({ videoData: data.video }))
-      uncheckAll()
-    } else {
-      console.log('No data.')
-    }
-  }
+    isCheckboxChosenAll ? uncheckAll() : checkAll()
 
   const deleteVideoIsChosen = async () => {
     showDeleteModal()
@@ -73,7 +64,8 @@ const AdminVideo = ({ videoData }) => {
     const url = `${apiURL}/admin/video/delete-soft`
     const data = await deleteVideo(url)
 
-    uncheckAllAndDispatchAfterFetch(data)
+    setVideoData(data)
+    uncheckAll()
   }
 
   const deleteVideo = async (url) => {
@@ -96,7 +88,7 @@ const AdminVideo = ({ videoData }) => {
     const url = `${apiURL}/admin/video/add-popular`
     const data = await patchPopular(url, videoId, isPopular)
 
-    uncheckAllAndDispatchAfterFetch(data)
+    setVideoData(data)
   }
 
   const patchPopular = async (url, videoId, isPopular) => {

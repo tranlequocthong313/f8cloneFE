@@ -1,64 +1,23 @@
 @import '../../sass/color';
 
 .wrapper {
-  align-items: center;
-  background-color: rgba(30, 30, 28, 0.8);
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  left: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  position: fixed;
-  right: 0;
-  top: 0;
-  z-index: 9999;
+  background-color: #fff;
+  color: #fff;
+  margin-bottom: 24px;
+  padding: 0 28px 12px 28px;
+  position: relative;
 
-  .body {
-    background-color: #fff;
-    border-radius: 16px;
-    color: #fff;
+  h3 {
+    color: $text-color;
+    font-size: 14px;
+    margin-bottom: 14px;
+  }
+
+  h2 {
+    color: $text-color;
+    font-size: 20px;
+    font-weight: 900;
     margin-bottom: 24px;
-    padding: 12px 28px 28px;
-    position: relative;
-    width: 912px;
-
-    i {
-      color: #333;
-      font-size: 32px;
-      padding: 16px;
-      position: absolute;
-      right: 8px;
-      top: -8px;
-      cursor: pointer;
-    }
-
-    h3 {
-      color: $text-color;
-      font-size: 14px;
-      margin: 14px 0;
-    }
-
-    h2 {
-      color: $text-color;
-      font-size: 20px;
-      font-weight: 900;
-      margin-bottom: 24px;
-      margin-top: 0;
-    }
-  }
-}
-
-@media (min-width: 740px) and (max-width: 1023px) {
-  .wrapper {
-    .body {
-      width: 644px;
-    }
-  }
-}
-
-@media (max-width: 739px) {
-  .wrapper {
-    display: none;
+    margin-top: 0;
   }
 }

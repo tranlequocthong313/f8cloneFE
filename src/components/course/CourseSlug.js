@@ -16,8 +16,7 @@ const Footer = React.lazy(() => import('../main-layout/footer/Footer'))
 const CourseSlug = () => {
   const location = useLocation()
 
-  const [course, setCourse] = useState()
-  const [hasRequire, setHasRequire] = useState(false)
+  const [course, setCourse] = useState(null)
   const [isShowVideoPreviewCourse, setIsShowVideoPreviewCourse] =
     useState(false)
 
@@ -28,9 +27,6 @@ const CourseSlug = () => {
     ;(async () => {
       const url = `${apiURL}${location.pathname}`
       const data = await getCourseBySlug(url)
-      if (data.status === 500) return
-
-      if (data.require) setHasRequire(true)
 
       setCourse(data)
       document.title = `${data.title} | by F8`
@@ -49,75 +45,71 @@ const CourseSlug = () => {
     <>
       <Header />
       <Row>
-        <Col xs={0} sm={0} md={1} lg={1} xl={1}>
-          <SideBar />
-        </Col>
+        <SideBar />
         <Col xs={12} sm={12} md={12} lg={11} xl={11}>
-          <div className="withSidebarContent">
-            <Row className={styles.wrapper}>
-              <Col lg={12} xl={8}>
-                <div className={styles.topHeading}>
-                  <h3>{course ? course.title : ''}</h3>
-                  <p>{course ? course.description : ''}</p>
-                </div>
-                <div className={styles.purchaseBadge}>
-                  <h5>Miễn phí</h5>
-                  <Link to={`/learning/${course ? course.slug : ''}`}>
-                    <MainButton className={styles.button} primary={true}>
-                      Đăng ký học
-                    </MainButton>
-                  </Link>
-                  <ul>
-                    <li>
-                      <i className={`${styles.icon} fa-solid fa-compass`}></i>
-                      <span>Trình độ {course ? course.level : ''}</span>
-                    </li>
-                    <li>
-                      <i className={`${styles.icon} fa-solid fa-film`} />
-                      <span>
-                        Tổng số <strong>10</strong> bài học
-                      </span>
-                    </li>
-                    <li>
-                      <i className={`${styles.icon} fa-solid fa-clock`}></i>
-                      <span>
-                        Thời lượng <strong>03 giờ 25 phút</strong>
-                      </span>
-                    </li>
-                    <li>
-                      <i className={`${styles.icon} fa-solid fa-clock`}></i>
-                      <span>Học mọi lúc, mọi nơi</span>
-                    </li>
-                  </ul>
-                </div>
-                <CourseDetail
-                  topicList={course ? course.topicList : []}
-                  title={'Bạn sẽ học được gì?'}
-                />
-                <CurriculumOfCourse
+          <Row className={styles.wrapper}>
+            <Col lg={12} xl={8}>
+              <div className={styles.topHeading}>
+                <h3>{course ? course.title : ''}</h3>
+                <p>{course ? course.description : ''}</p>
+              </div>
+              <div className={styles.purchaseBadge}>
+                <h5>Miễn phí</h5>
+                <Link to={`/learning/${course ? course._id : ''}`}>
+                  <MainButton className={styles.button} primary={true}>
+                    Đăng ký học
+                  </MainButton>
+                </Link>
+                <ul>
+                  <li>
+                    <i className={`${styles.icon} fa-solid fa-compass`}></i>
+                    <span>Trình độ {course ? course.level : ''}</span>
+                  </li>
+                  <li>
+                    <i className={`${styles.icon} fa-solid fa-film`} />
+                    <span>
+                      Tổng số <strong>10</strong> bài học
+                    </span>
+                  </li>
+                  <li>
+                    <i className={`${styles.icon} fa-solid fa-clock`}></i>
+                    <span>
+                      Thời lượng <strong>03 giờ 25 phút</strong>
+                    </span>
+                  </li>
+                  <li>
+                    <i className={`${styles.icon} fa-solid fa-clock`}></i>
+                    <span>Học mọi lúc, mọi nơi</span>
+                  </li>
+                </ul>
+              </div>
+              <CourseDetail
+                topicList={course ? course.goals : []}
+                title={'Bạn sẽ học được gì?'}
+              />
+              {/* <CurriculumOfCourse
                   episodeList={course ? course.episode : []}
+                /> */}
+              {course && course.requirement.length > 0 && (
+                <CourseDetail
+                  topicList={course ? course.requirement : []}
+                  title={'Yêu cầu'}
                 />
-                {hasRequire && (
-                  <CourseDetail
-                    topicList={course ? course.require : []}
-                    title={'Yêu cầu'}
-                  />
-                )}
-              </Col>
-              <Col lg={12} xl={4}>
-                <CourseEnroll
-                  image={course ? course.image : ''}
-                  showVideo={showVideoPreviewCourse}
-                  slug={course ? course.slug : ''}
-                />
-              </Col>
-            </Row>
-          </div>
+              )}
+            </Col>
+            <Col lg={12} xl={4}>
+              <CourseEnroll
+                image={course ? course.image : ''}
+                show={showVideoPreviewCourse}
+                slug={course ? course._id : ''}
+              />
+            </Col>
+          </Row>
         </Col>
       </Row>
 
       <div className={styles.mobileButtonWrapper}>
-        <Link to={`/learning/${course ? course.slug : ''}`}>
+        <Link to={`/learning/${course ? course._id : ''}`}>
           <MainButton className={styles.mobileButton} primary={true}>
             ĐĂNG KÝ MIỄN PHÍ
           </MainButton>
@@ -128,8 +120,8 @@ const CourseSlug = () => {
       </Suspense>
       {isShowVideoPreviewCourse && (
         <PreviewCourse
-          previewVideo={course.previewVideo}
-          showVideo={showVideoPreviewCourse}
+          isShowVideoPreviewCourse={isShowVideoPreviewCourse}
+          showVideoPreviewCourse={showVideoPreviewCourse}
         />
       )}
     </>

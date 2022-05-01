@@ -3,12 +3,13 @@ import { Modal, Form, Spinner } from 'react-bootstrap'
 import { apiURL } from '../../../context/constants'
 import { useDispatch } from 'react-redux'
 import styles from './CreateVideo.module.scss'
-import { createVideo } from '../../../actions/userAction'
+import { createVideo } from '../../../actions/videoAction'
 import MainToast from '../../utils/toast/MainToast'
 import removeActions from '../../utils/remove-accents/removeActions'
 import MainButton from '../../utils/button/MainButton'
+import MainModal from '../../utils/main-modal/MainModal'
 
-const CreateVideo = () => {
+const CreateVideo = ({ setVideoData }) => {
   const dispatch = useDispatch()
 
   const [videoId, setVideoId] = useState('')
@@ -85,8 +86,7 @@ const CreateVideo = () => {
     const url = `${apiURL}/admin/video/create`
     const data = await postCreateVideo(url, videoData)
     if (!data.success) return
-
-    dispatch(createVideo({ videoData: data.video }))
+    setVideoData((prev) => [data.video, ...prev])
     setCreateVideoStatusTrue()
   }
 
@@ -119,12 +119,13 @@ const CreateVideo = () => {
         <i className="fa-brands fa-youtube"></i>
         Tạo video
       </MainButton>
-      <Modal
+      <MainModal
         show={isShowCreateModal}
         onHide={showCreateVideoModal}
         className={styles.createModal}
+        centered={true}
+        closeButton={true}
       >
-        <Modal.Header closeButton style={{ border: 'none' }}></Modal.Header>
         <Form className={styles.createForm}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label className={styles.heading}>Thêm video</Form.Label>
@@ -175,7 +176,7 @@ const CreateVideo = () => {
             Hủy
           </MainButton>
         </Modal.Footer>
-      </Modal>
+      </MainModal>
       <MainToast
         status={createStatus}
         setStatus={() =>

@@ -56,7 +56,6 @@ const BlogDetail = ({ blog, blogHighlight }) => {
 
     const url = `${apiURL}/me/bookmark`
     const data = await patchBookmark(url, blogId, accessToken)
-    if (data.status === 500) return
 
     setBookmarkData(data.bookmark)
   }

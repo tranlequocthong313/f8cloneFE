@@ -124,7 +124,6 @@ const LoginWithEmailAndPasswordForm = ({
 
       let url = `${apiURL}/register/`
       const data = await postRegister(url, userDefaultAvatar)
-      if (data.status === 500) return
 
       setEmail('')
       setPassword('')

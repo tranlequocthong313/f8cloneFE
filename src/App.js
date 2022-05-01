@@ -26,6 +26,7 @@ import Privacy from './views/public/Privacy'
 import Terms from './views/public/Terms'
 import Careers from './views/public/Careers'
 import About from './views/public/About'
+import AdminEditCourse from './components/admin/AdminEditCourse'
 
 function App() {
   const dispatch = useDispatch()
@@ -36,10 +37,10 @@ function App() {
 
   useEffect(() => {
     ;(async () => {
-      const userData = Cookies.get('userData')
+      const userData = JSON.parse(Cookies.get('userData'))
       if (!userData) return
 
-      dispatch(setAuth(JSON.parse(userData)))
+      dispatch(setAuth(userData))
     })()
   }, [dispatch])
 
@@ -104,7 +105,7 @@ function App() {
           <Route path="/courses" exact>
             <Courses />
           </Route>
-          <Route path="/courses/:slug" exact>
+          <Route path="/courses/:courseId" exact>
             <CourseSlug />
           </Route>
           <Route path="/blog/:id" exact>
@@ -195,7 +196,7 @@ function App() {
           <Route path="/courses" exact>
             <Courses />
           </Route>
-          <Route path="/courses/:slug" exact>
+          <Route path="/courses/:courseId" exact>
             <CourseSlug />
           </Route>
           <Route path="/blog/:id" exact>
@@ -259,7 +260,7 @@ function App() {
           <Route path="/courses" exact>
             <Courses />
           </Route>
-          <Route path="/courses/:slug" exact>
+          <Route path="/courses/:courseId" exact>
             <CourseSlug />
           </Route>
           <Route path="/blog/:id" exact>

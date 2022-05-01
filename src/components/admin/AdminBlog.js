@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react'
 import { Form, Modal } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { createBlog } from '../../actions/userAction'
+import { createBlog } from '../../actions/blogAction'
 import { apiURL } from '../../context/constants'
 import MainButton from '../utils/button/MainButton'
 import MainTable from '../utils/table/MainTable'
 import styles from './AdminBlog.module.scss'
 
-const AdminBlog = ({ blogData }) => {
+const AdminBlog = ({ blogData, setBlogData }) => {
   const dispatch = useDispatch()
 
   const [isShowDeleteModal, setIsShowDeleteModal] = useState(false)
@@ -51,16 +51,7 @@ const AdminBlog = ({ blogData }) => {
   }
 
   const handleCheckBoxChosenAll = () =>
-    isCheckboxChosenAll ? uncheckAll() : checkAll
-
-  const uncheckAllAndDispatchAfterFetch = (data) => {
-    if (data) {
-      dispatch(createBlog({ blogData: data.blog }))
-      uncheckAll()
-    } else {
-      console.log('No data.')
-    }
-  }
+    isCheckboxChosenAll ? uncheckAll() : checkAll()
 
   const deleteBlogIsChosen = async () => {
     showDeleteModal()
@@ -68,7 +59,8 @@ const AdminBlog = ({ blogData }) => {
     const url = `${apiURL}/admin/blog/delete-soft`
     const data = await deleteBlog(url)
 
-    uncheckAllAndDispatchAfterFetch(data)
+    setBlogData(data)
+    uncheckAll()
   }
 
   const deleteBlog = async (url) => {
@@ -91,7 +83,7 @@ const AdminBlog = ({ blogData }) => {
     const url = `${apiURL}/admin/blog/add-popular`
     const data = await patchPopular(url, blogId, isPopular)
 
-    uncheckAllAndDispatchAfterFetch(data)
+    setBlogData(data)
   }
 
   const patchPopular = async (url, blogId, isPopular) => {

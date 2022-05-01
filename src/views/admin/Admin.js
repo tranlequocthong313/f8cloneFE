@@ -19,12 +19,16 @@ const Footer = React.lazy(() =>
 
 const Admin = () => {
   const location = useLocation()
-  const user = useSelector((state) => state.user)
+  const blog = useSelector((state) => state.blog)
+  const video = useSelector((state) => state.video)
+  const course = useSelector((state) => state.course)
 
   const [tabs, setTabs] = useState(location.pathname)
   const [courseData, setCourseData] = useState([])
   const [blogData, setBlogData] = useState([])
   const [videoData, setVideoData] = useState([])
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
 
   useEffect(() => (document.title = 'Quản lý F8'), [])
 
@@ -37,7 +41,7 @@ const Admin = () => {
       setBlogData(data.blogs)
       setVideoData(data.videos)
     })()
-  }, [user.videoCreated, user.blogCreated])
+  }, [])
 
   const getDataForAdmin = async (url) => {
     try {
@@ -82,17 +86,32 @@ const Admin = () => {
             </div>
             {tabs === '/admin/course' && (
               <>
-                <MainButton outline={true}>
-                  <i className="fa-solid fa-plus"></i> Thêm khóa học
-                </MainButton>
-                <AdminCourse courseData={courseData} />
+                <div className={styles.buttonGroup}>
+                  <MainButton
+                    outline={true}
+                    onClick={() => setShowAddModal(true)}
+                    className={styles.button}
+                  >
+                    <i className="fa-solid fa-plus"></i> Tạo khóa học
+                  </MainButton>
+                </div>
+                <AdminCourse
+                  courseData={courseData}
+                  showAddModal={showAddModal}
+                  showEditModal={showEditModal}
+                  setShowEditModal={setShowEditModal}
+                  setShowAddModal={setShowAddModal}
+                  setCourseData={setCourseData}
+                />
               </>
             )}
-            {tabs === '/admin/blog' && <AdminBlog blogData={blogData} />}
+            {tabs === '/admin/blog' && (
+              <AdminBlog blogData={blogData} setBlogData={setBlogData} />
+            )}
             {tabs === '/admin/video' && (
               <div className={styles.container}>
-                <CreateVideo />
-                <AdminVideo videoData={videoData} />
+                <CreateVideo setVideoData={setVideoData} />
+                <AdminVideo videoData={videoData} setVideoData={setVideoData} />
               </div>
             )}
           </Col>

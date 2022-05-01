@@ -7,7 +7,6 @@ import '../../sass/_myIcon.scss'
 import Header from '../../components/main-layout/nav/Header'
 import '../../sass/_markdownEditor.scss'
 import ContentEditable from '../../components/utils/content-editable/ContentEditable'
-import Modal from '../../components/new-post/Modal'
 import { useLocation, useHistory } from 'react-router-dom'
 import { apiURL } from '../../context/constants'
 import { PostContext } from '../../context/PostContext'
@@ -88,7 +87,7 @@ const EditPost = () => {
     const data = await putEditPost(url, accessToken)
 
     if (data.success) {
-      history.push(-1)
+      history.goBack()
       setEditStatusTrue()
     } else {
       setEditStatusFalse()

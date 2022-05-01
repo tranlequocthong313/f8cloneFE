@@ -26,8 +26,19 @@ const Courses = () => {
     ;(async () => {
       const url = `${apiURL}/courses`
       const data = await getCourses(url)
-      setCourseFE(data.courseFE)
-      setCourseBE(data.courseBE)
+
+      const courseFe = data.courses.filter(
+        (course) => course.role === 'Front-end'
+      )
+      const courseBe = data.courses.filter(
+        (course) => course.role === 'Back-end'
+      )
+      const courseFullstack = data.courses.filter(
+        (course) => course.role === 'Fullstack'
+      )
+
+      setCourseFE([...courseFullstack, ...courseFe])
+      setCourseBE([...courseFullstack, ...courseBe])
     })()
   }, [])
 

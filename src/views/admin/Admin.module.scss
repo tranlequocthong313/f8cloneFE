@@ -1,5 +1,4 @@
 .wrapper {
-  // height: 100vh;
   margin: 0 auto;
   margin-bottom: 80px;
   padding: 0 40px;
@@ -11,6 +10,14 @@
   .tabs {
     display: flex;
     margin-bottom: 24px;
+  }
+
+  .buttonGroup {
+    display: flex;
+
+    .button {
+      margin: 0 4px;
+    }
   }
 }
 

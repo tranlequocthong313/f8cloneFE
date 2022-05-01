@@ -38,29 +38,31 @@ const User = ({ photoURL, displayName, email, slug }) => {
       </div>
       {user.isAdmin && (
         <>
-          <Dropdown.Item className={styles.menuItem}>
-            <Link to="/admin/course">Quản lý F8</Link>
-          </Dropdown.Item>
+          <Link className={styles.menuItem} to="/admin/course">
+            Quản lý F8
+          </Link>
         </>
       )}
-      <Dropdown.Item className={styles.menuItem}>
-        <Link to="/new-post">Viết blog</Link>
-      </Dropdown.Item>
-      <Dropdown.Item className={styles.menuItem}>
-        <Link to="/my-post/published">Bài viết của tôi</Link>
-      </Dropdown.Item>
-      <Dropdown.Item className={styles.menuItem}>
-        <Link to="/bookmark-post">Bài viết đã lưu</Link>
-      </Dropdown.Item>
-      <Dropdown.Item className={styles.menuItem}>
-        <Link to="/settings">Cài đặt</Link>
-      </Dropdown.Item>
+      <Link className={styles.menuItem} to="/new-post">
+        Viết blog
+      </Link>
+
+      <Link className={styles.menuItem} to="/my-post/published">
+        Bài viết của tôi
+      </Link>
+
+      <Link className={styles.menuItem} to="/bookmark-post">
+        Bài viết đã lưu
+      </Link>
+
+      <Link className={styles.menuItem} to="/settings">
+        Cài đặt
+      </Link>
+
       <Dropdown.Divider />
-      <Dropdown.Item className={styles.menuItem}>
-        <Link to="/login" onClick={singOut}>
-          Đăng xuất
-        </Link>
-      </Dropdown.Item>
+      <Link className={styles.menuItem} to="/login" onClick={singOut}>
+        Đăng xuất
+      </Link>
     </Tippy>
   )
 }

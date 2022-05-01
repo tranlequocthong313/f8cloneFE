@@ -3,14 +3,13 @@ import { Col, Row } from 'react-bootstrap'
 import styles from './Home.module.scss'
 import Slide from '../../components/home/slide/Slide'
 import HeadingTitleWrap from '../../components/utils/title-heading/HeadingTitleWrap'
-import CourseList from '../../components/home/courses/CourseList'
 import '../../sass/_withSidebarContent.scss'
 import Header from '../../components/main-layout/nav/Header'
 import SideBar from '../../components/main-layout/sidebar/SideBar'
 import { apiURL } from '../../context/constants'
 import { useSelector } from 'react-redux'
-import MainCardAdd from '../../components/utils/card/MainCardAdd'
 import { Link } from 'react-router-dom'
+import CourseList from '../../components/home/courses/CourseList'
 
 const BlogList = React.lazy(() =>
   import('../../components/home/blogs/BlogList')
@@ -41,10 +40,18 @@ const Home = () => {
     ;(async () => {
       const data = await getHomeData(`${apiURL}`)
 
-      console.log(data)
+      const courseFe = data.courses.filter(
+        (course) => course.role === 'Front-end'
+      )
+      const courseBe = data.courses.filter(
+        (course) => course.role === 'Back-end'
+      )
+      const courseFullstack = data.courses.filter(
+        (course) => course.role === 'Fullstack'
+      )
 
-      setCourseFE(data.courseFE)
-      setCourseBE(data.courseBE)
+      setCourseFE([...courseFullstack, ...courseFe])
+      setCourseBE([...courseFullstack, ...courseBe])
       setBlogData(data.blogs)
       setVideoData(data.videos)
     })()

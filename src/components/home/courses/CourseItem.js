@@ -10,7 +10,7 @@ const CourseItem = ({ course, path }) => {
 
   return (
     <MainCard>
-      <Link to={`/courses/${course.slug}`}>
+      <Link to={`/courses/${course._id}`}>
         <section
           title={course.title ? course.title : null}
           style={{ backgroundImage: `url(${course.image})` }}
@@ -19,7 +19,7 @@ const CourseItem = ({ course, path }) => {
         </section>
       </Link>
       <h4 className={styles.title}>
-        <Link to={`/courses/${course.slug}`}>{course.title}</Link>
+        <Link to={`/courses/${course._id}`}>{course.title}</Link>
       </h4>
       {!path && (
         <div className={styles.studentCount}>

@@ -99,7 +99,7 @@ const Search = () => {
                   {result.courses.map((course) => (
                     <Link
                       className={styles.searchItem}
-                      to={`/courses/${course.slug}`}
+                      to={`/courses/${course._id}`}
                       key={course._id}
                     >
                       <img alt="" src={course.image} />

@@ -1,14 +1,14 @@
 const initialState = {
   courses: [],
+  courseCreated: null,
 }
 
 const courseReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'GET_COURSE':
-      console.log(action.payload)
+    case 'CREATE_COURSE':
       return {
         ...state,
-        courses: action.payload,
+        courseCreated: action.payload.courseData,
       }
 
     default:

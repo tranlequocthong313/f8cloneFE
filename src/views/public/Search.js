@@ -142,7 +142,7 @@ const Search = () => {
                                   className={styles.contentContainer}
                                   key={course._id}
                                 >
-                                  <Link to={`/courses/${course.slug}`}>
+                                  <Link to={`/courses/${course._id}`}>
                                     <div
                                       className={styles.image}
                                       style={{

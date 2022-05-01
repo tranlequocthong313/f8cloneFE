@@ -19,7 +19,6 @@ const NewBlogs = ({ blogs }) => {
 
       const url = `${apiURL}/me/bookmark`
       const data = await getBookmark(url, accessToken)
-      if (data.status === 500) return
 
       setBookmarkData(data.bookmark)
     })()

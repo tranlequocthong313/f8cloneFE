@@ -4,12 +4,9 @@ const initialState = {
   displayName: null,
   photoURL: null,
   email: null,
-  slug: null,
   phoneNumber: null,
-  isLoading: false,
   isLoggedIn: false,
-  videoCreated: null,
-  blogCreated: null,
+
   bio: null,
   socials: {
     fb: null,
@@ -48,12 +45,6 @@ const userReducer = (state = initialState, action) => {
         isLoggedIn: null,
       }
 
-    case 'SET_LOADING':
-      return {
-        ...state,
-        isLoading: action.payload,
-      }
-
     case 'SET_AUTH':
       return {
         ...state,
@@ -69,19 +60,6 @@ const userReducer = (state = initialState, action) => {
         isAdmin: action.payload.isAdmin,
         socials: action.payload.socials ? action.payload.socials : {},
         slug: action.payload.slug,
-      }
-
-    case 'CREATE_VIDEO':
-      console.log(action.payload.videoData)
-      return {
-        ...state,
-        videoCreated: action.payload.videoData,
-      }
-
-    case 'CREATE_BLOG':
-      return {
-        ...state,
-        blogCreated: action.payload.blogData,
       }
 
     case 'SETTING':
