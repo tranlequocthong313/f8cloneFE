@@ -58,26 +58,33 @@ const Settings = () => {
   }
 
   const changeName = async () => {
-    const { accessToken } = JSON.parse(Cookies.get('userData'))
-    if (!accessToken) return
+    const token = Cookies.get('token')
+    if (!token) return
 
     const url = `${apiURL}/help/setting/fullName`
-    const data = await patchFullName(url, accessToken)
+    const data = await patchFullName(url, token)
 
     setFullName(data.fullName)
-    dispatch(settings({ fullName: data.fullName, photoURL: user.photoURL }))
+    dispatch(
+      settings({
+        fullName: data.fullName,
+        photoURL: user.photoURL,
+      })
+    )
   }
 
   const patchFullName = async (url, token) => {
     try {
-      return await fetch(url, {
-        method: 'PATCH',
-        body: JSON.stringify({ fullName }),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      return (
+        await fetch(url, {
+          method: 'PATCH',
+          body: JSON.stringify({ fullName }),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      ).json()
     } catch (error) {
       console.log(error.message)
     } finally {
@@ -86,8 +93,8 @@ const Settings = () => {
   }
 
   const changeAvatar = () => {
-    const { accessToken } = JSON.parse(Cookies.get('userData'))
-    if (!accessToken) return
+    const token = Cookies.get('token')
+    if (!token) return
 
     if (image.avatar) {
       const storageRef = ref(storage, `uploads/${image.avatar.name}`)
@@ -100,11 +107,13 @@ const Settings = () => {
         async () => {
           const photoURL = await getDownloadURL(uploadTask.snapshot.ref)
           const url = `${apiURL}/help/setting/avatar`
-          const data = await patchAvatar(url, photoURL, accessToken)
-
-          setImage(data.photoURL)
+          const data = await patchAvatar(url, photoURL, token)
+          console.log(data)
           dispatch(
-            settings({ fullName: user.displayName, photoURL: data.photoURL })
+            settings({
+              fullName: user.displayName,
+              photoURL: data.photoURL,
+            })
           )
         }
       )
@@ -113,14 +122,16 @@ const Settings = () => {
 
   const patchAvatar = async (url, photoURL, token) => {
     try {
-      return await fetch(url, {
-        method: 'PATCH',
-        body: JSON.stringify({ photoURL }),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      return (
+        await fetch(url, {
+          method: 'PATCH',
+          body: JSON.stringify({ photoURL }),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      ).json()
     } catch (error) {
       console.log(error.message)
     } finally {
@@ -129,32 +140,33 @@ const Settings = () => {
   }
 
   const bioChange = async () => {
-    const { accessToken } = JSON.parse(Cookies.get('userData'))
-    if (!accessToken) return
+    const token = Cookies.get('token')
+    if (!token) return
 
     const url = `${apiURL}/help/setting/bio`
-    const data = await patchBio(url, accessToken)
+    const data = await patchBio(url, token)
 
     setBio(data.bio)
     dispatch(
       settings({
         fullName: user.displayName,
         photoURL: user.photoURL,
-        bio: data.bio,
       })
     )
   }
 
   const patchBio = async (url, token) => {
     try {
-      return await fetch(url, {
-        method: 'PATCH',
-        body: JSON.stringify({ bio }),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      return (
+        await fetch(url, {
+          method: 'PATCH',
+          body: JSON.stringify({ bio }),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      ).json()
     } catch (error) {
       console.log(error.message)
     } finally {
@@ -163,11 +175,11 @@ const Settings = () => {
   }
 
   const socialChange = async (socialName) => {
-    const { accessToken } = JSON.parse(Cookies.get('userData'))
-    if (!accessToken) return
+    const token = Cookies.get('token')
+    if (!token) return
 
     const url = `${apiURL}/help/setting/social`
-    const data = await patchSocial(url, socialName, accessToken)
+    const data = await patchSocial(url, socialName, token)
 
     setSocial((prev) => {
       return {
@@ -183,14 +195,16 @@ const Settings = () => {
 
   const patchSocial = async (url, socialName, token) => {
     try {
-      return await fetch(url, {
-        method: 'PATCH',
-        body: JSON.stringify(social),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      return (
+        await fetch(url, {
+          method: 'PATCH',
+          body: JSON.stringify(social),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      ).json()
     } catch (error) {
       console.log(error.message)
     } finally {
@@ -202,7 +216,7 @@ const Settings = () => {
     <>
       <Header />
       <Container className={styles.settings}>
-        <Row style={{ margin: 0 }}>
+        <Row style={{ marginTop: 48 }}>
           <Col sm={12} md={12} lg={9} xl={9}>
             <div className={styles.wrapper}>
               <h3 className={styles.heading}>Cài đặt</h3>
@@ -219,9 +233,9 @@ const Settings = () => {
                   }
                   placeholder={'Thêm tên của bạn'}
                   maxLength={50}
-                  disabled={!settingMode.includes('name')}
+                  disabled={!settingModeChosen('name')}
                   onShow={() => handleSettingMode('name')}
-                  settingMode={settingMode.includes('name')}
+                  isEditMode={settingModeChosen('name')}
                   onSave={changeName}
                 />
                 <FieldInput
@@ -233,9 +247,9 @@ const Settings = () => {
                   }
                   placeholder={'Thêm giới thiệu'}
                   maxLength={150}
-                  disabled={!settingMode.includes('bio')}
+                  disabled={!settingModeChosen('bio')}
                   onShow={() => handleSettingMode('bio')}
-                  settingMode={settingMode.includes('bio')}
+                  isEditMode={settingModeChosen('bio')}
                   onSave={bioChange}
                 />
                 <FieldInput
@@ -248,7 +262,7 @@ const Settings = () => {
                   isImage={true}
                   onFileChange={getNewAvatar}
                   onShow={() => handleSettingMode('avatar')}
-                  settingMode={settingMode.includes('avatar')}
+                  isEditMode={settingModeChosen('avatar')}
                   onSave={changeAvatar}
                 />
                 <FieldInput
@@ -296,9 +310,9 @@ const Settings = () => {
                     })
                   }
                   placeholder={'Eg. https://www.facebook.com/hoclaptrinhf8'}
-                  disabled={!settingMode.includes('fb')}
+                  disabled={!settingModeChosen('fb')}
                   onShow={() => handleSettingMode('fb')}
-                  settingMode={settingMode.includes('fb')}
+                  isEditMode={settingModeChosen('fb')}
                   onSave={() => socialChange('fb')}
                   value={social.fb}
                 />
@@ -314,9 +328,9 @@ const Settings = () => {
                       }
                     })
                   }
-                  disabled={!settingMode.includes('youtube')}
+                  disabled={!settingModeChosen('youtube')}
                   onShow={() => handleSettingMode('youtube')}
-                  settingMode={settingMode.includes('youtube')}
+                  isEditMode={settingModeChosen('youtube')}
                   onSave={() => socialChange('youtube')}
                   value={social.youtube}
                 />
@@ -332,9 +346,9 @@ const Settings = () => {
                       }
                     })
                   }
-                  disabled={!settingMode.includes('linkedin')}
+                  disabled={!settingModeChosen('linkedin')}
                   onShow={() => handleSettingMode('linkedin')}
-                  settingMode={settingMode.includes('linkedin')}
+                  isEditMode={settingModeChosen('linkedin')}
                   onSave={() => socialChange('linkedin')}
                   value={social.linkedin}
                 />
@@ -350,9 +364,9 @@ const Settings = () => {
                       }
                     })
                   }
-                  disabled={!settingMode.includes('instagram')}
+                  disabled={!settingModeChosen('instagram')}
                   onShow={() => handleSettingMode('instagram')}
-                  settingMode={settingMode.includes('instagram')}
+                  isEditMode={settingModeChosen('instagram')}
                   onSave={() => socialChange('instagram')}
                   value={social.instagram}
                 />
@@ -368,9 +382,9 @@ const Settings = () => {
                       }
                     })
                   }
-                  disabled={!settingMode.includes('twitter')}
+                  disabled={!settingModeChosen('twitter')}
                   onShow={() => handleSettingMode('twitter')}
-                  settingMode={settingMode.includes('twitter')}
+                  isEditMode={settingModeChosen('twitter')}
                   onSave={() => socialChange('twitter')}
                   value={social.twitter}
                 />

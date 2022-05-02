@@ -118,11 +118,11 @@ const AdminBlog = ({ blogData, setBlogData }) => {
             <th>STT</th>
             <th>Tên bài viết</th>
             <th>Tác giả</th>
-            <th>Được phép đề xuất</th>
+            <th>Đề xuất</th>
             <th>Tình trạng</th>
             <th>Đã xét duyệt</th>
-            <th>Thời gian tạo</th>
-            <th>Thời gian sửa</th>
+            <th>TG tạo</th>
+            <th>TG sửa</th>
           </tr>
         </thead>
         <tbody>

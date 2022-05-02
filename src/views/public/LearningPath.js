@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import '../../sass/_withSidebarContent.scss'
 import ctaImage from '../../asset/images/fb-group-cards@2x.png'
 import Suggestion from '../../components/utils/suggestion/Suggestion'
@@ -7,12 +7,21 @@ import LearningList from '../../components/learning-path/LearningList'
 import SideBar from '../../components/main-layout/sidebar/SideBar'
 import Header from '../../components/main-layout/nav/Header'
 import styles from './LearningPath.module.scss'
+import Loading from '../../components/utils/loading/Loading'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer')
 )
 
 const LearningPath = () => {
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    setLoading(true)
+
+    setTimeout(() => setLoading(false), 500)
+  }, [])
+
   useEffect(
     () =>
       (document.title =
@@ -20,7 +29,9 @@ const LearningPath = () => {
     []
   )
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <>
       <Header />
       <Row>

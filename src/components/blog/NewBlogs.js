@@ -14,11 +14,11 @@ const NewBlogs = ({ blogs }) => {
 
   useEffect(() => {
     ;(async () => {
-      const { accessToken } = JSON.parse(Cookies.get('userData'))
-      if (!accessToken) return
+      const token = Cookies.get('token')
+      if (!token) return
 
       const url = `${apiURL}/me/bookmark`
-      const data = await getBookmark(url, accessToken)
+      const data = await getBookmark(url, token)
 
       setBookmarkData(data.bookmark)
     })()
@@ -40,11 +40,11 @@ const NewBlogs = ({ blogs }) => {
   }
 
   const bookmark = async (blogId) => {
-    const { accessToken } = JSON.parse(Cookies.get('userData'))
-    if (!accessToken) return history.push('/login')
+    const token = Cookies.get('token')
+    if (!token) return history.push('/login')
 
     const url = `${apiURL}/me/bookmark`
-    const data = await patchBookmark(url, blogId, accessToken)
+    const data = await patchBookmark(url, blogId, token)
 
     setBookmarkData(data.bookmark)
   }

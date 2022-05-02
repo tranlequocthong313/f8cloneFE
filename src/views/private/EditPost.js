@@ -12,6 +12,7 @@ import { apiURL } from '../../context/constants'
 import { PostContext } from '../../context/PostContext'
 import Cookies from 'js-cookie'
 import MainToast from '../../components/utils/toast/MainToast'
+import Loading from '../../components/utils/loading/Loading'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer')
@@ -31,6 +32,7 @@ const EditPost = () => {
     isSuccess: false,
     show: false,
   })
+  const [loading, setLoading] = useState(true)
 
   const LIMIT_TITLE_LENGTH = '190'
 
@@ -40,16 +42,18 @@ const EditPost = () => {
     title && content ? setIsValid(true) : setIsValid(false)
   }, [title, content, setIsValid])
 
-  console.log(location.pathname)
-
   useEffect(() => {
     ;(async () => {
+      setLoading(true)
       const url = `${apiURL}/blog${location.pathname}`
       const data = await getPost(url)
 
-      setTitle(data.title)
-      setContent(data.content)
-      titleRef.current.innerText = data.title
+      if (data) {
+        setTitle(data.title)
+        setContent(data.content)
+        setLoading(false)
+        titleRef.current.innerText = data.title
+      }
     })()
   }, [location.pathname])
 
@@ -80,11 +84,11 @@ const EditPost = () => {
     })
 
   const submitEditPost = async () => {
-    const { accessToken } = JSON.parse(Cookies.get('userData'))
-    if (!accessToken) return
+    const token = Cookies.get('token')
+    if (!token) return
 
     const url = `${apiURL}/blog${location.pathname}`
-    const data = await putEditPost(url, accessToken)
+    const data = await putEditPost(url, token)
 
     if (data.success) {
       history.goBack()
@@ -113,7 +117,9 @@ const EditPost = () => {
     }
   }
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <>
       {!showModal && (
         <>

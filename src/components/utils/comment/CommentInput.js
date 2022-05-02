@@ -31,11 +31,11 @@ const CommentInput = ({
   }, [commentInput])
 
   const submitComment = async () => {
-    const { accessToken } = JSON.parse(Cookies.get('userData'))
-    if (!accessToken) return history.push('/login')
+    const token = Cookies.get('token')
+    if (!token) return history.push('/login')
 
     const url = `${apiURL}/comment`
-    const data = await postComment(url, accessToken)
+    const data = await postComment(url, token)
 
     setCommentData(data.comment)
 
@@ -83,7 +83,7 @@ const CommentInput = ({
 
   return (
     <div className={styles.comment}>
-      <img src={userPhotoURL} alt="" />
+      <img src={userPhotoURL} alt="ảnh đại diện" />
       <div onClick={() => setShowSubmit(true)}>
         <ContentEditable
           text={'Viết bình luận của bạn...'}

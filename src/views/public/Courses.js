@@ -12,10 +12,12 @@ import Footer from '../../components/main-layout/footer/Footer'
 import { apiURL } from '../../context/constants'
 import styles from './Courses.module.scss'
 import '../../sass/_withSidebarContent.scss'
+import Loading from '../../components/utils/loading/Loading'
 
 const Courses = () => {
   const [courseFE, setCourseFE] = useState([])
   const [courseBE, setCourseBE] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(
     () => (document.title = 'Danh sách các khóa học lập trình tại F8 | by F8'),
@@ -24,21 +26,22 @@ const Courses = () => {
 
   useEffect(() => {
     ;(async () => {
+      setLoading(true)
+
       const url = `${apiURL}/courses`
       const data = await getCourses(url)
 
-      const courseFe = data.courses.filter(
-        (course) => course.role === 'Front-end'
-      )
-      const courseBe = data.courses.filter(
-        (course) => course.role === 'Back-end'
-      )
-      const courseFullstack = data.courses.filter(
-        (course) => course.role === 'Fullstack'
-      )
+      if (data) {
+        const courseFe = data.filter((course) => course.role === 'Front-end')
+        const courseBe = data.filter((course) => course.role === 'Back-end')
+        const courseFullstack = data.filter(
+          (course) => course.role === 'Fullstack'
+        )
 
-      setCourseFE([...courseFullstack, ...courseFe])
-      setCourseBE([...courseFullstack, ...courseBe])
+        setCourseFE([...courseFullstack, ...courseFe])
+        setCourseBE([...courseFullstack, ...courseBe])
+        setLoading(false)
+      }
     })()
   }, [])
 
@@ -50,7 +53,9 @@ const Courses = () => {
     }
   }
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <>
       <Header />
       <Row>

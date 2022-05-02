@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import MainButton from '../../utils/button/MainButton'
 import MainCard from '../../utils/card/MainCard'
@@ -5,12 +6,20 @@ import VerticalProgressBar from '../../utils/vertical-progress-bar/VerticalProgr
 import styles from './CourseItem.module.scss'
 
 const CourseItem = ({ course, path }) => {
+  const user = useSelector((state) => state.user)
+
   const formatStudentCount = (studentCount) =>
     new Intl.NumberFormat(['ban', 'id']).format(+studentCount)
 
   return (
     <MainCard>
-      <Link to={`/courses/${course._id}`}>
+      <Link
+        to={
+          !user.coursesEnrolled.includes(course._id)
+            ? `/courses/${course._id}`
+            : `/lesson/${course._id}`
+        }
+      >
         <section
           title={course.title ? course.title : null}
           style={{ backgroundImage: `url(${course.image})` }}
@@ -19,7 +28,15 @@ const CourseItem = ({ course, path }) => {
         </section>
       </Link>
       <h4 className={styles.title}>
-        <Link to={`/courses/${course._id}`}>{course.title}</Link>
+        <Link
+          to={
+            !user.coursesEnrolled.includes(course._id)
+              ? `/courses/${course._id}`
+              : `/lesson/${course._id}`
+          }
+        >
+          {course.title}
+        </Link>
       </h4>
       {!path && (
         <div className={styles.studentCount}>

@@ -137,12 +137,15 @@ const AdminCourse = ({
             </th>
             <th>STT</th>
             <th>Tên khóa học</th>
+            <th>Số chương</th>
+            {/* <th>Số bài học</th> */}
             <th>Cấp độ</th>
+            <th>Tình trạng</th>
             <th>Vai trò</th>
             <th>Yêu cầu</th>
-            <th>Số lượng học sinh</th>
-            <th>Thời gian tạo</th>
-            <th>Thời gian sửa</th>
+            <th>Học sinh</th>
+            <th>TG tạo</th>
+            <th>TG sửa</th>
           </tr>
         </thead>
         <tbody>
@@ -159,7 +162,10 @@ const AdminCourse = ({
               </td>
               <td>{index + 1}</td>
               <td>{course.title}</td>
+              <td>{course.episodes.length}</td>
+              {/* <td>{course.episodes}</td> */}
               <td>{course.level}</td>
+              <td>{course.isPopular ? 'Hiện' : 'Ẩn'}</td>
               <td>{course.role}</td>
               <td>
                 {course.requirement && course.requirement.length > 0

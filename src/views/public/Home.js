@@ -10,6 +10,7 @@ import { apiURL } from '../../context/constants'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import CourseList from '../../components/home/courses/CourseList'
+import Loading from '../../components/utils/loading/Loading'
 
 const BlogList = React.lazy(() =>
   import('../../components/home/blogs/BlogList')
@@ -28,6 +29,7 @@ const Home = () => {
   const [courseBE, setCourseBE] = useState([])
   const [blogData, setBlogData] = useState([])
   const [videoData, setVideoData] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(
     () =>
@@ -38,22 +40,26 @@ const Home = () => {
 
   useEffect(() => {
     ;(async () => {
+      setLoading(true)
+
       const data = await getHomeData(`${apiURL}`)
+      if (data) {
+        const courseFe = data.courses.filter(
+          (course) => course.role === 'Front-end'
+        )
+        const courseBe = data.courses.filter(
+          (course) => course.role === 'Back-end'
+        )
+        const courseFullstack = data.courses.filter(
+          (course) => course.role === 'Fullstack'
+        )
 
-      const courseFe = data.courses.filter(
-        (course) => course.role === 'Front-end'
-      )
-      const courseBe = data.courses.filter(
-        (course) => course.role === 'Back-end'
-      )
-      const courseFullstack = data.courses.filter(
-        (course) => course.role === 'Fullstack'
-      )
-
-      setCourseFE([...courseFullstack, ...courseFe])
-      setCourseBE([...courseFullstack, ...courseBe])
-      setBlogData(data.blogs)
-      setVideoData(data.videos)
+        setCourseFE([...courseFullstack, ...courseFe])
+        setCourseBE([...courseFullstack, ...courseBe])
+        setBlogData(data.blogs)
+        setVideoData(data.videos)
+        setLoading(false)
+      }
     })()
   }, [])
 
@@ -65,7 +71,9 @@ const Home = () => {
     }
   }
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <>
       <Header />
       <Row>

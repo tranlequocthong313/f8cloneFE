@@ -17,7 +17,7 @@ const CommentModal = ({ showModal }) => {
         <div className={styles.body}>
           <div className={styles.content}>
             <div className={styles.avatar}>
-              <img alt="" src={noPhotoURL} />
+              <img alt="ảnh đại diện" src={noPhotoURL} />
               <div className={styles.iconWrapper}>
                 <div className={styles.iconContainer}>
                   <div className={styles.title}>{'title'}</div>

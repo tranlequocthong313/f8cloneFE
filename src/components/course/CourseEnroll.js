@@ -3,7 +3,13 @@ import { Link } from 'react-router-dom'
 import MainButton from '../utils/button/MainButton'
 import styles from './CourseEnroll.module.scss'
 
-const CourseEnroll = ({ image, show, slug }) => {
+const CourseEnroll = ({
+  image,
+  show,
+  courseId,
+  enrollCourse,
+  userCoursesEnrolled,
+}) => {
   return (
     <div className={styles.purchaseBadge}>
       <div className={styles.imgPreview} onClick={show}>
@@ -15,11 +21,15 @@ const CourseEnroll = ({ image, show, slug }) => {
         <p>Xem giới thiệu khóa học</p>
       </div>
       <h5>Miễn phí</h5>
-      <Link to={`/learning/${slug}`}>
-        <MainButton className={styles.button} primary={true}>
-          Đăng ký học
-        </MainButton>
-      </Link>
+      <MainButton
+        className={styles.button}
+        primary={true}
+        onClick={enrollCourse}
+      >
+        {!userCoursesEnrolled.includes(courseId)
+          ? 'ĐĂNG KÝ HỌC'
+          : 'TIẾP TỤC HỌC'}
+      </MainButton>
       <ul>
         <li>
           <i className={`${styles.icon} fa-solid fa-compass`}></i>

@@ -52,11 +52,11 @@ const AdminAddCourse = ({ showModal, setShowModal, setCourseData }) => {
     setRequireTags((prev) => prev.filter((item) => item !== tag))
 
   const createCourse = async () => {
-    const { accessToken } = JSON.parse(Cookies.get('userData'))
-    if (!accessToken) return
+    const token = Cookies.get('token')
+    if (!token) return
 
     const url = `${apiURL}/courses/create`
-    const data = await postCreateCourse(url, accessToken)
+    const data = await postCreateCourse(url, token)
 
     setCourseData((prev) => [data, ...prev])
   }

@@ -7,6 +7,7 @@ import Header from '../../components/main-layout/nav/Header'
 import SideBar from '../../components/main-layout/sidebar/SideBar'
 import { apiURL } from '../../context/constants'
 import { Link } from 'react-router-dom'
+import Loading from '../../components/utils/loading/Loading'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer')
@@ -14,6 +15,7 @@ const Footer = React.lazy(() =>
 
 const Blog = () => {
   const [blogs, setBlogs] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(
     () =>
@@ -24,10 +26,15 @@ const Blog = () => {
 
   useEffect(() => {
     ;(async () => {
+      setLoading(true)
+
       const url = `${apiURL}/blog`
       const data = await getBlog(url)
 
-      setBlogs(data)
+      if (data) {
+        setBlogs(data)
+        setLoading(false)
+      }
     })()
   }, [])
 
@@ -39,7 +46,9 @@ const Blog = () => {
     }
   }
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <>
       <Header />
       <Row>

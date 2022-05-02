@@ -29,11 +29,11 @@ const CommentBody = ({ commentData, setCommentData, blogId }) => {
   const isShowExtendButton = (commentId) => showExtendButton.includes(commentId)
 
   const deleteComment = async (commentId) => {
-    const { accessToken } = JSON.parse(Cookies.get('userData'))
-    if (!accessToken) return
+    const token = Cookies.get('token')
+    if (!token) return
 
     const url = `${apiURL}/comment/${commentId}`
-    const data = await deleteDeleteComment(url, accessToken)
+    const data = await deleteDeleteComment(url, token)
 
     setCommentData(data.comments)
   }
@@ -55,11 +55,11 @@ const CommentBody = ({ commentData, setCommentData, blogId }) => {
   }
 
   const editComment = async (commentId) => {
-    const { accessToken } = JSON.parse(Cookies.get('userData'))
-    if (!accessToken) return
+    const token = Cookies.get('token')
+    if (!token) return
 
     const url = `${apiURL}/comment/${commentId}`
-    const data = await putEditComment(url, accessToken)
+    const data = await putEditComment(url, token)
 
     setCommentData(data.comments)
   }
@@ -119,14 +119,14 @@ const CommentBody = ({ commentData, setCommentData, blogId }) => {
     commentPostedBy,
     commentLikes
   ) => {
-    const { accessToken } = JSON.parse(Cookies.get('userData'))
-    if (!accessToken) return
+    const token = Cookies.get('token')
+    if (!token) return
 
     const isLiked = commentLikes.includes(user.userId)
     const url = isLiked
       ? `${apiURL}/comment/unlike/${commentId}`
       : `${apiURL}/comment/like/${commentId}`
-    await patchLikeOrUnlikeComment(url, accessToken)
+    await patchLikeOrUnlikeComment(url, token)
 
     const isCommentAuthorLike = commentPostedBy._id === user.userId
     if (current && !isLiked && !isCommentAuthorLike) {
@@ -165,7 +165,7 @@ const CommentBody = ({ commentData, setCommentData, blogId }) => {
             <div className={styles.avatar}>
               <img
                 src={comment.postedBy.photoURL}
-                alt={`${comment.postedBy.fullName} avatar`}
+                alt={`${comment.postedBy.fullName} ảnh đại diện`}
               />
             </div>
             <div className={styles.commentBody}>
@@ -218,7 +218,7 @@ const CommentBody = ({ commentData, setCommentData, blogId }) => {
                     <div className={styles.reactCounterContainer}>
                       <div className={styles.count}>
                         {comment.likes.length}
-                        <img alt="" src={likeemoji} />
+                        <img alt="Like icon" src={likeemoji} />
                       </div>
                     </div>
                   </div>

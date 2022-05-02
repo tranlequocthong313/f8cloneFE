@@ -17,7 +17,7 @@ const CommentInputSecondary = ({
   return (
     <div className={styles.replyComment}>
       <div className={styles.comment}>
-        <img src={userPhotoURL} alt="" />
+        <img src={userPhotoURL} alt="ảnh đại diện" />
         <ContentEditable
           text={'Bình luận công khai...'}
           onInput={onInput}

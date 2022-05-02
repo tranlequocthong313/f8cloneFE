@@ -6,24 +6,28 @@ import SideBar from '../main-layout/sidebar/SideBar'
 import { useLocation } from 'react-router-dom'
 import Footer from '../main-layout/footer/Footer'
 import BlogDetail from '../new-post/BlogDetail'
+import Loading from '../utils/loading/Loading'
 
 const BlogSlug = () => {
   const location = useLocation()
 
   const [blog, setBlog] = useState(null)
   const [blogHighlight, setBlogHighlight] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     ;(async () => {
+      setLoading(true)
+
       const url = `${apiURL}${location.pathname}`
       const data = await getBlogBySlug(url)
 
-      console.log(data)
-
-      setBlog(data.blogSlug)
-      setBlogHighlight(data.blogHighlight)
-
-      document.title = `${data.blogSlug.titleDisplay} | by F8`
+      if (data) {
+        setBlog(data.blogSlug)
+        setBlogHighlight(data.blogHighlight)
+        document.title = `${data.blogSlug.titleDisplay} | by F8`
+        setLoading(false)
+      }
     })()
   }, [location.pathname])
 
@@ -35,7 +39,9 @@ const BlogSlug = () => {
     }
   }
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <>
       <Header />
       <div className={styles.sidebarWrap}>

@@ -9,6 +9,10 @@
   padding: 0;
   padding: 8px !important;
 
+  &.primary {
+    color: $primary-color !important;
+  }
+
   a {
     color: $text-color;
 
@@ -32,12 +36,13 @@
   box-shadow: 0 -4px 32px rgba($color: #000000, $alpha: 0.2);
   color: #1d2129;
   margin: 0;
-  overflow: hidden;
+  overflow-y: scroll;
   padding-left: 0;
   transition: all 0.3s ease-in-out;
   will-change: opacity, transform;
-  width: 345px;
   padding: 0 !important;
+  max-height: 68vh;
+  width: max-content;
 
   @keyframes fadeIn {
     from {
@@ -70,10 +75,15 @@
       font-size: 14px;
       margin-left: auto;
       color: $primary-color;
-      padding: 8px;
+      padding: 8px 0 8px 12px;
       border-radius: 4px;
       font-weight: 500;
     }
+  }
+
+  .noResult {
+    font-size: 14px;
+    padding: 0 20px;
   }
 
   .body {
@@ -88,16 +98,13 @@
       background-color: #1618230d;
     }
 
-    .thumb {
-      display: flex;
-      align-items: center;
-      img {
-        width: 120px;
-        min-height: 67px;
-        border-radius: 8px;
-        background-color: #ebebeb;
-        border-style: none;
-      }
+    .image {
+      border-radius: 8px;
+      height: 67px;
+      width: 120px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
     }
 
     .info {

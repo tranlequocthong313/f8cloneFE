@@ -17,7 +17,7 @@ const Footer = React.lazy(() =>
 )
 
 const BookmarkPost = () => {
-  const [bookmarkData, setBookmarkData] = useState(null)
+  const [bookmarkData, setBookmarkData] = useState([])
 
   useEffect(() => (document.title = 'Bài viết đã lưu tại F8'), [])
 
@@ -27,7 +27,7 @@ const BookmarkPost = () => {
       if (!token) return
 
       const url = `${apiURL}/me/bookmark-post`
-      const data = getBookmarkPost(url, token)
+      const data = await getBookmarkPost(url, token)
 
       setBookmarkData(data)
     })()
@@ -52,9 +52,7 @@ const BookmarkPost = () => {
     <>
       <Header />
       <Row>
-        <Col xs={0} sm={0} md={1} lg={1} xl={1}>
-          <SideBar />
-        </Col>
+        <SideBar />
         <Col xs={12} sm={12} md={12} lg={8} xl={8}>
           <div className="withSidebarContent">
             <div className={styles.wrapper}>
@@ -63,11 +61,11 @@ const BookmarkPost = () => {
                 <Tabs
                   isActive={true}
                   tab={'Bài viết'}
-                  quantity={bookmarkData ? `(${bookmarkData.length})` : `(0)`}
+                  quantity={`(${bookmarkData.length})`}
                   path={'/bookmark-post'}
                 />
               </div>
-              {bookmarkData && bookmarkData.length === 0 && (
+              {bookmarkData.length === 0 && (
                 <div className={styles.message}>
                   <p>Bạn chưa lưu bài viết nào.</p>
                   <p>
@@ -76,7 +74,7 @@ const BookmarkPost = () => {
                   </p>
                 </div>
               )}
-              {bookmarkData &&
+              {bookmarkData.length > 0 &&
                 bookmarkData.map((bookmark) => (
                   <ul key={bookmark._id} className={styles.bookmarkList}>
                     <li>

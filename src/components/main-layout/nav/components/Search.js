@@ -102,7 +102,7 @@ const Search = () => {
                       to={`/courses/${course._id}`}
                       key={course._id}
                     >
-                      <img alt="" src={course.image} />
+                      <img alt={`${course.title}`} src={course.image} />
                       <span>{course.title}</span>
                     </Link>
                   ))}
@@ -121,7 +121,7 @@ const Search = () => {
                       key={blog._id}
                     >
                       <img
-                        alt=""
+                        alt={`${blog.titleDisplay}`}
                         src={blog.image ? blog.image : blog.postedBy.photoURL}
                       />
                       <span>{blog.titleDisplay}</span>
@@ -143,7 +143,7 @@ const Search = () => {
                       href={`https://www.youtube.com/watch?v=${video.videoId}`}
                       key={video._id}
                     >
-                      <img alt="" src={video.image} />
+                      <img alt={`${video.title}`} src={video.image} />
                       <span>{video.title}</span>
                     </a>
                   ))}

@@ -5,34 +5,55 @@ import { Col, Row } from 'react-bootstrap'
 import { apiURL } from '../../context/constants'
 import CourseList from '../../components/home/courses/CourseList'
 import MainCardAdd from '../../components/utils/card/MainCardAdd'
+import Cookies from 'js-cookie'
+import Loading from '../../components/utils/loading/Loading'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer')
 )
 
 const MyCourse = () => {
-  const [courseFE, setCourseFE] = useState([])
-
-  useEffect(() => {
-    document.title = 'Thiết lập về tôi tại F8'
-  }, [])
+  const [myCourse, setMyCourse] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     ;(async () => {
-      const data = await getCourse(`${apiURL}`)
-      setCourseFE(data.courseFE)
+      setLoading(true)
+
+      const token = Cookies.get('token')
+      if (!token) return
+
+      const url = `${apiURL}/me/courses`
+      const data = await getCourse(url, token)
+
+      if (data) {
+        setMyCourse(data.coursesEnrolled)
+        setLoading(false)
+      }
     })()
   }, [])
 
-  const getCourse = async (url) => {
+  const getCourse = async (url, token) => {
     try {
-      return (await fetch(url)).json()
+      return (
+        await fetch(url, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      ).json()
     } catch (error) {
       console.log(error.message)
     }
   }
 
-  return (
+  useEffect(() => {
+    document.title = 'Thiết lập về tôi tại F8'
+  }, [])
+  return loading ? (
+    <Loading />
+  ) : (
     <>
       <Header />
       <Row>
@@ -44,7 +65,7 @@ const MyCourse = () => {
                 <h2>Khóa học của tôi</h2>
                 <p>Bạn chưa hoàn thành khóa học nào.</p>
               </div>
-              <CourseList courses={courseFE} path={'/courses'} />
+              <CourseList courses={myCourse} path={'/courses'} />
             </div>
           </div>
         </Col>

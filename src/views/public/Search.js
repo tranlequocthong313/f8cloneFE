@@ -51,6 +51,14 @@ const Search = () => {
     }
   }, [location.pathname])
 
+  const getSearch = async (url) => {
+    try {
+      return (await fetch(url)).json()
+    } catch (error) {
+      console.error(error.message)
+    }
+  }
+
   const searchCourseBlogAndVideo = async (e) => {
     const length = e.target.innerText.trim().length
     let match = e.target.innerText.match(/^[a-zA-Z ]*/)
@@ -79,14 +87,6 @@ const Search = () => {
           videos: [...data.videos],
         }
       })
-    }
-  }
-
-  const getSearch = async (url) => {
-    try {
-      return await fetch(url)
-    } catch (error) {
-      console.error(error.message)
     }
   }
 

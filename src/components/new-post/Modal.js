@@ -102,8 +102,8 @@ const Modal = ({ blogContent }) => {
   }
 
   const postBlog = async (image) => {
-    const { accessToken } = JSON.parse(Cookies.get('userData'))
-    if (!accessToken) return
+    const token = Cookies.get('token')
+    if (!token) return
 
     const blogData = {
       image,
@@ -125,7 +125,7 @@ const Modal = ({ blogContent }) => {
     }
 
     const url = `${apiURL}/new-post`
-    const data = await postNewPost(url, blogData, accessToken)
+    const data = await postNewPost(url, blogData, token)
 
     if (current && !user.isAdmin) {
       current.emit('post', {
@@ -338,13 +338,6 @@ const Modal = ({ blogContent }) => {
               {!isSchedule ? 'Lên lịch xuất bản' : 'Hủy lên lịch'}
             </button>
           </div>
-          <img
-            width={200}
-            src={
-              'http://localhost:5000/f8-prod/blog_posts/250951029_2310653682405428_2097463697023468442_n.jpg'
-            }
-            alt=""
-          />
         </Col>
       </Row>
     </div>

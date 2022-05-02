@@ -1,38 +1,87 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { Image } from 'react-bootstrap'
 import styles from './MyCourse.module.scss'
 import Tippy from '../../../utils/tippy/Tippy'
+import { apiURL } from '../../../../context/constants'
+import Cookies from 'js-cookie'
 
 const MyCourse = () => {
+  const location = useLocation()
+
+  const [myCourse, setMyCourse] = useState([])
+
+  const getMyCourse = async () => {
+    const token = Cookies.get('token')
+    if (!token) return
+
+    const url = `${apiURL}/me/courses`
+    const data = await getCourse(url, token)
+
+    setMyCourse(data.coursesEnrolled)
+  }
+
+  const getCourse = async (url, token) => {
+    try {
+      return (
+        await fetch(url, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      ).json()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
   return (
     <>
       <Tippy
-        button={<span className={styles.userCourse}>Khóa học của tôi</span>}
+        button={
+          <span
+            className={
+              location.pathname !== '/my-course'
+                ? styles.userCourse
+                : `${styles.userCourse} ${styles.primary}`
+            }
+            onClick={getMyCourse}
+          >
+            Khóa học của tôi
+          </span>
+        }
         className={styles.wrapper}
       >
-        <div onClick={(e) => e.stopPropagation()}>
-          <header className={styles.header}>
-            <h5>Khóa học của tôi</h5>
-            <Link to="/my-course" className={styles.viewAll}>
-              Xem tất cả
-            </Link>
-          </header>
-          <div className={styles.body}>
-            <Link to="/my-course" className={styles.thumb}>
-              <Image src="https://files.fullstack.edu.vn/f8-prod/courses/7.png" />
-            </Link>
-            <div className={styles.info}>
-              <h3>
-                <Link to="/my-course">Kiến Thức Nhập Môn IT</Link>
-              </h3>
-              <p>Bạn chưa học khóa này</p>
-              <Link to="/my-course" className={styles.startButton}>
-                Bắt đầu học
+        <header className={styles.header}>
+          <h5>Khóa học của tôi</h5>
+          <Link to="/my-course" className={styles.viewAll}>
+            Xem tất cả
+          </Link>
+        </header>
+        {myCourse.length === 0 && (
+          <p className={styles.noResult}>Bạn chưa tham gia khóa học nào.</p>
+        )}
+        {myCourse.length > 0 &&
+          myCourse.map((course) => (
+            <div className={styles.body} key={course._id}>
+              <Link to="/my-course">
+                <div
+                  className={styles.image}
+                  style={{ backgroundImage: `url(${course.image})` }}
+                ></div>
               </Link>
+              <div className={styles.info}>
+                <h3>
+                  <Link to="/my-course">{course.title}</Link>
+                </h3>
+                <p>Bạn chưa học khóa này</p>
+                <Link to="/my-course" className={styles.startButton}>
+                  Bắt đầu học
+                </Link>
+              </div>
             </div>
-          </div>
-        </div>
+          ))}
       </Tippy>
     </>
   )

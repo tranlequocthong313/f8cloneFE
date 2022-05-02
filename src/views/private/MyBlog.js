@@ -26,11 +26,11 @@ const MyBlog = () => {
 
   useEffect(() => {
     ;(async () => {
-      const { accessToken } = JSON.parse(Cookies.get('userData'))
-      if (!accessToken) return
+      const token = Cookies.get('token')
+      if (!token) return
 
       const url = `${apiURL}/help/my-post`
-      const data = await getMyPost(url, accessToken)
+      const data = await getMyPost(url, token)
 
       setMyBlog(data)
     })()
@@ -52,11 +52,11 @@ const MyBlog = () => {
   }
 
   const deleteBlogById = async (id) => {
-    const { accessToken } = JSON.parse(Cookies.get('userData'))
-    if (!accessToken) return
+    const token = Cookies.get('token')
+    if (!token) return
 
     const url = `${apiURL}/blog/delete-blog/${id}`
-    const data = await deleteBlog(url, accessToken)
+    const data = await deleteBlog(url, token)
 
     setMyBlog(data)
   }

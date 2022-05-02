@@ -122,9 +122,8 @@ const AdminVideo = ({ videoData, setVideoData }) => {
             </th>
             <th>STT</th>
             <th>Tên video</th>
-            <th>Thời gian</th>
             <th>Tình trạng</th>
-            <th>Thời gian tạo</th>
+            <th>TG tạo</th>
           </tr>
         </thead>
         <tbody>
@@ -141,7 +140,6 @@ const AdminVideo = ({ videoData, setVideoData }) => {
               </td>
               <td>{index + 1}</td>
               <td className={styles.breakWord}>{video.title}</td>
-              <td>{formatYoutubeDuration(video.duration)}</td>
               <td>{video.isPopular ? 'Hiện' : 'Ẩn'}</td>
               <td>{formatDateToLocaleString(video.createdAt)}</td>
               <td>

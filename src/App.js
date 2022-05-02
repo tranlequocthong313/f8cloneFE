@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import Cookies from 'js-cookie'
@@ -7,7 +7,7 @@ import NewPost from './views/private/NewPost'
 import Auth from './views/public/Auth'
 import Home from './views/public/Home'
 import NotFound from './views/public/NotFound'
-import Learning from './views/private/Learning'
+import Lesson from './views/private/Lesson'
 import MyCourse from './views/private/MyCourse'
 import EditPost from './views/private/EditPost'
 import BookmarkPost from './views/private/BookmarkPost'
@@ -26,23 +26,51 @@ import Privacy from './views/public/Privacy'
 import Terms from './views/public/Terms'
 import Careers from './views/public/Careers'
 import About from './views/public/About'
-import AdminEditCourse from './components/admin/AdminEditCourse'
+import { apiURL } from './context/constants'
+import Loading from './components/utils/loading/Loading'
 
 function App() {
   const dispatch = useDispatch()
   const location = useLocation()
   const user = useSelector((state) => state.user)
 
+  const [loading, setLoading] = useState(true)
+
   useEffect(() => window.scrollTo(0, 0), [location.pathname])
 
   useEffect(() => {
     ;(async () => {
-      const userData = JSON.parse(Cookies.get('userData'))
-      if (!userData) return
+      setLoading(true)
 
-      dispatch(setAuth(userData))
+      const token = Cookies.get('token')
+      if (!token) return
+
+      const url = `${apiURL}/auth/check-user`
+      const data = await getUser(url, token)
+
+      console.log(data)
+
+      if (data.success) dispatch(setAuth({ ...data.user, accessToken: token }))
+
+      setLoading(false)
     })()
   }, [dispatch])
+
+  const getUser = async (url, token) => {
+    try {
+      return (
+        await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      ).json()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 
   useEffect(() => {
     console.log(
@@ -78,8 +106,8 @@ function App() {
           <Route path="/register" exact>
             <NotFound />
           </Route>
-          <Route path="/learning/:slug" exact>
-            <Learning />
+          <Route path="/Lesson/:courseId" exact>
+            <Lesson />
           </Route>
           <Route path="/my-course" exact>
             <MyCourse />
@@ -169,8 +197,8 @@ function App() {
           <Route path="/register" exact>
             <NotFound />
           </Route>
-          <Route path="/learning/:slug" exact>
-            <Learning />
+          <Route path="/lesson/:courseId" exact>
+            <Lesson />
           </Route>
           <Route path="/my-course" exact>
             <MyCourse />
@@ -314,7 +342,7 @@ function App() {
     )
   }
 
-  return routes
+  return loading ? <Loading /> : routes
 }
 
 export default App

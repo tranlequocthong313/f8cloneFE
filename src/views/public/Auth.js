@@ -21,7 +21,7 @@ const Auth = () => {
   const [isLogin, setIsLogin] = useState(true)
   const [loginOption, setLoginOption] = useState('')
   const [forgotPassword, setForgotPassword] = useState(false)
-  const [inValid, setInValid] = useState(false)
+  const [emailUsed, setEmailUsed] = useState(false)
 
   const isShowAuthProviderOption = () => (loginOption === '' ? true : false)
 
@@ -36,30 +36,29 @@ const Auth = () => {
   }
 
   const loginWithProvider = async (provider) => {
-    const res = await signInWithPopup(auth, provider)
-    const user = res.user
+    try {
+      const res = await signInWithPopup(auth, provider)
+      const user = res.user
 
-    const url = `${apiURL}/login/provider`
-    const data = await postLoginProvider(url, {
-      fullName: user.displayName,
-      email: user.email,
-      photoURL: user.photoURL,
-      provider: user.providerData[0].providerId,
-      activated: true,
-    })
+      const url = `${apiURL}/login/provider`
+      const data = await postLoginProvider(url, {
+        fullName: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+        provider: user.providerData[0].providerId,
+        activated: true,
+      })
 
-    Cookies.set(
-      'userData',
-      JSON.stringify({
-        ...data.user,
+      Cookies.set('token', data.accessToken, { expires: 365 })
+      dispatchAndHistory({
+        ...data.userCreated,
         accessToken: data.accessToken,
-      }),
-      { expires: 365 }
-    )
-    dispatchAndHistory({
-      ...data.user,
-      accessToken: data.accessToken,
-    })
+      })
+    } catch (error) {
+      console.log(error.message)
+      if (error.code === 'auth/account-exists-with-different-credential')
+        setEmailUsed(true)
+    }
   }
 
   const postLoginProvider = async (url, data) => {
@@ -75,8 +74,6 @@ const Auth = () => {
       ).json()
     } catch (error) {
       console.log(error.message)
-      if (error.code === 'auth/account-exists-with-different-credential')
-        setInValid(true)
     }
   }
 
@@ -133,7 +130,7 @@ const Auth = () => {
                 dispatchAndHistory={dispatchAndHistory}
               />
             )}
-            {inValid && isShowAuthProviderOption() && (
+            {emailUsed && isShowAuthProviderOption() && (
               <p className={styles.validate}>
                 Email đã được sử dụng bởi một phương thức đăng nhập khác.
               </p>

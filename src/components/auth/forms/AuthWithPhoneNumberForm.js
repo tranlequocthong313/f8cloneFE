@@ -81,14 +81,7 @@ const LoginWithPhoneNumberForm = ({
   }
 
   const setCookieAndDispatchAfterLogin = (data) => {
-    Cookies.set(
-      'userData',
-      JSON.stringify({
-        ...data.user,
-        accessToken: data.accessToken,
-      }),
-      { expires: 365 }
-    )
+    Cookies.set('token', data.accessToken, { expires: 365 })
     dispatchAndHistory({
       ...data.user,
       accessToken: data.accessToken,

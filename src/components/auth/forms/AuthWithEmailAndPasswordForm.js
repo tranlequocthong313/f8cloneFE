@@ -102,14 +102,7 @@ const LoginWithEmailAndPasswordForm = ({
       const data = await postLogin(url)
       if (!data.success) return setInvalidEmailOrPassword(data.message)
 
-      Cookies.set(
-        'userData',
-        JSON.stringify({
-          ...data.user,
-          accessToken: data.accessToken,
-        }),
-        { expires: 365 }
-      )
+      Cookies.set('token', data.accessToken, { expires: 365 })
       dispatchAndHistory({
         ...data.user,
         accessToken: data.accessToken,
@@ -123,7 +116,7 @@ const LoginWithEmailAndPasswordForm = ({
         'https://firebasestorage.googleapis.com/v0/b/f8clone-3e404.appspot.com/o/uploads%2Fnobody_m.256x256.jpg?alt=media&token=8e617e21-795f-45ce-8340-955a5290e66f'
 
       let url = `${apiURL}/register/`
-      const data = await postRegister(url, userDefaultAvatar)
+      await postRegister(url, userDefaultAvatar)
 
       setEmail('')
       setPassword('')

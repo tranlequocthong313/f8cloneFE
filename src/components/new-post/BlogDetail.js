@@ -51,8 +51,8 @@ const BlogDetail = ({ blog, blogHighlight }) => {
   }
 
   const bookmark = async (blogId) => {
-    const { accessToken } = JSON.parse(Cookies.get('userData'))
-    if (!accessToken) return history.push('/login')
+    const token = Cookies.get('token')
+    if (!token) return history.push('/login')
 
     const url = `${apiURL}/me/bookmark`
     const data = await patchBookmark(url, blogId, accessToken)
@@ -78,8 +78,8 @@ const BlogDetail = ({ blog, blogHighlight }) => {
   }
 
   const handleLike = async () => {
-    const { accessToken } = JSON.parse(Cookies.get('userData'))
-    if (!accessToken) return history.push('/login')
+    const token = Cookies.get('token')
+    if (!token) return history.push('/login')
 
     const url = isLike
       ? `${apiURL}/blog/unlike/${blog._id}`

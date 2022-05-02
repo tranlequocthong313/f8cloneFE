@@ -10,7 +10,7 @@ const Address = () => {
       <div className={styles.containerList}>
         <div className={styles.header}>
           <Link to="/">
-            <img className={styles.logo} src={f8logo} alt="F8" />
+            <img className={styles.logo} src={f8logo} alt="F8 logo" />
           </Link>
           <h2 className={styles.subTitle}>Học Lập Trình Để Đi Làm</h2>
         </div>
@@ -31,7 +31,7 @@ const Address = () => {
               rel="noreferrer"
               title="DMCA Protected"
             >
-              <img src={dmcalogo} alt="DMCA" />
+              <img src={dmcalogo} alt="DMCA logo" />
             </a>
           </li>
         </ul>

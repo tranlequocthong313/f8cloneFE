@@ -54,13 +54,13 @@ const Notification = () => {
   useEffect(() => {
     ;(async () => {
       try {
-        const { accessToken } = JSON.parse(Cookies.get('userData'))
-        if (!accessToken) return
+        const token = Cookies.get('token')
+        if (!token) return
 
         const res = await fetch(`${apiURL}/notification/`, {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${token}`,
           },
         })
 
@@ -77,17 +77,17 @@ const Notification = () => {
   }, [])
 
   const seenOrSeenAll = async (notificationId) => {
-    const { accessToken } = JSON.parse(Cookies.get('userData'))
-    if (!accessToken) return
+    const token = Cookies.get('token')
+    if (!token) return
 
     const url = `${apiURL}/notification/seen-notification`
-    const data = await deleteNotification(url, notificationId, accessToken)
+    const data = await deleteNotification(url, notificationId, token)
 
     setNotifications(data)
     handleSetSeenAll(data)
   }
 
-  const deleteNotification = async (url, notificationId, accessToken) => {
+  const deleteNotification = async (url, notificationId, token) => {
     try {
       return (
         await fetch(url, {
@@ -97,7 +97,7 @@ const Notification = () => {
           }),
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${token}`,
           },
         })
       ).json()
@@ -153,7 +153,10 @@ const Notification = () => {
               >
                 <Link to={`/blog/${notification.postId}`}>
                   <div className={styles.avatar}>
-                    <img alt="" src={notification.senderImage} />
+                    <img
+                      alt={`${notification.senderName} ảnh đại diện`}
+                      src={notification.senderImage}
+                    />
                   </div>
                   <div className={styles.content}>
                     <div>
@@ -171,7 +174,7 @@ const Notification = () => {
             ))}
           <li className={`${styles.item} ${styles.noSeen}`}>
             <div className={styles.avatar}>
-              <img alt="" src={f8logo} />
+              <img alt="F8 logo" src={f8logo} />
             </div>
             <div className={styles.content}>
               <div>

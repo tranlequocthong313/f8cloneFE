@@ -51,7 +51,7 @@ const Profile = () => {
           >
             <div className={styles.user}>
               <div className={styles.avatar}>
-                <img alt="" src={user ? user.photoURL : ''} />
+                <img alt="ảnh đại diện" src={user ? user.photoURL : ''} />
               </div>
               <h3 className={styles.fullName}>{user ? user.fullName : ''}</h3>
             </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Suspense } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { Row, Col } from 'react-bootstrap'
+import { Link, useHistory, useLocation } from 'react-router-dom'
+import { Row, Col, Spinner } from 'react-bootstrap'
 import Header from '../main-layout/nav/Header'
 import SideBar from '../main-layout/sidebar/SideBar'
 import CourseDetail from './CourseDetail'
@@ -10,26 +10,40 @@ import CurriculumOfCourse from './CurriculumOfCourse'
 import PreviewCourse from './PreviewCourse'
 import { apiURL } from '../../context/constants'
 import MainButton from '../utils/button/MainButton'
+import Cookies from 'js-cookie'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { enrollCourse as enroll } from '../../actions/userAction'
+import Loading from '../utils/loading/Loading'
 
 const Footer = React.lazy(() => import('../main-layout/footer/Footer'))
 
 const CourseSlug = () => {
+  const dispatch = useDispatch()
   const location = useLocation()
+  const history = useHistory()
+  const user = useSelector((state) => state.user)
 
   const [course, setCourse] = useState(null)
   const [isShowVideoPreviewCourse, setIsShowVideoPreviewCourse] =
     useState(false)
+  const [loading, setLoading] = useState(true)
 
   const showVideoPreviewCourse = () =>
     setIsShowVideoPreviewCourse((prev) => !prev)
 
   useEffect(() => {
     ;(async () => {
+      setLoading(true)
+
       const url = `${apiURL}${location.pathname}`
       const data = await getCourseBySlug(url)
 
-      setCourse(data)
-      document.title = `${data.title} | by F8`
+      if (data) {
+        setCourse(data)
+        document.title = `${data.title} | by F8`
+        setLoading(false)
+      }
     })()
   }, [location.pathname])
 
@@ -41,7 +55,36 @@ const CourseSlug = () => {
     }
   }
 
-  return (
+  const enrollCourse = async () => {
+    const token = Cookies.get('token')
+    if (!token) return history.push('/login')
+
+    const url = `${apiURL}/me/enroll-course/${course._id}`
+    const data = await putEnrollCourse(url, token)
+
+    dispatch(enroll({ coursesEnrolled: data.coursesEnrolled }))
+    if (data.success) history.push(`/lesson/${course._id}`)
+  }
+
+  const putEnrollCourse = async (url, token) => {
+    try {
+      return (
+        await fetch(url, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      ).json()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
+  return loading ? (
+    <Loading />
+  ) : (
     <>
       <Header />
       <Row>
@@ -50,20 +93,24 @@ const CourseSlug = () => {
           <Row className={styles.wrapper}>
             <Col lg={12} xl={8}>
               <div className={styles.topHeading}>
-                <h3>{course ? course.title : ''}</h3>
-                <p>{course ? course.description : ''}</p>
+                <h3>{course.title}</h3>
+                <p>{course.description}</p>
               </div>
               <div className={styles.purchaseBadge}>
                 <h5>Miễn phí</h5>
-                <Link to={`/learning/${course ? course._id : ''}`}>
-                  <MainButton className={styles.button} primary={true}>
-                    Đăng ký học
-                  </MainButton>
-                </Link>
+                <MainButton
+                  className={styles.button}
+                  primary={true}
+                  onClick={enrollCourse}
+                >
+                  {!user.coursesEnrolled.includes(course._id)
+                    ? 'ĐĂNG KÝ HỌC'
+                    : 'TIẾP TỤC HỌC'}
+                </MainButton>
                 <ul>
                   <li>
                     <i className={`${styles.icon} fa-solid fa-compass`}></i>
-                    <span>Trình độ {course ? course.level : ''}</span>
+                    <span>Trình độ {course.level}</span>
                   </li>
                   <li>
                     <i className={`${styles.icon} fa-solid fa-film`} />
@@ -84,24 +131,26 @@ const CourseSlug = () => {
                 </ul>
               </div>
               <CourseDetail
-                topicList={course ? course.goals : []}
+                topicList={course.goals}
                 title={'Bạn sẽ học được gì?'}
               />
               {/* <CurriculumOfCourse
-                  episodeList={course ? course.episode : []}
+                  episodeList={ course.episode }
                 /> */}
               {course && course.requirement.length > 0 && (
                 <CourseDetail
-                  topicList={course ? course.requirement : []}
+                  topicList={course.requirement}
                   title={'Yêu cầu'}
                 />
               )}
             </Col>
             <Col lg={12} xl={4}>
               <CourseEnroll
-                image={course ? course.image : ''}
+                image={course.image}
                 show={showVideoPreviewCourse}
-                slug={course ? course._id : ''}
+                enrollCourse={() => enrollCourse()}
+                userCoursesEnrolled={user.coursesEnrolled}
+                courseId={course._id}
               />
             </Col>
           </Row>
@@ -109,11 +158,15 @@ const CourseSlug = () => {
       </Row>
 
       <div className={styles.mobileButtonWrapper}>
-        <Link to={`/learning/${course ? course._id : ''}`}>
-          <MainButton className={styles.mobileButton} primary={true}>
-            ĐĂNG KÝ MIỄN PHÍ
-          </MainButton>
-        </Link>
+        <MainButton
+          className={styles.mobileButton}
+          primary={true}
+          onClick={enrollCourse}
+        >
+          {!user.coursesEnrolled.includes(course._id)
+            ? 'ĐĂNG KÝ MIỄN PHÍ'
+            : 'TIẾP TỤC HỌC'}
+        </MainButton>
       </div>
       <Suspense fallback={<div>Loading...</div>}>
         <Footer />
@@ -122,6 +175,7 @@ const CourseSlug = () => {
         <PreviewCourse
           isShowVideoPreviewCourse={isShowVideoPreviewCourse}
           showVideoPreviewCourse={showVideoPreviewCourse}
+          previewVideo={course.videoId}
         />
       )}
     </>
