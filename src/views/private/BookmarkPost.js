@@ -11,6 +11,7 @@ import Cookies from 'js-cookie'
 import { apiURL } from '../../context/constants'
 import timeSince from '../../components/utils/timeSince/timeSince'
 import Tabs from '../../components/utils/tabs/Tabs'
+import Loading from '../../components/utils/loading/Loading'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer')
@@ -18,18 +19,24 @@ const Footer = React.lazy(() =>
 
 const BookmarkPost = () => {
   const [bookmarkData, setBookmarkData] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => (document.title = 'Bài viết đã lưu tại F8'), [])
 
   useEffect(() => {
     ;(async () => {
+      setLoading(true)
+
       const token = Cookies.get('token')
       if (!token) return
 
       const url = `${apiURL}/me/bookmark-post`
       const data = await getBookmarkPost(url, token)
 
-      setBookmarkData(data)
+      if (data) {
+        setBookmarkData(data)
+        setLoading(false)
+      }
     })()
   }, [])
 
@@ -48,7 +55,9 @@ const BookmarkPost = () => {
     }
   }
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <>
       <Header />
       <Row>

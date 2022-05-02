@@ -12,6 +12,7 @@ import AdminBlog from '../../components/admin/AdminBlog'
 import AdminVideo from '../../components/admin/AdminVideo'
 import { apiURL } from '../../context/constants'
 import MainButton from '../../components/utils/button/MainButton'
+import Loading from '../../components/utils/loading/Loading'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer')
@@ -19,9 +20,6 @@ const Footer = React.lazy(() =>
 
 const Admin = () => {
   const location = useLocation()
-  const blog = useSelector((state) => state.blog)
-  const video = useSelector((state) => state.video)
-  const course = useSelector((state) => state.course)
 
   const [tabs, setTabs] = useState(location.pathname)
   const [courseData, setCourseData] = useState([])
@@ -29,17 +27,23 @@ const Admin = () => {
   const [videoData, setVideoData] = useState([])
   const [showAddModal, setShowAddModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => (document.title = 'Quản lý F8'), [])
 
   useEffect(() => {
     ;(async () => {
+      setLoading(true)
+
       const url = `${apiURL}/admin`
       const data = await getDataForAdmin(url)
 
-      setCourseData(data.course)
-      setBlogData(data.blogs)
-      setVideoData(data.videos)
+      if (data) {
+        setCourseData(data.course)
+        setBlogData(data.blogs)
+        setVideoData(data.videos)
+        setLoading(false)
+      }
     })()
   }, [])
 
@@ -51,7 +55,9 @@ const Admin = () => {
     }
   }
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <>
       <Header />
       <div className={styles.sidebarWrap}>

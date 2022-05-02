@@ -48,8 +48,6 @@ function App() {
       const url = `${apiURL}/auth/check-user`
       const data = await getUser(url, token)
 
-      console.log(data)
-
       if (data.success) dispatch(setAuth({ ...data.user, accessToken: token }))
 
       setLoading(false)

@@ -25,11 +25,11 @@ const BlogDetail = ({ blog, blogHighlight }) => {
 
   useEffect(() => {
     ;(async () => {
-      const { accessToken } = JSON.parse(Cookies.get('userData'))
-      if (!accessToken) return
+      const { token } = JSON.parse(Cookies.get('userData'))
+      if (!token) return
 
       const url = `${apiURL}/me/bookmark`
-      const data = await getBookmark(url, accessToken)
+      const data = await getBookmark(url, token)
 
       setBookmarkData(data.bookmark)
     })()
@@ -55,7 +55,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
     if (!token) return history.push('/login')
 
     const url = `${apiURL}/me/bookmark`
-    const data = await patchBookmark(url, blogId, accessToken)
+    const data = await patchBookmark(url, blogId, token)
 
     setBookmarkData(data.bookmark)
   }
@@ -84,7 +84,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
     const url = isLike
       ? `${apiURL}/blog/unlike/${blog._id}`
       : `${apiURL}/blog/like/${blog._id}`
-    const data = await patchLike(url, accessToken)
+    const data = await patchLike(url, token)
 
     if (data.likes && data.likes.length > 0) {
       setLikeCount(data.likes)
@@ -211,56 +211,48 @@ const BlogDetail = ({ blog, blogHighlight }) => {
               className={styles.menuWrapper}
             >
               {user.userId === blog.postedBy._id && (
-                <Dropdown.Item className={styles.menuItem}>
-                  <Link to={`/edit-post/${blog._id}`}>
-                    <i className="fa-solid fa-pen"></i>
-                    <span>Sửa bài viết</span>
-                  </Link>
-                </Dropdown.Item>
+                <Link to={`/edit-post/${blog._id}`} className={styles.menuItem}>
+                  <i className="fa-solid fa-pen"></i>
+                  <span>Sửa bài viết</span>
+                </Link>
               )}
-              <Dropdown.Item className={styles.menuItem}>
-                <div
-                  data-href={window.location.href}
-                  className="fb-share-button"
-                >
-                  <a
-                    rel="noopener noreferrer"
-                    target="_blank"
-                    href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Ff8clone.tk%2F&amp;src=sdkpreparse"
-                  >
-                    <i className="fa-brands fa-facebook"></i>
-                    <span>Chia sẻ lên Facebook</span>
-                  </a>
-                </div>
-              </Dropdown.Item>
-              <Dropdown.Item className={styles.menuItem}>
+              <div data-href={window.location.href} className="fb-share-button">
                 <a
                   rel="noopener noreferrer"
+                  className={styles.menuItem}
                   target="_blank"
-                  href={`https://twitter.com/share?ref_src=twsrc%5Etfw&url=${window.location.href}`}
-                  data-show-count="false"
+                  href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Ff8clone.tk%2F&amp;src=sdkpreparse"
                 >
-                  <i className="fa-brands fa-twitter"></i>
-                  <span>Chia sẻ lên Twitter</span>
+                  <i className="fa-brands fa-facebook"></i>
+                  <span>Chia sẻ lên Facebook</span>
                 </a>
-              </Dropdown.Item>
-              <Dropdown.Item className={styles.menuItem}>
-                <a href={`mailto:mail@mail.com;body=${window.location.href}`}>
-                  <i className="fa-solid fa-envelope"></i>
-                  <span>Chia sẻ tới Email</span>
-                </a>
-              </Dropdown.Item>
-              <Dropdown.Item className={styles.menuItem}>
-                <div
-                  onClick={() =>
-                    navigator.clipboard.writeText(window.location.href)
-                  }
-                  style={{ padding: '10px 0' }}
-                >
-                  <i className="fa-solid fa-link"></i>
-                  <span>Sao chép liên kết</span>
-                </div>
-              </Dropdown.Item>
+              </div>
+              <a
+                rel="noopener noreferrer"
+                className={styles.menuItem}
+                target="_blank"
+                href={`https://twitter.com/share?ref_src=twsrc%5Etfw&url=${window.location.href}`}
+                data-show-count="false"
+              >
+                <i className="fa-brands fa-twitter"></i>
+                <span>Chia sẻ lên Twitter</span>
+              </a>
+              <a
+                href={`mailto:mail@mail.com;body=${window.location.href}`}
+                className={styles.menuItem}
+              >
+                <i className="fa-solid fa-envelope"></i>
+                <span>Chia sẻ tới Email</span>
+              </a>
+              <div
+                onClick={() =>
+                  navigator.clipboard.writeText(window.location.href)
+                }
+                className={styles.menuItem}
+              >
+                <i className="fa-solid fa-link"></i>
+                <span>Sao chép liên kết</span>
+              </div>
             </Tippy>
           </div>
         </div>

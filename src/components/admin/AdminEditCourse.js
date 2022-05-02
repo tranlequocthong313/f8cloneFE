@@ -1,7 +1,9 @@
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import Cookies from 'js-cookie'
 import { useEffect, useState } from 'react'
 import { Form } from 'react-bootstrap'
 import { apiURL } from '../../context/constants'
+import { storage } from '../../firebase/config'
 import MainModal from '../utils/main-modal/MainModal'
 import removeActions from '../utils/remove-accents/removeActions'
 import Tippy from '../utils/tippy/Tippy'
@@ -25,6 +27,8 @@ const AdminEditCourse = ({
   const [requireTags, setRequireTags] = useState([])
   const [invalidRequireTag, setInvalidRequireTag] = useState(null)
   const [role, setRole] = useState('')
+  const [preview, setPreview] = useState(null)
+  const [image, setImage] = useState(null)
 
   useEffect(() => {
     setTitle(courseForEdit.title)
@@ -65,18 +69,17 @@ const AdminEditCourse = ({
   const removeRequireTag = (tag) =>
     setRequireTags((prev) => prev.filter((item) => item !== tag))
 
-  const editCourse = async () => {
+  const editCourse = async (imageURL) => {
     const token = Cookies.get('token')
     if (!token) return
 
     const url = `${apiURL}/courses/edit/${courseId}`
-    const data = await putEditCourse(url, accessToken)
+    const data = await putEditCourse(url, imageURL, token)
 
-    console.log(data)
     setCourseData(data)
   }
 
-  const putEditCourse = async (url, token) => {
+  const putEditCourse = async (url, imageURL, token) => {
     try {
       return (
         await fetch(url, {
@@ -85,7 +88,9 @@ const AdminEditCourse = ({
             title,
             description,
             videoId,
-            image: `https://i.ytimg.com/vi/${videoId}/sddefault.jpg`,
+            image: imageURL
+              ? imageURL
+              : `https://i.ytimg.com/vi/${videoId}/sddefault.jpg`,
             search: removeActions(title),
             level,
             role,
@@ -109,6 +114,36 @@ const AdminEditCourse = ({
       setGoalTags([])
       setRequireTags([])
     }
+  }
+
+  useEffect(() => {
+    return () => preview && URL.revokeObjectURL(preview)
+  }, [preview])
+
+  const chooseImage = (e) => {
+    const image = URL.createObjectURL(e.target.files[0])
+    setPreview(image)
+    setImage(e.target.files[0])
+  }
+
+  const uploadImageToStorage = () => {
+    if (!image) return editCourse()
+
+    const storageRef = ref(storage, `uploads/${image.name}`)
+    const uploadTask = uploadBytesResumable(storageRef, image)
+    uploadTask.on(
+      'state_changed',
+      () => {},
+      (err) => console.log(err),
+      async () => {
+        try {
+          const url = await getDownloadURL(uploadTask.snapshot.ref)
+          editCourse(url)
+        } catch (error) {
+          console.error(error.message)
+        }
+      }
+    )
   }
 
   return (
@@ -140,6 +175,14 @@ const AdminEditCourse = ({
               placeholder="Video giới thiêu khóa học"
               value={videoId}
               onChange={(e) => setVideoId(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Control
+              className={styles.formInput}
+              onChange={chooseImage}
+              type="file"
+              accept="image/*"
             />
           </Form.Group>
           <Form.Group className="d-flex">
@@ -262,7 +305,7 @@ const AdminEditCourse = ({
             <div
               className={styles.createButton}
               onClick={() => {
-                editCourse()
+                uploadImageToStorage()
                 setShowModal()
               }}
             >

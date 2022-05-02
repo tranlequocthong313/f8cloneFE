@@ -11,6 +11,7 @@ import Cookies from 'js-cookie'
 import timeSince from '../../components/utils/timeSince/timeSince'
 import Tabs from '../../components/utils/tabs/Tabs'
 import Tippy from '../../components/utils/tippy/Tippy'
+import Loading from '../../components/utils/loading/Loading'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer')
@@ -21,18 +22,24 @@ const MyBlog = () => {
 
   const [tabs, setTabs] = useState(location.pathname)
   const [myBlog, setMyBlog] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => (document.title = 'Bài viết của tôi tại F8'), [])
 
   useEffect(() => {
     ;(async () => {
+      setLoading(true)
+
       const token = Cookies.get('token')
       if (!token) return
 
       const url = `${apiURL}/help/my-post`
       const data = await getMyPost(url, token)
 
-      setMyBlog(data)
+      if (data) {
+        setMyBlog(data)
+        setLoading(false)
+      }
     })()
   }, [])
 
@@ -77,7 +84,9 @@ const MyBlog = () => {
     }
   }
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <>
       <Header />
       <Row>

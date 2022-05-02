@@ -1,15 +1,14 @@
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import Cookies from 'js-cookie'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Form } from 'react-bootstrap'
-import { useDispatch } from 'react-redux'
 import { apiURL } from '../../context/constants'
+import { storage } from '../../firebase/config'
 import MainModal from '../utils/main-modal/MainModal'
 import removeActions from '../utils/remove-accents/removeActions'
 import styles from './AdminCreateCourse.module.scss'
 
 const AdminAddCourse = ({ showModal, setShowModal, setCourseData }) => {
-  const dispatch = useDispatch()
-
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [videoId, setVideoId] = useState('')
@@ -21,7 +20,8 @@ const AdminAddCourse = ({ showModal, setShowModal, setCourseData }) => {
   const [requireTags, setRequireTags] = useState([])
   const [invalidRequireTag, setInvalidRequireTag] = useState(null)
   const [role, setRole] = useState('')
-  const [disabled, setDisabled] = useState(true)
+  const [preview, setPreview] = useState(null)
+  const [image, setImage] = useState(null)
 
   const addGoalTag = (e) => {
     const isEnterPressed = e.keyCode === 13
@@ -51,17 +51,17 @@ const AdminAddCourse = ({ showModal, setShowModal, setCourseData }) => {
   const removeRequireTag = (tag) =>
     setRequireTags((prev) => prev.filter((item) => item !== tag))
 
-  const createCourse = async () => {
+  const createCourse = async (imageURL) => {
     const token = Cookies.get('token')
     if (!token) return
 
     const url = `${apiURL}/courses/create`
-    const data = await postCreateCourse(url, token)
+    const data = await postCreateCourse(url, imageURL, token)
 
     setCourseData((prev) => [data, ...prev])
   }
 
-  const postCreateCourse = async (url, token) => {
+  const postCreateCourse = async (url, imageURL, token) => {
     try {
       return (
         await fetch(url, {
@@ -70,7 +70,9 @@ const AdminAddCourse = ({ showModal, setShowModal, setCourseData }) => {
             title,
             description,
             videoId,
-            image: `https://i.ytimg.com/vi/${videoId}/sddefault.jpg`,
+            image: imageURL
+              ? imageURL
+              : `https://i.ytimg.com/vi/${videoId}/sddefault.jpg`,
             search: removeActions(title),
             level,
             role,
@@ -94,6 +96,36 @@ const AdminAddCourse = ({ showModal, setShowModal, setCourseData }) => {
       setGoalTags([])
       setRequireTags([])
     }
+  }
+
+  useEffect(() => {
+    return () => preview && URL.revokeObjectURL(preview)
+  }, [preview])
+
+  const chooseImage = (e) => {
+    const image = URL.createObjectURL(e.target.files[0])
+    setPreview(image)
+    setImage(e.target.files[0])
+  }
+
+  const uploadImageToStorage = () => {
+    if (!image) return createCourse()
+
+    const storageRef = ref(storage, `uploads/${image.name}`)
+    const uploadTask = uploadBytesResumable(storageRef, image)
+    uploadTask.on(
+      'state_changed',
+      () => {},
+      (err) => console.log(err),
+      async () => {
+        try {
+          const url = await getDownloadURL(uploadTask.snapshot.ref)
+          createCourse(url)
+        } catch (error) {
+          console.error(error.message)
+        }
+      }
+    )
   }
 
   return (
@@ -125,6 +157,14 @@ const AdminAddCourse = ({ showModal, setShowModal, setCourseData }) => {
               placeholder="Video giới thiêu khóa học"
               onChange={(e) => setVideoId(e.target.value)}
               value={videoId}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Control
+              className={styles.formInput}
+              onChange={chooseImage}
+              type="file"
+              accept="image/*"
             />
           </Form.Group>
           <Form.Group className="d-flex">
@@ -247,7 +287,7 @@ const AdminAddCourse = ({ showModal, setShowModal, setCourseData }) => {
             <div
               className={styles.createButton}
               onClick={() => {
-                createCourse()
+                uploadImageToStorage()
                 setShowModal()
               }}
             >

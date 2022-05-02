@@ -18,12 +18,8 @@ const Notification = () => {
 
   useEffect(() => {
     current?.on('notificationReceived', async (data) => {
-      console.log('SOCKET: ', data)
-
       const url = `${apiURL}/notification/new-notification`
       const notifications = await createNotification(url, data)
-
-      console.log('SAVED', notifications)
 
       setNotifications((prev) => [notifications, ...prev])
       handleSetSeenAll([notifications])
@@ -65,8 +61,6 @@ const Notification = () => {
         })
 
         const data = await res.json()
-
-        console.log('FETCH:', data)
 
         handleSetSeenAll(data)
         setNotifications(data)
