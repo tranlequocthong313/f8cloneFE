@@ -11,7 +11,9 @@ const SocketContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (!socket.current) {
-      socket.current = io(apiURL)
+      socket.current = io(apiURL, {
+        transports: ['websocket', 'polling', 'flashsocket'],
+      })
     }
 
     if (socket.current && userId) {

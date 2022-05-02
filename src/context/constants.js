@@ -8,7 +8,7 @@ import wowEmoji from '../asset/images/wowemoji.png'
 const apiURL =
   process.env.NODE_ENV !== 'production'
     ? 'http://localhost:5000'
-    : 'https://f8clone.herokuapp.com:80'
+    : 'https://f8clone.herokuapp.com'
 
 const COUNTRY_CODE = {
   AF: {
