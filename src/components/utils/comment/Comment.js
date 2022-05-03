@@ -4,9 +4,9 @@ import CommentHeader from './CommentHeader'
 import CommentInput from './CommentInput'
 import CommentBody from './CommentBody'
 import { useSelector } from 'react-redux'
-import MainToast from '../toast/MainToast'
 import ScrollToTop from '../scroll/ScrollToTop'
 import { apiURL } from '../../../context/constants'
+import ModalError from '../modal-error/ModalError'
 
 const Comment = ({ submitComment, commentInput, onInput, blog }) => {
   const commentRef = useRef()
@@ -16,10 +16,6 @@ const Comment = ({ submitComment, commentInput, onInput, blog }) => {
   const [showSubmit, setShowSubmit] = useState(false)
   const [showCode, setShowCode] = useState(false)
   const [visible, setVisible] = useState(false)
-  const [reportStatus, setReportStatus] = useState({
-    isSuccess: false,
-    show: false,
-  })
 
   const SHOW_SCROLL_TO_TOP_OFFSET = 1000
   const scrollToTop = () =>
@@ -40,7 +36,7 @@ const Comment = ({ submitComment, commentInput, onInput, blog }) => {
     try {
       return (await fetch(url)).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 
@@ -81,19 +77,6 @@ const Comment = ({ submitComment, commentInput, onInput, blog }) => {
           />
         )}
       </div>
-      <MainToast
-        status={reportStatus}
-        setCreateStatus={() =>
-          setReportStatus((prev) => {
-            return {
-              ...prev,
-              show: false,
-            }
-          })
-        }
-        successText={'Đã gửi báo cáo tới quản trị viên'}
-        failText={'Gửi báo cáo không thành công'}
-      />
     </>
   )
 }

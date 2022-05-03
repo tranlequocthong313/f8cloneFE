@@ -1,45 +1,26 @@
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { Suspense, useContext, useEffect, useState } from 'react'
 import { Row, Col, Form } from 'react-bootstrap'
 import styles from './Contact.module.scss'
 import Header from '../../components/main-layout/nav/Header'
 import SideBar from '../../components/main-layout/sidebar/SideBar'
 import { apiURL } from '../../context/constants'
-import MainToast from '../../components/utils/toast/MainToast'
 import MainButton from '../../components/utils/button/MainButton'
+import ModalError from '../../components/utils/modal-error/ModalError'
+import { ErrorContext } from '../../context/ErrorContext'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer')
 )
 
 const Contact = () => {
+  const { onShowError } = useContext(ErrorContext)
+
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
   const [content, setContent] = useState('')
-  const [contactStatus, setContactStatus] = useState({
-    isSuccess: false,
-    show: false,
-  })
 
   useEffect(() => (document.title = 'Liên hệ với F8'), [])
-
-  const setCreateStatusFalse = () =>
-    setContactStatus((prev) => {
-      return {
-        ...prev,
-        isSuccess: false,
-        show: true,
-      }
-    })
-
-  const setCreateStatusTrue = () =>
-    setContactStatus((prev) => {
-      return {
-        ...prev,
-        isSuccess: true,
-        show: true,
-      }
-    })
 
   const submitContact = async (e) => {
     e.preventDefault()
@@ -49,8 +30,7 @@ const Contact = () => {
 
     if (validInput) {
       const url = `${apiURL}/help/contact`
-      const data = await postContact(url)
-      data.success ? setCreateStatusTrue() : setCreateStatusFalse()
+      await postContact(url)
     }
   }
 
@@ -69,12 +49,15 @@ const Contact = () => {
         },
       })
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
+      onShowError()
     }
   }
 
   return (
     <>
+      <ModalError />
+
       <Header />
       <Row>
         <Col xs={0} sm={0} md={1} lg={1} xl={1}>
@@ -144,20 +127,6 @@ const Contact = () => {
           </div>
         </Col>
       </Row>
-
-      <MainToast
-        status={contactStatus}
-        setStatus={() =>
-          setContactStatus((prev) => {
-            return {
-              ...prev,
-              show: false,
-            }
-          })
-        }
-        successText={'Gửi thông tin liên hệ thành công'}
-        failText={'Gửi thông tin liên hệ không thành công'}
-      />
 
       <Suspense fallback={<div>Loading...</div>}>
         <Footer />

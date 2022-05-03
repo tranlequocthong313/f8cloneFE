@@ -4,9 +4,9 @@ import SideBar from '../../components/main-layout/sidebar/SideBar'
 import { Col, Row } from 'react-bootstrap'
 import { apiURL } from '../../context/constants'
 import CourseList from '../../components/home/courses/CourseList'
-import MainCardAdd from '../../components/utils/card/MainCardAdd'
 import Cookies from 'js-cookie'
 import Loading from '../../components/utils/loading/Loading'
+import consoleLog from '../../components/utils/console-log/consoleLog'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer')
@@ -44,7 +44,7 @@ const MyCourse = () => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 

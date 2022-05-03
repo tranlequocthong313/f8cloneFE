@@ -55,7 +55,7 @@ const Search = () => {
     try {
       return (await fetch(url)).json()
     } catch (error) {
-      console.error(error.message)
+      consoleLog(error.message)
     }
   }
 

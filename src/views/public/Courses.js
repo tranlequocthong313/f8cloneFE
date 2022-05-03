@@ -13,6 +13,7 @@ import { apiURL } from '../../context/constants'
 import styles from './Courses.module.scss'
 import '../../sass/_withSidebarContent.scss'
 import Loading from '../../components/utils/loading/Loading'
+import consoleLog from '../../components/utils/console-log/consoleLog'
 
 const Courses = () => {
   const [courseFE, setCourseFE] = useState([])
@@ -49,7 +50,7 @@ const Courses = () => {
     try {
       return (await fetch(url)).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 

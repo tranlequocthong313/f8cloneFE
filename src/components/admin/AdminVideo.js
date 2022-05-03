@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Form, Modal } from 'react-bootstrap'
-import { useDispatch } from 'react-redux'
-import { createVideo } from '../../actions/videoAction'
 import { apiURL } from '../../context/constants'
+import { ErrorContext } from '../../context/ErrorContext'
 import MainButton from '../utils/button/MainButton'
+import consoleLog from '../utils/console-log/consoleLog'
+import ModalError from '../utils/modal-error/ModalError'
 import MainTable from '../utils/table/MainTable'
 import styles from './AdminVideo.module.scss'
-import youtubeDurationFormat from 'youtube-duration-format'
 
 const AdminVideo = ({ videoData, setVideoData }) => {
-  const dispatch = useDispatch()
+  const { onShowError } = useContext(ErrorContext)
 
   const [isShowDeleteModal, setIsShowDeleteModal] = useState(false)
   const [checkboxChosen, setCheckboxChosen] = useState([])
@@ -22,11 +22,6 @@ const AdminVideo = ({ videoData, setVideoData }) => {
   }, [videoData])
 
   const showDeleteModal = () => setIsShowDeleteModal((prev) => !prev)
-
-  const formatYoutubeDuration = (duration) => {
-    const durationFormatted = youtubeDurationFormat(duration)
-    return durationFormatted
-  }
 
   const formatDateToLocaleString = (date) => new Date(date).toLocaleString()
 
@@ -80,7 +75,8 @@ const AdminVideo = ({ videoData, setVideoData }) => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
+      onShowError()
     }
   }
 
@@ -103,12 +99,14 @@ const AdminVideo = ({ videoData, setVideoData }) => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
+      onShowError()
     }
   }
 
   return (
     <>
+      <ModalError />
       <MainTable>
         <thead>
           <tr>

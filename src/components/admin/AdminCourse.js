@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Form, Modal } from 'react-bootstrap'
 import { apiURL } from '../../context/constants'
 import MainButton from '../utils/button/MainButton'
@@ -6,6 +6,9 @@ import MainTable from '../utils/table/MainTable'
 import AdminCreateCourse from './AdminCreateCourse'
 import AdminEditCourse from './AdminEditCourse'
 import styles from './AdminCourse.module.scss'
+import { ErrorContext } from '../../context/ErrorContext'
+import ModalError from '../utils/modal-error/ModalError'
+import consoleLog from '../utils/console-log/consoleLog'
 
 const AdminCourse = ({
   courseData,
@@ -15,6 +18,8 @@ const AdminCourse = ({
   setShowAddModal,
   setCourseData,
 }) => {
+  const { onShowError } = useContext(ErrorContext)
+
   const [isShowDeleteModal, setIsShowDeleteModal] = useState(false)
   const [checkboxChosen, setCheckboxChosen] = useState([])
   const [checkboxChosenAll, setCheckboxChosenAll] = useState([])
@@ -80,7 +85,8 @@ const AdminCourse = ({
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
+      onShowError()
     }
   }
 
@@ -102,7 +108,8 @@ const AdminCourse = ({
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
+      onShowError()
     }
   }
 
@@ -119,11 +126,12 @@ const AdminCourse = ({
     try {
       return (await fetch(url)).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
   return (
     <>
+      <ModalError />
       <MainTable>
         <thead>
           <tr>

@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense } from 'react'
+import { useState, useEffect } from 'react'
 import { apiURL } from '../../context/constants'
 import Header from '../main-layout/nav/Header'
 import styles from './BlogSlug.module.scss'
@@ -7,6 +7,7 @@ import { useLocation } from 'react-router-dom'
 import Footer from '../main-layout/footer/Footer'
 import BlogDetail from '../new-post/BlogDetail'
 import Loading from '../utils/loading/Loading'
+import consoleLog from '../utils/console-log/consoleLog'
 
 const BlogSlug = () => {
   const location = useLocation()
@@ -35,7 +36,7 @@ const BlogSlug = () => {
     try {
       return (await fetch(url)).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 

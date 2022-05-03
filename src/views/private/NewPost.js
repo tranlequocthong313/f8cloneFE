@@ -7,7 +7,7 @@ import '../../sass/_myIcon.scss'
 import Header from '../../components/main-layout/nav/Header'
 import '../../sass/_markdownEditor.scss'
 import ContentEditable from '../../components/utils/content-editable/ContentEditable'
-import Modal from '../../components/new-post/Modal'
+import PostOption from '../../components/new-post/PostOption'
 import { PostContext } from '../../context/PostContext'
 
 const Footer = React.lazy(() =>
@@ -59,7 +59,7 @@ const NewPost = () => {
         </>
       )}
       {showModal && (
-        <Modal
+        <PostOption
           blogContent={{
             title: titleRef.current.innerText,
             content: contentRef.current.getMdValue(),

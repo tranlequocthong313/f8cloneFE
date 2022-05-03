@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
-import { Row, Col, Image, Dropdown } from 'react-bootstrap'
+import { Row, Col, Image } from 'react-bootstrap'
 import styles from './BlogDetail.module.scss'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { Link, useHistory } from 'react-router-dom'
@@ -12,6 +12,7 @@ import Cookies from 'js-cookie'
 import { useSelector } from 'react-redux'
 import Reaction from './Reaction'
 import Tippy from '../utils/tippy/Tippy'
+import consoleLog from '../utils/console-log/consoleLog'
 import MainButton from '../utils/button/MainButton'
 import remarkGfm from 'remark-gfm'
 
@@ -46,7 +47,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 
@@ -73,7 +74,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 
@@ -107,7 +108,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 
@@ -131,7 +132,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
         },
       })
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     } finally {
       history.push('/admin/blog')
     }

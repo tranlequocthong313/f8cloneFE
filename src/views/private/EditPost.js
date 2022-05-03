@@ -11,8 +11,9 @@ import { useLocation, useHistory } from 'react-router-dom'
 import { apiURL } from '../../context/constants'
 import { PostContext } from '../../context/PostContext'
 import Cookies from 'js-cookie'
-import MainToast from '../../components/utils/toast/MainToast'
 import Loading from '../../components/utils/loading/Loading'
+import ModalError from '../../components/utils/modal-error/ModalError'
+import { ErrorContext } from '../../context/ErrorContext'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer')
@@ -25,13 +26,10 @@ const EditPost = () => {
   const location = useLocation()
   const history = useHistory()
   const { showModal, setIsValid } = useContext(PostContext)
+  const { onShowError } = useContext(ErrorContext)
 
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
-  const [editStatus, setEditStatus] = useState({
-    isSuccess: false,
-    show: false,
-  })
   const [loading, setLoading] = useState(true)
 
   const LIMIT_TITLE_LENGTH = '190'
@@ -61,27 +59,9 @@ const EditPost = () => {
     try {
       return (await fetch(url)).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
-
-  const setEditStatusTrue = () =>
-    setEditStatus((prev) => {
-      return {
-        ...prev,
-        isSuccess: true,
-        show: true,
-      }
-    })
-
-  const setEditStatusFalse = () =>
-    setEditStatus((prev) => {
-      return {
-        ...prev,
-        isSuccess: false,
-        show: true,
-      }
-    })
 
   const submitEditPost = async () => {
     const token = Cookies.get('token')
@@ -90,12 +70,7 @@ const EditPost = () => {
     const url = `${apiURL}/blog${location.pathname}`
     const data = await putEditPost(url, token)
 
-    if (data.success) {
-      history.goBack()
-      setEditStatusTrue()
-    } else {
-      setEditStatusFalse()
-    }
+    if (data.success) history.goBack()
   }
 
   const putEditPost = async (url, token) => {
@@ -113,7 +88,8 @@ const EditPost = () => {
         },
       }).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
+      onShowError()
     }
   }
 
@@ -124,6 +100,7 @@ const EditPost = () => {
       {!showModal && (
         <>
           <Header submitEditPost={submitEditPost} />
+          <ModalError />
           <div className={styles.wrapper}>
             <ContentEditable
               text={'Tiêu đề'}
@@ -141,19 +118,7 @@ const EditPost = () => {
           </div>
         </>
       )}
-      <MainToast
-        status={editStatus}
-        setStatus={() =>
-          setEditStatus((prev) => {
-            return {
-              ...prev,
-              show: false,
-            }
-          })
-        }
-        successText={'Chỉnh sửa bài viết thành công!'}
-        failText={'Chỉnh sửa bài viêt không thành công!'}
-      />
+
       <Suspense fallback={<div>Loading...</div>}>
         <Footer />
       </Suspense>

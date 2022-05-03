@@ -1,14 +1,19 @@
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import Cookies from 'js-cookie'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Form } from 'react-bootstrap'
 import { apiURL } from '../../context/constants'
+import { ErrorContext } from '../../context/ErrorContext'
 import { storage } from '../../firebase/config'
+import consoleLog from '../utils/console-log/consoleLog'
 import MainModal from '../utils/main-modal/MainModal'
+import ModalError from '../utils/modal-error/ModalError'
 import removeActions from '../utils/remove-accents/removeActions'
 import styles from './AdminCreateCourse.module.scss'
 
 const AdminAddCourse = ({ showModal, setShowModal, setCourseData }) => {
+  const { onShowError } = useContext(ErrorContext)
+
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [videoId, setVideoId] = useState('')
@@ -86,7 +91,8 @@ const AdminAddCourse = ({ showModal, setShowModal, setCourseData }) => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
+      onShowError()
     } finally {
       setTitle('')
       setDescription('')
@@ -116,13 +122,13 @@ const AdminAddCourse = ({ showModal, setShowModal, setCourseData }) => {
     uploadTask.on(
       'state_changed',
       () => {},
-      (err) => console.log(err),
+      (err) => consoleLog(err),
       async () => {
         try {
           const url = await getDownloadURL(uploadTask.snapshot.ref)
           createCourse(url)
         } catch (error) {
-          console.error(error.message)
+          consoleLog(error.message)
         }
       }
     )
@@ -130,6 +136,7 @@ const AdminAddCourse = ({ showModal, setShowModal, setCourseData }) => {
 
   return (
     <MainModal show={showModal} onHide={setShowModal} centered={true}>
+      <ModalError />
       <div className={styles.wrapper}>
         <h5>Tạo khóa học</h5>
         <Form className={styles.formWrapper}>

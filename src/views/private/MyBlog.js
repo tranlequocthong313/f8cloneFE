@@ -12,6 +12,7 @@ import timeSince from '../../components/utils/timeSince/timeSince'
 import Tabs from '../../components/utils/tabs/Tabs'
 import Tippy from '../../components/utils/tippy/Tippy'
 import Loading from '../../components/utils/loading/Loading'
+import consoleLog from '../../components/utils/console-log/consoleLog'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer')
@@ -54,7 +55,7 @@ const MyBlog = () => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 
@@ -80,7 +81,7 @@ const MyBlog = () => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 

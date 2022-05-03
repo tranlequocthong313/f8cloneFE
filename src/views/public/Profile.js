@@ -31,7 +31,7 @@ const Profile = () => {
     try {
       return await fetch(url)
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 

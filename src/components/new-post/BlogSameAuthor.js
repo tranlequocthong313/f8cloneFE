@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styles from './BlogSameAuthor.module.scss'
 import { Link } from 'react-router-dom'
 import { apiURL } from '../../context/constants'
+import consoleLog from '../../components/utils/console-log/consoleLog'
 
 const BlogSameAuthor = ({ postedBy, blogId }) => {
   const [blogSameAuthor, setBlogSameAuthor] = useState([])
@@ -20,7 +21,7 @@ const BlogSameAuthor = ({ postedBy, blogId }) => {
     try {
       return (await fetch(url)).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 

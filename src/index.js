@@ -10,6 +10,7 @@ import SocketContextProvider from './context/SocketContext'
 import { BrowserRouter as Router } from 'react-router-dom'
 import CommentContextProvider from './context/CommentContext'
 import LessonContextProvider from './context/LessonContext'
+import ErrorContextProvider from './context/ErrorContext'
 
 ReactDOM.render(
   <Router>
@@ -19,7 +20,9 @@ ReactDOM.render(
           <SocketContextProvider>
             <CommentContextProvider>
               <LessonContextProvider>
-                <App />
+                <ErrorContextProvider>
+                  <App />
+                </ErrorContextProvider>
               </LessonContextProvider>
             </CommentContextProvider>
           </SocketContextProvider>

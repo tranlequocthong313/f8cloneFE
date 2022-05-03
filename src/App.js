@@ -28,6 +28,7 @@ import Careers from './views/public/Careers'
 import About from './views/public/About'
 import { apiURL } from './context/constants'
 import Loading from './components/utils/loading/Loading'
+import consoleLog from './components/utils/console-log/consoleLog'
 
 function App() {
   const dispatch = useDispatch()
@@ -66,7 +67,7 @@ function App() {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 

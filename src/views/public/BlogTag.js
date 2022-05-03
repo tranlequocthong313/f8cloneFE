@@ -8,6 +8,7 @@ import SideBar from '../../components/main-layout/sidebar/SideBar'
 import { apiURL } from '../../context/constants'
 import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
+import consoleLog from '../../components/utils/console-log/consoleLog'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer')
@@ -38,7 +39,7 @@ const BlogTag = () => {
     try {
       return (await fetch(url)).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 

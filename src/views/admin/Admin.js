@@ -13,6 +13,7 @@ import AdminVideo from '../../components/admin/AdminVideo'
 import { apiURL } from '../../context/constants'
 import MainButton from '../../components/utils/button/MainButton'
 import Loading from '../../components/utils/loading/Loading'
+import consoleLog from '../../components/utils/console-log/consoleLog'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer')
@@ -51,7 +52,7 @@ const Admin = () => {
     try {
       return (await fetch(url)).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 

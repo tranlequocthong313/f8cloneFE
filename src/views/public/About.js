@@ -10,6 +10,7 @@ import Header from '../../components/main-layout/nav/Header'
 import Footer from '../../components/main-layout/footer/Footer'
 import CareerList from '../../components/career/CareerList'
 import { apiURL } from '../../context/constants'
+import consoleLog from '../../components/utils/console-log/consoleLog'
 
 const About = () => {
   const [jobs, setJobs] = useState([])
@@ -34,7 +35,7 @@ const About = () => {
     try {
       return (await fetch(url)).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 

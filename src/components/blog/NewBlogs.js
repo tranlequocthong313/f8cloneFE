@@ -6,6 +6,7 @@ import styles from './NewBlogs.module.scss'
 import { apiURL } from '../../context/constants'
 import timeSince from '../utils/timeSince/timeSince'
 import Cookies from 'js-cookie'
+import consoleLog from '../utils/console-log/consoleLog'
 
 const NewBlogs = ({ blogs }) => {
   const history = useHistory()
@@ -35,7 +36,7 @@ const NewBlogs = ({ blogs }) => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 
@@ -62,7 +63,7 @@ const NewBlogs = ({ blogs }) => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 

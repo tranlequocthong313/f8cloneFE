@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import CourseList from '../../components/home/courses/CourseList'
 import Loading from '../../components/utils/loading/Loading'
+import ModalError from '../../components/utils/modal-error/ModalError'
 
 const BlogList = React.lazy(() =>
   import('../../components/home/blogs/BlogList')
@@ -67,7 +68,7 @@ const Home = () => {
     try {
       return (await fetch(url)).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 

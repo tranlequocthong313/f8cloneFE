@@ -8,13 +8,16 @@ import styles from './CommentBody.module.scss'
 import Tippy from '../tippy/Tippy'
 import { CommentContext } from '../../../context/CommentContext'
 import { SocketContext } from '../../../context/SocketContext'
+import { ErrorContext } from '../../../context/ErrorContext'
 import { Dropdown } from 'react-bootstrap'
 import likeemoji from '../../../asset/images/likeemoji.png'
+import ModalError from '../modal-error/ModalError'
 
 const CommentBody = ({ commentData, setCommentData, blogId }) => {
   const user = useSelector((state) => state.user)
   const { isEditing, canModifyComment } = useContext(CommentContext)
   const { current } = useContext(SocketContext).socket
+  const { onShowError } = useContext(ErrorContext)
 
   const [isCode, setIsCode] = useState(false)
   const [editCommentText, setEditCommentText] = useState('')
@@ -50,7 +53,8 @@ const CommentBody = ({ commentData, setCommentData, blogId }) => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
+      onShowError()
     }
   }
 
@@ -80,7 +84,8 @@ const CommentBody = ({ commentData, setCommentData, blogId }) => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
+      onShowError()
     } finally {
       setEditCommentText('')
       cancelInput()
@@ -153,12 +158,14 @@ const CommentBody = ({ commentData, setCommentData, blogId }) => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
+      onShowError()
     }
   }
 
   return (
     <>
+      <ModalError />
       {commentData.map((comment) => (
         <div key={comment._id}>
           <div className={styles.commentList}>

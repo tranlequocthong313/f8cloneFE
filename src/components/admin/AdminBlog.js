@@ -1,15 +1,16 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Form, Modal } from 'react-bootstrap'
-import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { createBlog } from '../../actions/blogAction'
 import { apiURL } from '../../context/constants'
 import MainButton from '../utils/button/MainButton'
 import MainTable from '../utils/table/MainTable'
 import styles from './AdminBlog.module.scss'
+import { ErrorContext } from '../../context/ErrorContext'
+import ModalError from '../../components/utils/modal-error/ModalError'
+import consoleLog from '../utils/console-log/consoleLog'
 
 const AdminBlog = ({ blogData, setBlogData }) => {
-  const dispatch = useDispatch()
+  const { onShowError } = useContext(ErrorContext)
 
   const [isShowDeleteModal, setIsShowDeleteModal] = useState(false)
   const [checkboxChosen, setCheckboxChosen] = useState([])
@@ -75,7 +76,8 @@ const AdminBlog = ({ blogData, setBlogData }) => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
+      onShowError()
     }
   }
 
@@ -98,12 +100,14 @@ const AdminBlog = ({ blogData, setBlogData }) => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
+      onShowError()
     }
   }
 
   return (
     <>
+      <ModalError />
       <MainTable>
         <thead>
           <tr>

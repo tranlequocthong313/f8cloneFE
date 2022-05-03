@@ -1,12 +1,11 @@
 import React, { useEffect, useState, Suspense } from 'react'
-import { Link, useHistory, useLocation } from 'react-router-dom'
-import { Row, Col, Spinner } from 'react-bootstrap'
+import { useHistory, useLocation } from 'react-router-dom'
+import { Row, Col } from 'react-bootstrap'
 import Header from '../main-layout/nav/Header'
 import SideBar from '../main-layout/sidebar/SideBar'
 import CourseDetail from './CourseDetail'
 import CourseEnroll from './CourseEnroll'
 import styles from './CourseSlug.module.scss'
-import CurriculumOfCourse from './CurriculumOfCourse'
 import PreviewCourse from './PreviewCourse'
 import { apiURL } from '../../context/constants'
 import MainButton from '../utils/button/MainButton'
@@ -15,6 +14,7 @@ import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { enrollCourse as enroll } from '../../actions/userAction'
 import Loading from '../utils/loading/Loading'
+import consoleLog from '../utils/console-log/consoleLog'
 
 const Footer = React.lazy(() => import('../main-layout/footer/Footer'))
 
@@ -51,7 +51,7 @@ const CourseSlug = () => {
     try {
       return (await fetch(url)).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 
@@ -78,7 +78,7 @@ const CourseSlug = () => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 

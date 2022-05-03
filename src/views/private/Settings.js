@@ -11,6 +11,7 @@ import { settings } from '../../actions/userAction'
 import { ref, uploadBytesResumable, getDownloadURL } from '@firebase/storage'
 import { storage } from '../../firebase/config'
 import removeActions from '../../components/utils/remove-accents/removeActions'
+import consoleLog from '../../components/utils/console-log/consoleLog'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer')
@@ -86,7 +87,7 @@ const Settings = () => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     } finally {
       handleSettingMode('name')
     }
@@ -133,7 +134,7 @@ const Settings = () => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     } finally {
       handleSettingMode('avatar')
     }
@@ -168,7 +169,7 @@ const Settings = () => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     } finally {
       handleSettingMode('bio')
     }
@@ -206,7 +207,7 @@ const Settings = () => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     } finally {
       handleSettingMode(socialName)
     }

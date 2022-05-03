@@ -6,6 +6,7 @@ import {
   //   useSearchParams,
 } from 'react-router-dom'
 import { apiURL } from './constants'
+import consoleLog from '../components/utils/console-log/consoleLog'
 
 export const LessonContext = createContext()
 
@@ -27,7 +28,7 @@ const LessonContextProvider = ({ children }) => {
       setIsShowMenuTrack(id)
       createParams(id)
     } catch (error) {
-      console.error(error.message)
+      consoleLog(error.message)
     }
   }
 
@@ -55,7 +56,7 @@ const LessonContextProvider = ({ children }) => {
     //   console.log('Video End')
     //   await fetch(`${apiURL}${location.pathname}?id=${query}`)
     // } catch (error) {
-    //   console.error(error.message)
+    //   consoleLog(error.message)
     // }
   }
 

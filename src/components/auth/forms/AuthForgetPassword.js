@@ -3,6 +3,7 @@ import { apiURL } from '../../../context/constants'
 import { Form, Spinner } from 'react-bootstrap'
 import FormGroup from '../../utils/auth-form/FormGroup'
 import styles from './AuthForgetPassword.module.scss'
+import consoleLog from '../../utils/console-log/consoleLog'
 
 const AuthForgetPassword = ({
   setForgotPassword,
@@ -52,7 +53,7 @@ const AuthForgetPassword = ({
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 
@@ -68,7 +69,6 @@ const AuthForgetPassword = ({
     setIsConfirm(true)
     setInvalidOTP(null)
   }
-  console.log(disabled)
   return (
     <Form className={styles.formBody}>
       {!isConfirm && (

@@ -32,7 +32,7 @@ const MyCourse = () => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 
@@ -65,7 +65,7 @@ const MyCourse = () => {
         {myCourse.length > 0 &&
           myCourse.map((course) => (
             <div className={styles.body} key={course._id}>
-              <Link to="/my-course">
+              <Link to={`/lesson/${course._id}`}>
                 <div
                   className={styles.image}
                   style={{ backgroundImage: `url(${course.image})` }}
@@ -73,10 +73,13 @@ const MyCourse = () => {
               </Link>
               <div className={styles.info}>
                 <h3>
-                  <Link to="/my-course">{course.title}</Link>
+                  <Link to={`/lesson/${course._id}`}>{course.title}</Link>
                 </h3>
                 <p>Bạn chưa học khóa này</p>
-                <Link to="/my-course" className={styles.startButton}>
+                <Link
+                  to={`/lesson/${course._id}`}
+                  className={styles.startButton}
+                >
                   Bắt đầu học
                 </Link>
               </div>

@@ -5,6 +5,7 @@ import styles from './AuthWithEmailAndPasswordForm.module.scss'
 import Cookies from 'js-cookie'
 import { apiURL } from '../../../context/constants'
 import AuthForgetPassword from './AuthForgetPassword'
+import consoleLog from '../../utils/console-log/consoleLog'
 
 const LoginWithEmailAndPasswordForm = ({
   switchPhoneAndEmail,
@@ -90,7 +91,7 @@ const LoginWithEmailAndPasswordForm = ({
         },
       })
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 
@@ -140,7 +141,7 @@ const LoginWithEmailAndPasswordForm = ({
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 
@@ -160,7 +161,7 @@ const LoginWithEmailAndPasswordForm = ({
         },
       })
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 
@@ -194,7 +195,7 @@ const LoginWithEmailAndPasswordForm = ({
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 

@@ -1,10 +1,13 @@
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import Cookies from 'js-cookie'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Form } from 'react-bootstrap'
 import { apiURL } from '../../context/constants'
+import { ErrorContext } from '../../context/ErrorContext'
 import { storage } from '../../firebase/config'
+import consoleLog from '../utils/console-log/consoleLog'
 import MainModal from '../utils/main-modal/MainModal'
+import ModalError from '../utils/modal-error/ModalError'
 import removeActions from '../utils/remove-accents/removeActions'
 import Tippy from '../utils/tippy/Tippy'
 import styles from './AdminEditCourse.module.scss'
@@ -16,6 +19,8 @@ const AdminEditCourse = ({
   setCourseData,
   courseForEdit,
 }) => {
+  const { onShowError } = useContext(ErrorContext)
+
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [videoId, setVideoId] = useState('')
@@ -104,7 +109,8 @@ const AdminEditCourse = ({
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
+      onShowError()
     } finally {
       setTitle('')
       setDescription('')
@@ -134,13 +140,13 @@ const AdminEditCourse = ({
     uploadTask.on(
       'state_changed',
       () => {},
-      (err) => console.log(err),
+      (err) => consoleLog(err),
       async () => {
         try {
           const url = await getDownloadURL(uploadTask.snapshot.ref)
           editCourse(url)
         } catch (error) {
-          console.error(error.message)
+          consoleLog(error.message)
         }
       }
     )
@@ -148,6 +154,7 @@ const AdminEditCourse = ({
 
   return (
     <MainModal show={showModal} onHide={setShowModal} centered={true}>
+      <ModalError />
       <div className={styles.wrapper}>
         <h5>Sửa khóa học</h5>
         <Form className={styles.formWrapper}>

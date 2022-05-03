@@ -1,44 +1,24 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { Modal, Form, Spinner } from 'react-bootstrap'
 import { apiURL } from '../../../context/constants'
 import { useDispatch } from 'react-redux'
 import styles from './CreateVideo.module.scss'
 import { createVideo } from '../../../actions/videoAction'
-import MainToast from '../../utils/toast/MainToast'
 import removeActions from '../../utils/remove-accents/removeActions'
 import MainButton from '../../utils/button/MainButton'
 import MainModal from '../../utils/main-modal/MainModal'
+import ModalError from '../../utils/modal-error/ModalError'
+import { ErrorContext } from '../../../context/ErrorContext'
 
 const CreateVideo = ({ setVideoData }) => {
-  const dispatch = useDispatch()
+  const { onShowError } = useContext(ErrorContext)
 
   const [videoId, setVideoId] = useState('')
   const [isShowCreateModal, setIsShowCreateModal] = useState(false)
   const [isPopular, setIsPopular] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [createStatus, setCreateStatus] = useState({
-    isSuccess: false,
-    show: false,
-  })
 
   const showCreateVideoModal = () => setIsShowCreateModal((prev) => !prev)
-
-  const setCreateVideoStatusTrue = () =>
-    setCreateStatus((prev) => {
-      return {
-        ...prev,
-        isSuccess: true,
-        show: true,
-      }
-    })
-  const setCreateVideoStatusFalse = () =>
-    setCreateStatus((prev) => {
-      return {
-        ...prev,
-        isSuccess: false,
-        show: true,
-      }
-    })
 
   const setLoadingAndPopularFalse = () => {
     setIsLoading(false)
@@ -77,7 +57,8 @@ const CreateVideo = ({ setVideoData }) => {
     try {
       return (await fetch(url)).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
+      onShowError()
       setLoadingAndPopularFalse()
     }
   }
@@ -87,7 +68,6 @@ const CreateVideo = ({ setVideoData }) => {
     const data = await postCreateVideo(url, videoData)
     if (!data.success) return
     setVideoData((prev) => [data.video, ...prev])
-    setCreateVideoStatusTrue()
   }
 
   const postCreateVideo = async (url, videoData) => {
@@ -102,8 +82,8 @@ const CreateVideo = ({ setVideoData }) => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
-      setCreateVideoStatusFalse()
+      consoleLog(error.message)
+      onShowError()
     } finally {
       setLoadingAndPopularFalse()
     }
@@ -111,6 +91,7 @@ const CreateVideo = ({ setVideoData }) => {
 
   return (
     <>
+      <ModalError />
       <MainButton
         outline={true}
         className={styles.videoCreate}
@@ -177,19 +158,6 @@ const CreateVideo = ({ setVideoData }) => {
           </MainButton>
         </Modal.Footer>
       </MainModal>
-      <MainToast
-        status={createStatus}
-        setStatus={() =>
-          setCreateStatus((prev) => {
-            return {
-              ...prev,
-              show: false,
-            }
-          })
-        }
-        successText={'Tạo video thành công!'}
-        failText={'Tạo video không thành công!'}
-      />
     </>
   )
 }

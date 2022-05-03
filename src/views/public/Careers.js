@@ -5,6 +5,7 @@ import CareerList from '../../components/career/CareerList'
 import Header from '../../components/main-layout/nav/Header'
 import SideBar from '../../components/main-layout/sidebar/SideBar'
 import { apiURL } from '../../context/constants'
+import consoleLog from '../../components/utils/console-log/consoleLog'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer')
@@ -33,7 +34,7 @@ const Careers = () => {
     try {
       return (await fetch(url)).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 

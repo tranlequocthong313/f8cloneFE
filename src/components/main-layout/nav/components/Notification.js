@@ -38,7 +38,7 @@ const Notification = () => {
         })
       ).json()
     } catch (error) {
-      console.error(error.message)
+      consoleLog(error.message)
     }
   }
 
@@ -65,7 +65,7 @@ const Notification = () => {
         handleSetSeenAll(data)
         setNotifications(data)
       } catch (error) {
-        console.error(error.message)
+        consoleLog(error.message)
       }
     })()
   }, [])
@@ -96,7 +96,7 @@ const Notification = () => {
         })
       ).json()
     } catch (error) {
-      console.error(error.message)
+      consoleLog(error.message)
     }
   }
 

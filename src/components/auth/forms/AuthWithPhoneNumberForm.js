@@ -76,7 +76,7 @@ const LoginWithPhoneNumberForm = ({
       )
       window.confirmationResult = confirmationResult
     } catch (error) {
-      console.error(error.message)
+      consoleLog(error.message)
     }
   }
 
@@ -130,7 +130,7 @@ const LoginWithPhoneNumberForm = ({
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 
@@ -151,7 +151,7 @@ const LoginWithPhoneNumberForm = ({
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 
@@ -183,7 +183,7 @@ const LoginWithPhoneNumberForm = ({
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 

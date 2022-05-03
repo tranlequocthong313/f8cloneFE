@@ -13,6 +13,7 @@ import { login } from '../../actions/userAction'
 import SignInButtonContainer from '../../components/auth/buttons/SignInButtonContainer'
 import { apiURL } from '../../context/constants'
 import Cookies from 'js-cookie'
+import consoleLog from '../../components/utils/console-log/consoleLog'
 
 const Auth = () => {
   const history = useHistory()
@@ -55,7 +56,7 @@ const Auth = () => {
         accessToken: data.accessToken,
       })
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
       if (error.code === 'auth/account-exists-with-different-credential')
         setEmailUsed(true)
     }
@@ -73,7 +74,7 @@ const Auth = () => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 

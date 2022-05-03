@@ -12,6 +12,7 @@ import { apiURL } from '../../context/constants'
 import timeSince from '../../components/utils/timeSince/timeSince'
 import Tabs from '../../components/utils/tabs/Tabs'
 import Loading from '../../components/utils/loading/Loading'
+import consoleLog from '../../components/utils/console-log/consoleLog'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer')
@@ -51,7 +52,7 @@ const BookmarkPost = () => {
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
     }
   }
 

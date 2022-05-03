@@ -5,7 +5,9 @@ import Cookies from 'js-cookie'
 import { useHistory } from 'react-router-dom'
 import { apiURL } from '../../../context/constants'
 import { SocketContext } from '../../../context/SocketContext'
+import { ErrorContext } from '../../../context/ErrorContext'
 import { useSelector } from 'react-redux'
+import ModalError from '../../utils/modal-error/ModalError'
 
 const CommentInput = ({
   showCode,
@@ -18,10 +20,10 @@ const CommentInput = ({
 }) => {
   const history = useHistory()
   const contentEditableRef = useRef()
-
   const user = useSelector((state) => state.user)
 
   const { current } = useContext(SocketContext).socket
+  const { onShowError } = useContext(ErrorContext)
 
   const [commentInput, setCommentInput] = useState('')
 
@@ -73,7 +75,8 @@ const CommentInput = ({
         })
       ).json()
     } catch (error) {
-      console.log(error.message)
+      consoleLog(error.message)
+      onShowError()
     } finally {
       setCommentInput('')
       setShowSubmit(false)
@@ -83,6 +86,7 @@ const CommentInput = ({
 
   return (
     <div className={styles.comment}>
+      <ModalError />
       <img src={userPhotoURL} alt="ảnh đại diện" />
       <div onClick={() => setShowSubmit(true)}>
         <ContentEditable

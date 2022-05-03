@@ -46,7 +46,7 @@ const Search = () => {
         })
       }
     } catch (error) {
-      console.error(error.message)
+      consoleLog(error.message)
     }
   }
 
