@@ -17,6 +17,10 @@
     color: black;
   }
 
+  &.lessons {
+    color: #146ebe;
+  }
+
   &.disabled {
     color: #ddd;
     pointer-events: none;

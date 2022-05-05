@@ -6,6 +6,7 @@ import Header from '../../components/main-layout/nav/Header'
 import SideBar from '../../components/main-layout/sidebar/SideBar'
 import { apiURL } from '../../context/constants'
 import consoleLog from '../../components/utils/console-log/consoleLog'
+import Loading from '../../components/utils/loading/Loading'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer')
@@ -13,6 +14,7 @@ const Footer = React.lazy(() =>
 
 const Careers = () => {
   const [jobs, setJobs] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(
     () =>
@@ -23,10 +25,15 @@ const Careers = () => {
 
   useEffect(() => {
     ;(async () => {
+      setLoading(true)
+
       const url = `${apiURL}/help/get-job`
       const data = await getJob(url)
 
-      setJobs(data)
+      if (data) {
+        setJobs(data)
+        setLoading(false)
+      }
     })()
   }, [])
 
@@ -38,7 +45,9 @@ const Careers = () => {
     }
   }
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <>
       <Header />
       <Row>

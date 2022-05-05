@@ -1,4 +1,4 @@
-import React, { memo, Suspense, useContext } from 'react'
+import React, { memo, useContext } from 'react'
 import { Navbar, Container } from 'react-bootstrap'
 import Logo from './components/Logo'
 import Search from './components/Search'
@@ -13,10 +13,15 @@ import User from './components/User'
 import MyCourse from './components/MyCourse'
 import Notification from './components/Notification'
 import { PostContext } from '../../../context/PostContext'
+import Login from './components/Login'
 
-const Login = React.lazy(() => import('./components/Login'))
-
-const Header = ({ className, isProfile, isSearchPage, submitEditPost }) => {
+const Header = ({
+  className,
+  isProfile,
+  isSearchPage,
+  isAdmin,
+  submitEditPost,
+}) => {
   const user = useSelector((state) => state.user)
   const { isEditPost, isNewPost } = useContext(PostContext)
 
@@ -25,7 +30,11 @@ const Header = ({ className, isProfile, isSearchPage, submitEditPost }) => {
       <Container fluid style={{ padding: 0 }}>
         <MobileNav photoURL={user.photoURL} />
         <Logo />
-        {!isEditPost && !isNewPost && !isProfile && !isSearchPage && <Search />}
+        {!isEditPost &&
+          !isNewPost &&
+          !isProfile &&
+          !isAdmin &&
+          !isSearchPage && <Search />}
         <div className={styles.userAction}>
           {(isNewPost || isEditPost) && (
             <PublishButton submitEditPost={submitEditPost} />
@@ -35,23 +44,20 @@ const Header = ({ className, isProfile, isSearchPage, submitEditPost }) => {
               <div className={styles.searchMobileIcon}></div>
             </Link>
           )}
-
-          <Suspense fallback={<User />}>
-            {user.isLoggedIn ? (
-              <>
-                {!isProfile && <MyCourse />}
-                <Notification />
-                <User
-                  photoURL={user.photoURL}
-                  displayName={user.displayName}
-                  email={user.email}
-                  slug={user.slug}
-                />
-              </>
-            ) : (
-              <Login />
-            )}
-          </Suspense>
+          {user.isLoggedIn ? (
+            <>
+              {!isProfile && !isAdmin && <MyCourse />}
+              <Notification />
+              <User
+                photoURL={user.photoURL}
+                displayName={user.displayName}
+                email={user.email}
+                slug={user.slug}
+              />
+            </>
+          ) : (
+            <Login />
+          )}
         </div>
       </Container>
     </Navbar>

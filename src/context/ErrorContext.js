@@ -3,7 +3,7 @@ import React, { createContext, useState } from 'react'
 export const ErrorContext = createContext()
 
 const ErrorContextProvider = ({ children }) => {
-  const [show, setShow] = useState(true)
+  const [show, setShow] = useState(false)
 
   const onHideError = () => setShow(false)
   const onShowError = () => setShow(true)

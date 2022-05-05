@@ -3,29 +3,21 @@ import { Form, Modal } from 'react-bootstrap'
 import { apiURL } from '../../context/constants'
 import MainButton from '../utils/button/MainButton'
 import MainTable from '../utils/table/MainTable'
-import AdminCreateCourse from './AdminCreateCourse'
-import AdminEditCourse from './AdminEditCourse'
 import styles from './AdminCourse.module.scss'
 import { ErrorContext } from '../../context/ErrorContext'
 import ModalError from '../utils/modal-error/ModalError'
 import consoleLog from '../utils/console-log/consoleLog'
+import { Link } from 'react-router-dom'
+import formatNumber from '../utils/format-number/FormatNumber'
+import formatDateToLocaleString from '../utils/format-date/FormatDate'
 
-const AdminCourse = ({
-  courseData,
-  showAddModal,
-  showEditModal,
-  setShowEditModal,
-  setShowAddModal,
-  setCourseData,
-}) => {
+const AdminCourse = ({ courseData, setCourseData }) => {
   const { onShowError } = useContext(ErrorContext)
 
   const [isShowDeleteModal, setIsShowDeleteModal] = useState(false)
   const [checkboxChosen, setCheckboxChosen] = useState([])
   const [checkboxChosenAll, setCheckboxChosenAll] = useState([])
   const [isCheckboxChosenAll, setIsCheckboxChosenAll] = useState(false)
-  const [courseId, setCourseId] = useState('')
-  const [courseForEdit, setCourseForEdit] = useState(null)
 
   useEffect(() => {
     const courseIds = courseData.map((course) => course._id)
@@ -33,8 +25,6 @@ const AdminCourse = ({
   }, [courseData])
 
   const showDeleteModal = () => setIsShowDeleteModal((prev) => !prev)
-
-  const formatDateToLocaleString = (date) => new Date(date).toLocaleString()
 
   const checkBoxChosenSingle = (id) =>
     setCheckboxChosen((prev) => {
@@ -113,22 +103,6 @@ const AdminCourse = ({
     }
   }
 
-  const formatStudentCount = (number) =>
-    new Intl.NumberFormat(['ban', 'id']).format(number)
-
-  const getCourseForEdit = async (courseId) => {
-    const url = `${apiURL}/courses/${courseId}`
-    const data = await getCourse(url)
-    setCourseForEdit(data)
-  }
-
-  const getCourse = async (url) => {
-    try {
-      return (await fetch(url)).json()
-    } catch (error) {
-      consoleLog(error.message)
-    }
-  }
   return (
     <>
       <ModalError />
@@ -180,23 +154,30 @@ const AdminCourse = ({
                   ? 'Yes'
                   : 'No'}
               </td>
-              <td>{formatStudentCount(course.studentCount)}</td>
+              <td>{formatNumber(course.studentCount)}</td>
               <td>{formatDateToLocaleString(course.createdAt)}</td>
               <td>{formatDateToLocaleString(course.updatedAt)}</td>
               <td>
-                <i
-                  onClick={() => {
-                    setShowEditModal(true)
-                    setCourseId(course._id)
-                    getCourseForEdit(course._id)
-                  }}
-                  title={'Chỉnh sửa kho học'}
-                  className={
-                    checkboxChosen.includes(course._id)
-                      ? `fa-solid fa-pen ${styles.buttonIcon} ${styles.disabled}`
-                      : `fa-solid fa-pen ${styles.buttonIcon}`
-                  }
-                ></i>
+                <Link to={`/admin/edit-course/${course._id}`}>
+                  <i
+                    title={'Chỉnh sửa khoá học'}
+                    className={
+                      checkboxChosen.includes(course._id)
+                        ? `fa-solid fa-pen ${styles.buttonIcon} ${styles.disabled}`
+                        : `fa-solid fa-pen ${styles.buttonIcon}`
+                    }
+                  ></i>
+                </Link>
+                <Link to={`/admin/lessons/${course._id}`}>
+                  <i
+                    title={'Quản lý bài học'}
+                    className={
+                      checkboxChosen.includes(course._id)
+                        ? `fa-solid fa-book ${styles.lessons}  ${styles.buttonIcon} ${styles.disabled}`
+                        : `fa-solid fa-book ${styles.lessons} ${styles.buttonIcon} `
+                    }
+                  ></i>
+                </Link>
                 {!checkboxChosen.includes(course._id) && (
                   <i
                     onClick={() =>
@@ -260,23 +241,6 @@ const AdminCourse = ({
           <MainButton onClick={showDeleteModal}>Hủy</MainButton>
         </Modal.Footer>
       </Modal>
-
-      <AdminCreateCourse
-        showModal={showAddModal}
-        setShowModal={() => setShowAddModal(false)}
-        setCourseData={setCourseData}
-      />
-
-      {courseForEdit && (
-        <AdminEditCourse
-          courseData={courseData}
-          showModal={showEditModal}
-          setShowModal={() => setShowEditModal(false)}
-          setCourseData={setCourseData}
-          courseId={courseId}
-          courseForEdit={courseForEdit}
-        />
-      )}
     </>
   )
 }

@@ -25,6 +25,9 @@ const NavContextProvider = ({ children }) => {
       case '/careers':
         setActiveTab('careers')
         break
+      case '/my-course':
+        setActiveTab('my-course')
+        break
       case '/bookmark-post':
         setActiveTab('bookmark-post')
         break

@@ -8,6 +8,7 @@ import styles from './AdminBlog.module.scss'
 import { ErrorContext } from '../../context/ErrorContext'
 import ModalError from '../../components/utils/modal-error/ModalError'
 import consoleLog from '../utils/console-log/consoleLog'
+import formatDateToLocaleString from '../utils/format-date/FormatDate'
 
 const AdminBlog = ({ blogData, setBlogData }) => {
   const { onShowError } = useContext(ErrorContext)
@@ -23,8 +24,6 @@ const AdminBlog = ({ blogData, setBlogData }) => {
   }, [blogData])
 
   const showDeleteModal = () => setIsShowDeleteModal((prev) => !prev)
-
-  const formatDateToLocaleString = (date) => new Date(date).toLocaleString()
 
   const checkBoxChosenSingle = (id) =>
     setCheckboxChosen((prev) => {

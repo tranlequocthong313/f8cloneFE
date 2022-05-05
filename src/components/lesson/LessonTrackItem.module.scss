@@ -1,5 +1,9 @@
 @import '../../sass/color';
 
+.noResult {
+  margin-left: 16px;
+}
+
 .wrapper {
   background-color: #f7f8fa;
   border-bottom: 1px solid #dedfe0;
@@ -18,9 +22,8 @@
     cursor: pointer;
   }
 
-  .title {
+  .episodeTitle {
     font-size: 16px;
-    font-weight: 600;
     margin: 0;
     color: #000;
   }
@@ -44,7 +47,7 @@
 .lessonItem {
   display: flex;
   flex-direction: row;
-  padding: 10px 0 10px 2px;
+  padding: 8px 0 10px 2px;
   position: relative;
   transition: all 0.3s ease-in-out;
 
@@ -61,12 +64,12 @@
   .lessonInfo {
     cursor: pointer;
     flex: 1 1;
-    margin: 0 0 0 28px;
+    margin: 0 0 0 25px;
     position: relative;
 
-    h3 {
+    .lessonTitle {
       color: #000;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 400;
       line-height: 1.4;
       margin: 0;
@@ -77,7 +80,7 @@
     p {
       font-size: 11px;
       margin-bottom: 0;
-      margin-top: 11px;
+      margin-top: 10px;
 
       i {
         color: #888;

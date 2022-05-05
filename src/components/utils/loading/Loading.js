@@ -7,9 +7,9 @@ const Loading = () => {
   return (
     <div className={styles.wrapper}>
       <img alt="F8 logo" src={f8Logo} />
-      <Spinner animation="grow" />
-      <Spinner animation="grow" />
-      <Spinner animation="grow" />
+      <Spinner animation="grow" size="sm" />
+      <Spinner animation="grow" size="sm" />
+      <Spinner animation="grow" size="sm" />
     </div>
   )
 }

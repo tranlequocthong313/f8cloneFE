@@ -4,7 +4,7 @@ import VideoPlayer from '../course/VideoPlayer'
 import styles from './LessonVideo.module.scss'
 
 const LessonVideo = () => {
-  const { show, videoId, setPlay } = useContext(LessonContext)
+  const { show, videoId, playVideo } = useContext(LessonContext)
 
   return (
     <div
@@ -12,10 +12,7 @@ const LessonVideo = () => {
         show ? styles.wrapper : `${styles.wrapper} ${styles.fullWidth}`
       }
     >
-      <VideoPlayer
-        onClick={() => setPlay(true)}
-        videoId={videoId ? videoId : ''}
-      />
+      <VideoPlayer onClick={playVideo} videoId={videoId} />
     </div>
   )
 }

@@ -3,11 +3,9 @@ import SecondaryCard from '../utils/card/SecondaryCard'
 import { Row, Col } from 'react-bootstrap'
 import styles from './CareerList.module.scss'
 import timeSince from '../utils/timeSince/timeSince'
+import formatNumber from '../utils/format-number/FormatNumber'
 
 const CareerList = ({ jobs, xl }) => {
-  const formatSalary = (salary) =>
-    new Intl.NumberFormat(['ban', 'id']).format(salary)
-
   return (
     <Row style={{ margin: 0 }}>
       {jobs.map((job) => (
@@ -19,7 +17,7 @@ const CareerList = ({ jobs, xl }) => {
                 <i className="fa-solid fa-dollar-sign"></i>
                 Mức lương:{' '}
                 <span>
-                  {formatSalary(job.minSalary)} - {formatSalary(job.maxSalary)}
+                  {formatNumber(job.minSalary)} - {formatNumber(job.maxSalary)}
                 </span>
               </div>
               <div className={styles.languages}>

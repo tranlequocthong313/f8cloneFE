@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom'
 import CourseList from '../../components/home/courses/CourseList'
 import Loading from '../../components/utils/loading/Loading'
 import ModalError from '../../components/utils/modal-error/ModalError'
+import consoleLog from '../../components/utils/console-log/consoleLog'
 
 const BlogList = React.lazy(() =>
   import('../../components/home/blogs/BlogList')

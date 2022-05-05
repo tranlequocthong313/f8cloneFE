@@ -50,11 +50,9 @@ const MobileNav = ({ photoURL }) => {
         <ul className={styles.list}>
           <li
             onClick={() => {
-              setActiveTab('/my-course')
+              setActiveTab('my-course')
             }}
-            className={
-              activeTab === '/my-course' ? styles.setActiveTab : styles.item
-            }
+            className={activeTab === 'my-course' ? styles.active : ''}
           >
             <Link to="/my-course">
               <i className="fa-solid fa-book-open"></i>
@@ -67,7 +65,7 @@ const MobileNav = ({ photoURL }) => {
             onClick={() => {
               setActiveTab('home')
             }}
-            className={activeTab === 'home' ? styles.setActiveTab : styles.item}
+            className={activeTab === 'home' ? styles.active : ''}
           >
             <Link to="/">
               <i className="fa-solid fa-house"></i>
@@ -78,9 +76,7 @@ const MobileNav = ({ photoURL }) => {
             onClick={() => {
               setActiveTab('learning-path')
             }}
-            className={
-              activeTab === 'learning-path' ? styles.setActiveTab : styles.item
-            }
+            className={activeTab === 'learning-path' ? styles.active : ''}
           >
             <Link to="/learning-path">
               <i className="fa-solid fa-road"></i>
@@ -91,9 +87,7 @@ const MobileNav = ({ photoURL }) => {
             onClick={() => {
               setActiveTab('courses')
             }}
-            className={
-              activeTab === 'courses' ? styles.setActiveTab : styles.item
-            }
+            className={activeTab === 'courses' ? styles.active : ''}
           >
             <Link to={'/courses' || '/course-slug'}>
               <i className="fa-solid fa-lightbulb"></i>
@@ -104,7 +98,7 @@ const MobileNav = ({ photoURL }) => {
             onClick={() => {
               setActiveTab('blog')
             }}
-            className={activeTab === 'blog' ? styles.setActiveTab : styles.item}
+            className={activeTab === 'blog' ? styles.active : ''}
           >
             <Link to="/blog">
               <i className="fa-solid fa-newspaper"></i>
@@ -117,9 +111,7 @@ const MobileNav = ({ photoURL }) => {
             onClick={() => {
               setActiveTab('bookmark-post')
             }}
-            className={
-              activeTab === 'bookmark-post' ? styles.setActiveTab : styles.item
-            }
+            className={activeTab === 'bookmark-post' ? styles.active : ''}
           >
             <Link to="/bookmark-post">
               <i className="fa-solid fa-bookmark"></i>
@@ -132,9 +124,7 @@ const MobileNav = ({ photoURL }) => {
             onClick={() => {
               setActiveTab('about-us')
             }}
-            className={
-              activeTab === 'about-us' ? styles.setActiveTab : styles.item
-            }
+            className={activeTab === 'about-us' ? styles.active : ''}
           >
             <Link to="/about-us">
               <i className="fa-solid fa-circle-info"></i>
@@ -145,9 +135,7 @@ const MobileNav = ({ photoURL }) => {
             onClick={() => {
               setActiveTab('careers')
             }}
-            className={
-              activeTab === 'careers' ? styles.setActiveTab : styles.item
-            }
+            className={activeTab === 'careers' ? styles.active : ''}
           >
             <Link to="/careers">
               <i className="fa-solid fa-users"></i>

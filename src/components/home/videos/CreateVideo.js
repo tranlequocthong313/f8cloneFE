@@ -1,14 +1,13 @@
 import { useContext, useState } from 'react'
 import { Modal, Form, Spinner } from 'react-bootstrap'
 import { apiURL } from '../../../context/constants'
-import { useDispatch } from 'react-redux'
 import styles from './CreateVideo.module.scss'
-import { createVideo } from '../../../actions/videoAction'
 import removeActions from '../../utils/remove-accents/removeActions'
 import MainButton from '../../utils/button/MainButton'
 import MainModal from '../../utils/main-modal/MainModal'
 import ModalError from '../../utils/modal-error/ModalError'
 import { ErrorContext } from '../../../context/ErrorContext'
+import consoleLog from '../../utils/console-log/consoleLog'
 
 const CreateVideo = ({ setVideoData }) => {
   const { onShowError } = useContext(ErrorContext)

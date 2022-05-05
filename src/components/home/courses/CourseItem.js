@@ -4,12 +4,10 @@ import MainButton from '../../utils/button/MainButton'
 import MainCard from '../../utils/card/MainCard'
 import VerticalProgressBar from '../../utils/vertical-progress-bar/VerticalProgressBar'
 import styles from './CourseItem.module.scss'
+import formatNumber from '../../utils/format-number/FormatNumber'
 
 const CourseItem = ({ course, path }) => {
   const user = useSelector((state) => state.user)
-
-  const formatStudentCount = (studentCount) =>
-    new Intl.NumberFormat(['ban', 'id']).format(+studentCount)
 
   return (
     <MainCard>
@@ -41,7 +39,7 @@ const CourseItem = ({ course, path }) => {
       {!path && (
         <div className={styles.studentCount}>
           <i className="fa-solid fa-users"></i>
-          <span>{formatStudentCount(course.studentCount)}</span>
+          <span>{formatNumber(course.studentCount)}</span>
         </div>
       )}
       {path && (

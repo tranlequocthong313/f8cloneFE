@@ -1,0 +1,86 @@
+@import '../../../sass/flexCenter';
+
+.navHeader {
+  background-color: #3478d8;
+  padding: 0 28px !important;
+  height: 50px;
+  border-bottom: 1px solid #e8ebed;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1000;
+  transition: transform 0.5s ease, -webkit-transform 0.5s ease;
+  will-change: transform;
+  z-index: 20;
+  user-select: none;
+
+  .userAction {
+    align-items: center;
+    display: flex;
+    flex: 1 1;
+    justify-content: flex-end;
+  }
+
+  .logo {
+    @include flexCenter(row);
+    flex: 1 1;
+    justify-content: flex-start !important;
+
+    h5 {
+      margin-bottom: 0;
+      color: #fff;
+      margin-left: 60px;
+      font-size: 16px;
+    }
+
+    a {
+      display: flex;
+      align-items: center;
+
+      img {
+        width: 32px;
+        height: 32px;
+      }
+
+      h4 {
+        margin: 0 0 0 8px;
+        color: #fff;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .logoNavbar {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    object-fit: contain;
+    border-radius: 6px;
+  }
+
+  .logoHeading {
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0 0 0 16px;
+    color: #000;
+  }
+}
+
+@media (max-width: 1023px) {
+  .navHeader {
+    padding: 0 32px !important;
+  }
+}
+
+@media (max-width: 739px) {
+  .navHeader {
+    padding: 0 16px !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  .userWrapper {
+    display: block !important;
+  }
+}

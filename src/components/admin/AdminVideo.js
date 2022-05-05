@@ -4,6 +4,7 @@ import { apiURL } from '../../context/constants'
 import { ErrorContext } from '../../context/ErrorContext'
 import MainButton from '../utils/button/MainButton'
 import consoleLog from '../utils/console-log/consoleLog'
+import formatDateToLocaleString from '../utils/format-date/FormatDate'
 import ModalError from '../utils/modal-error/ModalError'
 import MainTable from '../utils/table/MainTable'
 import styles from './AdminVideo.module.scss'
@@ -22,8 +23,6 @@ const AdminVideo = ({ videoData, setVideoData }) => {
   }, [videoData])
 
   const showDeleteModal = () => setIsShowDeleteModal((prev) => !prev)
-
-  const formatDateToLocaleString = (date) => new Date(date).toLocaleString()
 
   const checkBoxChosenSingle = (id) =>
     setCheckboxChosen((prev) => {

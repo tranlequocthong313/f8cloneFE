@@ -7,8 +7,8 @@ import ContentEditable from '../../components/utils/content-editable/ContentEdit
 import { apiURL } from '../../context/constants'
 import { Link, useLocation } from 'react-router-dom'
 import Tabs from '../../components/utils/tabs/Tabs'
+import consoleLog from '../../components/utils/console-log/consoleLog'
 import f8Icon from '../../asset/images/f8_icon.png'
-import CoursesEnrolled from '../../components/profile/ProfileCourses'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer')

@@ -13,7 +13,9 @@ import EditPost from './views/private/EditPost'
 import BookmarkPost from './views/private/BookmarkPost'
 import Settings from './views/private/Settings'
 import MyBlog from './views/private/MyBlog'
-import Admin from './views/admin/Admin'
+import Admin from './views/console/Admin'
+import AdminCreateCourse from './views/console/AdminCreateCourse'
+import AdminEditCourse from './views/console/AdminEditCourse'
 import Courses from './views/public/Courses'
 import CourseSlug from './components/course/CourseSlug'
 import BlogSlug from './components/blog/BlogSlug'
@@ -29,6 +31,7 @@ import About from './views/public/About'
 import { apiURL } from './context/constants'
 import Loading from './components/utils/loading/Loading'
 import consoleLog from './components/utils/console-log/consoleLog'
+import AdminLesson from './views/console/AdminLesson'
 
 function App() {
   const dispatch = useDispatch()
@@ -95,6 +98,15 @@ function App() {
           </Route>
           <Route path="/admin/video" exact>
             <Admin />
+          </Route>
+          <Route path="/admin/lessons/:courseId" exact>
+            <AdminLesson />
+          </Route>
+          <Route path="/admin/create-course" exact>
+            <AdminCreateCourse />
+          </Route>
+          <Route path="/admin/edit-course/:courseId" exact>
+            <AdminEditCourse />
           </Route>
           <Route path="/new-post" exact>
             <NewPost />

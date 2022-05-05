@@ -1,10 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react'
-import {
-  useLocation,
-  useHistory,
-  //   createSearchParams,
-  //   useSearchParams,
-} from 'react-router-dom'
+import { useLocation, useHistory } from 'react-router-dom'
 import { apiURL } from './constants'
 import consoleLog from '../components/utils/console-log/consoleLog'
 
@@ -15,55 +10,29 @@ const LessonContextProvider = ({ children }) => {
   const history = useHistory()
 
   const [isShowMenuTrack, setIsShowMenuTrack] = useState(true)
-  const [chosenLesson, setChosenLesson] = useState(null)
+  const [chosenLesson, setChosenLesson] = useState('')
+  const [chosenEpisode, setChosenEpisode] = useState([])
   const [lockedLesson, setLockedLesson] = useState(null)
-  //   const [searchParams, setSearchParams] = useSearchParams()
-  //   const [query, setQuery] = useState(searchParams.get('id'))
   const [play, setPlay] = useState(false)
   const [videoId, setVideoId] = useState('')
-  const [course, setCourse] = useState(null)
+  const [lessons, setLessons] = useState([])
 
-  const active = async (id) => {
-    try {
-      setIsShowMenuTrack(id)
-      createParams(id)
-    } catch (error) {
-      consoleLog(error.message)
-    }
-  }
-
-  const playVideo = (lessonId, lessonVideoId) => {
-    setIsShowMenuTrack((prev) => !prev)
+  const playVideo = (lessonIndex, lessonVideoId) => {
     setPlay(true)
-    // active(lessonId)
     setVideoId(lessonVideoId)
-    createParams(lessonId)
+    setChosenLesson(lessonIndex)
   }
 
-  const createParams = (id) => {
-    console.log('create params', id)
-    history({
-      pathname: location.pathname,
-      //   search: createSearchParams({
-      //     id,
-      //   }).toString(),
-    })
-    // setQuery(id)
-  }
-
-  const onEnd = async () => {
-    // try {
-    //   console.log('Video End')
-    //   await fetch(`${apiURL}${location.pathname}?id=${query}`)
-    // } catch (error) {
-    //   consoleLog(error.message)
-    // }
-  }
+  const isEpisodeChosen = (id) => chosenEpisode.includes(id)
 
   const handleIsShowMenuTrack = () => setIsShowMenuTrack((prev) => !prev)
 
+  const chooseEpisode = (id) =>
+    setChosenEpisode((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    )
+
   const value = {
-    course,
     chosenLesson,
     lockedLesson,
     playVideo,
@@ -71,9 +40,15 @@ const LessonContextProvider = ({ children }) => {
     videoId,
     play,
     setPlay,
-    onEnd,
-    active,
+    chosenEpisode,
+    setVideoId,
     isShowMenuTrack,
+    setChosenLesson,
+    setChosenEpisode,
+    isEpisodeChosen,
+    chooseEpisode,
+    setLessons,
+    lessons,
   }
 
   return (

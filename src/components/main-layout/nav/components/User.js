@@ -8,7 +8,7 @@ import { logout } from '../../../../actions/userAction'
 import Cookies from 'js-cookie'
 import Tippy from '../../../utils/tippy/Tippy'
 
-const User = ({ photoURL, displayName, email, slug }) => {
+const User = ({ photoURL, displayName, isAdminPage, className, slug }) => {
   const history = useHistory()
   const dispatch = useDispatch()
 
@@ -26,8 +26,16 @@ const User = ({ photoURL, displayName, email, slug }) => {
 
   return (
     <Tippy
-      button={<Image className={styles.userPicture} src={photoURL} />}
-      className={styles.menuWrapper}
+      button={
+        <div className={styles.userTippyButton}>
+          <Image
+            className={`${styles.userPicture} ${className}`}
+            src={photoURL}
+          />
+          {isAdminPage && <p>{user.displayName}</p>}
+        </div>
+      }
+      className={`${styles.menuWrapper} ${className}`}
     >
       <div className={styles.user}>
         <Image src={photoURL} className={styles.avatar} />
@@ -37,11 +45,9 @@ const User = ({ photoURL, displayName, email, slug }) => {
         </div>
       </div>
       {user.isAdmin && (
-        <>
-          <Link className={styles.menuItem} to="/admin/course">
-            Quản lý F8
-          </Link>
-        </>
+        <Link className={styles.menuItem} to="/admin/course">
+          Quản lý F8
+        </Link>
       )}
       <Link className={styles.menuItem} to="/new-post">
         Viết blog
@@ -55,11 +61,9 @@ const User = ({ photoURL, displayName, email, slug }) => {
         Bài viết đã lưu
       </Link>
 
-      <Link className={styles.menuItem} to="/settings">
+      <Link className={`${styles.menuItem} ${styles.divider}`} to="/settings">
         Cài đặt
       </Link>
-
-      <Dropdown.Divider />
       <Link className={styles.menuItem} to="/login" onClick={singOut}>
         Đăng xuất
       </Link>
