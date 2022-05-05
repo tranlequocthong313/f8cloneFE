@@ -24,7 +24,7 @@ function App() {
       setLoading(true)
 
       const token = Cookies.get('token')
-      if (!token) return
+      if (!token) return setLoading(false)
 
       const url = `${apiURL}/auth/check-user`
       const data = await getUser(url, token)

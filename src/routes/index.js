@@ -66,8 +66,8 @@ const adminRoutes = [
 ]
 
 const authRoutes = [
-  { path: '/login', component: Auth },
-  { path: '/register', component: Auth },
+  { path: '/login', component: Auth, layout: null },
+  { path: '/register', component: Auth, layout: null },
 ]
 
 export { publicRoutes, privateRoutes, adminRoutes, authRoutes }

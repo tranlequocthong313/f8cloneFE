@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import SecondaryCard from '../../components/utils/card/SecondaryCard'
 import { Image } from 'react-bootstrap'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import styles from './NewBlogs.module.scss'
 import { apiURL } from '../../context/constants'
 import timeSince from '../../components/utils/timeSince/timeSince'
@@ -9,7 +9,7 @@ import Cookies from 'js-cookie'
 import consoleLog from '../../components/utils/console-log/consoleLog'
 
 const NewBlogs = ({ blogs }) => {
-  const location = useLocation()
+  const navigate = useNavigate()
 
   const [bookmarkData, setBookmarkData] = useState(null)
 
@@ -42,7 +42,7 @@ const NewBlogs = ({ blogs }) => {
 
   const bookmark = async (blogId) => {
     const token = Cookies.get('token')
-    if (!token) return location('/login')
+    if (!token) return navigate('/login')
 
     const url = `${apiURL}/me/bookmark`
     const data = await patchBookmark(url, blogId, token)

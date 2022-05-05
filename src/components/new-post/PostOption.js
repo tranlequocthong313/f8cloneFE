@@ -5,7 +5,7 @@ import ContentEditable from '../utils/content-editable/ContentEditable'
 import moment from 'moment'
 import { apiURL } from '../../context/constants'
 import styles from './PostOption.module.scss'
-import { useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import { ref, uploadBytesResumable, getDownloadURL } from '@firebase/storage'
 import { storage } from '../../firebase/config'
@@ -18,7 +18,7 @@ import { ErrorContext } from '../../context/ErrorContext'
 import ModalError from '../utils/modal-error/ModalError'
 
 const PostOption = ({ blogContent }) => {
-  const location = useLocation()
+  const navigate = useNavigate()
   const titleDisplayRef = useRef()
   const { setShowModal } = useContext(PostContext)
   const { onShowError } = useContext(ErrorContext)
@@ -99,7 +99,7 @@ const PostOption = ({ blogContent }) => {
 
   const dispatchAndNavigate = (data) => {
     createBlog({ blogData: data.blog })
-    location(
+    navigate(
       !data.blog.schedule ? `/blog/${data.blog._id}` : '/my-post/published'
     )
   }

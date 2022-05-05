@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import { Image } from 'react-bootstrap'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useN, useNavigate } from 'react-router-dom'
 import styles from './MobileNav.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import userDefaultImage from '../../../../asset/images/nobody_m.256x256.jpg'
@@ -11,13 +11,13 @@ import VerticalModal from '../../../utils/vertical-modal/VerticalModal'
 
 const MobileNav = ({ photoURL }) => {
   const dispatch = useDispatch()
-  const location = useLocation()
+  const navigate = useNavigate()
   const { activeTab, setActiveTab } = useContext(NavContext)
   const user = useSelector((state) => state.user)
 
   const dispatchAndNavigate = () => {
     dispatch(logout())
-    location('/login')
+    navigate('/login')
   }
 
   const singOut = () => {

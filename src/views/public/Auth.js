@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Image } from 'react-bootstrap'
 import styles from './Auth.module.scss'
 import f8Logo from '../../asset/images/f8_icon.png'
@@ -16,7 +16,7 @@ import Cookies from 'js-cookie'
 import consoleLog from '../../components/utils/console-log/consoleLog'
 
 const Auth = () => {
-  const location = useLocation()
+  const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const [isLogin, setIsLogin] = useState(true)
@@ -28,7 +28,7 @@ const Auth = () => {
 
   const dispatchAndNavigate = (payload) => {
     dispatch(login(payload))
-    location('/')
+    navigate('/')
   }
 
   const handleIsLogin = () => {
