@@ -16,7 +16,7 @@ const CommentInput = ({
   setShowSubmit,
   setShowCode,
   userPhotoURL,
-  blog,
+  data,
   setCommentData,
 }) => {
   const location = useLocation()
@@ -42,13 +42,13 @@ const CommentInput = ({
 
     setCommentData(data.comment)
 
-    const isCommentByBlogAuthor = data.comment.postedBy === blog.postedBy._id
-    if (current && !isCommentByBlogAuthor) {
+    const isCommentByAuthor = data.comment.postedBy === data.postedBy._id
+    if (current && !isCommentByAuthor) {
       current.emit('comment', {
         sender: user,
-        postId: blog._id,
-        receiver: blog,
-        receiverId: blog.postedBy._id,
+        postId: data._id,
+        receiver: data,
+        receiverId: data.postedBy._id,
         commentContent: data.comment,
         description: 'đã trả lời vào bình luận của bạn',
         notificationType: 'comment',
@@ -63,10 +63,10 @@ const CommentInput = ({
         await fetch(url, {
           method: 'POST',
           body: JSON.stringify({
-            post: blog._id,
+            post: data._id,
             content: commentInput,
             isCode: showCode,
-            commentType: 'blogs',
+            commentType: 'datas',
             postedBy: user.userId,
           }),
           headers: {

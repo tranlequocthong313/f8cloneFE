@@ -21,13 +21,6 @@ const AdminTabs = ({ tabs, setTabs }) => {
       />
       <Tabs
         className={styles.tab}
-        tab={'Phân đoạn'}
-        onActive={() => setTabs('segment')}
-        isActive={tabs === 'segment'}
-        activeColor={styles.active}
-      />
-      <Tabs
-        className={styles.tab}
         tab={'Tóm tắt bài học'}
         onActive={() => setTabs('summary')}
         isActive={tabs === 'summary'}

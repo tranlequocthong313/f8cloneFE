@@ -3,13 +3,7 @@ import { Link } from 'react-router-dom'
 import MainButton from '../utils/button/MainButton'
 import styles from './CourseEnroll.module.scss'
 
-const CourseEnroll = ({
-  image,
-  show,
-  courseId,
-  enrollCourse,
-  userCoursesEnrolled,
-}) => {
+const CourseEnroll = ({ image, show, courseId, enrollCourse, isEnrolled }) => {
   return (
     <div className={styles.purchaseBadge}>
       <div className={styles.imgPreview} onClick={show}>
@@ -21,15 +15,15 @@ const CourseEnroll = ({
         <p>Xem giới thiệu khóa học</p>
       </div>
       <h5>Miễn phí</h5>
-      <MainButton
-        className={styles.button}
-        primary={true}
-        onClick={enrollCourse}
-      >
-        {!userCoursesEnrolled.includes(courseId)
-          ? 'ĐĂNG KÝ HỌC'
-          : 'TIẾP TỤC HỌC'}
-      </MainButton>
+      <Link to={isEnrolled ? `/lesson/${courseId}` : '#'}>
+        <MainButton
+          className={styles.button}
+          primary={true}
+          onClick={enrollCourse}
+        >
+          {!isEnrolled(courseId) ? 'ĐĂNG KÝ HỌC' : 'TIẾP TỤC HỌC'}
+        </MainButton>
+      </Link>
       <ul>
         <li>
           <i className={`${styles.icon} fa-solid fa-compass`}></i>

@@ -53,56 +53,54 @@ const Admin = () => {
     <SubLoading />
   ) : (
     <Container fluid className={styles.wrapper}>
-      <Row>
-        <Col xs={12} sm={12} md={12} lg={12} xl={12}>
-          <h2>Quản lý F8</h2>
-          <div className={styles.tabs}>
-            <Tabs
-              path={'/admin/course'}
-              tab={'Khóa học'}
-              onActive={() => setTabs('/admin/course')}
-              isActive={tabs === '/admin/course'}
-              quantity={`(${courseData.length})`}
+      <Col xs={12} sm={12} md={12} lg={12} xl={12}>
+        <h2>Quản lý F8</h2>
+        <div className={styles.tabs}>
+          <Tabs
+            path={'/admin/course'}
+            tab={'Khóa học'}
+            onActive={() => setTabs('/admin/course')}
+            isActive={tabs === '/admin/course'}
+            quantity={`(${courseData.length})`}
+          />
+          <Tabs
+            path={'/admin/blog'}
+            tab={'Bài viết'}
+            onActive={() => setTabs('/admin/blog')}
+            isActive={tabs === '/admin/blog'}
+            quantity={`(${blogData.length})`}
+          />
+          <Tabs
+            path={'/admin/video'}
+            tab={'Video'}
+            onActive={() => setTabs('/admin/video')}
+            isActive={tabs === '/admin/video'}
+            quantity={`(${videoData.length})`}
+          />
+        </div>
+        {tabs === '/admin/course' && (
+          <>
+            <Link to={'/admin/create-course'}>
+              <MainButton primary={true} className={styles.button}>
+                <i className="fa-solid fa-plus"></i> Tạo khóa học
+              </MainButton>
+            </Link>
+            <AdminCourse
+              courseData={courseData}
+              setCourseData={setCourseData}
             />
-            <Tabs
-              path={'/admin/blog'}
-              tab={'Bài viết'}
-              onActive={() => setTabs('/admin/blog')}
-              isActive={tabs === '/admin/blog'}
-              quantity={`(${blogData.length})`}
-            />
-            <Tabs
-              path={'/admin/video'}
-              tab={'Video'}
-              onActive={() => setTabs('/admin/video')}
-              isActive={tabs === '/admin/video'}
-              quantity={`(${videoData.length})`}
-            />
+          </>
+        )}
+        {tabs === '/admin/blog' && (
+          <AdminBlog blogData={blogData} setBlogData={setBlogData} />
+        )}
+        {tabs === '/admin/video' && (
+          <div className={styles.container}>
+            <CreateVideo setVideoData={setVideoData} />
+            <AdminVideo videoData={videoData} setVideoData={setVideoData} />
           </div>
-          {tabs === '/admin/course' && (
-            <>
-              <Link to={'/admin/create-course'}>
-                <MainButton primary={true} className={styles.button}>
-                  <i className="fa-solid fa-plus"></i> Tạo khóa học
-                </MainButton>
-              </Link>
-              <AdminCourse
-                courseData={courseData}
-                setCourseData={setCourseData}
-              />
-            </>
-          )}
-          {tabs === '/admin/blog' && (
-            <AdminBlog blogData={blogData} setBlogData={setBlogData} />
-          )}
-          {tabs === '/admin/video' && (
-            <div className={styles.container}>
-              <CreateVideo setVideoData={setVideoData} />
-              <AdminVideo videoData={videoData} setVideoData={setVideoData} />
-            </div>
-          )}
-        </Col>
-      </Row>
+        )}
+      </Col>
     </Container>
   )
 }

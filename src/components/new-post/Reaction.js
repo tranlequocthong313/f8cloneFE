@@ -27,7 +27,7 @@ const Reaction = ({ isLike, handleLike, likeCount, blog }) => {
         closeButton={true}
         className={styles.wrapper}
       >
-        <Comment blog={blog} />
+        <Comment data={blog} />
       </VerticalModal>
     </div>
   )

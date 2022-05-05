@@ -16,3 +16,15 @@
     margin-bottom: 16px;
   }
 }
+
+.rc-md-editor {
+  margin-bottom: 31px;
+  height: calc(100vh - 100px) !important;
+  border: none !important;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1px;
+  position: relative;
+  background: #fff;
+}

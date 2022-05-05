@@ -268,10 +268,8 @@ const CommentBody = ({ commentData, setCommentData, blogId }) => {
                         }
                         className={styles.optionWrapper}
                       >
-                        {canModifyComment(
-                          user.userId,
-                          comment.postedBy._id
-                        ) && (
+                        {(canModifyComment(user.userId, comment.postedBy._id) ||
+                          user.isAdmin) && (
                           <>
                             <Dropdown.Item
                               className={styles.optionItem}

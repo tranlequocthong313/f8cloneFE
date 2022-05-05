@@ -1,16 +1,18 @@
 import React from 'react'
 import { Navbar, Image } from 'react-bootstrap'
 import styles from './LessonHeader.module.scss'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import logo from '../../asset/images/f8_icon.png'
 import CircularProgressBar from '../utils/circular-progress-bar/CircularProgressBar'
 
 const LessonHeader = () => {
+  const navigate = useNavigate()
+
   return (
     <Navbar className={styles.navHeader}>
-      <Link to="/" className={styles.backHome}>
+      <div onClick={() => navigate(-1)} className={styles.backHome}>
         <i className="fa-solid fa-chevron-left"></i>
-      </Link>
+      </div>
       <Navbar.Brand className={styles.logo}>
         <Link to="/">
           <Image src={logo} className={styles.logoNavbar} />

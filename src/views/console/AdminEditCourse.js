@@ -173,179 +173,169 @@ const AdminEditCourse = () => {
     <SubLoading />
   ) : (
     <>
-      <Header isAdmin={true} />
-      <Row>
-        <Col xs={12} sm={12} md={12} lg={11} xl={11}>
-          <div className="withSidebarContent">
-            <ModalError />
-            <div className={styles.wrapper}>
-              <h4>Sửa khóa học</h4>
-              <Form className={styles.formWrapper}>
-                <Form.Group>
-                  <Form.Control
-                    className={styles.formInput}
-                    placeholder="Tiêu đề khóa học"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                  />
-                </Form.Group>
-                <Form.Group>
-                  <Form.Control
-                    as="textarea"
-                    row={4}
-                    className={styles.formInput}
-                    placeholder="Mô tả khóa học"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                  />
-                </Form.Group>
-                <Form.Group>
-                  <Form.Control
-                    className={styles.formInput}
-                    placeholder="Video giới thiêu khóa học"
-                    value={videoId}
-                    onChange={(e) => setVideoId(e.target.value)}
-                  />
-                </Form.Group>
-                <Form.Group>
-                  <Form.Control
-                    className={styles.formInput}
-                    onChange={chooseImage}
-                    type="file"
-                    accept="image/*"
-                  />
-                </Form.Group>
-                <Form.Group className="d-flex">
-                  <Form.Label>Trình độ: </Form.Label>
-                  <Form.Check
-                    type={'radio'}
-                    label={'cơ bản'}
-                    checked={level === 'cơ bản'}
-                    className={styles.formBoxItem}
-                    onChange={() => {
-                      setLevel('cơ bản')
-                    }}
-                  />
-                  <Form.Check
-                    type={'radio'}
-                    label={'trung bình'}
-                    checked={level === 'trung bình'}
-                    className={styles.formBoxItem}
-                    onChange={() => {
-                      setLevel('trung bình')
-                    }}
-                  />
-                  <Form.Check
-                    type={'radio'}
-                    label={'nâng cao'}
-                    checked={level === 'nâng cao'}
-                    className={styles.formBoxItem}
-                    onChange={() => {
-                      setLevel('nâng cao')
-                    }}
-                  />
-                </Form.Group>
-                <Form.Group className="d-flex">
-                  <Form.Label>Vai trò: </Form.Label>
-                  <Form.Check
-                    type={'radio'}
-                    label={'Front-end'}
-                    checked={role === 'Front-end'}
-                    className={styles.formBoxItem}
-                    onChange={() => {
-                      setRole('Front-end')
-                    }}
-                  />
-                  <Form.Check
-                    type={'radio'}
-                    label={'Back-end'}
-                    checked={role === 'Back-end'}
-                    className={styles.formBoxItem}
-                    onChange={() => {
-                      setRole('Back-end')
-                    }}
-                  />
-                  <Form.Check
-                    type={'radio'}
-                    label={'Fullstack'}
-                    checked={role === 'Fullstack'}
-                    className={styles.formBoxItem}
-                    onChange={() => {
-                      setRole('Fullstack')
-                    }}
-                  />
-                </Form.Group>
-                <Form.Group
-                  className={
-                    invalidGoalTag !== null
-                      ? `${styles.invalid} ${styles.tagWrapper}`
-                      : styles.tagWrapper
-                  }
-                >
-                  {goalTags &&
-                    goalTags.map((tag) => (
-                      <div key={tag} tabIndex={1} className={styles.tagCard}>
-                        <span>{tag}</span>
-                        <div
-                          className={styles.removeTagButton}
-                          onClick={() => removeGoalTag(tag)}
-                        >
-                          x
-                        </div>
-                      </div>
-                    ))}
-                  <Form.Control
-                    placeholder="Những mục tiêu đạt được sau khóa học"
-                    onKeyDown={addGoalTag}
-                    value={goalTag}
-                    onChange={(e) => setGoalTag(e.target.value)}
-                  />
-                </Form.Group>
-                {invalidGoalTag !== null && (
-                  <div className={styles.invalidText}>{invalidGoalTag}</div>
-                )}
-                <Form.Group
-                  className={
-                    invalidRequireTag !== null
-                      ? `${styles.invalid} ${styles.tagWrapper}`
-                      : styles.tagWrapper
-                  }
-                >
-                  {requireTags &&
-                    requireTags.map((tag) => (
-                      <div key={tag} tabIndex={1} className={styles.tagCard}>
-                        <span>{tag}</span>
-                        <div
-                          className={styles.removeTagButton}
-                          onClick={() => removeRequireTag(tag)}
-                        >
-                          x
-                        </div>
-                      </div>
-                    ))}
-                  <Form.Control
-                    placeholder="Yêu cầu của khóa học (tùy chọn)"
-                    onKeyDown={addRequireTag}
-                    value={requireTag}
-                    onChange={(e) => setRequireTag(e.target.value)}
-                  />
-                </Form.Group>
-                {invalidRequireTag !== null && (
-                  <div className={styles.invalidText}>{invalidRequireTag}</div>
-                )}
-                <div className={styles.formSubmit}>
+      <ModalError />
+      <div className={styles.wrapper}>
+        <h4>Sửa khóa học</h4>
+        <Form className={styles.formWrapper}>
+          <Form.Group>
+            <Form.Control
+              className={styles.formInput}
+              placeholder="Tiêu đề khóa học"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Control
+              as="textarea"
+              row={4}
+              className={styles.formInput}
+              placeholder="Mô tả khóa học"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Control
+              className={styles.formInput}
+              placeholder="Video giới thiêu khóa học"
+              value={videoId}
+              onChange={(e) => setVideoId(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Control
+              className={styles.formInput}
+              onChange={chooseImage}
+              type="file"
+              accept="image/*"
+            />
+          </Form.Group>
+          <Form.Group className="d-flex">
+            <Form.Label>Trình độ: </Form.Label>
+            <Form.Check
+              type={'radio'}
+              label={'cơ bản'}
+              checked={level === 'cơ bản'}
+              className={styles.formBoxItem}
+              onChange={() => {
+                setLevel('cơ bản')
+              }}
+            />
+            <Form.Check
+              type={'radio'}
+              label={'trung bình'}
+              checked={level === 'trung bình'}
+              className={styles.formBoxItem}
+              onChange={() => {
+                setLevel('trung bình')
+              }}
+            />
+            <Form.Check
+              type={'radio'}
+              label={'nâng cao'}
+              checked={level === 'nâng cao'}
+              className={styles.formBoxItem}
+              onChange={() => {
+                setLevel('nâng cao')
+              }}
+            />
+          </Form.Group>
+          <Form.Group className="d-flex">
+            <Form.Label>Vai trò: </Form.Label>
+            <Form.Check
+              type={'radio'}
+              label={'Front-end'}
+              checked={role === 'Front-end'}
+              className={styles.formBoxItem}
+              onChange={() => {
+                setRole('Front-end')
+              }}
+            />
+            <Form.Check
+              type={'radio'}
+              label={'Back-end'}
+              checked={role === 'Back-end'}
+              className={styles.formBoxItem}
+              onChange={() => {
+                setRole('Back-end')
+              }}
+            />
+            <Form.Check
+              type={'radio'}
+              label={'Fullstack'}
+              checked={role === 'Fullstack'}
+              className={styles.formBoxItem}
+              onChange={() => {
+                setRole('Fullstack')
+              }}
+            />
+          </Form.Group>
+          <Form.Group
+            className={
+              invalidGoalTag !== null
+                ? `${styles.invalid} ${styles.tagWrapper}`
+                : styles.tagWrapper
+            }
+          >
+            {goalTags &&
+              goalTags.map((tag) => (
+                <div key={tag} tabIndex={1} className={styles.tagCard}>
+                  <span>{tag}</span>
                   <div
-                    className={styles.createButton}
-                    onClick={uploadImageToStorage}
+                    className={styles.removeTagButton}
+                    onClick={() => removeGoalTag(tag)}
                   >
-                    Sửa khóa học
+                    x
                   </div>
                 </div>
-              </Form>
+              ))}
+            <Form.Control
+              placeholder="Những mục tiêu đạt được sau khóa học"
+              onKeyDown={addGoalTag}
+              value={goalTag}
+              onChange={(e) => setGoalTag(e.target.value)}
+            />
+          </Form.Group>
+          {invalidGoalTag !== null && (
+            <div className={styles.invalidText}>{invalidGoalTag}</div>
+          )}
+          <Form.Group
+            className={
+              invalidRequireTag !== null
+                ? `${styles.invalid} ${styles.tagWrapper}`
+                : styles.tagWrapper
+            }
+          >
+            {requireTags &&
+              requireTags.map((tag) => (
+                <div key={tag} tabIndex={1} className={styles.tagCard}>
+                  <span>{tag}</span>
+                  <div
+                    className={styles.removeTagButton}
+                    onClick={() => removeRequireTag(tag)}
+                  >
+                    x
+                  </div>
+                </div>
+              ))}
+            <Form.Control
+              placeholder="Yêu cầu của khóa học (tùy chọn)"
+              onKeyDown={addRequireTag}
+              value={requireTag}
+              onChange={(e) => setRequireTag(e.target.value)}
+            />
+          </Form.Group>
+          {invalidRequireTag !== null && (
+            <div className={styles.invalidText}>{invalidRequireTag}</div>
+          )}
+          <div className={styles.formSubmit}>
+            <div className={styles.createButton} onClick={uploadImageToStorage}>
+              Sửa khóa học
             </div>
           </div>
-        </Col>
-      </Row>
+        </Form>
+      </div>
     </>
   )
 }

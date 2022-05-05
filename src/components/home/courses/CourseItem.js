@@ -9,11 +9,13 @@ import formatNumber from '../../utils/format-number/FormatNumber'
 const CourseItem = ({ course, path }) => {
   const user = useSelector((state) => state.user)
 
+  const isEnrolled = (id) => user.coursesEnrolled.includes(id)
+
   return (
     <MainCard>
       <Link
         to={
-          !user.coursesEnrolled.includes(course._id)
+          !isEnrolled(course._id)
             ? `/courses/${course._id}`
             : `/lesson/${course._id}`
         }
@@ -28,7 +30,7 @@ const CourseItem = ({ course, path }) => {
       <h4 className={styles.title}>
         <Link
           to={
-            !user.coursesEnrolled.includes(course._id)
+            !isEnrolled(course._id)
               ? `/courses/${course._id}`
               : `/lesson/${course._id}`
           }

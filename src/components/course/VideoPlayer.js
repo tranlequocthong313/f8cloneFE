@@ -6,7 +6,7 @@ import styles from './VideoPlayer.module.scss'
 const VideoPlayer = ({ videoId }) => {
   const youtubeVideoOptions = {
     playerVars: {
-      autoplay: 1,
+      autoplay: 0,
     },
   }
 

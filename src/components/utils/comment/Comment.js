@@ -8,8 +8,9 @@ import ScrollToTop from '../scroll/ScrollToTop'
 import { apiURL } from '../../../context/constants'
 import ModalError from '../modal-error/ModalError'
 import consoleLog from '../console-log/consoleLog'
+import SubLoading from '../loading/SubLoading'
 
-const Comment = ({ submitComment, commentInput, onInput, blog }) => {
+const Comment = ({ submitComment, commentInput, onInput, data }) => {
   const commentRef = useRef()
   const user = useSelector((state) => state.user)
 
@@ -17,6 +18,7 @@ const Comment = ({ submitComment, commentInput, onInput, blog }) => {
   const [showSubmit, setShowSubmit] = useState(false)
   const [showCode, setShowCode] = useState(false)
   const [visible, setVisible] = useState(false)
+  const [loading, setLoading] = useState()
 
   const SHOW_SCROLL_TO_TOP_OFFSET = 1000
   const scrollToTop = () =>
@@ -26,14 +28,17 @@ const Comment = ({ submitComment, commentInput, onInput, blog }) => {
 
   useEffect(() => {
     ;(async () => {
-      const url = `${apiURL}/comment/${blog._id}`
-      const comments = await getCommentByBLogId(url)
+      setLoading(true)
+
+      const url = `${apiURL}/comment/${data._id}`
+      const comments = await getCommentByDataId(url)
 
       setCommentData(comments)
+      setLoading(false)
     })()
-  }, [blog._id, commentData])
+  }, [data._id])
 
-  const getCommentByBLogId = async (url) => {
+  const getCommentByDataId = async (url) => {
     try {
       return (await fetch(url)).json()
     } catch (error) {
@@ -41,11 +46,13 @@ const Comment = ({ submitComment, commentInput, onInput, blog }) => {
     }
   }
 
-  return (
+  return loading ? (
+    <SubLoading />
+  ) : (
     <>
       <div className={styles.container}>
         <div className={styles.content} ref={commentRef} onScroll={scrollToTop}>
-          <CommentHeader commentCount={blog.comments} />
+          <CommentHeader commentCount={data.comments} />
           {user.isLoggedIn && (
             <CommentInput
               showCode={showCode}
@@ -56,17 +63,15 @@ const Comment = ({ submitComment, commentInput, onInput, blog }) => {
               commentInput={commentInput}
               submitComment={submitComment}
               userPhotoURL={user.photoURL}
-              blog={blog}
+              data={data}
               setCommentData={setCommentData}
             />
           )}
           {commentData.length > 0 && (
             <CommentBody
               commentData={commentData}
-              userPhotoURL={user.photoURL}
               setCommentData={setCommentData}
-              blogId={blog._id}
-              getCommentByBLogId={getCommentByBLogId}
+              dataId={data._id}
             />
           )}
         </div>

@@ -1,8 +1,6 @@
-import React, { useEffect, useState, Suspense } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Row, Col } from 'react-bootstrap'
-import Header from '../../components/layout/nav/Header'
-import SideBar from '../../components/layout/sidebar/SideBar'
 import CourseDetail from '../../components/course/CourseDetail'
 import CourseEnroll from '../../components/course/CourseEnroll'
 import styles from './CourseSlug.module.scss'
@@ -16,11 +14,10 @@ import { enrollCourse as enroll } from '../../actions/userAction'
 import SubLoading from '../../components/utils/loading/SubLoading'
 import consoleLog from '../../components/utils/console-log/consoleLog'
 
-const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
-
 const CourseSlug = () => {
   const dispatch = useDispatch()
   const location = useLocation()
+  const navigate = useNavigate()
   const user = useSelector((state) => state.user)
 
   const [course, setCourse] = useState(null)
@@ -56,13 +53,19 @@ const CourseSlug = () => {
 
   const enrollCourse = async () => {
     const token = Cookies.get('token')
-    if (!token) return location('/login')
+    if (!token) return navigate('/login')
+
+    if (isEnrolled(course._id)) return
 
     const url = `${apiURL}/me/enroll-course/${course._id}`
     const data = await putEnrollCourse(url, token)
 
-    dispatch(enroll({ coursesEnrolled: data.coursesEnrolled }))
-    if (data.success) location(`/lesson/${course._id}`)
+    if (data.success) {
+      dispatch(
+        enroll({ coursesEnrolled: data.coursesEnrolled[0].coursesEnrolled })
+      )
+      navigate(`/lesson/${course._id}`)
+    }
   }
 
   const putEnrollCourse = async (url, token) => {
@@ -81,84 +84,86 @@ const CourseSlug = () => {
     }
   }
 
+  const isEnrolled = (id) => user.coursesEnrolled.includes(id)
+
   return loading ? (
     <SubLoading />
   ) : (
     <>
-      <Col lg={12} xl={8}>
-        <div className={styles.topHeading}>
-          <h3>{course.title}</h3>
-          <p>{course.description}</p>
-        </div>
-        <div className={styles.purchaseBadge}>
-          <h5>Miễn phí</h5>
-          <MainButton
-            className={styles.button}
-            primary={true}
-            onClick={enrollCourse}
-          >
-            {!user.coursesEnrolled.includes(course._id)
-              ? 'ĐĂNG KÝ HỌC'
-              : 'TIẾP TỤC HỌC'}
-          </MainButton>
-          <ul>
-            <li>
-              <i className={`${styles.icon} fa-solid fa-compass`}></i>
-              <span>Trình độ {course.level}</span>
-            </li>
-            <li>
-              <i className={`${styles.icon} fa-solid fa-film`} />
-              <span>
-                Tổng số <strong>10</strong> bài học
-              </span>
-            </li>
-            <li>
-              <i className={`${styles.icon} fa-solid fa-clock`}></i>
-              <span>
-                Thời lượng <strong>03 giờ 25 phút</strong>
-              </span>
-            </li>
-            <li>
-              <i className={`${styles.icon} fa-solid fa-clock`}></i>
-              <span>Học mọi lúc, mọi nơi</span>
-            </li>
-          </ul>
-        </div>
-        <CourseDetail topicList={course.goals} title={'Bạn sẽ học được gì?'} />
-        {/* <CurriculumOfCourse
+      <Row className={styles.wrapper}>
+        <Col lg={12} xl={8}>
+          <div className={styles.topHeading}>
+            <h3>{course.title}</h3>
+            <p>{course.description}</p>
+          </div>
+          <div className={styles.purchaseBadge}>
+            <h5>Miễn phí</h5>
+            <Link to={isEnrolled ? `/lesson/${course._id}` : '#'}>
+              <MainButton
+                className={styles.button}
+                primary={true}
+                onClick={enrollCourse}
+              >
+                {!isEnrolled(course._id) ? 'ĐĂNG KÝ HỌC' : 'TIẾP TỤC HỌC'}
+              </MainButton>
+            </Link>
+            <ul>
+              <li>
+                <i className={`${styles.icon} fa-solid fa-compass`}></i>
+                <span>Trình độ {course.level}</span>
+              </li>
+              <li>
+                <i className={`${styles.icon} fa-solid fa-film`} />
+                <span>
+                  Tổng số <strong>10</strong> bài học
+                </span>
+              </li>
+              <li>
+                <i className={`${styles.icon} fa-solid fa-clock`}></i>
+                <span>
+                  Thời lượng <strong>03 giờ 25 phút</strong>
+                </span>
+              </li>
+              <li>
+                <i className={`${styles.icon} fa-solid fa-clock`}></i>
+                <span>Học mọi lúc, mọi nơi</span>
+              </li>
+            </ul>
+          </div>
+          <CourseDetail
+            topicList={course.goals}
+            title={'Bạn sẽ học được gì?'}
+          />
+          {/* <CurriculumOfCourse
                   episodeList={ course.episode }
                 /> */}
-        {course && course.requirement.length > 0 && (
-          <CourseDetail topicList={course.requirement} title={'Yêu cầu'} />
-        )}
-      </Col>
-      <Col lg={12} xl={4}>
-        <CourseEnroll
-          image={course.image}
-          show={showVideoPreviewCourse}
-          enrollCourse={() => enrollCourse()}
-          userCoursesEnrolled={user.coursesEnrolled}
-          courseId={course._id}
-        />
-      </Col>
+          {course && course.requirement.length > 0 && (
+            <CourseDetail topicList={course.requirement} title={'Yêu cầu'} />
+          )}
+        </Col>
+        <Col lg={12} xl={4}>
+          <CourseEnroll
+            image={course.image}
+            show={showVideoPreviewCourse}
+            enrollCourse={() => enrollCourse()}
+            isEnrolled={isEnrolled}
+            courseId={course._id}
+          />
+        </Col>
+      </Row>
 
       <div className={styles.mobileButtonWrapper}>
-        <MainButton
-          className={styles.mobileButton}
-          primary={true}
-          onClick={enrollCourse}
-        >
-          {!user.coursesEnrolled.includes(course._id)
-            ? 'ĐĂNG KÝ MIỄN PHÍ'
-            : 'TIẾP TỤC HỌC'}
-        </MainButton>
+        <Link to={`/lesson/${course._id}`}>
+          <MainButton className={styles.mobileButton} primary={true}>
+            {isEnrolled(course._id) ? 'TIẾP TỤC HỌC' : 'ĐĂNG KÝ MIỄN PHÍ'}
+          </MainButton>
+        </Link>
       </div>
 
       {isShowVideoPreviewCourse && (
         <PreviewCourse
-          isShowVideoPreviewCourse={isShowVideoPreviewCourse}
-          showVideoPreviewCourse={showVideoPreviewCourse}
-          previewVideo={course.videoId}
+          previewVideo={course.previewVideo}
+          showVideo={showVideoPreviewCourse}
         />
       )}
     </>

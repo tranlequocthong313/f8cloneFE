@@ -17,7 +17,7 @@ const AdminHeader = () => {
             <Image src={logo} className={styles.logoNavbar} />
             <h4>F8 Admin</h4>
           </Link>
-          <h5>Thiết kế bài học</h5>
+          <h5>Sửa bài học</h5>
         </Navbar.Brand>
         <div className={styles.userAction}>
           <User

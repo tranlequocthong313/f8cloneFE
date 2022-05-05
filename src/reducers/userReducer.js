@@ -65,7 +65,6 @@ const userReducer = (state = initialState, action) => {
       }
 
     case 'ENROLL_COURSE':
-      console.log(action.payload.coursesEnrolled)
       return {
         ...state,
         coursesEnrolled: action.payload.coursesEnrolled,

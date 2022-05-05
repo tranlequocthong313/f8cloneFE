@@ -119,6 +119,10 @@
   }
 }
 
+.commentWrapper {
+  width: 50%;
+}
+
 @media (min-width: 1024px) {
   .wrapper {
     .content {
@@ -136,6 +140,10 @@
 @media (max-width: 1023px) {
   .wrapper {
     width: 100%;
+  }
+
+  .commentWrapper {
+    width: 90%;
   }
 }
 
@@ -159,5 +167,10 @@
         display: none;
       }
     }
+  }
+
+  .commentWrapper {
+    width: 100%;
+    padding: 10px;
   }
 }

@@ -50,6 +50,7 @@ const NewPost = () => {
               onChange={({ text }) => {
                 setContent(text)
               }}
+              className={styles['rc-md-editor']}
               renderHTML={(text) => <ReactMarkdown children={text} />}
             />
           </div>

@@ -53,16 +53,28 @@ const privateRoutes = [
   { path: '/new-post/:id', component: NewPost },
   { path: '/bookmark-post', component: BookmarkPost },
   { path: '/edit-post/:id', component: EditPost },
-  { path: '/lesson/:courseId', component: Lesson },
+  { path: '/lesson/:courseId', component: Lesson, layout: null },
 ]
 
 const adminRoutes = [
-  { path: '/admin/blog', component: Admin },
-  { path: '/admin/video', component: Admin },
-  { path: '/admin/course', component: Admin },
-  { path: '/admin/create-course', component: AdminCreateCourse },
-  { path: '/admin/lessons/:courseId', component: AdminLesson },
-  { path: '/admin/edit-course/:courseId', component: AdminEditCourse },
+  { path: '/admin/blog', component: Admin, layout: HeaderOnly },
+  { path: '/admin/video', component: Admin, layout: HeaderOnly },
+  { path: '/admin/course', component: Admin, layout: HeaderOnly },
+  {
+    path: '/admin/create-course',
+    component: AdminCreateCourse,
+    layout: HeaderOnly,
+  },
+  {
+    path: '/admin/lessons/:courseId',
+    component: AdminLesson,
+    layout: null,
+  },
+  {
+    path: '/admin/edit-course/:courseId',
+    component: AdminEditCourse,
+    layout: HeaderOnly,
+  },
 ]
 
 const authRoutes = [

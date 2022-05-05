@@ -6,27 +6,39 @@ import {
   FormGroup,
   FormLabel,
 } from 'react-bootstrap'
+import MainButton from '../../../utils/button/MainButton'
 import styles from './AdminGeneral.module.scss'
 
 const AdminGeneral = () => {
   return (
     <Form className={styles.wrapper}>
-      <FormGroup>
+      <FormGroup className={styles.formItem}>
         <FormLabel>Tên</FormLabel>
         <FormControl />
       </FormGroup>
-      <FormGroup>
+      <FormGroup className={styles.formItem}>
         <FormLabel>Chương học</FormLabel>
         <FormControl />
       </FormGroup>
-      <FormGroup>
+      <FormGroup className={styles.formItem}>
         <FormLabel>Bài học video</FormLabel>
-        <div className="d-flex">
-          <FormCheck type="radio" label="Tải lên" />
-          <FormCheck type="radio" label="Youtube" />
+        <div className="d-flex mb-3">
+          <FormCheck
+            type="radio"
+            label="Tải lên"
+            className={styles.formCheck}
+          />
+          <FormCheck
+            type="radio"
+            label="Youtube"
+            className={styles.formCheck}
+          />
         </div>
-        <FormControl />
+        <FormControl style={{ width: '50%' }} />
       </FormGroup>
+      <MainButton primary={true} className={styles.submitButton}>
+        Lưu lại
+      </MainButton>
     </Form>
   )
 }

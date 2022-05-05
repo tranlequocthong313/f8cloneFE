@@ -91,10 +91,10 @@ const Lesson = () => {
       {isShowMenuTrack && (
         <LessonTrack episodes={episodes} heading={'Nội dung khóa học'} />
       )}
-
       <LessonActionBar
         handleIsShowMenuTrack={handleIsShowMenuTrack}
         isShowMenuTrack={isShowMenuTrack}
+        episodes={episodes}
       />
     </>
   )

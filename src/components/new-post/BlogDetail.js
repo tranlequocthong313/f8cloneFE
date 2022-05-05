@@ -26,7 +26,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
 
   useEffect(() => {
     ;(async () => {
-      const { token } = JSON.parse(Cookies.get('userData'))
+      const { token } = Cookies.get('token')
       if (!token) return
 
       const url = `${apiURL}/me/bookmark`
