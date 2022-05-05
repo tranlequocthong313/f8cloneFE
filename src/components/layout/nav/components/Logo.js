@@ -19,7 +19,7 @@ const Logo = () => {
         <h4 className={styles.logoHeading}>Học Lập Trình Để Đi Làm</h4>
       )}
       {activeTab !== 'home' && (
-        <div onClick={navigate(-1)}>
+        <div onClick={() => navigate(-1)}>
           <h4 className={styles.logoHeading}>
             <i className="fa-solid fa-chevron-left"></i>
             <span>Quay lại</span>

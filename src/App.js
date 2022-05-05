@@ -87,6 +87,8 @@ function App() {
     })
   }
 
+  console.log(user.isLoggedIn)
+
   return loading ? (
     <Loading />
   ) : (
