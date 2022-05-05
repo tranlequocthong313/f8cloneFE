@@ -13,7 +13,7 @@ const LoginWithEmailAndPasswordForm = ({
   isLogin,
   forgotPassword,
   setForgotPassword,
-  dispatchAndHistory,
+  dispatchAndNavigate,
 }) => {
   const LIMITED_SECOND_FOR_SIGNUP = 120
   const LIMITED_SECOND_FOR_FORGET_PWD = 60
@@ -104,7 +104,7 @@ const LoginWithEmailAndPasswordForm = ({
       if (!data.success) return setInvalidEmailOrPassword(data.message)
 
       Cookies.set('token', data.accessToken, { expires: 365 })
-      dispatchAndHistory({
+      dispatchAndNavigate({
         ...data.user,
         accessToken: data.accessToken,
         admin: data.admin,

@@ -5,7 +5,7 @@ import ContentEditable from '../utils/content-editable/ContentEditable'
 import moment from 'moment'
 import { apiURL } from '../../context/constants'
 import styles from './PostOption.module.scss'
-import { useHistory } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import { ref, uploadBytesResumable, getDownloadURL } from '@firebase/storage'
 import { storage } from '../../firebase/config'
@@ -18,7 +18,7 @@ import { ErrorContext } from '../../context/ErrorContext'
 import ModalError from '../utils/modal-error/ModalError'
 
 const PostOption = ({ blogContent }) => {
-  const history = useHistory()
+  const location = useLocation()
   const titleDisplayRef = useRef()
   const { setShowModal } = useContext(PostContext)
   const { onShowError } = useContext(ErrorContext)
@@ -97,9 +97,9 @@ const PostOption = ({ blogContent }) => {
     )
   }
 
-  const dispatchAndHistory = (data) => {
+  const dispatchAndNavigate = (data) => {
     createBlog({ blogData: data.blog })
-    history.push(
+    location(
       !data.blog.schedule ? `/blog/${data.blog._id}` : '/my-post/published'
     )
   }
@@ -142,7 +142,7 @@ const PostOption = ({ blogContent }) => {
       })
     }
 
-    dispatchAndHistory(data)
+    dispatchAndNavigate(data)
     setShowModal(false)
   }
 

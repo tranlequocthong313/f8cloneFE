@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect, useRef, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
-import Header from '../../components/main-layout/nav/Header'
-import SideBar from '../../components/main-layout/sidebar/SideBar'
+import Header from '../../components/layout/nav/Header'
+import SideBar from '../../components/layout/sidebar/SideBar'
 import styles from './Search.module.scss'
 import ContentEditable from '../../components/utils/content-editable/ContentEditable'
 import { apiURL } from '../../context/constants'
@@ -10,9 +10,7 @@ import Tabs from '../../components/utils/tabs/Tabs'
 import consoleLog from '../../components/utils/console-log/consoleLog'
 import f8Icon from '../../asset/images/f8_icon.png'
 
-const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer')
-)
+const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
 
 const Search = () => {
   const location = useLocation()

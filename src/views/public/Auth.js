@@ -6,7 +6,7 @@ import f8Logo from '../../asset/images/f8_icon.png'
 import { signInWithPopup } from 'firebase/auth'
 import { auth } from '../../firebase/config'
 import { useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import AuthWithPhoneNumberForm from '../../components/auth/forms/AuthWithPhoneNumberForm'
 import AuthWithEmailAndPasswordForm from '../../components/auth/forms/AuthWithEmailAndPasswordForm'
 import { login } from '../../actions/userAction'
@@ -16,7 +16,7 @@ import Cookies from 'js-cookie'
 import consoleLog from '../../components/utils/console-log/consoleLog'
 
 const Auth = () => {
-  const history = useHistory()
+  const location = useLocation()
   const dispatch = useDispatch()
 
   const [isLogin, setIsLogin] = useState(true)
@@ -26,9 +26,9 @@ const Auth = () => {
 
   const isShowAuthProviderOption = () => (loginOption === '' ? true : false)
 
-  const dispatchAndHistory = (payload) => {
+  const dispatchAndNavigate = (payload) => {
     dispatch(login(payload))
-    history.push('/')
+    location('/')
   }
 
   const handleIsLogin = () => {
@@ -51,7 +51,7 @@ const Auth = () => {
       })
 
       Cookies.set('token', data.accessToken, { expires: 365 })
-      dispatchAndHistory({
+      dispatchAndNavigate({
         ...data.userCreated,
         accessToken: data.accessToken,
       })
@@ -115,7 +115,7 @@ const Auth = () => {
             )}
             {loginOption === 'phone' && (
               <AuthWithPhoneNumberForm
-                dispatchAndHistory={dispatchAndHistory}
+                dispatchAndNavigate={dispatchAndNavigate}
                 switchPhoneAndEmail={switchPhoneAndEmail}
                 isLogin={isLogin}
               />
@@ -128,7 +128,7 @@ const Auth = () => {
                 handleIsLogin={handleIsLogin}
                 forgotPassword={forgotPassword}
                 setForgotPassword={setForgotPassword}
-                dispatchAndHistory={dispatchAndHistory}
+                dispatchAndNavigate={dispatchAndNavigate}
               />
             )}
             {emailUsed && isShowAuthProviderOption() && (

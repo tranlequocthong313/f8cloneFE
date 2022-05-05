@@ -1,7 +1,7 @@
 import React, { useState, Suspense, useEffect } from 'react'
 import styles from './Settings.module.scss'
 import { Container, Row, Col } from 'react-bootstrap'
-import Header from '../../components/main-layout/nav/Header'
+import Header from '../../components/layout/nav/Header'
 import { useSelector } from 'react-redux'
 import FieldInput from '../../components/utils/field-input/FieldInput'
 import Cookies from 'js-cookie'
@@ -13,9 +13,7 @@ import { storage } from '../../firebase/config'
 import removeActions from '../../components/utils/remove-accents/removeActions'
 import consoleLog from '../../components/utils/console-log/consoleLog'
 
-const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer')
-)
+const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
 
 const Settings = () => {
   const dispatch = useDispatch()
@@ -214,190 +212,182 @@ const Settings = () => {
   }
 
   return (
-    <>
-      <Header />
-      <Container className={styles.settings}>
-        <Row style={{ marginTop: 48 }}>
-          <Col sm={12} md={12} lg={9} xl={9}>
-            <div className={styles.wrapper}>
-              <h3 className={styles.heading}>Cài đặt</h3>
-              <div className={styles.container}>
-                <div className={styles.userInfo}>
-                  <h3>Thông tin cá nhân</h3>
-                </div>
-                <FieldInput
-                  title={'Họ tên'}
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  description={
-                    'Tên của bạn xuất hiện trên trang cá nhân và bên cạnh các bình luận của bạn.'
-                  }
-                  placeholder={'Thêm tên của bạn'}
-                  maxLength={50}
-                  disabled={!settingModeChosen('name')}
-                  onShow={() => handleSettingMode('name')}
-                  isEditMode={settingModeChosen('name')}
-                  onSave={changeName}
-                />
-                <FieldInput
-                  title={'Bio'}
-                  onChange={(e) => setBio(e.target.value)}
-                  value={bio}
-                  description={
-                    'Bio hiển thị trên trang cá nhân và trong các bài viết (blog) của bạn.'
-                  }
-                  placeholder={'Thêm giới thiệu'}
-                  maxLength={150}
-                  disabled={!settingModeChosen('bio')}
-                  onShow={() => handleSettingMode('bio')}
-                  isEditMode={settingModeChosen('bio')}
-                  onSave={bioChange}
-                />
-                <FieldInput
-                  title={'Avatar'}
-                  description={
-                    'Nên là ảnh vuông, chấp nhận các tệp: JPG, PNG hoặc GIF.'
-                  }
-                  photoURL={user.photoURL}
-                  preview={image.preview}
-                  isImage={true}
-                  onFileChange={getNewAvatar}
-                  onShow={() => handleSettingMode('avatar')}
-                  isEditMode={settingModeChosen('avatar')}
-                  onSave={changeAvatar}
-                />
-                <FieldInput
-                  title={'Email'}
-                  value={user.email ? user.email : ''}
-                  placeholder={'Eg. hoclaptrinh@f8.edu.vn'}
-                  isEdit={false}
-                  disabled={true}
-                />
-                <FieldInput
-                  title={'User Name'}
-                  value={`${removeActions(
-                    user.displayName.toLowerCase().replace(/\s/g, '')
-                  )}`}
-                  placeholder={'Thêm user name'}
-                  isEdit={false}
-                  disabled={true}
-                  description={`URL: https://fullstack.edu.vn/@${removeActions(
-                    user.displayName.toLowerCase().replace(/\s/g, '')
-                  )}`}
-                />
-                <FieldInput
-                  title={'Số điện thoại'}
-                  value={user.phoneNumber}
-                  placeholder={'Thêm số điện thoại'}
-                  isEdit={false}
-                  disabled={true}
-                  description={'Điện thoại kết nối với F8.'}
-                />
-              </div>
-
-              <div className={styles.container}>
-                <div className={styles.userInfo}>
-                  <h3>Mạng xã hội</h3>
-                </div>
-                <FieldInput
-                  title={'Facebook'}
-                  maxLength={150}
-                  onChange={(e) =>
-                    setSocial((prev) => {
-                      return {
-                        ...prev,
-                        fb: e.target.value,
-                      }
-                    })
-                  }
-                  placeholder={'Eg. https://www.facebook.com/hoclaptrinhf8'}
-                  disabled={!settingModeChosen('fb')}
-                  onShow={() => handleSettingMode('fb')}
-                  isEditMode={settingModeChosen('fb')}
-                  onSave={() => socialChange('fb')}
-                  value={social.fb}
-                />
-                <FieldInput
-                  title={'Youtube'}
-                  placeholder={'Eg. https://www.youtube.com/c/F8VNOfficial'}
-                  maxLength={150}
-                  onChange={(e) =>
-                    setSocial((prev) => {
-                      return {
-                        ...prev,
-                        youtube: e.target.value,
-                      }
-                    })
-                  }
-                  disabled={!settingModeChosen('youtube')}
-                  onShow={() => handleSettingMode('youtube')}
-                  isEditMode={settingModeChosen('youtube')}
-                  onSave={() => socialChange('youtube')}
-                  value={social.youtube}
-                />
-                <FieldInput
-                  title={'Linkedin'}
-                  placeholder={'Eg. https://www.linkedin.com/in/hoclaptrinhf8/'}
-                  maxLength={150}
-                  onChange={(e) =>
-                    setSocial((prev) => {
-                      return {
-                        ...prev,
-                        linkedin: e.target.value,
-                      }
-                    })
-                  }
-                  disabled={!settingModeChosen('linkedin')}
-                  onShow={() => handleSettingMode('linkedin')}
-                  isEditMode={settingModeChosen('linkedin')}
-                  onSave={() => socialChange('linkedin')}
-                  value={social.linkedin}
-                />
-                <FieldInput
-                  title={'Instagram'}
-                  placeholder={'Eg. https://www.instagram.com/hoclaptrinhf8/'}
-                  maxLength={150}
-                  onChange={(e) =>
-                    setSocial((prev) => {
-                      return {
-                        ...prev,
-                        instagram: e.target.value,
-                      }
-                    })
-                  }
-                  disabled={!settingModeChosen('instagram')}
-                  onShow={() => handleSettingMode('instagram')}
-                  isEditMode={settingModeChosen('instagram')}
-                  onSave={() => socialChange('instagram')}
-                  value={social.instagram}
-                />
-                <FieldInput
-                  title={'Twitter'}
-                  placeholder={'Eg. https://twitter.com/hoclaptrinhf8'}
-                  maxLength={150}
-                  onChange={(e) =>
-                    setSocial((prev) => {
-                      return {
-                        ...prev,
-                        twitter: e.target.value,
-                      }
-                    })
-                  }
-                  disabled={!settingModeChosen('twitter')}
-                  onShow={() => handleSettingMode('twitter')}
-                  isEditMode={settingModeChosen('twitter')}
-                  onSave={() => socialChange('twitter')}
-                  value={social.twitter}
-                />
-              </div>
+    <Container className={styles.settings}>
+      <Col sm={12} md={12} lg={9} xl={9}>
+        <div className={styles.wrapper}>
+          <h3 className={styles.heading}>Cài đặt</h3>
+          <div className={styles.container}>
+            <div className={styles.userInfo}>
+              <h3>Thông tin cá nhân</h3>
             </div>
-          </Col>
-        </Row>
-      </Container>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Footer />
-      </Suspense>
-    </>
+            <FieldInput
+              title={'Họ tên'}
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              description={
+                'Tên của bạn xuất hiện trên trang cá nhân và bên cạnh các bình luận của bạn.'
+              }
+              placeholder={'Thêm tên của bạn'}
+              maxLength={50}
+              disabled={!settingModeChosen('name')}
+              onShow={() => handleSettingMode('name')}
+              isEditMode={settingModeChosen('name')}
+              onSave={changeName}
+            />
+            <FieldInput
+              title={'Bio'}
+              onChange={(e) => setBio(e.target.value)}
+              value={bio}
+              description={
+                'Bio hiển thị trên trang cá nhân và trong các bài viết (blog) của bạn.'
+              }
+              placeholder={'Thêm giới thiệu'}
+              maxLength={150}
+              disabled={!settingModeChosen('bio')}
+              onShow={() => handleSettingMode('bio')}
+              isEditMode={settingModeChosen('bio')}
+              onSave={bioChange}
+            />
+            <FieldInput
+              title={'Avatar'}
+              description={
+                'Nên là ảnh vuông, chấp nhận các tệp: JPG, PNG hoặc GIF.'
+              }
+              photoURL={user.photoURL}
+              preview={image.preview}
+              isImage={true}
+              onFileChange={getNewAvatar}
+              onShow={() => handleSettingMode('avatar')}
+              isEditMode={settingModeChosen('avatar')}
+              onSave={changeAvatar}
+            />
+            <FieldInput
+              title={'Email'}
+              value={user.email ? user.email : ''}
+              placeholder={'Eg. hoclaptrinh@f8.edu.vn'}
+              isEdit={false}
+              disabled={true}
+            />
+            <FieldInput
+              title={'User Name'}
+              value={`${removeActions(
+                user.displayName.toLowerCase().replace(/\s/g, '')
+              )}`}
+              placeholder={'Thêm user name'}
+              isEdit={false}
+              disabled={true}
+              description={`URL: https://fullstack.edu.vn/@${removeActions(
+                user.displayName.toLowerCase().replace(/\s/g, '')
+              )}`}
+            />
+            <FieldInput
+              title={'Số điện thoại'}
+              value={user.phoneNumber}
+              placeholder={'Thêm số điện thoại'}
+              isEdit={false}
+              disabled={true}
+              description={'Điện thoại kết nối với F8.'}
+            />
+          </div>
+
+          <div className={styles.container}>
+            <div className={styles.userInfo}>
+              <h3>Mạng xã hội</h3>
+            </div>
+            <FieldInput
+              title={'Facebook'}
+              maxLength={150}
+              onChange={(e) =>
+                setSocial((prev) => {
+                  return {
+                    ...prev,
+                    fb: e.target.value,
+                  }
+                })
+              }
+              placeholder={'Eg. https://www.facebook.com/hoclaptrinhf8'}
+              disabled={!settingModeChosen('fb')}
+              onShow={() => handleSettingMode('fb')}
+              isEditMode={settingModeChosen('fb')}
+              onSave={() => socialChange('fb')}
+              value={social.fb}
+            />
+            <FieldInput
+              title={'Youtube'}
+              placeholder={'Eg. https://www.youtube.com/c/F8VNOfficial'}
+              maxLength={150}
+              onChange={(e) =>
+                setSocial((prev) => {
+                  return {
+                    ...prev,
+                    youtube: e.target.value,
+                  }
+                })
+              }
+              disabled={!settingModeChosen('youtube')}
+              onShow={() => handleSettingMode('youtube')}
+              isEditMode={settingModeChosen('youtube')}
+              onSave={() => socialChange('youtube')}
+              value={social.youtube}
+            />
+            <FieldInput
+              title={'Linkedin'}
+              placeholder={'Eg. https://www.linkedin.com/in/hoclaptrinhf8/'}
+              maxLength={150}
+              onChange={(e) =>
+                setSocial((prev) => {
+                  return {
+                    ...prev,
+                    linkedin: e.target.value,
+                  }
+                })
+              }
+              disabled={!settingModeChosen('linkedin')}
+              onShow={() => handleSettingMode('linkedin')}
+              isEditMode={settingModeChosen('linkedin')}
+              onSave={() => socialChange('linkedin')}
+              value={social.linkedin}
+            />
+            <FieldInput
+              title={'Instagram'}
+              placeholder={'Eg. https://www.instagram.com/hoclaptrinhf8/'}
+              maxLength={150}
+              onChange={(e) =>
+                setSocial((prev) => {
+                  return {
+                    ...prev,
+                    instagram: e.target.value,
+                  }
+                })
+              }
+              disabled={!settingModeChosen('instagram')}
+              onShow={() => handleSettingMode('instagram')}
+              isEditMode={settingModeChosen('instagram')}
+              onSave={() => socialChange('instagram')}
+              value={social.instagram}
+            />
+            <FieldInput
+              title={'Twitter'}
+              placeholder={'Eg. https://twitter.com/hoclaptrinhf8'}
+              maxLength={150}
+              onChange={(e) =>
+                setSocial((prev) => {
+                  return {
+                    ...prev,
+                    twitter: e.target.value,
+                  }
+                })
+              }
+              disabled={!settingModeChosen('twitter')}
+              onShow={() => handleSettingMode('twitter')}
+              isEditMode={settingModeChosen('twitter')}
+              onSave={() => socialChange('twitter')}
+              value={social.twitter}
+            />
+          </div>
+        </div>
+      </Col>
+    </Container>
   )
 }
 

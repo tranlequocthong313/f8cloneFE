@@ -6,7 +6,7 @@ import AdminTrack from '../../components/admin/track/AdminTrack'
 import { apiURL } from '../../context/constants'
 import { useLocation } from 'react-router-dom'
 import consoleLog from '../../components/utils/console-log/consoleLog'
-import Loading from '../../components/utils/loading/Loading'
+import SubLoading from '../../components/utils/loading/SubLoading'
 import Tabs from '../../components/utils/tabs/Tabs'
 import AdminLessonConsole from '../../components/admin/console/AdminLessonConsole'
 import { Col, Row } from 'react-bootstrap'
@@ -733,7 +733,7 @@ const AdminLesson = () => {
   }
 
   return loading ? (
-    <Loading />
+    <SubLoading />
   ) : (
     <>
       <AdminHeader />

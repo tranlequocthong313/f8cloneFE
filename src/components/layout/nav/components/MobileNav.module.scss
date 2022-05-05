@@ -1,0 +1,121 @@
+@import '../../../../sass/color';
+
+.mobileNav {
+  color: #707070;
+  font-size: 20px;
+  margin-right: 32px;
+  padding: 8px 0;
+  display: none;
+}
+
+.user {
+  padding: 32px 0 32px 20px;
+}
+
+.userPicture {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+}
+
+.list {
+  list-style-type: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.0785);
+  padding: 16px 0;
+  margin-bottom: 12px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  a {
+    color: $text-color;
+    font-weight: 500;
+    padding: 20px 0 20px 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 16px;
+    display: block;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    text-decoration: none;
+  }
+
+  i {
+    width: 20px;
+    display: inline-block;
+    text-align: center;
+    margin-right: 16px;
+    color: #757575;
+  }
+
+  .active {
+    border-radius: 5px;
+    background-color: #e8ebed;
+    color: #1a1a1a;
+  }
+}
+
+.icon {
+  font-size: 28px;
+  flex: 1 1;
+  margin-right: 160px;
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .mobileNav {
+    width: 60% !important;
+    z-index: 9999 !important;
+    font-size: 1.6rem;
+    padding: 16px 0 0 32px;
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    overflow-y: auto;
+    animation: slideIn 0.5s ease;
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-100%);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+        transform: translateX(0);
+      }
+    }
+  }
+
+  .user {
+    padding: 16px 0 0px 20px;
+  }
+
+  .icon {
+    display: block;
+  }
+
+  .mobileNav {
+    display: block;
+  }
+}
+
+@media (max-width: 739px) {
+  .mobileNav {
+    width: 80% !important;
+    padding: 16px 0 0 16px !important;
+  }
+
+  .user {
+    padding-bottom: 24px;
+  }
+
+  .list {
+    padding: 8px 0;
+
+    a {
+      padding: 16px 0 16px 16px;
+    }
+  }
+}

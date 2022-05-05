@@ -10,9 +10,9 @@ import MainModal from '../../components/utils/main-modal/MainModal'
 import ModalError from '../../components/utils/modal-error/ModalError'
 import removeActions from '../../components/utils/remove-accents/removeActions'
 import styles from './AdminCreateCourse.module.scss'
-import Header from '../../components/main-layout/nav/Header'
-import Footer from '../../components/main-layout/footer/Footer'
-import SideBar from '../../components/main-layout/sidebar/SideBar'
+import Header from '../../components/layout/nav/Header'
+import Footer from '../../components/layout/footer/Footer'
+import SideBar from '../../components/layout/sidebar/SideBar'
 
 const AdminAddCourse = ({ showModal, setShowModal, setCourseData }) => {
   const { onShowError } = useContext(ErrorContext)

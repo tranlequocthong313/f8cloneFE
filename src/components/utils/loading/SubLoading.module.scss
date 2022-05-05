@@ -1,0 +1,9 @@
+@import '../../../sass/color';
+@import '../../../sass/flexCenter';
+
+.wrapper {
+  height: 90vh;
+  @include flexCenter(row);
+  color: $primary-color;
+  z-index: 9999;
+}

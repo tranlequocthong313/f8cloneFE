@@ -4,15 +4,13 @@ import Editor from 'react-markdown-editor-lite'
 import ReactMarkdown from 'react-markdown'
 import 'react-markdown-editor-lite/lib/index.css'
 import '../../sass/_myIcon.scss'
-import Header from '../../components/main-layout/nav/Header'
+import Header from '../../components/layout/nav/Header'
 import '../../sass/_markdownEditor.scss'
 import ContentEditable from '../../components/utils/content-editable/ContentEditable'
 import PostOption from '../../components/new-post/PostOption'
 import { PostContext } from '../../context/PostContext'
 
-const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer')
-)
+const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
 
 const NewPost = () => {
   const titleRef = useRef(null)
@@ -36,7 +34,6 @@ const NewPost = () => {
     <>
       {!showModal && (
         <>
-          <Header />
           <div className={styles.wrapper}>
             <ContentEditable
               text={'Tiêu đề'}
@@ -66,9 +63,6 @@ const NewPost = () => {
           }}
         />
       )}
-      <Suspense fallback={<div>Loading...</div>}>
-        <Footer />
-      </Suspense>
     </>
   )
 }

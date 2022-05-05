@@ -1,0 +1,40 @@
+@import '../../../sass/flexCenter';
+@import '../../../sass/color';
+
+.footerWrapper {
+  overflow: hidden;
+  padding: 20px 0;
+  background-color: #181821;
+  color: $footer-text-color;
+  // position: fixed;
+  // bottom: 0;
+  // left: 0;
+  // right: 0;
+}
+
+.footerContainer {
+  max-width: 1100px;
+  width: 100%;
+  // max-width: 1224px;
+  margin: 0 auto;
+}
+
+.lowFooterContainer {
+  @include flexCenter(row);
+}
+
+.lowFooter {
+  margin: 20px 0;
+}
+
+@media (min-width: 1024px) and (max-width: 1366px) {
+  .lowFooter {
+    padding: 0 40px;
+  }
+}
+
+@media (max-width: 739px) {
+  .footerWrapper {
+    text-align: center;
+  }
+}

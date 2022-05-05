@@ -13,7 +13,7 @@ const ProfileActivity = ({ user }) => {
             <span>{user.bio}</span>
           </div>
         )}
-        <div className={styles.joinHistory}>
+        <div className={styles.joinlocation}>
           <i className={`fa-solid fa-user-group ${styles.groupIcon}`}></i>
           <span>
             Thành viên của <strong>F8 (Học lập trình để đi làm) </strong>

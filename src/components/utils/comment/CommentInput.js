@@ -2,12 +2,13 @@ import { useState, useRef, useEffect, useContext } from 'react'
 import styles from './CommentInput.module.scss'
 import ContentEditable from '../content-editable/ContentEditable'
 import Cookies from 'js-cookie'
-import { useHistory } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { apiURL } from '../../../context/constants'
 import { SocketContext } from '../../../context/SocketContext'
 import { ErrorContext } from '../../../context/ErrorContext'
 import { useSelector } from 'react-redux'
 import ModalError from '../../utils/modal-error/ModalError'
+import consoleLog from '../console-log/consoleLog'
 
 const CommentInput = ({
   showCode,
@@ -18,7 +19,7 @@ const CommentInput = ({
   blog,
   setCommentData,
 }) => {
-  const history = useHistory()
+  const location = useLocation()
   const contentEditableRef = useRef()
   const user = useSelector((state) => state.user)
 
@@ -34,7 +35,7 @@ const CommentInput = ({
 
   const submitComment = async () => {
     const token = Cookies.get('token')
-    if (!token) return history.push('/login')
+    if (!token) return location('/login')
 
     const url = `${apiURL}/comment`
     const data = await postComment(url, token)

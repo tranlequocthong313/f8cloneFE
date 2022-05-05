@@ -4,7 +4,7 @@ import LessonContent from '../../components/lesson/LessonContent'
 import LessonHeader from '../../components/lesson/LessonHeader'
 import LessonTrack from '../../components/lesson/LessonTrack'
 import Comment from '../../components/utils/comment/Comment'
-import Loading from '../../components/utils/loading/Loading'
+import SubLoading from '../../components/utils/loading/SubLoading'
 import { apiURL } from '../../context/constants'
 import { LessonContext } from '../../context/LessonContext'
 import styles from './Lesson.module.scss'
@@ -83,7 +83,7 @@ const Lesson = () => {
   }, [episodes, setChosenLesson, setVideoId, setChosenEpisode, setLessons])
 
   return loading ? (
-    <Loading />
+    <SubLoading />
   ) : (
     <>
       <LessonHeader />

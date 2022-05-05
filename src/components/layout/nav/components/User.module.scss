@@ -1,0 +1,84 @@
+@import '../../../../sass/flexCenter';
+@import '../../../../sass/color';
+
+.userTippyButton {
+  display: flex;
+  cursor: pointer;
+
+  .userPicture {
+    width: 28px;
+    height: 28px;
+    margin-left: 12px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  p {
+    margin: 0 0 0 6px;
+    color: #fff;
+    font-size: 13px;
+    line-height: 28px;
+  }
+}
+
+.menuWrapper {
+  width: 280px;
+  padding: 8px 24px !important;
+  position: absolute;
+  top: 38px !important;
+  right: -7px !important;
+
+  .user {
+    align-items: center;
+    display: flex;
+
+    .avatar {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin: 10px 0;
+    }
+
+    .info {
+      margin-left: 12px;
+
+      .name {
+        font-size: 16px;
+        font-weight: 600;
+        color: #292929;
+      }
+
+      .fullName {
+        font-size: 14px;
+        color: #757575;
+        margin-top: 4px;
+      }
+    }
+  }
+
+  .menuItem {
+    padding: 0;
+    display: block;
+    font-size: 14px;
+    padding: 10px 0;
+
+    &.divider {
+      border-top: 1px solid rgb(248, 243, 243);
+    }
+
+    &:hover {
+      background-color: transparent;
+    }
+  }
+}
+
+@media (max-width: 1023px) {
+  .userPicture {
+    display: none !important;
+  }
+
+  .menuWrapper {
+    display: none !important;
+  }
+}

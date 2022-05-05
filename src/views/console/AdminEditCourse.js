@@ -11,9 +11,9 @@ import ModalError from '../../components/utils/modal-error/ModalError'
 import removeActions from '../../components/utils/remove-accents/removeActions'
 import Tippy from '../../components/utils/tippy/Tippy'
 import styles from './AdminEditCourse.module.scss'
-import Header from '../../components/main-layout/nav/Header'
+import Header from '../../components/layout/nav/Header'
 import { useLocation } from 'react-router-dom'
-import Loading from '../../components/utils/loading/Loading'
+import SubLoading from '../../components/utils/loading/SubLoading'
 
 const AdminEditCourse = () => {
   const location = useLocation()
@@ -170,7 +170,7 @@ const AdminEditCourse = () => {
   }
 
   return loading ? (
-    <Loading />
+    <SubLoading />
   ) : (
     <>
       <Header isAdmin={true} />

@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import ScrollToTop from '../scroll/ScrollToTop'
 import { apiURL } from '../../../context/constants'
 import ModalError from '../modal-error/ModalError'
+import consoleLog from '../console-log/consoleLog'
 
 const Comment = ({ submitComment, commentInput, onInput, blog }) => {
   const commentRef = useRef()

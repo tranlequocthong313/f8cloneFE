@@ -2,7 +2,7 @@ import React from 'react'
 import { Container, Image, Navbar } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import User from '../../main-layout/nav/components/User'
+import User from '../../layout/nav/components/User'
 import styles from './AdminHeader.module.scss'
 import logo from '../../../asset/images/f8_icon.png'
 

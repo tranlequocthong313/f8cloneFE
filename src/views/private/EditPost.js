@@ -4,27 +4,25 @@ import Editor from 'react-markdown-editor-lite'
 import ReactMarkdown from 'react-markdown'
 import 'react-markdown-editor-lite/lib/index.css'
 import '../../sass/_myIcon.scss'
-import Header from '../../components/main-layout/nav/Header'
+import Header from '../../components/layout/nav/Header'
 import '../../sass/_markdownEditor.scss'
 import ContentEditable from '../../components/utils/content-editable/ContentEditable'
-import { useLocation, useHistory } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { apiURL } from '../../context/constants'
 import { PostContext } from '../../context/PostContext'
 import Cookies from 'js-cookie'
-import Loading from '../../components/utils/loading/Loading'
+import SubLoading from '../../components/utils/loading/SubLoading'
 import ModalError from '../../components/utils/modal-error/ModalError'
 import { ErrorContext } from '../../context/ErrorContext'
+import consoleLog from '../../components/utils/console-log/consoleLog'
 
-const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer')
-)
+const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
 
 const EditPost = () => {
   const mdEditor = useRef(null)
   const titleRef = useRef(null)
 
   const location = useLocation()
-  const history = useHistory()
   const { showModal, setIsValid } = useContext(PostContext)
   const { onShowError } = useContext(ErrorContext)
 
@@ -70,7 +68,7 @@ const EditPost = () => {
     const url = `${apiURL}/blog${location.pathname}`
     const data = await putEditPost(url, token)
 
-    if (data.success) history.goBack()
+    if (data.success) location.goBack()
   }
 
   const putEditPost = async (url, token) => {
@@ -94,7 +92,7 @@ const EditPost = () => {
   }
 
   return loading ? (
-    <Loading />
+    <SubLoading />
   ) : (
     <>
       {!showModal && (

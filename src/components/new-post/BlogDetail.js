@@ -3,7 +3,7 @@ import ReactMarkdown from 'react-markdown'
 import { Row, Col, Image } from 'react-bootstrap'
 import styles from './BlogDetail.module.scss'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import BlogSameAuthor from './BlogSameAuthor'
 import BlogHighlights from './BlogHighlights'
 import timeSince from '../utils/timeSince/timeSince'
@@ -18,7 +18,7 @@ import remarkGfm from 'remark-gfm'
 
 const BlogDetail = ({ blog, blogHighlight }) => {
   const user = useSelector((state) => state.user)
-  const history = useHistory()
+  const location = useLocation()
 
   const [likeCount, setLikeCount] = useState(blog.likes)
   const [isLike, setIsLike] = useState(blog.likes.includes(user.userId))
@@ -53,7 +53,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
 
   const bookmark = async (blogId) => {
     const token = Cookies.get('token')
-    if (!token) return history.push('/login')
+    if (!token) return location('/login')
 
     const url = `${apiURL}/me/bookmark`
     const data = await patchBookmark(url, blogId, token)
@@ -80,7 +80,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
 
   const handleLike = async () => {
     const token = Cookies.get('token')
-    if (!token) return history.push('/login')
+    if (!token) return location('/login')
 
     const url = isLike
       ? `${apiURL}/blog/unlike/${blog._id}`
@@ -134,7 +134,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
     } catch (error) {
       consoleLog(error.message)
     } finally {
-      history.push('/admin/blog')
+      location('/admin/blog')
     }
   }
 

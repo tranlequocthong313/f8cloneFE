@@ -1,37 +1,14 @@
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import { setAuth } from './actions/userAction'
-import NewPost from './views/private/NewPost'
-import Auth from './views/public/Auth'
-import Home from './views/public/Home'
-import NotFound from './views/public/NotFound'
-import Lesson from './views/private/Lesson'
-import MyCourse from './views/private/MyCourse'
-import EditPost from './views/private/EditPost'
-import BookmarkPost from './views/private/BookmarkPost'
-import Settings from './views/private/Settings'
-import MyBlog from './views/private/MyBlog'
-import Admin from './views/console/Admin'
-import AdminCreateCourse from './views/console/AdminCreateCourse'
-import AdminEditCourse from './views/console/AdminEditCourse'
-import Courses from './views/public/Courses'
-import CourseSlug from './components/course/CourseSlug'
-import BlogSlug from './components/blog/BlogSlug'
-import LearningPath from './views/public/LearningPath'
-import Blog from './views/public/Blog'
-import BlogTag from './views/public/BlogTag'
-import Search from './views/public/Search'
-import Contact from './views/public/Contact'
-import Privacy from './views/public/Privacy'
-import Terms from './views/public/Terms'
-import Careers from './views/public/Careers'
-import About from './views/public/About'
 import { apiURL } from './context/constants'
 import Loading from './components/utils/loading/Loading'
 import consoleLog from './components/utils/console-log/consoleLog'
-import AdminLesson from './views/console/AdminLesson'
+import { publicRoutes, privateRoutes, adminRoutes, authRoutes } from './routes'
+import { Routes, Route, useLocation, Router } from 'react-router-dom'
+import NotFound from './views/public/NotFound'
+import DefaultLayout from './components/layout/default-layout/DefaultLayout'
 
 function App() {
   const dispatch = useDispatch()
@@ -85,275 +62,42 @@ function App() {
     )
   }, [])
 
-  let routes
-  if (user.isLoggedIn && user.isAdmin) {
-    routes = (
-      <>
-        <Switch>
-          <Route path="/admin/course" exact>
-            <Admin />
-          </Route>
-          <Route path="/admin/blog" exact>
-            <Admin />
-          </Route>
-          <Route path="/admin/video" exact>
-            <Admin />
-          </Route>
-          <Route path="/admin/lessons/:courseId" exact>
-            <AdminLesson />
-          </Route>
-          <Route path="/admin/create-course" exact>
-            <AdminCreateCourse />
-          </Route>
-          <Route path="/admin/edit-course/:courseId" exact>
-            <AdminEditCourse />
-          </Route>
-          <Route path="/new-post" exact>
-            <NewPost />
-          </Route>
-          <Route path="/login" exact>
-            <NotFound />
-          </Route>
-          <Route path="/register" exact>
-            <NotFound />
-          </Route>
-          <Route path="/Lesson/:courseId" exact>
-            <Lesson />
-          </Route>
-          <Route path="/my-course" exact>
-            <MyCourse />
-          </Route>
-          <Route path="/new-post" exact>
-            <NewPost />
-          </Route>
-          <Route path="/new-post/:id" exact>
-            <NewPost />
-          </Route>
-          <Route path="/edit-post/:id">
-            <EditPost />
-          </Route>
-          <Route path="/settings" exact>
-            <Settings />
-          </Route>
-          <Route path="/bookmark-post" exact>
-            <BookmarkPost />
-          </Route>
-          <Route path="/my-post/published" exact>
-            <MyBlog />
-          </Route>
-          <Route path="/courses" exact>
-            <Courses />
-          </Route>
-          <Route path="/courses/:courseId" exact>
-            <CourseSlug />
-          </Route>
-          <Route path="/blog/:id" exact>
-            <BlogSlug />
-          </Route>
-          <Route path="/learning-path" exact>
-            <LearningPath />
-          </Route>
-          <Route path="/blog">
-            <Blog />
-          </Route>
-          <Route path="/blog/tag/:tag" exact>
-            <BlogTag />
-          </Route>
-          <Route path="/search">
-            <Search />
-          </Route>
-          <Route path="/Search/course" exact>
-            <Search />
-          </Route>
-          <Route path="/search/blog" exact>
-            <Search />
-          </Route>
-          <Route path="/search/video" exact>
-            <Search />
-          </Route>
-          <Route path="/contact-us" exact>
-            <Contact />
-          </Route>
-          <Route path="/privacy" exact>
-            <Privacy />
-          </Route>
-          <Route path="/terms" exact>
-            <Terms />
-          </Route>
-          <Route path="/careers" exact>
-            <Careers />
-          </Route>
-          <Route path="/about-us" exact>
-            <About />
-          </Route>
-          <Route path="/" exact>
-            <Home />
-          </Route>
-          <Route path="*" exact>
-            <NotFound />
-          </Route>
-        </Switch>
-      </>
-    )
-  } else if (user.isLoggedIn) {
-    routes = (
-      <>
-        <Switch>
-          <Route path="/new-post" exact>
-            <NewPost />
-          </Route>
-          <Route path="/login" exact>
-            <NotFound />
-          </Route>
-          <Route path="/register" exact>
-            <NotFound />
-          </Route>
-          <Route path="/lesson/:courseId" exact>
-            <Lesson />
-          </Route>
-          <Route path="/my-course" exact>
-            <MyCourse />
-          </Route>
-          <Route path="/new-post" exact>
-            <NewPost />
-          </Route>
-          <Route path="/new-post/:id" exact>
-            <NewPost />
-          </Route>
-          <Route path="/edit-post/:id">
-            <EditPost />
-          </Route>
-          <Route path="/settings" exact>
-            <Settings />
-          </Route>
-          <Route path="/bookmark-post" exact>
-            <BookmarkPost />
-          </Route>
-          <Route path="/my-post/published" exact>
-            <MyBlog />
-          </Route>
-          <Route path="/courses" exact>
-            <Courses />
-          </Route>
-          <Route path="/courses/:courseId" exact>
-            <CourseSlug />
-          </Route>
-          <Route path="/blog/:id" exact>
-            <BlogSlug />
-          </Route>
-          <Route path="/learning-path" exact>
-            <LearningPath />
-          </Route>
-          <Route path="/blog">
-            <Blog />
-          </Route>
-          <Route path="/blog/tag/:tag" exact>
-            <BlogTag />
-          </Route>
-          <Route path="/search">
-            <Search />
-          </Route>
-          <Route path="/Search/course" exact>
-            <Search />
-          </Route>
-          <Route path="/search/blog" exact>
-            <Search />
-          </Route>
-          <Route path="/search/video" exact>
-            <Search />
-          </Route>
-          <Route path="/contact-us" exact>
-            <Contact />
-          </Route>
-          <Route path="/privacy" exact>
-            <Privacy />
-          </Route>
-          <Route path="/terms" exact>
-            <Terms />
-          </Route>
-          <Route path="/careers" exact>
-            <Careers />
-          </Route>
-          <Route path="/about-us" exact>
-            <About />
-          </Route>
-          <Route path="/" exact>
-            <Home />
-          </Route>
-          <Route path="*" exact>
-            <NotFound />
-          </Route>
-        </Switch>
-      </>
-    )
-  } else {
-    routes = (
-      <>
-        <Switch>
-          <Route path="/login" exact>
-            <Auth />
-          </Route>
-          <Route path="/register" exact>
-            <Auth />
-          </Route>
-          <Route path="/courses" exact>
-            <Courses />
-          </Route>
-          <Route path="/courses/:courseId" exact>
-            <CourseSlug />
-          </Route>
-          <Route path="/blog/:id" exact>
-            <BlogSlug />
-          </Route>
-          <Route path="/learning-path" exact>
-            <LearningPath />
-          </Route>
-          <Route path="/blog">
-            <Blog />
-          </Route>
-          <Route path="/blog/tag/:tag" exact>
-            <BlogTag />
-          </Route>
-          <Route path="/search">
-            <Search />
-          </Route>
-          <Route path="/search/course" exact>
-            <Search />
-          </Route>
-          <Route path="/search/blog" exact>
-            <Search />
-          </Route>
-          <Route path="/search/video" exact>
-            <Search />
-          </Route>
-          <Route path="/contact-us" exact>
-            <Contact />
-          </Route>
-          <Route path="/privacy" exact>
-            <Privacy />
-          </Route>
-          <Route path="/terms" exact>
-            <Terms />
-          </Route>
-          <Route path="/careers" exact>
-            <Careers />
-          </Route>
-          <Route path="/about-us" exact>
-            <About />
-          </Route>
-          <Route path="/" exact>
-            <Home />
-          </Route>
-          <Route path="*" exact>
-            <NotFound />
-          </Route>
-          <Redirect to="/login" />
-        </Switch>
-      </>
-    )
+  const handleRoute = (routes) => {
+    return routes.map((route, index) => {
+      const Page = route.component
+      let Layout = DefaultLayout
+
+      if (route.layout) {
+        Layout = route.layout
+      } else if (route.layout === null) {
+        Layout = Fragment
+      }
+
+      return (
+        <Route
+          key={index}
+          path={route.path}
+          element={
+            <Layout>
+              <Page />
+            </Layout>
+          }
+        />
+      )
+    })
   }
 
-  return loading ? <Loading /> : routes
+  return loading ? (
+    <Loading />
+  ) : (
+    <Routes>
+      {handleRoute(publicRoutes)}
+      {user.isLoggedIn && handleRoute(privateRoutes)}
+      {user.isLoggedIn && user.isAdmin && handleRoute(adminRoutes)}
+      {!user.isLoggedIn && handleRoute(authRoutes)}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  )
 }
 
 export default App

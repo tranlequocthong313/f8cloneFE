@@ -7,10 +7,10 @@ import { Provider } from 'react-redux'
 import store from './reducers/index'
 import PostContextProvider from './context/PostContext'
 import SocketContextProvider from './context/SocketContext'
-import { BrowserRouter as Router } from 'react-router-dom'
 import CommentContextProvider from './context/CommentContext'
 import LessonContextProvider from './context/LessonContext'
 import ErrorContextProvider from './context/ErrorContext'
+import { BrowserRouter as Router } from 'react-router-dom'
 
 ReactDOM.render(
   <Router>

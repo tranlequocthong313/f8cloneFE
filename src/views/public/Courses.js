@@ -6,13 +6,13 @@ import ctaImage from '../../asset/images/fb-group-cards@2x.png'
 import '../../sass/_mainHeadingTitle.scss'
 import Suggestion from '../../components/utils/suggestion/Suggestion'
 import '../../sass/_container.scss'
-import Header from '../../components/main-layout/nav/Header'
-import SideBar from '../../components/main-layout/sidebar/SideBar'
-import Footer from '../../components/main-layout/footer/Footer'
+import Header from '../../components/layout/nav/Header'
+import SideBar from '../../components/layout/sidebar/SideBar'
+import Footer from '../../components/layout/footer/Footer'
 import { apiURL } from '../../context/constants'
 import styles from './Courses.module.scss'
 import '../../sass/_withSidebarContent.scss'
-import Loading from '../../components/utils/loading/Loading'
+import SubLoading from '../../components/utils/loading/SubLoading'
 import consoleLog from '../../components/utils/console-log/consoleLog'
 
 const Courses = () => {
@@ -55,48 +55,31 @@ const Courses = () => {
   }
 
   return loading ? (
-    <Loading />
+    <SubLoading />
   ) : (
-    <>
-      <Header />
-      <Row>
-        <SideBar />
-        <Col xs={12} sm={12} md={12} lg={11} xl={11}>
-          <div className="withSidebarContent">
-            <Row className={styles.wrapper}>
-              <div className={styles.containerTop}>
-                <h2>Khóa học</h2>
-                <p>
-                  Các khóa học được thiết kế phù hợp cho cả người mới, miễn phí,
-                  nội dung dễ hiểu.
-                </p>
-              </div>
-              <HeadingTitleWrap
-                title={'Lộ trình học Front-end'}
-                viewMode={null}
-              />
-              <CourseList courses={courseFE} />
+    <Row className={styles.wrapper}>
+      <div className={styles.containerTop}>
+        <h2>Khóa học</h2>
+        <p>
+          Các khóa học được thiết kế phù hợp cho cả người mới, miễn phí, nội
+          dung dễ hiểu.
+        </p>
+      </div>
+      <HeadingTitleWrap title={'Lộ trình học Front-end'} viewMode={null} />
+      <CourseList courses={courseFE} />
 
-              <HeadingTitleWrap
-                title={'Lộ trình học Back-end'}
-                viewMode={null}
-              />
-              <CourseList courses={courseBE} />
+      <HeadingTitleWrap title={'Lộ trình học Back-end'} viewMode={null} />
+      <CourseList courses={courseBE} />
 
-              <Suggestion
-                title={'Bạn đang tìm kiếm lộ trình học cho người mới?'}
-                description={
-                  'Các khóa học được thiết kế phù hợp cho người mới, lộ trình học rõ ràng, nội dung dễ hiểu.'
-                }
-                button={'Xem lộ trình'}
-                image={ctaImage}
-              />
-            </Row>
-          </div>
-        </Col>
-      </Row>
-      <Footer />
-    </>
+      <Suggestion
+        title={'Bạn đang tìm kiếm lộ trình học cho người mới?'}
+        description={
+          'Các khóa học được thiết kế phù hợp cho người mới, lộ trình học rõ ràng, nội dung dễ hiểu.'
+        }
+        button={'Xem lộ trình'}
+        image={ctaImage}
+      />
+    </Row>
   )
 }
 

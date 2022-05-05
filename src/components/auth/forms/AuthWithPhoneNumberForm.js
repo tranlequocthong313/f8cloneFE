@@ -6,10 +6,11 @@ import { auth } from '../../../firebase/config'
 import FormGroup from '../../utils/auth-form/FormGroup'
 import { apiURL } from '../../../context/constants'
 import Cookies from 'js-cookie'
+import consoleLog from '../../utils/console-log/consoleLog'
 
 const LoginWithPhoneNumberForm = ({
   switchPhoneAndEmail,
-  dispatchAndHistory,
+  dispatchAndNavigate,
   isLogin,
 }) => {
   const COUNTRY_NAME_DEFAULT = 'vn'
@@ -82,7 +83,7 @@ const LoginWithPhoneNumberForm = ({
 
   const setCookieAndDispatchAfterLogin = (data) => {
     Cookies.set('token', data.accessToken, { expires: 365 })
-    dispatchAndHistory({
+    dispatchAndNavigate({
       ...data.user,
       accessToken: data.accessToken,
     })

@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react'
-import { useLocation, useHistory } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { apiURL } from './constants'
 import consoleLog from '../components/utils/console-log/consoleLog'
 
@@ -7,7 +7,6 @@ export const LessonContext = createContext()
 
 const LessonContextProvider = ({ children }) => {
   const location = useLocation()
-  const history = useHistory()
 
   const [isShowMenuTrack, setIsShowMenuTrack] = useState(true)
   const [chosenLesson, setChosenLesson] = useState('')
