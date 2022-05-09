@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import FormGroup from '../../utils/auth-form/FormGroup'
+import FormGroup from '../../../utils/auth-form/FormGroup'
 import { Form, Spinner } from 'react-bootstrap'
 import styles from './AuthWithEmailAndPasswordForm.module.scss'
 import Cookies from 'js-cookie'
 import { apiURL } from '../../../context/constants'
 import AuthForgetPassword from './AuthForgetPassword'
-import consoleLog from '../../utils/console-log/consoleLog'
+import consoleLog from '../../../utils/console-log/consoleLog'
 
 const LoginWithEmailAndPasswordForm = ({
   switchPhoneAndEmail,

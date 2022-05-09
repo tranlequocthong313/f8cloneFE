@@ -113,7 +113,7 @@
 
       h3 {
         font-size: 14px;
-        margin: 6px 0 0;
+        margin: 10px 0 0;
 
         a {
           color: $text-color;
@@ -132,12 +132,12 @@
         font-size: 13px;
         font-weight: 600;
         color: $primary-color;
-        margin-top: 6px;
         cursor: pointer;
         display: block;
         background-color: transparent;
         text-decoration: none;
         padding: 0;
+        margin: 16px 0 10px 0;
       }
     }
   }

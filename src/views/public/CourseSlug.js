@@ -6,13 +6,14 @@ import CourseEnroll from '../../components/course/CourseEnroll'
 import styles from './CourseSlug.module.scss'
 import PreviewCourse from '../../components/course/PreviewCourse'
 import { apiURL } from '../../context/constants'
-import MainButton from '../../components/utils/button/MainButton'
+import MainButton from '../../utils/button/MainButton'
 import Cookies from 'js-cookie'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { enrollCourse as enroll } from '../../actions/userAction'
-import SubLoading from '../../components/utils/loading/SubLoading'
-import consoleLog from '../../components/utils/console-log/consoleLog'
+import SubLoading from '../../utils/loading/SubLoading'
+import consoleLog from '../../utils/console-log/consoleLog'
+import CurriculumOfCourse from '../../components/course/CurriculumOfCourse'
 
 const CourseSlug = () => {
   const dispatch = useDispatch()
@@ -24,6 +25,7 @@ const CourseSlug = () => {
   const [isShowVideoPreviewCourse, setIsShowVideoPreviewCourse] =
     useState(false)
   const [loading, setLoading] = useState(true)
+  const [totalLesson, setTotalLesson] = useState([])
 
   const showVideoPreviewCourse = () =>
     setIsShowVideoPreviewCourse((prev) => !prev)
@@ -41,7 +43,17 @@ const CourseSlug = () => {
         setLoading(false)
       }
     })()
-  }, [location.pathname])
+  }, [location.pathname, totalLesson])
+
+  useEffect(() => {
+    if (course)
+      course.episodes.forEach((episode) => {
+        episode.lessons.forEach((lesson) => {
+          if (!totalLesson.includes(lesson._id))
+            setTotalLesson((prev) => [...prev, lesson._id])
+        })
+      })
+  }, [course, totalLesson])
 
   const getCourseBySlug = async (url) => {
     try {
@@ -120,12 +132,6 @@ const CourseSlug = () => {
               </li>
               <li>
                 <i className={`${styles.icon} fa-solid fa-clock`}></i>
-                <span>
-                  Thời lượng <strong>03 giờ 25 phút</strong>
-                </span>
-              </li>
-              <li>
-                <i className={`${styles.icon} fa-solid fa-clock`}></i>
                 <span>Học mọi lúc, mọi nơi</span>
               </li>
             </ul>
@@ -134,9 +140,10 @@ const CourseSlug = () => {
             topicList={course.goals}
             title={'Bạn sẽ học được gì?'}
           />
-          {/* <CurriculumOfCourse
-                  episodeList={ course.episode }
-                /> */}
+          <CurriculumOfCourse
+            episodeList={course.episodes}
+            totalLesson={totalLesson}
+          />
           {course && course.requirement.length > 0 && (
             <CourseDetail topicList={course.requirement} title={'Yêu cầu'} />
           )}
@@ -144,10 +151,12 @@ const CourseSlug = () => {
         <Col lg={12} xl={4}>
           <CourseEnroll
             image={course.image}
-            show={showVideoPreviewCourse}
+            showVideoPreviewCourse={showVideoPreviewCourse}
             enrollCourse={() => enrollCourse()}
             isEnrolled={isEnrolled}
             courseId={course._id}
+            totalLesson={totalLesson}
+            courseLevel={course.level}
           />
         </Col>
       </Row>
@@ -159,13 +168,11 @@ const CourseSlug = () => {
           </MainButton>
         </Link>
       </div>
-
-      {isShowVideoPreviewCourse && (
-        <PreviewCourse
-          previewVideo={course.previewVideo}
-          showVideo={showVideoPreviewCourse}
-        />
-      )}
+      <PreviewCourse
+        videoId={course.videoId}
+        showVideoPreviewCourse={showVideoPreviewCourse}
+        isShowVideoPreviewCourse={isShowVideoPreviewCourse}
+      />
     </>
   )
 }

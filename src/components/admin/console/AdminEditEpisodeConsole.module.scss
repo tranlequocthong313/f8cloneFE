@@ -1,0 +1,58 @@
+@import '../../../sass/color';
+
+.wrapper {
+  padding: 0 32px;
+  width: 50%;
+
+  .formItem {
+    margin-top: 20px;
+
+    label {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    input {
+      margin-right: 20px;
+    }
+
+    .deleteButton {
+      background-color: red;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      padding: 6px;
+      font-weight: 600;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.9;
+      }
+
+      i {
+        margin-right: 8px;
+      }
+    }
+  }
+
+  .submitButton {
+    margin-top: 40px;
+    background-color: $primary-admin-color;
+  }
+
+  .buttonWrapper {
+    display: flex;
+    margin-top: 20px;
+
+    .button {
+      margin: 0 6px;
+
+      &.create {
+        background-color: $primary-admin-color;
+      }
+      &.cancel {
+        background-color: #777;
+      }
+    }
+  }
+}

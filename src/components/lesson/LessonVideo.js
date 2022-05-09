@@ -4,15 +4,17 @@ import VideoPlayer from '../course/VideoPlayer'
 import styles from './LessonVideo.module.scss'
 
 const LessonVideo = () => {
-  const { show, videoId, playVideo } = useContext(LessonContext)
+  const { videoId, onEnd, play } = useContext(LessonContext)
 
   return (
     <div
       className={
-        show ? styles.wrapper : `${styles.wrapper} ${styles.fullWidth}`
+        videoId
+          ? `${styles.wrapper} ${styles.fullWidth}`
+          : `${styles.wrapper} ${styles.fullWidth} ${styles.disabled}`
       }
     >
-      <VideoPlayer onClick={playVideo} videoId={videoId} />
+      <VideoPlayer videoId={videoId} onEnd={onEnd} play={play} />
     </div>
   )
 }

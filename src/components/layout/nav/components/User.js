@@ -1,4 +1,4 @@
-import { Image, Dropdown } from 'react-bootstrap'
+import { Image } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './User.module.scss'
 import { useNavigate } from 'react-router-dom'
@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../../../../actions/userAction'
 import Cookies from 'js-cookie'
-import Tippy from '../../../utils/tippy/Tippy'
+import Tippy from '../../../../utils/tippy/Tippy'
 
 const User = ({ photoURL, displayName, isAdminPage, className, slug }) => {
   const navigate = useNavigate()

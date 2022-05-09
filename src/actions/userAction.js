@@ -26,6 +26,13 @@ const enrollCourse = (payload) => {
   }
 }
 
+const learnedLesson = (payload) => {
+  return {
+    type: 'LEARNED_LESSON',
+    payload,
+  }
+}
+
 const settings = (payload) => {
   return {
     type: 'SETTING',
@@ -33,4 +40,4 @@ const settings = (payload) => {
   }
 }
 
-export { login, logout, setAuth, settings, enrollCourse }
+export { login, logout, setAuth, settings, enrollCourse, learnedLesson }

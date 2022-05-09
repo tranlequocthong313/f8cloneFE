@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { apiURL } from '../../../context/constants'
 import { Form, Spinner } from 'react-bootstrap'
-import FormGroup from '../../utils/auth-form/FormGroup'
+import FormGroup from '../../../utils/auth-form/FormGroup'
 import styles from './AuthForgetPassword.module.scss'
-import consoleLog from '../../utils/console-log/consoleLog'
+import consoleLog from '../../../utils/console-log/consoleLog'
 
 const AuthForgetPassword = ({
   setForgotPassword,

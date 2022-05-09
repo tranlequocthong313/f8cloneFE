@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Col, Row } from 'react-bootstrap'
-import HeadingTitleWrap from '../../components/utils/title-heading/HeadingTitleWrap'
+import HeadingTitleWrap from '../../utils/title-heading/HeadingTitleWrap'
 import CourseList from '../../components/home/courses/CourseList'
 import ctaImage from '../../asset/images/fb-group-cards@2x.png'
 import '../../sass/_mainHeadingTitle.scss'
-import Suggestion from '../../components/utils/suggestion/Suggestion'
+import Suggestion from '../../utils/suggestion/Suggestion'
 import '../../sass/_container.scss'
 import Header from '../../components/layout/nav/Header'
 import SideBar from '../../components/layout/sidebar/SideBar'
@@ -12,8 +12,8 @@ import Footer from '../../components/layout/footer/Footer'
 import { apiURL } from '../../context/constants'
 import styles from './Courses.module.scss'
 import '../../sass/_withSidebarContent.scss'
-import SubLoading from '../../components/utils/loading/SubLoading'
-import consoleLog from '../../components/utils/console-log/consoleLog'
+import SubLoading from '../../utils/loading/SubLoading'
+import consoleLog from '../../utils/console-log/consoleLog'
 
 const Courses = () => {
   const [courseFE, setCourseFE] = useState([])
@@ -78,6 +78,7 @@ const Courses = () => {
         }
         button={'Xem lộ trình'}
         image={ctaImage}
+        path={'/learning-path'}
       />
     </Row>
   )

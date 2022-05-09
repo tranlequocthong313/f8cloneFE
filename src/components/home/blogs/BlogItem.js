@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
 import { Image } from 'react-bootstrap'
-import MainCard from '../../utils/card/MainCard'
+import MainCard from '../../../utils/card/MainCard'
 import styles from './BlogItem.module.scss'
-import MainButton from '../../utils/button/MainButton'
+import MainButton from '../../../utils/button/MainButton'
 import f8Logo from '../../../asset/images/f8_icon.png'
 
 const BlogItem = ({ blog }) => {

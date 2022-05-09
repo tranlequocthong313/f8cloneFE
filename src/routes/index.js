@@ -50,9 +50,8 @@ const privateRoutes = [
   { path: '/my-course', component: MyCourse },
   { path: '/my-post/published', component: MyBlog },
   { path: '/new-post/', component: NewPost, layout: HeaderOnly },
-  { path: '/new-post/:id', component: NewPost },
+  { path: '/edit-post/:id', component: EditPost, layout: null },
   { path: '/bookmark-post', component: BookmarkPost },
-  { path: '/edit-post/:id', component: EditPost },
   { path: '/lesson/:courseId', component: Lesson, layout: null },
 ]
 

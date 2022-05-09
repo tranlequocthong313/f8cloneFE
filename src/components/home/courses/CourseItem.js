@@ -1,12 +1,11 @@
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import MainButton from '../../utils/button/MainButton'
-import MainCard from '../../utils/card/MainCard'
-import VerticalProgressBar from '../../utils/vertical-progress-bar/VerticalProgressBar'
+import MainButton from '../../../utils/button/MainButton'
+import MainCard from '../../../utils/card/MainCard'
 import styles from './CourseItem.module.scss'
-import formatNumber from '../../utils/format-number/FormatNumber'
+import { formatNumber } from '../../../utils/format/index'
 
-const CourseItem = ({ course, path }) => {
+const CourseItem = ({ course }) => {
   const user = useSelector((state) => state.user)
 
   const isEnrolled = (id) => user.coursesEnrolled.includes(id)
@@ -38,18 +37,10 @@ const CourseItem = ({ course, path }) => {
           {course.title}
         </Link>
       </h4>
-      {!path && (
-        <div className={styles.studentCount}>
-          <i className="fa-solid fa-users"></i>
-          <span>{formatNumber(course.studentCount)}</span>
-        </div>
-      )}
-      {path && (
-        <div className={styles.progress}>
-          <p>Học cách đây 23 ngày trước</p>
-          <VerticalProgressBar tooltip={'50%'} />
-        </div>
-      )}
+      <div className={styles.studentCount}>
+        <i className="fa-solid fa-users"></i>
+        <span>{formatNumber(course.studentCount)}</span>
+      </div>
     </MainCard>
   )
 }

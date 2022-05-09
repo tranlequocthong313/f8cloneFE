@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import Tabs from '../../utils/tabs/Tabs'
+import Tabs from '../../../utils/tabs/Tabs'
 import styles from './AdminTabs.module.scss'
 
 const AdminTabs = ({ tabs, setTabs }) => {
@@ -24,13 +23,6 @@ const AdminTabs = ({ tabs, setTabs }) => {
         tab={'Tóm tắt bài học'}
         onActive={() => setTabs('summary')}
         isActive={tabs === 'summary'}
-        activeColor={styles.active}
-      />
-      <Tabs
-        className={styles.tab}
-        tab={'Bình luận'}
-        onActive={() => setTabs('comment')}
-        isActive={tabs === 'comment'}
         activeColor={styles.active}
       />
     </div>

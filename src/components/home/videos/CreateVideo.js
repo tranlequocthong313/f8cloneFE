@@ -2,15 +2,14 @@ import { useContext, useState } from 'react'
 import { Modal, Form, Spinner } from 'react-bootstrap'
 import { apiURL } from '../../../context/constants'
 import styles from './CreateVideo.module.scss'
-import removeActions from '../../utils/remove-accents/removeActions'
-import MainButton from '../../utils/button/MainButton'
-import MainModal from '../../utils/main-modal/MainModal'
-import ModalError from '../../utils/modal-error/ModalError'
-import { ErrorContext } from '../../../context/ErrorContext'
-import consoleLog from '../../utils/console-log/consoleLog'
+import { removeActions } from '../../../utils/format/index'
+import MainButton from '../../../utils/button/MainButton'
+import MainModal from '../../../utils/modal/MainModal'
+import { ModalContext } from '../../../context/ModalContext'
+import consoleLog from '../../../utils/console-log/consoleLog'
 
 const CreateVideo = ({ setVideoData }) => {
-  const { onShowError } = useContext(ErrorContext)
+  const { onShowError } = useContext(ModalContext)
 
   const [videoId, setVideoId] = useState('')
   const [isShowCreateModal, setIsShowCreateModal] = useState(false)
@@ -90,7 +89,6 @@ const CreateVideo = ({ setVideoData }) => {
 
   return (
     <>
-      <ModalError />
       <MainButton
         outline={true}
         className={styles.videoCreate}

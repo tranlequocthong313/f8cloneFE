@@ -1,0 +1,45 @@
+@import '../../sass/color';
+@import '../../sass/flexCenter';
+
+.wrapper {
+  height: 100vh;
+  width: 100vw;
+  @include flexCenter(row);
+  color: $primary-color;
+  z-index: 9999;
+
+  img {
+    margin-right: 10px;
+    width: 70px;
+    height: 70px;
+    animation: tada 0.7s infinite;
+  }
+
+  @keyframes tada {
+    from {
+      transform: scale3d(1, 1, 1);
+    }
+
+    10%,
+    20% {
+      transform: scale3d(0.9, 0.9, 0.9) rotate3d(0, 0, 1, -3deg);
+    }
+
+    30%,
+    50%,
+    70%,
+    90% {
+      transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, 3deg);
+    }
+
+    40%,
+    60%,
+    80% {
+      transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, -3deg);
+    }
+
+    to {
+      transform: scale3d(1, 1, 1);
+    }
+  }
+}

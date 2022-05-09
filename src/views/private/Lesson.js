@@ -1,13 +1,16 @@
 import React, { useContext, useState, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import LessonActionBar from '../../components/lesson/LessonActionBar'
 import LessonContent from '../../components/lesson/LessonContent'
 import LessonHeader from '../../components/lesson/LessonHeader'
 import LessonTrack from '../../components/lesson/LessonTrack'
-import Comment from '../../components/utils/comment/Comment'
-import SubLoading from '../../components/utils/loading/SubLoading'
+import Comment from '../../utils/comment/Comment'
+import consoleLog from '../../utils/console-log/consoleLog'
+import SubLoading from '../../utils/loading/SubLoading'
 import { apiURL } from '../../context/constants'
 import { LessonContext } from '../../context/LessonContext'
 import styles from './Lesson.module.scss'
+import { useSelector } from 'react-redux'
 
 const Lesson = () => {
   const {
@@ -17,77 +20,61 @@ const Lesson = () => {
     setChosenLesson,
     setChosenEpisode,
     setLessons,
+    setTitleLesson,
+    setEpisodeChosenTitle,
+    setUpdatedAt,
   } = useContext(LessonContext)
+  const user = useSelector((state) => state.user)
+  const navigate = useNavigate()
+
+  const location = useLocation()
+  const courseId = location.pathname.split('/lesson/')[1]
 
   const [loading, setLoading] = useState(true)
-  const [episodes, setEpisodes] = useState([
-    {
-      _id: Math.random(),
-      title: 'Khái niệm kỹ thuật cần biết',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: true,
-          videoId: 'M62l1xA5Eu8',
-          title: 'Domain là gì? Tên miền là gì?',
-          time: '10:34',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'M62l1xA5Eu8',
-          title: 'Domain là gì? Tên miền là gì?',
-          time: '10:34',
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: 'Môi trường, con người IT',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'CyZ_O7v62h4',
-          title:
-            'Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo dục',
-          time: '24:10',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'YH-E4Y3EaT4',
-          title: 'Sinh viên IT đi thực tập tại doanh nghiệp cần biết những gì?',
-          time: '34:51',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: '2sg1yNl1WvE',
-          title:
-            'Chọn ngành IT có sai lầm? Những trải nghiệm thực tế sau 2 tháng làm việc tại doanh nghiệp?',
-          time: '47:12',
-        },
-      ],
-    },
-  ])
+  const [episodes, setEpisodes] = useState([])
 
   useEffect(() => {
-    setLoading(true)
-    setVideoId(episodes[0].lessons[0].videoId)
-    setChosenLesson(episodes[0].lessons[0]._id)
-    setChosenEpisode((prev) => [episodes[0]._id, ...prev])
-    setLessons(episodes)
+    ;(async () => {
+      if (!user.coursesEnrolled.includes(courseId))
+        return navigate(`/courses/${courseId}`)
 
-    setTimeout(() => setLoading(false), 500)
-  }, [episodes, setChosenLesson, setVideoId, setChosenEpisode, setLessons])
+      setLoading(true)
+
+      const url = `${apiURL}/courses/${courseId}/lessons`
+      const data = await getCourseById(url)
+
+      if (data) {
+        setEpisodes(data.episodes)
+        setLoading(false)
+      }
+    })()
+  }, [
+    courseId,
+    setChosenLesson,
+    setVideoId,
+    setChosenEpisode,
+    setLessons,
+    setTitleLesson,
+    setEpisodeChosenTitle,
+    setUpdatedAt,
+    navigate,
+    user.coursesEnrolled,
+  ])
+
+  const getCourseById = async (url) => {
+    try {
+      return (await fetch(url)).json()
+    } catch (error) {
+      consoleLog(error.message)
+    }
+  }
 
   return loading ? (
     <SubLoading />
   ) : (
     <>
-      <LessonHeader />
-      <LessonContent isShowMenuTrack={isShowMenuTrack} />
+      <LessonHeader episodes={episodes} />
+      <LessonContent isShowMenuTrack={isShowMenuTrack} episodes={episodes} />
       {isShowMenuTrack && (
         <LessonTrack episodes={episodes} heading={'Nội dung khóa học'} />
       )}

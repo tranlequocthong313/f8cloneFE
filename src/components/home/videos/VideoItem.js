@@ -1,12 +1,9 @@
-import MainCard from '../../utils/card/MainCard'
+import MainCard from '../../../utils/card/MainCard'
 import styles from './VideoItem.module.scss'
-import youtubeDurationFormat from 'youtube-duration-format'
-import MainButton from '../../utils/button/MainButton'
-import formatNumber from '../../utils/format-number/FormatNumber'
+import MainButton from '../../../utils/button/MainButton'
+import { formatDuration, formatNumber } from '../../../utils/format/index'
 
 const VideoItem = ({ video }) => {
-  const formatYoutubeDuration = (duration) => youtubeDurationFormat(duration)
-
   return (
     <MainCard>
       <a
@@ -24,7 +21,7 @@ const VideoItem = ({ video }) => {
               <i className="fa-solid fa-play"></i>
             </div>
             <div className={styles.duration}>
-              {formatYoutubeDuration(video.duration)}
+              {formatDuration(video.duration)}
             </div>
             <div></div>
           </div>

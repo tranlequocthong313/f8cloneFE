@@ -10,7 +10,7 @@ import Header from '../../components/layout/nav/Header'
 import Footer from '../../components/layout/footer/Footer'
 import CareerList from '../../components/career/CareerList'
 import { apiURL } from '../../context/constants'
-import consoleLog from '../../components/utils/console-log/consoleLog'
+import consoleLog from '../../utils/console-log/consoleLog'
 
 const About = () => {
   const [jobs, setJobs] = useState([])

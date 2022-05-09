@@ -1,20 +1,20 @@
 import { useContext, useEffect, useState } from 'react'
-import { Form, Modal } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
 import { apiURL } from '../../context/constants'
-import MainButton from '../utils/button/MainButton'
-import MainTable from '../utils/table/MainTable'
+import MainTable from '../../utils/table/MainTable'
 import styles from './AdminCourse.module.scss'
-import { ErrorContext } from '../../context/ErrorContext'
-import ModalError from '../utils/modal-error/ModalError'
-import consoleLog from '../utils/console-log/consoleLog'
+import { ModalContext } from '../../context/ModalContext'
+import consoleLog from '../../utils/console-log/consoleLog'
 import { Link } from 'react-router-dom'
-import formatNumber from '../utils/format-number/FormatNumber'
-import formatDateToLocaleString from '../utils/format-date/FormatDate'
+import {
+  formatNumber,
+  formatDateToLocaleString,
+} from '../../utils/format/index'
+import ModalConfirm from '../../utils/modal/ModalConfirm'
 
 const AdminCourse = ({ courseData, setCourseData }) => {
-  const { onShowError } = useContext(ErrorContext)
+  const { onShowError, onShowConfirm, onHideConfirm } = useContext(ModalContext)
 
-  const [isShowDeleteModal, setIsShowDeleteModal] = useState(false)
   const [checkboxChosen, setCheckboxChosen] = useState([])
   const [checkboxChosenAll, setCheckboxChosenAll] = useState([])
   const [isCheckboxChosenAll, setIsCheckboxChosenAll] = useState(false)
@@ -23,8 +23,6 @@ const AdminCourse = ({ courseData, setCourseData }) => {
     const courseIds = courseData.map((course) => course._id)
     setCheckboxChosenAll(courseIds)
   }, [courseData])
-
-  const showDeleteModal = () => setIsShowDeleteModal((prev) => !prev)
 
   const checkBoxChosenSingle = (id) =>
     setCheckboxChosen((prev) => {
@@ -55,7 +53,7 @@ const AdminCourse = ({ courseData, setCourseData }) => {
     isCheckboxChosenAll ? uncheckAll() : checkAll()
 
   const deleteCourseIsChosen = async () => {
-    showDeleteModal()
+    onHideConfirm()
 
     const url = `${apiURL}/admin/course/delete-soft`
     const data = await deleteCourse(url)
@@ -105,7 +103,6 @@ const AdminCourse = ({ courseData, setCourseData }) => {
 
   return (
     <>
-      <ModalError />
       <MainTable>
         <thead>
           <tr>
@@ -195,7 +192,6 @@ const AdminCourse = ({ courseData, setCourseData }) => {
                     }
                   ></i>
                 )}
-
                 {checkboxChosen.includes(course._id) && (
                   <i
                     className={
@@ -206,7 +202,7 @@ const AdminCourse = ({ courseData, setCourseData }) => {
                   ></i>
                 )}
                 <i
-                  onClick={showDeleteModal}
+                  onClick={onShowConfirm}
                   title={'Xóa course'}
                   className={
                     checkboxChosen.includes(course._id)
@@ -224,23 +220,11 @@ const AdminCourse = ({ courseData, setCourseData }) => {
           )}
         </tbody>
       </MainTable>
-      <Modal
-        show={isShowDeleteModal}
-        onHide={showDeleteModal}
-        className={styles.createModal}
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Xóa course</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>Đồng ý xóa course?</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <MainButton onClick={deleteCourseIsChosen}>Đồng ý</MainButton>
-          <MainButton onClick={showDeleteModal}>Hủy</MainButton>
-        </Modal.Footer>
-      </Modal>
+      <ModalConfirm
+        onConfirm={deleteCourseIsChosen}
+        body={'Bạn có đồng ý xóa khóa học?'}
+        header={'Xóa khóa học'}
+      />
     </>
   )
 }

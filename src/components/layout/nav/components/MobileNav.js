@@ -1,13 +1,12 @@
 import { useContext } from 'react'
 import { Image } from 'react-bootstrap'
-import { Link, useN, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import styles from './MobileNav.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
-import userDefaultImage from '../../../../asset/images/nobody_m.256x256.jpg'
 import { logout } from '../../../../actions/userAction'
 import { NavContext } from '../../../../context/NavContext'
 import Cookies from 'js-cookie'
-import VerticalModal from '../../../utils/vertical-modal/VerticalModal'
+import VerticalModal from '../../../../utils/modal/VerticalModal'
 
 const MobileNav = ({ photoURL }) => {
   const dispatch = useDispatch()

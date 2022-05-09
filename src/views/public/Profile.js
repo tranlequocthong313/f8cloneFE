@@ -6,7 +6,7 @@ import ProfileActivity from '../../components/profile/ProfileActivity'
 import { apiURL } from '../../context/constants'
 import { useLocation } from 'react-router-dom'
 import bannerProfileImage from '../../asset/images/cover-profile.3fb9fed576da4b28386a.png'
-import consoleLog from '../../components/utils/console-log/consoleLog'
+import consoleLog from '../../utils/console-log/consoleLog'
 
 const Profile = () => {
   const location = useLocation()

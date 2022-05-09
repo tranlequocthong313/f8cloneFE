@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Image } from 'react-bootstrap'
 import styles from './MyCourse.module.scss'
-import Tippy from '../../../utils/tippy/Tippy'
+import Tippy from '../../../../utils/tippy/Tippy'
 import { apiURL } from '../../../../context/constants'
 import Cookies from 'js-cookie'
-import consoleLog from '../../../utils/console-log/consoleLog'
+import consoleLog from '../../../../utils/console-log/consoleLog'
 
 const MyCourse = () => {
   const location = useLocation()
@@ -76,7 +76,6 @@ const MyCourse = () => {
                 <h3>
                   <Link to={`/lesson/${course._id}`}>{course.title}</Link>
                 </h3>
-                <p>Bạn chưa học khóa này</p>
                 <Link
                   to={`/lesson/${course._id}`}
                   className={styles.startButton}

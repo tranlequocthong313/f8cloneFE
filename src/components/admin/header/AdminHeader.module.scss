@@ -1,8 +1,9 @@
+@import '../../../sass/color';
 @import '../../../sass/flexCenter';
 
 .navHeader {
-  background-color: #3478d8;
-  padding: 0 28px !important;
+  background-color: $primary-admin-color;
+  padding: 0 28px 0 0 !important;
   height: 50px;
   border-bottom: 1px solid #e8ebed;
   position: fixed;
@@ -15,11 +16,38 @@
   z-index: 20;
   user-select: none;
 
+  .backHome {
+    cursor: pointer;
+    height: 50px;
+    width: 60px;
+    transition: background-color 0.2s linear;
+    @include flexCenter(row);
+    color: #fff;
+    text-decoration: none;
+
+    &:hover {
+      background-color: #0000001a;
+    }
+
+    i {
+      font-size: 16px;
+      width: 100%;
+      text-align: center;
+    }
+  }
+
   .userAction {
     align-items: center;
     display: flex;
     flex: 1 1;
     justify-content: flex-end;
+
+    .designLessonBtn {
+      height: 30px;
+      display: flex;
+      align-items: center;
+      margin-right: 14px;
+    }
   }
 
   .logo {

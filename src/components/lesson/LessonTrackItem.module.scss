@@ -8,14 +8,13 @@
   background-color: #f7f8fa;
   border-bottom: 1px solid #dedfe0;
   display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  align-items: center;
   padding: 8px 20px;
   position: sticky;
   top: 0;
   user-select: none;
   z-index: 2;
+  min-height: 55px;
 
   &:hover {
     background-color: #edeff1;
@@ -108,7 +107,7 @@
   .statusIcon {
     display: flex;
     justify-content: center;
-    margin-right: 12px;
+    margin: 12px;
     width: 36px;
 
     &.locked {

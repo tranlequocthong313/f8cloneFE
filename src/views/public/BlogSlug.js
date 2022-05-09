@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 import { apiURL } from '../../context/constants'
 import { useLocation } from 'react-router-dom'
 import BlogDetail from '../../components/new-post/BlogDetail'
-import SubLoading from '../../components/utils/loading/SubLoading'
-import consoleLog from '../../components/utils/console-log/consoleLog'
+import SubLoading from '../../utils/loading/SubLoading'
+import consoleLog from '../../utils/console-log/consoleLog'
 
 const BlogSlug = () => {
   const location = useLocation()

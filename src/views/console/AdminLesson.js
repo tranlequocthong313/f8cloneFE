@@ -1,713 +1,47 @@
 import { useEffect, useState } from 'react'
-import styles from './AdminLesson.module.scss'
-import LessonTrack from '../../components/lesson/LessonTrack'
 import AdminHeader from '../../components/admin/header/AdminHeader'
 import AdminTrack from '../../components/admin/track/AdminTrack'
 import { apiURL } from '../../context/constants'
 import { useLocation } from 'react-router-dom'
-import consoleLog from '../../components/utils/console-log/consoleLog'
-import SubLoading from '../../components/utils/loading/SubLoading'
-import Tabs from '../../components/utils/tabs/Tabs'
-import AdminLessonConsole from '../../components/admin/console/AdminLessonConsole'
+import consoleLog from '../../utils/console-log/consoleLog'
+import SubLoading from '../../utils/loading/SubLoading'
 import { Col, Row } from 'react-bootstrap'
+import AdminEditEpisodeConsole from '../../components/admin/console/AdminEditEpisodeConsole'
+import AdminAddEpisodeConsole from '../../components/admin/console/AdminAddEpisodeConsole'
+import AdminEditLessonConsole from '../../components/admin/console/AdminEditLessonConsole'
+import AdminAddLessonConsole from '../../components/admin/console/AdminAddLessonConsole'
 
 const AdminLesson = () => {
   const location = useLocation()
   const courseId = location.pathname.split('/admin/lessons/')[1]
 
-  const [courseTitle, setCourseTitle] = useState('')
-  const [episodes, setEpisodes] = useState([
-    {
-      _id: Math.random(),
-      title: 'Khái niệm kỹ thuật cần biết',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: true,
-          videoId: 'M62l1xA5Eu8',
-          title: 'Domain là gì? Tên miền là gì?',
-          time: '10:34',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'M62l1xA5Eu8',
-          title: 'Domain là gì? Tên miền là gì?',
-          time: '10:34',
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: 'Môi trường, con người IT',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'CyZ_O7v62h4',
-          title:
-            'Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo dục',
-          time: '24:10',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'YH-E4Y3EaT4',
-          title: 'Sinh viên IT đi thực tập tại doanh nghiệp cần biết những gì?',
-          time: '34:51',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: '2sg1yNl1WvE',
-          title:
-            'Chọn ngành IT có sai lầm? Những trải nghiệm thực tế sau 2 tháng làm việc tại doanh nghiệp?',
-          time: '47:12',
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: 'Môi trường, con người IT',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'CyZ_O7v62h4',
-          title:
-            'Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo dục',
-          time: '24:10',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'YH-E4Y3EaT4',
-          title: 'Sinh viên IT đi thực tập tại doanh nghiệp cần biết những gì?',
-          time: '34:51',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: '2sg1yNl1WvE',
-          title:
-            'Chọn ngành IT có sai lầm? Những trải nghiệm thực tế sau 2 tháng làm việc tại doanh nghiệp?',
-          time: '47:12',
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: 'Môi trường, con người IT',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'CyZ_O7v62h4',
-          title:
-            'Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo dục',
-          time: '24:10',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'YH-E4Y3EaT4',
-          title: 'Sinh viên IT đi thực tập tại doanh nghiệp cần biết những gì?',
-          time: '34:51',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: '2sg1yNl1WvE',
-          title:
-            'Chọn ngành IT có sai lầm? Những trải nghiệm thực tế sau 2 tháng làm việc tại doanh nghiệp?',
-          time: '47:12',
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: 'Môi trường, con người IT',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'CyZ_O7v62h4',
-          title:
-            'Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo dục',
-          time: '24:10',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'YH-E4Y3EaT4',
-          title: 'Sinh viên IT đi thực tập tại doanh nghiệp cần biết những gì?',
-          time: '34:51',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: '2sg1yNl1WvE',
-          title:
-            'Chọn ngành IT có sai lầm? Những trải nghiệm thực tế sau 2 tháng làm việc tại doanh nghiệp?',
-          time: '47:12',
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: 'Môi trường, con người IT',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'CyZ_O7v62h4',
-          title:
-            'Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo dục',
-          time: '24:10',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'YH-E4Y3EaT4',
-          title: 'Sinh viên IT đi thực tập tại doanh nghiệp cần biết những gì?',
-          time: '34:51',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: '2sg1yNl1WvE',
-          title:
-            'Chọn ngành IT có sai lầm? Những trải nghiệm thực tế sau 2 tháng làm việc tại doanh nghiệp?',
-          time: '47:12',
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: 'Môi trường, con người IT',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'CyZ_O7v62h4',
-          title:
-            'Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo dục',
-          time: '24:10',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'YH-E4Y3EaT4',
-          title: 'Sinh viên IT đi thực tập tại doanh nghiệp cần biết những gì?',
-          time: '34:51',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: '2sg1yNl1WvE',
-          title:
-            'Chọn ngành IT có sai lầm? Những trải nghiệm thực tế sau 2 tháng làm việc tại doanh nghiệp?',
-          time: '47:12',
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: 'Môi trường, con người IT',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'CyZ_O7v62h4',
-          title:
-            'Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo dục',
-          time: '24:10',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'YH-E4Y3EaT4',
-          title: 'Sinh viên IT đi thực tập tại doanh nghiệp cần biết những gì?',
-          time: '34:51',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: '2sg1yNl1WvE',
-          title:
-            'Chọn ngành IT có sai lầm? Những trải nghiệm thực tế sau 2 tháng làm việc tại doanh nghiệp?',
-          time: '47:12',
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: 'Môi trường, con người IT',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'CyZ_O7v62h4',
-          title:
-            'Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo dục',
-          time: '24:10',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'YH-E4Y3EaT4',
-          title: 'Sinh viên IT đi thực tập tại doanh nghiệp cần biết những gì?',
-          time: '34:51',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: '2sg1yNl1WvE',
-          title:
-            'Chọn ngành IT có sai lầm? Những trải nghiệm thực tế sau 2 tháng làm việc tại doanh nghiệp?',
-          time: '47:12',
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: 'Môi trường, con người IT',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'CyZ_O7v62h4',
-          title:
-            'Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo dục',
-          time: '24:10',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'YH-E4Y3EaT4',
-          title: 'Sinh viên IT đi thực tập tại doanh nghiệp cần biết những gì?',
-          time: '34:51',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: '2sg1yNl1WvE',
-          title:
-            'Chọn ngành IT có sai lầm? Những trải nghiệm thực tế sau 2 tháng làm việc tại doanh nghiệp?',
-          time: '47:12',
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: 'Môi trường, con người IT',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'CyZ_O7v62h4',
-          title:
-            'Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo dục',
-          time: '24:10',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'YH-E4Y3EaT4',
-          title: 'Sinh viên IT đi thực tập tại doanh nghiệp cần biết những gì?',
-          time: '34:51',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: '2sg1yNl1WvE',
-          title:
-            'Chọn ngành IT có sai lầm? Những trải nghiệm thực tế sau 2 tháng làm việc tại doanh nghiệp?',
-          time: '47:12',
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: 'Môi trường, con người IT',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'CyZ_O7v62h4',
-          title:
-            'Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo dục',
-          time: '24:10',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'YH-E4Y3EaT4',
-          title: 'Sinh viên IT đi thực tập tại doanh nghiệp cần biết những gì?',
-          time: '34:51',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: '2sg1yNl1WvE',
-          title:
-            'Chọn ngành IT có sai lầm? Những trải nghiệm thực tế sau 2 tháng làm việc tại doanh nghiệp?',
-          time: '47:12',
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: 'Môi trường, con người IT',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'CyZ_O7v62h4',
-          title:
-            'Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo dục',
-          time: '24:10',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'YH-E4Y3EaT4',
-          title: 'Sinh viên IT đi thực tập tại doanh nghiệp cần biết những gì?',
-          time: '34:51',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: '2sg1yNl1WvE',
-          title:
-            'Chọn ngành IT có sai lầm? Những trải nghiệm thực tế sau 2 tháng làm việc tại doanh nghiệp?',
-          time: '47:12',
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: 'Môi trường, con người IT',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'CyZ_O7v62h4',
-          title:
-            'Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo dục',
-          time: '24:10',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'YH-E4Y3EaT4',
-          title: 'Sinh viên IT đi thực tập tại doanh nghiệp cần biết những gì?',
-          time: '34:51',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: '2sg1yNl1WvE',
-          title:
-            'Chọn ngành IT có sai lầm? Những trải nghiệm thực tế sau 2 tháng làm việc tại doanh nghiệp?',
-          time: '47:12',
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: 'Môi trường, con người IT',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'CyZ_O7v62h4',
-          title:
-            'Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo dục',
-          time: '24:10',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'YH-E4Y3EaT4',
-          title: 'Sinh viên IT đi thực tập tại doanh nghiệp cần biết những gì?',
-          time: '34:51',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: '2sg1yNl1WvE',
-          title:
-            'Chọn ngành IT có sai lầm? Những trải nghiệm thực tế sau 2 tháng làm việc tại doanh nghiệp?',
-          time: '47:12',
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: 'Môi trường, con người IT',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'CyZ_O7v62h4',
-          title:
-            'Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo dục',
-          time: '24:10',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'YH-E4Y3EaT4',
-          title: 'Sinh viên IT đi thực tập tại doanh nghiệp cần biết những gì?',
-          time: '34:51',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: '2sg1yNl1WvE',
-          title:
-            'Chọn ngành IT có sai lầm? Những trải nghiệm thực tế sau 2 tháng làm việc tại doanh nghiệp?',
-          time: '47:12',
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: 'Môi trường, con người IT',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'CyZ_O7v62h4',
-          title:
-            'Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo dục',
-          time: '24:10',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'YH-E4Y3EaT4',
-          title: 'Sinh viên IT đi thực tập tại doanh nghiệp cần biết những gì?',
-          time: '34:51',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: '2sg1yNl1WvE',
-          title:
-            'Chọn ngành IT có sai lầm? Những trải nghiệm thực tế sau 2 tháng làm việc tại doanh nghiệp?',
-          time: '47:12',
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: 'Môi trường, con người IT',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'CyZ_O7v62h4',
-          title:
-            'Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo dục',
-          time: '24:10',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'YH-E4Y3EaT4',
-          title: 'Sinh viên IT đi thực tập tại doanh nghiệp cần biết những gì?',
-          time: '34:51',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: '2sg1yNl1WvE',
-          title:
-            'Chọn ngành IT có sai lầm? Những trải nghiệm thực tế sau 2 tháng làm việc tại doanh nghiệp?',
-          time: '47:12',
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: 'Môi trường, con người IT',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'CyZ_O7v62h4',
-          title:
-            'Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo dục',
-          time: '24:10',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'YH-E4Y3EaT4',
-          title: 'Sinh viên IT đi thực tập tại doanh nghiệp cần biết những gì?',
-          time: '34:51',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: '2sg1yNl1WvE',
-          title:
-            'Chọn ngành IT có sai lầm? Những trải nghiệm thực tế sau 2 tháng làm việc tại doanh nghiệp?',
-          time: '47:12',
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: 'Môi trường, con người IT',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'CyZ_O7v62h4',
-          title:
-            'Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo dục',
-          time: '24:10',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'YH-E4Y3EaT4',
-          title: 'Sinh viên IT đi thực tập tại doanh nghiệp cần biết những gì?',
-          time: '34:51',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: '2sg1yNl1WvE',
-          title:
-            'Chọn ngành IT có sai lầm? Những trải nghiệm thực tế sau 2 tháng làm việc tại doanh nghiệp?',
-          time: '47:12',
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: 'Môi trường, con người IT',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'CyZ_O7v62h4',
-          title:
-            'Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo dục',
-          time: '24:10',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'YH-E4Y3EaT4',
-          title: 'Sinh viên IT đi thực tập tại doanh nghiệp cần biết những gì?',
-          time: '34:51',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: '2sg1yNl1WvE',
-          title:
-            'Chọn ngành IT có sai lầm? Những trải nghiệm thực tế sau 2 tháng làm việc tại doanh nghiệp?',
-          time: '47:12',
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: 'Môi trường, con người IT',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'CyZ_O7v62h4',
-          title:
-            'Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo dục',
-          time: '24:10',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'YH-E4Y3EaT4',
-          title: 'Sinh viên IT đi thực tập tại doanh nghiệp cần biết những gì?',
-          time: '34:51',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: '2sg1yNl1WvE',
-          title:
-            'Chọn ngành IT có sai lầm? Những trải nghiệm thực tế sau 2 tháng làm việc tại doanh nghiệp?',
-          time: '47:12',
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: 'Môi trường, con người IT',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'CyZ_O7v62h4',
-          title:
-            'Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo dục',
-          time: '24:10',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'YH-E4Y3EaT4',
-          title: 'Sinh viên IT đi thực tập tại doanh nghiệp cần biết những gì?',
-          time: '34:51',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: '2sg1yNl1WvE',
-          title:
-            'Chọn ngành IT có sai lầm? Những trải nghiệm thực tế sau 2 tháng làm việc tại doanh nghiệp?',
-          time: '47:12',
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: 'Môi trường, con người IT',
-      lessons: [
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'CyZ_O7v62h4',
-          title:
-            'Học IT cần tố chất gì? Góc nhìn khác từ chuyên gia định hướng giáo dục',
-          time: '24:10',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: 'YH-E4Y3EaT4',
-          title: 'Sinh viên IT đi thực tập tại doanh nghiệp cần biết những gì?',
-          time: '34:51',
-        },
-        {
-          _id: Math.random(),
-          learned: false,
-          videoId: '2sg1yNl1WvE',
-          title:
-            'Chọn ngành IT có sai lầm? Những trải nghiệm thực tế sau 2 tháng làm việc tại doanh nghiệp?',
-          time: '47:12',
-        },
-      ],
-    },
-  ])
+  const [course, setCourse] = useState(null)
+  const [episodes, setEpisodes] = useState([])
   const [loading, setLoading] = useState(true)
+  const [manageMode, setManageMode] = useState('add-lesson')
 
-  useEffect(() => (document.title = 'Thiết kế bài học'), [])
+  useEffect(() => {
+    switch (manageMode) {
+      case 'add-lesson': {
+        document.title = 'Thiết kế bài học'
+        break
+      }
+      case 'add-episode': {
+        document.title = 'Thiết kế chương'
+        break
+      }
+      case 'edit-episode': {
+        document.title = 'Sửa chương'
+        break
+      }
+      case 'edit-lesson': {
+        document.title = 'Sửa bài học'
+        break
+      }
+      default:
+        return
+    }
+  }, [manageMode])
 
   useEffect(() => {
     ;(async () => {
@@ -717,8 +51,8 @@ const AdminLesson = () => {
       const data = await getCourseById(url)
 
       if (data) {
-        setCourseTitle(data.title)
-        // setEpisodes(data.episodes)
+        setCourse(data)
+        setEpisodes(data.episodes)
         setLoading(false)
       }
     })()
@@ -736,13 +70,47 @@ const AdminLesson = () => {
     <SubLoading />
   ) : (
     <>
-      <AdminHeader />
+      <AdminHeader manageMode={manageMode} setManageMode={setManageMode} />
       <Row style={{ marginTop: 50, flex: '1 1' }}>
         <Col xl={2}>
-          <AdminTrack episodes={episodes} heading={courseTitle} />
+          <AdminTrack
+            setManageMode={setManageMode}
+            episodes={episodes}
+            heading={course.title}
+            courseId={course._id}
+            setEpisodes={setEpisodes}
+          />
         </Col>
         <Col xl={10}>
-          <AdminLessonConsole />
+          {manageMode === 'add-lesson' && (
+            <AdminAddLessonConsole
+              episodes={episodes}
+              setEpisodes={setEpisodes}
+              courseId={course._id}
+              manageMode={manageMode}
+            />
+          )}
+          {manageMode === 'edit-lesson' && (
+            <AdminEditLessonConsole
+              episodes={episodes}
+              setEpisodes={setEpisodes}
+              courseId={course._id}
+            />
+          )}
+          {manageMode === 'add-episode' && (
+            <AdminAddEpisodeConsole
+              setEpisodes={setEpisodes}
+              courseId={course._id}
+              setManageMode={setManageMode}
+            />
+          )}
+          {manageMode === 'edit-episode' && (
+            <AdminEditEpisodeConsole
+              setManageMode={setManageMode}
+              courseId={course._id}
+              setEpisodes={setEpisodes}
+            />
+          )}
         </Col>
       </Row>
     </>

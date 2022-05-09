@@ -1,16 +1,12 @@
-import React, { useContext } from 'react'
 import Youtube from 'react-youtube'
-import { LessonContext } from '../../context/LessonContext'
 import styles from './VideoPlayer.module.scss'
 
-const VideoPlayer = ({ videoId }) => {
+const VideoPlayer = ({ play, videoId, onEnd }) => {
   const youtubeVideoOptions = {
     playerVars: {
-      autoplay: 0,
+      autoplay: play,
     },
   }
-
-  const onEnd = async () => {}
 
   return (
     <div className={styles.wrapper}>

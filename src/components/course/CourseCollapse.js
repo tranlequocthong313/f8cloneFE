@@ -1,19 +1,21 @@
 import React from 'react'
 import { Collapse } from 'react-bootstrap'
 import styles from './CourseCollapse.module.scss'
-import '../../sass/_float.scss'
+import { formatDuration } from '../../utils/format/index'
 
-const CourseCollapse = ({ open, lessons, episodeId }) => {
+const CourseCollapse = ({ collapsedCurriculum, lessons, episodeId }) => {
   return (
-    <Collapse in={open.includes(episodeId)}>
+    <Collapse in={collapsedCurriculum.includes(episodeId)}>
       <div className={styles.panelBody}>
         {lessons.map((lesson) => (
-          <div className={styles.lessonItem} key={lesson.id}>
-            <span className="floatLeft">
+          <div className={styles.lessonItem} key={lesson._id}>
+            <div className="d-flex align-items-center">
               <i className={`${styles.icon} fa-regular fa-circle-play`}></i>
               <div className={styles.lessonName}>{lesson.title}</div>
+            </div>
+            <span className={styles.duration}>
+              {formatDuration(lesson.duration)}
             </span>
-            <span className={`${styles.time} floatRight`}>{lesson.time}</span>
           </div>
         ))}
       </div>

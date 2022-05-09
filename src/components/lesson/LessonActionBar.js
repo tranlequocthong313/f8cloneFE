@@ -1,37 +1,30 @@
 import styles from './LessonActionBar.module.scss'
-import VerticalModal from '../utils/vertical-modal/VerticalModal'
+import VerticalModal from '../../utils/modal/VerticalModal'
 import LessonTrackItem from './LessonTrackItem'
+import { LessonContext } from '../../context/LessonContext'
+import { useContext } from 'react'
 
 const LessonActionBar = ({
   episodes,
   handleIsShowMenuTrack,
   isShowMenuTrack,
 }) => {
+  const { episodeChosenTitle } = useContext(LessonContext)
+
   return (
     <div className={styles.wrapper}>
-      <button className={styles.button}>
-        <i className="fa-solid fa-chevron-left"></i>
-        <span>BÀI TRƯỚC</span>
-      </button>
-      <button
-        className={`${styles.button} ${styles.primary} ${styles.disabled}`}
-      >
-        <span>BÀI TIẾP THEO</span>
-        <i className="fa-solid fa-chevron-right"></i>
-      </button>
       <div className={styles.toggleTrackMenu} onClick={handleIsShowMenuTrack}>
-        <h4 className={styles.title}>1. Khái niệm kỹ thuật cần biết</h4>
+        <h4 className={styles.title}>{episodeChosenTitle}</h4>
         <button className={styles.toggleButton}>
           {!isShowMenuTrack && <i className="fa-solid fa-bars"></i>}
           {isShowMenuTrack && <i className="fa-solid fa-arrow-right"></i>}
         </button>
       </div>
-
       <div className={styles.mobileAndTabletTrack}>
         <VerticalModal
           button={
             <div className={styles.toggleTrackMenu}>
-              <h4 className={styles.title}>1. Khái niệm kỹ thuật cần biết</h4>
+              <h4 className={styles.title}>{episodeChosenTitle}</h4>
               <button className={styles.toggleButton}>
                 <i className="fa-solid fa-bars"></i>
               </button>

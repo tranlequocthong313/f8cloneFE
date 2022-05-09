@@ -1,7 +1,7 @@
 import React from 'react'
 import BlogItem from './BlogItem'
-import ScrollHorizontal from '../../utils/scroll/ScrollHorizontal'
-import MainCardAdd from '../../utils/card/MainCardAdd'
+import ScrollHorizontal from '../../../utils/scroll/ScrollHorizontal'
+import MainCardAdd from '../../../utils/card/MainCardAdd'
 import { useSelector } from 'react-redux'
 
 const BlogList = (props) => {

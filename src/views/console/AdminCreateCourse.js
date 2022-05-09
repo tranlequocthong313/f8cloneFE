@@ -1,21 +1,16 @@
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import Cookies from 'js-cookie'
 import { useContext, useEffect, useState } from 'react'
-import { Col, Form, Row } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
 import { apiURL } from '../../context/constants'
-import { ErrorContext } from '../../context/ErrorContext'
+import { ModalContext } from '../../context/ModalContext'
 import { storage } from '../../firebase/config'
-import consoleLog from '../../components/utils/console-log/consoleLog'
-import MainModal from '../../components/utils/main-modal/MainModal'
-import ModalError from '../../components/utils/modal-error/ModalError'
-import removeActions from '../../components/utils/remove-accents/removeActions'
+import consoleLog from '../../utils/console-log/consoleLog'
+import { removeActions } from '../../utils/format/index'
 import styles from './AdminCreateCourse.module.scss'
-import Header from '../../components/layout/nav/Header'
-import Footer from '../../components/layout/footer/Footer'
-import SideBar from '../../components/layout/sidebar/SideBar'
 
 const AdminAddCourse = ({ showModal, setShowModal, setCourseData }) => {
-  const { onShowError } = useContext(ErrorContext)
+  const { onShowError } = useContext(ModalContext)
 
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -139,7 +134,6 @@ const AdminAddCourse = ({ showModal, setShowModal, setCourseData }) => {
 
   return (
     <>
-      <ModalError />
       <div className={styles.wrapper}>
         <h4>Tạo khóa học</h4>
         <Form className={styles.formWrapper}>

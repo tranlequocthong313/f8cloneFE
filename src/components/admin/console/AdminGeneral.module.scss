@@ -1,0 +1,24 @@
+@import '../../../sass/color';
+
+.wrapper {
+  padding: 0 32px;
+  width: 50%;
+
+  .formItem {
+    margin-top: 20px;
+
+    label {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .formCheck {
+      margin: 0 8px;
+    }
+  }
+
+  .submitButton {
+    margin-top: 40px;
+    background-color: $primary-admin-color;
+  }
+}

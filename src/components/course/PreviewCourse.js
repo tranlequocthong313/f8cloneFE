@@ -1,12 +1,12 @@
-import React, { useEffect, previewVideo } from 'react'
-import MainModal from '../utils/main-modal/MainModal'
+import { useEffect } from 'react'
+import MainModal from '../../utils/modal/MainModal'
 import styles from './PreviewCourse.module.scss'
 import VideoPlayer from './VideoPlayer'
 
 const PreviewCourse = ({
   showVideoPreviewCourse,
   isShowVideoPreviewCourse,
-  previewVideo,
+  videoId,
 }) => {
   useEffect(() => {
     const resize = () =>
@@ -30,7 +30,7 @@ const PreviewCourse = ({
       <div className={styles.wrapper}>
         <h3>Giới thiệu khóa học</h3>
         <h2>Xây Dựng Website với ReactJS</h2>
-        <VideoPlayer videoId={previewVideo} />
+        <VideoPlayer videoId={videoId} />
       </div>
     </MainModal>
   )

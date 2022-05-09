@@ -3,14 +3,14 @@ import { Col, Container, Row } from 'react-bootstrap'
 import { Link, useLocation } from 'react-router-dom'
 import styles from './Admin.module.scss'
 import CreateVideo from '../../components/home/videos/CreateVideo'
-import Tabs from '../../components/utils/tabs/Tabs'
+import Tabs from '../../utils/tabs/Tabs'
 import AdminCourse from '../../components/admin/AdminCourse'
 import AdminBlog from '../../components/admin/AdminBlog'
 import AdminVideo from '../../components/admin/AdminVideo'
 import { apiURL } from '../../context/constants'
-import MainButton from '../../components/utils/button/MainButton'
-import SubLoading from '../../components/utils/loading/SubLoading'
-import consoleLog from '../../components/utils/console-log/consoleLog'
+import MainButton from '../../utils/button/MainButton'
+import SubLoading from '../../utils/loading/SubLoading'
+import consoleLog from '../../utils/console-log/consoleLog'
 
 const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
 

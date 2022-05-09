@@ -7,6 +7,7 @@ const initialState = {
   phoneNumber: null,
   isLoggedIn: false,
   coursesEnrolled: [],
+  lessonLearned: [],
   bio: null,
   socials: {
     fb: null,
@@ -35,6 +36,7 @@ const userReducer = (state = initialState, action) => {
         socials: action.payload.socials ? action.payload.socials : {},
         slug: action.payload.slug,
         coursesEnrolled: action.payload.coursesEnrolled,
+        lessonLearned: action.payload.lessonLearned,
       }
 
     case 'SIGN_OUT':
@@ -62,12 +64,19 @@ const userReducer = (state = initialState, action) => {
         socials: action.payload.socials ? action.payload.socials : {},
         slug: action.payload.slug,
         coursesEnrolled: action.payload.coursesEnrolled,
+        lessonLearned: action.payload.lessonLearned,
       }
 
     case 'ENROLL_COURSE':
       return {
         ...state,
         coursesEnrolled: action.payload.coursesEnrolled,
+      }
+
+    case 'LEARNED_LESSON':
+      return {
+        ...state,
+        lessonLearned: action.payload.lessonLearned,
       }
 
     case 'SETTING':

@@ -1,0 +1,38 @@
+.tippy {
+  animation: fadeIn 0.3s ease;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 -4px 32px rgba($color: #000000, $alpha: 0.2);
+  color: #1d2129;
+  margin: 0;
+  overflow: hidden;
+  padding-left: 0;
+  transition: all 0.3s ease-in-out;
+  will-change: opacity, transform;
+  left: unset !important;
+
+  &:hover {
+    a {
+      color: #292929;
+    }
+  }
+
+  a {
+    display: block;
+    font-size: 14px;
+    padding: 10px 0;
+    color: #666;
+    text-decoration: none;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

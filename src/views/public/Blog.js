@@ -5,8 +5,8 @@ import '../../sass/_withSidebarContent.scss'
 import NewBlogs from '../public/NewBlogs'
 import { apiURL } from '../../context/constants'
 import { Link } from 'react-router-dom'
-import SubLoading from '../../components/utils/loading/SubLoading'
-import consoleLog from '../../components/utils/console-log/consoleLog'
+import SubLoading from '../../utils/loading/SubLoading'
+import consoleLog from '../../utils/console-log/consoleLog'
 
 const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
 

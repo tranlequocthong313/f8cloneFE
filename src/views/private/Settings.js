@@ -1,19 +1,16 @@
-import React, { useState, Suspense, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import styles from './Settings.module.scss'
-import { Container, Row, Col } from 'react-bootstrap'
-import Header from '../../components/layout/nav/Header'
+import { Container, Col } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
-import FieldInput from '../../components/utils/field-input/FieldInput'
+import FieldInput from '../../utils/input/FieldInput'
 import Cookies from 'js-cookie'
 import { apiURL } from '../../context/constants'
 import { useDispatch } from 'react-redux'
 import { settings } from '../../actions/userAction'
 import { ref, uploadBytesResumable, getDownloadURL } from '@firebase/storage'
 import { storage } from '../../firebase/config'
-import removeActions from '../../components/utils/remove-accents/removeActions'
-import consoleLog from '../../components/utils/console-log/consoleLog'
-
-const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
+import { removeActions } from '../../utils/format/index'
+import consoleLog from '../../utils/console-log/consoleLog'
 
 const Settings = () => {
   const dispatch = useDispatch()

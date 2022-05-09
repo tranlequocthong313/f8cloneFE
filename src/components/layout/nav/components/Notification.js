@@ -1,15 +1,15 @@
 import { useContext, useEffect, useState } from 'react'
 import styles from './Notification.module.scss'
 import '../../../../sass/_custom.scss'
-import Tippy from '../../../utils/tippy/Tippy'
+import Tippy from '../../../../utils/tippy/Tippy'
 import { Link } from 'react-router-dom'
 import f8logo from '../../../../asset/images/f8_icon.png'
 import { apiURL } from '../../../../context/constants'
-import timeSince from '../../../utils/timeSince/timeSince'
+import { timeSince } from '../../../../utils/format/index'
 import Cookies from 'js-cookie'
 import { SocketContext } from '../../../../context/SocketContext'
 import { Dropdown } from 'react-bootstrap'
-import consoleLog from '../../../utils/console-log/consoleLog'
+import consoleLog from '../../../../utils/console-log/consoleLog'
 
 const Notification = () => {
   const [seenAll, setSeenAll] = useState([])
@@ -142,11 +142,17 @@ const Notification = () => {
                     ? styles.item
                     : `${styles.item} ${styles.noSeen}`
                 }
-                href={`/blog/${notification.postId}`}
+                href={`/${
+                  notification.postType === 'blogs' ? 'blog' : 'lesson'
+                }/${notification.postId}`}
                 key={notification._id}
                 onClick={() => seenOrSeenAll([notification._id])}
               >
-                <Link to={`/blog/${notification.postId}`}>
+                <Link
+                  to={`/${
+                    notification.postType === 'blogs' ? 'blog' : 'lesson'
+                  }/${notification.postId}`}
+                >
                   <div className={styles.avatar}>
                     <img
                       alt={`${notification.senderName} ảnh đại diện`}
@@ -167,7 +173,7 @@ const Notification = () => {
                 </Link>
               </li>
             ))}
-          <li className={`${styles.item} ${styles.noSeen}`}>
+          <li className={styles.item}>
             <div className={styles.avatar}>
               <img alt="F8 logo" src={f8logo} />
             </div>
@@ -178,7 +184,6 @@ const Notification = () => {
                 đã gia nhập F8. Hãy luôn đam mê, kiên trì và theo đuổi mục tiêu
                 tới cùng bạn nhé ❤️
               </div>
-              <div className={styles.createdTime}>vài giây trước</div>
             </div>
           </li>
         </ul>

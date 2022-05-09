@@ -1,19 +1,17 @@
 import { useContext, useEffect, useState } from 'react'
-import { Form, Modal } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { apiURL } from '../../context/constants'
-import MainButton from '../utils/button/MainButton'
-import MainTable from '../utils/table/MainTable'
+import MainTable from '../../utils/table/MainTable'
 import styles from './AdminBlog.module.scss'
-import { ErrorContext } from '../../context/ErrorContext'
-import ModalError from '../../components/utils/modal-error/ModalError'
-import consoleLog from '../utils/console-log/consoleLog'
-import formatDateToLocaleString from '../utils/format-date/FormatDate'
+import { ModalContext } from '../../context/ModalContext'
+import consoleLog from '../../utils/console-log/consoleLog'
+import { formatDateToLocaleString } from '../../utils/format/index'
+import ModalConfirm from '../../utils/modal/ModalConfirm'
 
 const AdminBlog = ({ blogData, setBlogData }) => {
-  const { onShowError } = useContext(ErrorContext)
+  const { onShowError, onShowConfirm, onHideConfirm } = useContext(ModalContext)
 
-  const [isShowDeleteModal, setIsShowDeleteModal] = useState(false)
   const [checkboxChosen, setCheckboxChosen] = useState([])
   const [checkboxChosenAll, setCheckboxChosenAll] = useState([])
   const [isCheckboxChosenAll, setIsCheckboxChosenAll] = useState(false)
@@ -22,8 +20,6 @@ const AdminBlog = ({ blogData, setBlogData }) => {
     const blogIds = blogData.map((blog) => blog._id)
     setCheckboxChosenAll(blogIds)
   }, [blogData])
-
-  const showDeleteModal = () => setIsShowDeleteModal((prev) => !prev)
 
   const checkBoxChosenSingle = (id) =>
     setCheckboxChosen((prev) => {
@@ -54,7 +50,7 @@ const AdminBlog = ({ blogData, setBlogData }) => {
     isCheckboxChosenAll ? uncheckAll() : checkAll()
 
   const deleteBlogIsChosen = async () => {
-    showDeleteModal()
+    onHideConfirm()
 
     const url = `${apiURL}/admin/blog/delete-soft`
     const data = await deleteBlog(url)
@@ -106,7 +102,6 @@ const AdminBlog = ({ blogData, setBlogData }) => {
 
   return (
     <>
-      <ModalError />
       <MainTable>
         <thead>
           <tr>
@@ -181,7 +176,7 @@ const AdminBlog = ({ blogData, setBlogData }) => {
                   </>
                 )}
                 <i
-                  onClick={showDeleteModal}
+                  onClick={onShowConfirm}
                   title={'Xóa blog'}
                   className={
                     checkboxChosen.includes(blog._id)
@@ -205,24 +200,11 @@ const AdminBlog = ({ blogData, setBlogData }) => {
           )}
         </tbody>
       </MainTable>
-      <Modal
-        show={isShowDeleteModal}
-        onHide={showDeleteModal}
-        className={styles.createModal}
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Xóa blog</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>Đồng ý xóa blog?</p>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <MainButton onClick={deleteBlogIsChosen}>Đồng ý</MainButton>
-          <MainButton onClick={showDeleteModal}>Hủy</MainButton>
-        </Modal.Footer>
-      </Modal>
+      <ModalConfirm
+        onConfirm={deleteBlogIsChosen}
+        body={'Bạn có đồng ý xóa bài viết?'}
+        header={'Xóa bài viết'}
+      />
     </>
   )
 }

@@ -1,20 +1,14 @@
-import React, { Suspense, useEffect, useState } from 'react'
-import { Col } from 'react-bootstrap'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import styles from './BookmarkPost.module.scss'
 import '../../sass/_withSidebarContent.scss'
 import '../../sass/_mainHeadingTitle.scss'
-import { Row } from 'react-bootstrap'
-import Header from '../../components/layout/nav/Header'
-import SideBar from '../../components/layout/sidebar/SideBar'
 import Cookies from 'js-cookie'
 import { apiURL } from '../../context/constants'
-import timeSince from '../../components/utils/timeSince/timeSince'
-import Tabs from '../../components/utils/tabs/Tabs'
-import SubLoading from '../../components/utils/loading/SubLoading'
-import consoleLog from '../../components/utils/console-log/consoleLog'
-
-const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
+import { timeSince } from '../../utils/format/index'
+import Tabs from '../../utils/tabs/Tabs'
+import SubLoading from '../../utils/loading/SubLoading'
+import consoleLog from '../../utils/console-log/consoleLog'
 
 const BookmarkPost = () => {
   const [bookmarkData, setBookmarkData] = useState([])

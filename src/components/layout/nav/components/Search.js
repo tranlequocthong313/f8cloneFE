@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './Search.module.scss'
 import { Link } from 'react-router-dom'
 import { apiURL } from '../../../../context/constants'
-import consoleLog from '../../../utils/console-log/consoleLog'
+import consoleLog from '../../../../utils/console-log/consoleLog'
 
 const Search = () => {
   const [searchInput, setSearchInput] = useState('')

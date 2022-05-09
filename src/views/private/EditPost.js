@@ -6,15 +6,17 @@ import 'react-markdown-editor-lite/lib/index.css'
 import '../../sass/_myIcon.scss'
 import Header from '../../components/layout/nav/Header'
 import '../../sass/_markdownEditor.scss'
-import ContentEditable from '../../components/utils/content-editable/ContentEditable'
-import { useLocation } from 'react-router-dom'
+import ContentEditable from '../../utils/input/ContentEditable'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { apiURL } from '../../context/constants'
 import { PostContext } from '../../context/PostContext'
 import Cookies from 'js-cookie'
-import SubLoading from '../../components/utils/loading/SubLoading'
-import ModalError from '../../components/utils/modal-error/ModalError'
-import { ErrorContext } from '../../context/ErrorContext'
-import consoleLog from '../../components/utils/console-log/consoleLog'
+import SubLoading from '../../utils/loading/SubLoading'
+import { ModalContext } from '../../context/ModalContext'
+import consoleLog from '../../utils/console-log/consoleLog'
+import { SocketContext } from '../../context/SocketContext'
+import { useSelector } from 'react-redux'
+import { Row } from 'react-bootstrap'
 
 const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
 
@@ -23,8 +25,12 @@ const EditPost = () => {
   const titleRef = useRef(null)
 
   const location = useLocation()
+  const navigate = useNavigate()
+
   const { showModal, setIsValid } = useContext(PostContext)
-  const { onShowError } = useContext(ErrorContext)
+  const { onShowError } = useContext(ModalContext)
+  const { current } = useContext(SocketContext).socket
+  const user = useSelector((state) => state.user)
 
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
@@ -68,23 +74,37 @@ const EditPost = () => {
     const url = `${apiURL}/blog${location.pathname}`
     const data = await putEditPost(url, token)
 
-    if (data.success) location.goBack()
+    if (data.success) navigate(-1)
+
+    if (current && !user.isAdmin) {
+      current.emit('post', {
+        sender: user,
+        postId: data.blog._id,
+        receiverId: process.env.REACT_APP_ADMIN_ID,
+        post: data.blog,
+        description: 'vừa chỉnh sửa bài viết và đang chờ được xét duyệt',
+        notificationType: 'post',
+        postType: 'blogs',
+        createdAt: new Date(),
+      })
+    }
   }
 
   const putEditPost = async (url, token) => {
     try {
-      return (await fetch(url),
-      {
-        method: 'PUT',
-        body: JSON.stringify({
-          title: titleRef.current.innerText,
-          content: mdEditor.current.getMdValue(),
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      }).json()
+      return (
+        await fetch(url, {
+          method: 'PUT',
+          body: JSON.stringify({
+            title: titleRef.current.innerText,
+            content: mdEditor.current.getMdValue(),
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      ).json()
     } catch (error) {
       consoleLog(error.message)
       onShowError()
@@ -98,22 +118,24 @@ const EditPost = () => {
       {!showModal && (
         <>
           <Header submitEditPost={submitEditPost} />
-          <ModalError />
-          <div className={styles.wrapper}>
-            <ContentEditable
-              text={'Tiêu đề'}
-              className={styles.contentEditable}
-              onInput={(e) => setTitle(e.target.innerText)}
-              maxLength={LIMIT_TITLE_LENGTH}
-              ref={titleRef}
-            />
-            <Editor
-              ref={mdEditor}
-              value={content}
-              onChange={({ text }) => setContent(text)}
-              renderHTML={(text) => <ReactMarkdown children={text} />}
-            />
-          </div>
+          <Row>
+            <div className={styles.wrapper}>
+              <ContentEditable
+                text={'Tiêu đề'}
+                className={styles.contentEditable}
+                onInput={(e) => setTitle(e.target.innerText)}
+                maxLength={LIMIT_TITLE_LENGTH}
+                ref={titleRef}
+              />
+              <Editor
+                ref={mdEditor}
+                value={content}
+                className={styles['rc-md-editor']}
+                onChange={({ text }) => setContent(text)}
+                renderHTML={(text) => <ReactMarkdown children={text} />}
+              />
+            </div>
+          </Row>
         </>
       )}
 

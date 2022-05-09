@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import styles from './PublishButton.module.scss'
-import MainButton from '../utils/button/MainButton'
+import MainButton from '../../utils/button/MainButton'
 import { PostContext } from '../../context/PostContext'
 
 const PublishButton = ({ submitEditPost }) => {

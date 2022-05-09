@@ -3,10 +3,10 @@ import { Form, Spinner } from 'react-bootstrap'
 import styles from './AuthWithPhoneNumberForm.module.scss'
 import { signInWithPhoneNumber, RecaptchaVerifier } from 'firebase/auth'
 import { auth } from '../../../firebase/config'
-import FormGroup from '../../utils/auth-form/FormGroup'
+import FormGroup from '../../../utils/auth-form/FormGroup'
 import { apiURL } from '../../../context/constants'
 import Cookies from 'js-cookie'
-import consoleLog from '../../utils/console-log/consoleLog'
+import consoleLog from '../../../utils/console-log/consoleLog'
 
 const LoginWithPhoneNumberForm = ({
   switchPhoneAndEmail,

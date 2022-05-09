@@ -1,5 +1,5 @@
-import Comment from '../utils/comment/Comment'
-import VerticalModal from '../utils/vertical-modal/VerticalModal'
+import Comment from '../../utils/comment/Comment'
+import VerticalModal from '../../utils/modal/VerticalModal'
 import styles from './Reaction.module.scss'
 
 const Reaction = ({ isLike, handleLike, likeCount, blog }) => {
@@ -27,7 +27,7 @@ const Reaction = ({ isLike, handleLike, likeCount, blog }) => {
         closeButton={true}
         className={styles.wrapper}
       >
-        <Comment data={blog} />
+        <Comment data={blog} commentType={'blogs'} />
       </VerticalModal>
     </div>
   )

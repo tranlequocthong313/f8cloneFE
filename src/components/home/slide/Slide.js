@@ -6,7 +6,7 @@ import banner3 from '../../../asset/images/Banner_04_2.png'
 import banner4 from '../../../asset/images/Banner_web_ReactJS.png'
 import styles from './Slide.module.scss'
 import '../../../sass/_carousel.scss'
-import MainButton from '../../utils/button/MainButton'
+import MainButton from '../../../utils/button/MainButton'
 
 const Slide = () => {
   return (

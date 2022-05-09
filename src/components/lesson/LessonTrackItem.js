@@ -1,25 +1,38 @@
-import React, { useState, useContext } from 'react'
+import { useContext } from 'react'
 import styles from './LessonTrackItem.module.scss'
 import { Collapse } from 'react-bootstrap'
 import { LessonContext } from '../../context/LessonContext'
+import { useSelector } from 'react-redux'
+import { formatDuration } from '../../utils/format'
 
 const LessonTrackItem = ({ episodes }) => {
-  const { chosenLesson, active, playVideo, isEpisodeChosen, chooseEpisode } =
-    useContext(LessonContext)
+  const {
+    chosenLesson,
+    active,
+    playVideo,
+    isEpisodeChosen,
+    chooseEpisode,
+    setTitleLesson,
+    setEpisodeChosenTitle,
+    setUpdatedAt,
+    setLessonComments,
+  } = useContext(LessonContext)
+  const user = useSelector((state) => state.user)
+
+  const renderIndexAndTitle = (index, title) => `${index}. ${title}`
 
   return episodes.length === 0 ? (
     <p className={styles.noResult}>Chưa có bài học nào.</p>
   ) : (
-    episodes.map((episode, index) => (
+    episodes.map((episode, episodeIndex) => (
       <div key={episode._id}>
         <div
           className={styles.wrapper}
           onClick={() => chooseEpisode(episode._id)}
         >
-          <h4 className={styles.episodeTitle}>{`${index + 1}. ${
-            episode.title
-          }`}</h4>
-          <span className={styles.description}>2/2 | 22:09</span>
+          <h4 className={styles.episodeTitle}>
+            {renderIndexAndTitle(episodeIndex + 1, episode.title)}
+          </h4>
           <span className={styles.icon}>
             {isEpisodeChosen(episode._id) ? (
               <i className="fa-solid fa-chevron-up"></i>
@@ -30,20 +43,28 @@ const LessonTrackItem = ({ episodes }) => {
         </div>
         <Collapse in={isEpisodeChosen(episode._id)}>
           <div className={styles.panelBody}>
-            {episode.lessons.map((lesson, index) => (
+            {episode.lessons.map((lesson, lessonIndex) => (
               <div
                 className={
                   chosenLesson === lesson._id
                     ? `${styles.lessonItem} ${styles.active}`
-                    : `${styles.lessonItem} ${styles.locked}`
+                    : styles.lessonItem
                 }
                 key={lesson._id}
-                onClick={() => playVideo(index, lesson.videoId)}
+                onClick={() => {
+                  playVideo(lesson._id, lesson.videoId)
+                  setTitleLesson(lesson.title)
+                  setEpisodeChosenTitle(
+                    renderIndexAndTitle(episodeIndex + 1, episode.title)
+                  )
+                  setUpdatedAt(lesson.updatedAt)
+                  setLessonComments(lesson.comments)
+                }}
               >
                 <div className={styles.lessonInfo}>
-                  <h5 className={styles.lessonTitle}>{`${index + 1}. ${
-                    lesson.title
-                  }`}</h5>
+                  <h5 className={styles.lessonTitle}>
+                    {renderIndexAndTitle(lessonIndex + 1, lesson.title)}
+                  </h5>
                   <p>
                     <i
                       className={
@@ -52,25 +73,26 @@ const LessonTrackItem = ({ episodes }) => {
                           : `fa-solid fa-compact-disc ${styles.playingIcon}`
                       }
                     ></i>{' '}
-                    {lesson.time}
+                    {formatDuration(lesson.duration)}
                   </p>
                 </div>
                 <div
                   className={
-                    lesson.learned
+                    user.lessonLearned.includes(lesson._id)
                       ? styles.statusIcon
                       : `${styles.statusIcon} ${styles.locked}`
                   }
                 >
-                  {lesson.learned && (
+                  {user.lessonLearned.includes(lesson._id) && (
                     <i
                       className="fa-solid fa-circle-check"
                       style={{ fontSize: 12 }}
                     ></i>
                   )}
-                  {!lesson.learned && active !== index && (
-                    <i className="fa-solid fa-clock-five"></i>
-                  )}
+                  {!user.lessonLearned.includes(lesson._id) &&
+                    active !== lesson._id && (
+                      <i className="fa-solid fa-clock-five"></i>
+                    )}
                 </div>
               </div>
             ))}

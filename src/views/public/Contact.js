@@ -1,18 +1,13 @@
-import React, { Suspense, useContext, useEffect, useState } from 'react'
-import { Row, Col, Form } from 'react-bootstrap'
+import { useContext, useEffect, useState } from 'react'
+import { Form } from 'react-bootstrap'
 import styles from './Contact.module.scss'
-import Header from '../../components/layout/nav/Header'
-import SideBar from '../../components/layout/sidebar/SideBar'
 import { apiURL } from '../../context/constants'
-import MainButton from '../../components/utils/button/MainButton'
-import ModalError from '../../components/utils/modal-error/ModalError'
-import { ErrorContext } from '../../context/ErrorContext'
-import consoleLog from '../../components/utils/console-log/consoleLog'
-
-const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
+import MainButton from '../../utils/button/MainButton'
+import { ModalContext } from '../../context/ModalContext'
+import consoleLog from '../../utils/console-log/consoleLog'
 
 const Contact = () => {
-  const { onShowError } = useContext(ErrorContext)
+  const { onShowError } = useContext(ModalContext)
 
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
@@ -55,7 +50,6 @@ const Contact = () => {
 
   return (
     <>
-      <ModalError />
       <div className="container">
         <div className="containerTop">
           <h1 className="mainHeadingTitle">Liên hệ</h1>

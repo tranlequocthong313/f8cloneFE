@@ -18,14 +18,12 @@
         .title {
           margin: 0;
 
-          a {
-            display: block;
-            color: #242424;
-            font-size: 20px;
-            font-weight: 900;
-            padding-bottom: 14px;
-            text-decoration: none;
-          }
+          display: block;
+          color: #242424;
+          font-size: 20px;
+          font-weight: 900;
+          padding-bottom: 14px;
+          text-decoration: none;
         }
 
         p {
@@ -49,14 +47,12 @@
           border: 5px solid $primary-color;
           overflow: hidden;
 
-          .thumb {
-            img {
-              width: 98px;
-              height: 98px;
-              border-radius: 50%;
-              object-fit: cover;
-              border-style: none;
-            }
+          img {
+            width: 98px;
+            height: 98px;
+            border-radius: 50%;
+            object-fit: cover;
+            border-style: none;
           }
         }
       }

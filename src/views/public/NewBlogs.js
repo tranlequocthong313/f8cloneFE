@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
-import SecondaryCard from '../../components/utils/card/SecondaryCard'
+import SecondaryCard from '../../utils/card/SecondaryCard'
 import { Image } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import styles from './NewBlogs.module.scss'
 import { apiURL } from '../../context/constants'
-import timeSince from '../../components/utils/timeSince/timeSince'
+import { timeSince } from '../../utils/format/index'
 import Cookies from 'js-cookie'
-import consoleLog from '../../components/utils/console-log/consoleLog'
+import consoleLog from '../../utils/console-log/consoleLog'
 
 const NewBlogs = ({ blogs }) => {
   const navigate = useNavigate()

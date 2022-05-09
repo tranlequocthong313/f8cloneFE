@@ -1,14 +1,14 @@
 import React, { useState, useEffect, Suspense } from 'react'
 import styles from './Home.module.scss'
 import Slide from '../../components/home/slide/Slide'
-import HeadingTitleWrap from '../../components/utils/title-heading/HeadingTitleWrap'
+import HeadingTitleWrap from '../../utils/title-heading/HeadingTitleWrap'
 import '../../sass/_withSidebarContent.scss'
 import { apiURL } from '../../context/constants'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import CourseList from '../../components/home/courses/CourseList'
-import SubLoading from '../../components/utils/loading/SubLoading'
-import consoleLog from '../../components/utils/console-log/consoleLog'
+import SubLoading from '../../utils/loading/SubLoading'
+import consoleLog from '../../utils/console-log/consoleLog'
 
 const BlogList = React.lazy(() =>
   import('../../components/home/blogs/BlogList')

@@ -1,0 +1,25 @@
+@import '../../sass/flexCenter';
+
+.wrapper {
+  padding: 32px 24px 110px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+}
+
+.body {
+  @include flexCenter(row);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  font-size: 16px;
+  color: #444;
+  box-shadow: 0 3px 8px rgba($color: #000000, $alpha: 0.1);
+  background-color: transparent;
+  text-decoration: none;
+
+  &:hover {
+    color: #444;
+  }
+}

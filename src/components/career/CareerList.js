@@ -1,9 +1,8 @@
 import React from 'react'
-import SecondaryCard from '../utils/card/SecondaryCard'
+import SecondaryCard from '../../utils/card/SecondaryCard'
 import { Row, Col } from 'react-bootstrap'
 import styles from './CareerList.module.scss'
-import timeSince from '../utils/timeSince/timeSince'
-import formatNumber from '../utils/format-number/FormatNumber'
+import { formatNumber, timeSince } from '../../utils/format/index'
 
 const CareerList = ({ jobs, xl }) => {
   return (

@@ -1,8 +1,6 @@
-import React from 'react'
-import { NavDropdown } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import styles from './NewBlogButton.module.scss'
-import Tippy from '../../../utils/tippy/Tippy'
+import Tippy from '../../../../utils/tippy/Tippy'
 
 const NewBlogButton = () => {
   return (

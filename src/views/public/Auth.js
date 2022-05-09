@@ -13,7 +13,7 @@ import { login } from '../../actions/userAction'
 import SignInButtonContainer from '../../components/auth/buttons/SignInButtonContainer'
 import { apiURL } from '../../context/constants'
 import Cookies from 'js-cookie'
-import consoleLog from '../../components/utils/console-log/consoleLog'
+import consoleLog from '../../utils/console-log/consoleLog'
 
 const Auth = () => {
   const navigate = useNavigate()

@@ -1,0 +1,19 @@
+.heading {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  margin-bottom: 48px;
+
+  h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+  }
+  p {
+    color: #666;
+    font-size: 13px;
+    margin: 13px 0;
+    font-style: italic;
+    line-height: 1.4;
+  }
+}

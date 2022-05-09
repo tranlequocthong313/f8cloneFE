@@ -5,8 +5,8 @@ import { Col, Row } from 'react-bootstrap'
 import { apiURL } from '../../context/constants'
 import CourseList from '../../components/home/courses/CourseList'
 import Cookies from 'js-cookie'
-import SubLoading from '../../components/utils/loading/SubLoading'
-import consoleLog from '../../components/utils/console-log/consoleLog'
+import SubLoading from '../../utils/loading/SubLoading'
+import consoleLog from '../../utils/console-log/consoleLog'
 
 const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
 
@@ -55,9 +55,8 @@ const MyCourse = () => {
     <div className="container">
       <div className="containerTop">
         <h2>Khóa học của tôi</h2>
-        <p>Bạn chưa hoàn thành khóa học nào.</p>
       </div>
-      <CourseList courses={myCourse} path={'/courses'} />
+      <CourseList courses={myCourse} />
     </div>
   )
 }

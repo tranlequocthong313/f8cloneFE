@@ -5,8 +5,8 @@ import CareerList from '../../components/career/CareerList'
 import Header from '../../components/layout/nav/Header'
 import SideBar from '../../components/layout/sidebar/SideBar'
 import { apiURL } from '../../context/constants'
-import consoleLog from '../../components/utils/console-log/consoleLog'
-import SubLoading from '../../components/utils/loading/SubLoading'
+import consoleLog from '../../utils/console-log/consoleLog'
+import SubLoading from '../../utils/loading/SubLoading'
 
 const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
 

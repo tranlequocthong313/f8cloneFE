@@ -1,18 +1,16 @@
 import { useContext, useEffect, useState } from 'react'
-import { Form, Modal } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
 import { apiURL } from '../../context/constants'
-import { ErrorContext } from '../../context/ErrorContext'
-import MainButton from '../utils/button/MainButton'
-import consoleLog from '../utils/console-log/consoleLog'
-import formatDateToLocaleString from '../utils/format-date/FormatDate'
-import ModalError from '../utils/modal-error/ModalError'
-import MainTable from '../utils/table/MainTable'
+import { ModalContext } from '../../context/ModalContext'
+import consoleLog from '../../utils/console-log/consoleLog'
+import { formatDateToLocaleString } from '../../utils/format/index'
+import ModalConfirm from '../../utils/modal/ModalConfirm'
+import MainTable from '../../utils/table/MainTable'
 import styles from './AdminVideo.module.scss'
 
 const AdminVideo = ({ videoData, setVideoData }) => {
-  const { onShowError } = useContext(ErrorContext)
+  const { onShowError, onShowConfirm, onHideConfirm } = useContext(ModalContext)
 
-  const [isShowDeleteModal, setIsShowDeleteModal] = useState(false)
   const [checkboxChosen, setCheckboxChosen] = useState([])
   const [checkboxChosenAll, setCheckboxChosenAll] = useState([])
   const [isCheckboxChosenAll, setIsCheckboxChosenAll] = useState(false)
@@ -21,8 +19,6 @@ const AdminVideo = ({ videoData, setVideoData }) => {
     const videoId = videoData.map((video) => video._id)
     setCheckboxChosenAll(videoId)
   }, [videoData])
-
-  const showDeleteModal = () => setIsShowDeleteModal((prev) => !prev)
 
   const checkBoxChosenSingle = (id) =>
     setCheckboxChosen((prev) => {
@@ -53,7 +49,7 @@ const AdminVideo = ({ videoData, setVideoData }) => {
     isCheckboxChosenAll ? uncheckAll() : checkAll()
 
   const deleteVideoIsChosen = async () => {
-    showDeleteModal()
+    onHideConfirm()
 
     const url = `${apiURL}/admin/video/delete-soft`
     const data = await deleteVideo(url)
@@ -105,7 +101,6 @@ const AdminVideo = ({ videoData, setVideoData }) => {
 
   return (
     <>
-      <ModalError />
       <MainTable>
         <thead>
           <tr>
@@ -167,7 +162,7 @@ const AdminVideo = ({ videoData, setVideoData }) => {
                   ></i>
                 )}
                 <i
-                  onClick={showDeleteModal}
+                  onClick={onShowConfirm}
                   title={'Xóa video'}
                   className={
                     checkboxChosen.includes(video._id)
@@ -195,19 +190,11 @@ const AdminVideo = ({ videoData, setVideoData }) => {
           )}
         </tbody>
       </MainTable>
-      <Modal show={isShowDeleteModal} onHide={isShowDeleteModal} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Xóa video</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>Đồng ý xóa video?</p>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <MainButton onClick={deleteVideoIsChosen}>Đồng ý</MainButton>
-          <MainButton onClick={showDeleteModal}>Hủy</MainButton>
-        </Modal.Footer>
-      </Modal>
+      <ModalConfirm
+        onConfirm={deleteVideoIsChosen}
+        body={'Bạn có đồng ý xóa video?'}
+        header={'Xóa video'}
+      />
     </>
   )
 }

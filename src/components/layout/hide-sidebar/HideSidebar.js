@@ -4,11 +4,13 @@ import Header from '../nav/Header'
 import SideBar from '../sidebar/SideBar'
 import Footer from '../footer/Footer'
 import styles from './HideSidebar.module.scss'
+import ModalError from '../../../utils/modal/ModalError'
 
 const HideSidebar = ({ children }) => {
   return (
     <>
       <Header />
+      <ModalError />
       <Row>
         <div className={styles.sidebarWrap}>
           <SideBar />

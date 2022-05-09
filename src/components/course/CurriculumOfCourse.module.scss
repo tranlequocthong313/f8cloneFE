@@ -85,11 +85,12 @@
         font-size: 16px;
         color: $text-color;
         overflow: hidden;
+        display: flex;
+        justify-content: space-between;
 
         i {
           position: absolute;
-          font-size: 22px;
-          font-weight: 300;
+          font-size: 14px;
           left: 20px;
           top: 50%;
           color: $primary-color;
@@ -118,17 +119,6 @@
 
 @media (max-width: 739px) {
   .subHeadWrapper {
-    ul {
-      & li:first-child,
-      .dot {
-        display: none !important;
-      }
-
-      li {
-        padding-right: 8px;
-      }
-    }
-
     flex-direction: column;
   }
 

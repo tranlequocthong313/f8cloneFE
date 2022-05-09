@@ -1,0 +1,39 @@
+.wrapper {
+  align-items: center;
+  background-color: #fff;
+  border-radius: 10px;
+  top: 40px;
+  box-shadow: 0 1px 3px 0 #00000033;
+  display: flex;
+  padding: 2px 4px 2px 2px;
+  position: absolute;
+  right: 0;
+  z-index: 0;
+
+  .container {
+    display: flex;
+    cursor: pointer;
+    color: rgb(54, 88, 153);
+    font-family: 'San Francisco', -apple-system, BlinkMacSystemFont,
+      '.SFNSText-Regular', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .icon {
+    width: 18px;
+    height: 18px;
+    background-size: 100% 100%;
+    border-radius: 8px;
+    box-shadow: #fff 0px 0px 0px 2px;
+    position: relative;
+    z-index: 3;
+  }
+
+  .count {
+    color: #65676b;
+    font-size: 13px;
+    font-weight: 500;
+    margin-left: 3px;
+  }
+}

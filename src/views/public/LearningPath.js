@@ -1,13 +1,11 @@
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import '../../sass/_withSidebarContent.scss'
 import ctaImage from '../../asset/images/fb-group-cards@2x.png'
-import Suggestion from '../../components/utils/suggestion/Suggestion'
-import { Col, Row } from 'react-bootstrap'
+import Suggestion from '../../utils/suggestion/Suggestion'
+import { Row } from 'react-bootstrap'
 import LearningList from '../../components/learning-path/LearningList'
-import SideBar from '../../components/layout/sidebar/SideBar'
-import Header from '../../components/layout/nav/Header'
 import styles from './LearningPath.module.scss'
-import SubLoading from '../../components/utils/loading/SubLoading'
+import SubLoading from '../../utils/loading/SubLoading'
 
 const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
 
@@ -47,6 +45,8 @@ const LearningPath = () => {
         }
         button={'Tham gia nhóm'}
         image={ctaImage}
+        path={'https://www.facebook.com/groups/f8official'}
+        linkOutside={true}
       />
     </Row>
   )

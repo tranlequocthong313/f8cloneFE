@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useContext, useRef } from 'react'
 import { Row, Col, Spinner } from 'react-bootstrap'
 import { useDropzone } from 'react-dropzone'
-import ContentEditable from '../utils/content-editable/ContentEditable'
+import ContentEditable from '../../utils/input/ContentEditable'
 import moment from 'moment'
 import { apiURL } from '../../context/constants'
 import styles from './PostOption.module.scss'
@@ -10,18 +10,17 @@ import Cookies from 'js-cookie'
 import { ref, uploadBytesResumable, getDownloadURL } from '@firebase/storage'
 import { storage } from '../../firebase/config'
 import { createBlog } from '../../actions/blogAction'
-import removeActions from '../utils/remove-accents/removeActions'
+import { removeActions } from '../../utils/format/index'
 import { useSelector } from 'react-redux'
 import { PostContext } from '../../context/PostContext'
 import { SocketContext } from '../../context/SocketContext'
-import { ErrorContext } from '../../context/ErrorContext'
-import ModalError from '../utils/modal-error/ModalError'
+import { ModalContext } from '../../context/ModalContext'
 
 const PostOption = ({ blogContent }) => {
   const navigate = useNavigate()
   const titleDisplayRef = useRef()
   const { setShowModal } = useContext(PostContext)
-  const { onShowError } = useContext(ErrorContext)
+  const { onShowError } = useContext(ModalContext)
   const user = useSelector((state) => state.user)
   const { current } = useContext(SocketContext).socket
 
@@ -138,6 +137,7 @@ const PostOption = ({ blogContent }) => {
         post: data.blog,
         description: 'có bài viết chờ được xét duyệt',
         notificationType: 'post',
+        postType: 'blogs',
         createdAt: new Date(),
       })
     }
@@ -193,7 +193,6 @@ const PostOption = ({ blogContent }) => {
 
   return (
     <div className={styles.modal}>
-      <ModalError />
       <div className={styles.close} onClick={() => setShowModal(false)}>
         x
       </div>

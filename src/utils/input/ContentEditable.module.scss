@@ -1,0 +1,29 @@
+.contentEditable {
+  line-height: 1.4;
+  outline: none;
+  cursor: text;
+
+  &:empty::before {
+    color: #b3b3b1;
+    content: attr(data-empty-text);
+    width: 100%;
+  }
+
+  pre {
+    word-wrap: normal;
+    background-color: #f8f8f8;
+    border: 1px solid #dadada;
+    border-radius: 6px;
+    display: block;
+    font-family: Fira Code, monospace;
+    font-size: 14px;
+    hyphens: none;
+    line-height: 1.8;
+    overflow-x: auto;
+    padding: 6px 8px;
+    tab-size: 4;
+    white-space: pre;
+    word-break: normal;
+    word-spacing: normal;
+  }
+}

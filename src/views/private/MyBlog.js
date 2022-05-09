@@ -1,27 +1,27 @@
-import React, { Suspense, useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
-import Header from '../../components/layout/nav/Header'
-import SideBar from '../../components/layout/sidebar/SideBar'
 import '../../sass/_withSidebarContent.scss'
 import '../../sass/_container.scss'
 import styles from './MyBlog.module.scss'
 import { Link, useLocation } from 'react-router-dom'
 import { apiURL } from '../../context/constants'
 import Cookies from 'js-cookie'
-import timeSince from '../../components/utils/timeSince/timeSince'
-import Tabs from '../../components/utils/tabs/Tabs'
-import Tippy from '../../components/utils/tippy/Tippy'
-import SubLoading from '../../components/utils/loading/SubLoading'
-import consoleLog from '../../components/utils/console-log/consoleLog'
-
-const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
+import { timeSince } from '../../utils/format/index'
+import Tabs from '../../utils/tabs/Tabs'
+import Tippy from '../../utils/tippy/Tippy'
+import SubLoading from '../../utils/loading/SubLoading'
+import consoleLog from '../../utils/console-log/consoleLog'
+import { ModalContext } from '../../context/ModalContext'
+import ModalConfirm from '../../utils/modal/ModalConfirm'
 
 const MyBlog = () => {
   const location = useLocation()
+  const { onShowConfirm, onHideConfirm } = useContext(ModalContext)
 
   const [tabs, setTabs] = useState(location.pathname)
   const [myBlog, setMyBlog] = useState([])
   const [loading, setLoading] = useState(true)
+  const [blogId, setBlogId] = useState('')
 
   useEffect(() => (document.title = 'Bài viết của tôi tại F8'), [])
 
@@ -57,11 +57,13 @@ const MyBlog = () => {
     }
   }
 
-  const deleteBlogById = async (id) => {
+  const deleteBlogById = async () => {
+    onHideConfirm()
+
     const token = Cookies.get('token')
     if (!token) return
 
-    const url = `${apiURL}/blog/delete-blog/${id}`
+    const url = `${apiURL}/blog/delete-blog/${blogId}`
     const data = await deleteBlog(url, token)
 
     setMyBlog(data)
@@ -118,13 +120,13 @@ const MyBlog = () => {
                   <li>
                     <div className={styles.heading}>
                       <h3>
-                        <Link to={`/new-post/${blog._id}`}>
+                        <Link to={`/blog/${blog._id}`}>
                           <span>{blog.title}</span>
                         </Link>
                       </h3>
                       <Tippy
                         button={
-                          <span className={styles.option}>
+                          <span className={styles.optionBtn}>
                             <i className={`fa-solid fa-ellipsis`}></i>
                           </span>
                         }
@@ -137,7 +139,10 @@ const MyBlog = () => {
                           Chỉnh sửa
                         </Link>
                         <div
-                          onClick={() => deleteBlogById(blog._id)}
+                          onClick={() => {
+                            onShowConfirm()
+                            setBlogId(blog._id)
+                          }}
                           className={styles.optionItem}
                         >
                           Xóa
@@ -157,6 +162,11 @@ const MyBlog = () => {
           </Col>
         </Row>
       </Container>
+      <ModalConfirm
+        body={'Bạn có muốn xóa bài viết của bạn?'}
+        header={'Xóa bài viết'}
+        onConfirm={deleteBlogById}
+      />
     </div>
   )
 }

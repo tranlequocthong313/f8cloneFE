@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import MainButton from '../../../utils/button/MainButton'
+import MainButton from '../../../../utils/button/MainButton'
 import styles from './Login.module.scss'
 
 const Login = () => {

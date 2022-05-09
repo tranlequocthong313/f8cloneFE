@@ -1,0 +1,35 @@
+@import '../../sass/color';
+
+.container {
+  background-color: #fff;
+  cursor: default;
+  max-width: 100%;
+  position: relative;
+  will-change: transform;
+
+  .content {
+    height: 100vh;
+    overflow-y: auto;
+    padding: 0 40px 60px;
+    position: relative;
+    word-break: break-all;
+  }
+}
+
+@media (min-width: 0px) and (max-width: 1023px) {
+  .container {
+    border-radius: 16px;
+
+    .content {
+      height: 93vh;
+    }
+  }
+}
+
+@media (min-width: 0px) and (max-width: 739px) {
+  .container {
+    .content {
+      padding: 0;
+    }
+  }
+}

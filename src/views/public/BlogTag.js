@@ -8,7 +8,7 @@ import SideBar from '../../components/layout/sidebar/SideBar'
 import { apiURL } from '../../context/constants'
 import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
-import consoleLog from '../../components/utils/console-log/consoleLog'
+import consoleLog from '../../utils/console-log/consoleLog'
 
 const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
 
