@@ -86,11 +86,13 @@ const CurriculumOfCourse = ({ episodeList, totalLesson }) => {
                   </div>
                 </h5>
               </div>
-              <CourseCollapse
-                collapsedCurriculum={collapsedCurriculum}
-                episodeId={episode._id}
-                lessons={episode.lessons}
-              />
+              {episode.lessons.length > 0 && (
+                <CourseCollapse
+                  collapsedCurriculum={collapsedCurriculum}
+                  episodeId={episode._id}
+                  lessons={episode.lessons}
+                />
+              )}
             </div>
           ))}
         </div>
