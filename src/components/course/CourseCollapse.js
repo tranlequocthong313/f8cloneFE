@@ -13,9 +13,9 @@ const CourseCollapse = ({ collapsedCurriculum, lessons, episodeId }) => {
               <i className={`${styles.icon} fa-regular fa-circle-play`}></i>
               <div className={styles.lessonName}>{lesson.title}</div>
             </div>
-            {/* <span className={styles.duration}> */}
-            {/* {formatDuration(lesson.duration)} */}
-            {/* </span> */}
+            <span className={styles.duration}>
+              {formatDuration(lesson.duration)}
+            </span>
           </div>
         ))}
       </div>
