@@ -13,16 +13,16 @@ const MyCourse = () => {
   const [myCourse, setMyCourse] = useState([])
 
   const getMyCourse = async () => {
-    const token = Cookies.get('token')
-    if (!token) return
-
     const url = `${apiURL}/me/courses`
-    const data = await getCourse(url, token)
+    const data = await getCourse(url)
 
     setMyCourse(data.coursesEnrolled)
   }
 
-  const getCourse = async (url, token) => {
+  const getCourse = async (url) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
       return (
         await fetch(url, {

@@ -32,16 +32,16 @@ const CommentBody = ({ commentData, setCommentData, dataId, commentType }) => {
   const isShowExtendButton = (commentId) => showExtendButton.includes(commentId)
 
   const deleteComment = async (commentId) => {
-    const token = Cookies.get('token')
-    if (!token) return
-
     const url = `${apiURL}/comment/${commentId}`
-    const data = await deleteDeleteComment(url, token)
+    const data = await deleteDeleteComment(url)
 
     setCommentData(data.comments)
   }
 
-  const deleteDeleteComment = async (url, token) => {
+  const deleteDeleteComment = async (url) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
       return (
         await fetch(url, {
@@ -59,16 +59,16 @@ const CommentBody = ({ commentData, setCommentData, dataId, commentType }) => {
   }
 
   const editComment = async (commentId) => {
-    const token = Cookies.get('token')
-    if (!token) return
-
     const url = `${apiURL}/comment/${commentId}`
-    const data = await putEditComment(url, token)
+    const data = await putEditComment(url)
 
     setCommentData(data.comments)
   }
 
-  const putEditComment = async (url, token) => {
+  const putEditComment = async (url) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
       return (
         await fetch(url, {
@@ -124,14 +124,11 @@ const CommentBody = ({ commentData, setCommentData, dataId, commentType }) => {
     commentPostedBy,
     commentLikes
   ) => {
-    const token = Cookies.get('token')
-    if (!token) return
-
     const isLiked = commentLikes.includes(user.userId)
     const url = isLiked
       ? `${apiURL}/comment/unlike/${dataId}/${commentId}`
       : `${apiURL}/comment/like/${dataId}/${commentId}`
-    const data = await patchLikeOrUnlikeComment(url, token)
+    const data = await patchLikeOrUnlikeComment(url)
 
     setCommentData(data)
 
@@ -149,7 +146,10 @@ const CommentBody = ({ commentData, setCommentData, dataId, commentType }) => {
     }
   }
 
-  const patchLikeOrUnlikeComment = async (url, token) => {
+  const patchLikeOrUnlikeComment = async (url) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
       return (
         await fetch(url, {

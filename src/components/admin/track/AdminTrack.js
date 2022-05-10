@@ -42,12 +42,16 @@ const AdminTrack = ({
   }
 
   const delDeleteEpisode = async (url) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
       return (
         await fetch(url, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
         })
       ).json()

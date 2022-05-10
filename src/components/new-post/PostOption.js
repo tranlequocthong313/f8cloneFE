@@ -104,9 +104,6 @@ const PostOption = ({ blogContent }) => {
   }
 
   const postBlog = async (image) => {
-    const token = Cookies.get('token')
-    if (!token) return
-
     const blogData = {
       image,
       tags,
@@ -127,7 +124,7 @@ const PostOption = ({ blogContent }) => {
     }
 
     const url = `${apiURL}/new-post`
-    const data = await postNewPost(url, blogData, token)
+    const data = await postNewPost(url, blogData)
 
     if (current && !user.isAdmin) {
       current.emit('post', {
@@ -146,7 +143,10 @@ const PostOption = ({ blogContent }) => {
     setShowModal(false)
   }
 
-  const postNewPost = async (url, blogData, token) => {
+  const postNewPost = async (url, blogData) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
       return (
         await fetch(url, {

@@ -17,7 +17,7 @@ const CourseEnroll = ({
       <div className={styles.imgPreview} onClick={showVideoPreviewCourse}>
         <div
           className={styles.backgroundImg}
-          style={{ backgroundImage: `url(${image})` }}
+          style={{ backgroundImage: `url('${image}')` }}
         ></div>
         <i className={`${styles.icon} fa-solid fa-circle-play`}></i>
         <p>Xem giới thiệu khóa học</p>

@@ -7,6 +7,7 @@ import MainButton from '../../../utils/button/MainButton'
 import MainModal from '../../../utils/modal/MainModal'
 import { ModalContext } from '../../../context/ModalContext'
 import consoleLog from '../../../utils/console-log/consoleLog'
+import Cookies from 'js-cookie'
 
 const CreateVideo = ({ setVideoData }) => {
   const { onShowError } = useContext(ModalContext)
@@ -69,6 +70,9 @@ const CreateVideo = ({ setVideoData }) => {
   }
 
   const postCreateVideo = async (url, videoData) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
       return (
         await fetch(url, {
@@ -76,6 +80,7 @@ const CreateVideo = ({ setVideoData }) => {
           body: JSON.stringify(videoData),
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
         })
       ).json()

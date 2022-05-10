@@ -41,16 +41,16 @@ const NewBlogs = ({ blogs }) => {
   }
 
   const bookmark = async (blogId) => {
-    const token = Cookies.get('token')
-    if (!token) return navigate('/login')
-
     const url = `${apiURL}/me/bookmark`
-    const data = await patchBookmark(url, blogId, token)
+    const data = await patchBookmark(url, blogId)
 
     setBookmarkData(data.bookmark)
   }
 
-  const patchBookmark = async (url, blogId, token) => {
+  const patchBookmark = async (url, blogId) => {
+    const token = Cookies.get('token')
+    if (!token) return navigate('/login')
+
     try {
       return (
         await fetch(url, {

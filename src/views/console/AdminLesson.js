@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import AdminHeader from '../../components/admin/header/AdminHeader'
 import AdminTrack from '../../components/admin/track/AdminTrack'
 import { apiURL } from '../../context/constants'
@@ -10,10 +10,12 @@ import AdminEditEpisodeConsole from '../../components/admin/console/AdminEditEpi
 import AdminAddEpisodeConsole from '../../components/admin/console/AdminAddEpisodeConsole'
 import AdminEditLessonConsole from '../../components/admin/console/AdminEditLessonConsole'
 import AdminAddLessonConsole from '../../components/admin/console/AdminAddLessonConsole'
+import { LessonContext } from '../../context/LessonContext'
 
 const AdminLesson = () => {
   const location = useLocation()
   const courseId = location.pathname.split('/admin/lessons/')[1]
+  const { setEpisodeChosenId } = useContext(LessonContext)
 
   const [course, setCourse] = useState(null)
   const [episodes, setEpisodes] = useState([])
@@ -50,13 +52,15 @@ const AdminLesson = () => {
       const url = `${apiURL}/courses/${courseId}/lessons`
       const data = await getCourseById(url)
 
+      console.log(data)
       if (data) {
         setCourse(data)
         setEpisodes(data.episodes)
+        setEpisodeChosenId(data.episodes[0]._id)
         setLoading(false)
       }
     })()
-  }, [courseId])
+  }, [courseId, setEpisodeChosenId])
 
   const getCourseById = async (url) => {
     try {

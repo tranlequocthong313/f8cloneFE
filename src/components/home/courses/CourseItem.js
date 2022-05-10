@@ -21,7 +21,9 @@ const CourseItem = ({ course }) => {
       >
         <section
           title={course.title ? course.title : null}
-          style={{ backgroundImage: `url(${course.image})` }}
+          style={{
+            backgroundImage: `url('${course.image}')`,
+          }}
         >
           <MainButton className={styles.button}>Xem khóa học</MainButton>
         </section>

@@ -8,6 +8,7 @@ import { ModalContext } from '../../context/ModalContext'
 import consoleLog from '../../utils/console-log/consoleLog'
 import { formatDateToLocaleString } from '../../utils/format/index'
 import ModalConfirm from '../../utils/modal/ModalConfirm'
+import Cookies from 'js-cookie'
 
 const AdminBlog = ({ blogData, setBlogData }) => {
   const { onShowError, onShowConfirm, onHideConfirm } = useContext(ModalContext)
@@ -60,6 +61,9 @@ const AdminBlog = ({ blogData, setBlogData }) => {
   }
 
   const deleteBlog = async (url) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
       return (
         await fetch(url, {
@@ -67,6 +71,7 @@ const AdminBlog = ({ blogData, setBlogData }) => {
           body: JSON.stringify({ blogId: checkboxChosen }),
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
         })
       ).json()
@@ -84,6 +89,9 @@ const AdminBlog = ({ blogData, setBlogData }) => {
   }
 
   const patchPopular = async (url, blogId, isPopular) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
       return (
         await fetch(url, {
@@ -91,6 +99,7 @@ const AdminBlog = ({ blogData, setBlogData }) => {
           body: JSON.stringify({ blogId, isPopular }),
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
         })
       ).json()

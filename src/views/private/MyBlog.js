@@ -60,16 +60,16 @@ const MyBlog = () => {
   const deleteBlogById = async () => {
     onHideConfirm()
 
-    const token = Cookies.get('token')
-    if (!token) return
-
     const url = `${apiURL}/blog/delete-blog/${blogId}`
-    const data = await deleteBlog(url, token)
+    const data = await deleteBlog(url)
 
     setMyBlog(data)
   }
 
-  const deleteBlog = async (url, token) => {
+  const deleteBlog = async (url) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
       return (
         await fetch(url, {

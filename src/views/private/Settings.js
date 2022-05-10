@@ -89,9 +89,6 @@ const Settings = () => {
   }
 
   const changeAvatar = () => {
-    const token = Cookies.get('token')
-    if (!token) return
-
     if (image.avatar) {
       const storageRef = ref(storage, `uploads/${image.avatar.name}`)
       const uploadTask = uploadBytesResumable(storageRef, image.avatar)
@@ -103,7 +100,7 @@ const Settings = () => {
         async () => {
           const photoURL = await getDownloadURL(uploadTask.snapshot.ref)
           const url = `${apiURL}/help/setting/avatar`
-          const data = await patchAvatar(url, photoURL, token)
+          const data = await patchAvatar(url, photoURL)
           console.log(data)
           dispatch(
             settings({
@@ -116,7 +113,10 @@ const Settings = () => {
     }
   }
 
-  const patchAvatar = async (url, photoURL, token) => {
+  const patchAvatar = async (url, photoURL) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
       return (
         await fetch(url, {
@@ -136,11 +136,8 @@ const Settings = () => {
   }
 
   const bioChange = async () => {
-    const token = Cookies.get('token')
-    if (!token) return
-
     const url = `${apiURL}/help/setting/bio`
-    const data = await patchBio(url, token)
+    const data = await patchBio(url)
 
     setBio(data.bio)
     dispatch(
@@ -151,7 +148,10 @@ const Settings = () => {
     )
   }
 
-  const patchBio = async (url, token) => {
+  const patchBio = async (url) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
       return (
         await fetch(url, {
@@ -171,11 +171,8 @@ const Settings = () => {
   }
 
   const socialChange = async (socialName) => {
-    const token = Cookies.get('token')
-    if (!token) return
-
     const url = `${apiURL}/help/setting/social`
-    const data = await patchSocial(url, socialName, token)
+    const data = await patchSocial(url, socialName)
 
     setSocial((prev) => {
       return {
@@ -189,7 +186,10 @@ const Settings = () => {
     })
   }
 
-  const patchSocial = async (url, socialName, token) => {
+  const patchSocial = async (url, socialName) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
       return (
         await fetch(url, {

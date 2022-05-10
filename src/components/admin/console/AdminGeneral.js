@@ -6,6 +6,8 @@ import { ModalContext } from '../../../context/ModalContext'
 import MainButton from '../../../utils/button/MainButton'
 import consoleLog from '../../../utils/console-log/consoleLog'
 import styles from './AdminGeneral.module.scss'
+import Cookies from 'js-cookie'
+import { LessonContext } from '../../../context/LessonContext'
 
 const AdminGeneral = ({
   episodes,
@@ -14,13 +16,15 @@ const AdminGeneral = ({
   titleLesson,
   videoIdLesson,
   lessonId,
-  episodeChosenId,
   manageMode,
 }) => {
   const user = useSelector((state) => state.user)
   const { onShowError } = useContext(ModalContext)
+  const { episodeChosenId } = useContext(LessonContext)
 
-  const [episodeChosen, setEpisodeChosen] = useState(episodes[0]._id)
+  const [episodeChosen, setEpisodeChosen] = useState(
+    episodeChosenId ? episodeChosenId : ''
+  )
   const [title, setTitle] = useState('')
   const [videoId, setVideoId] = useState('')
 
@@ -70,6 +74,9 @@ const AdminGeneral = ({
   }
 
   const postCreateLesson = async (url, lessonData) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
       return (
         await fetch(url, {
@@ -77,6 +84,7 @@ const AdminGeneral = ({
           body: JSON.stringify(lessonData),
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
         })
       ).json()
@@ -90,8 +98,6 @@ const AdminGeneral = ({
     const url = `${apiURL}/lessons/edit-lesson/${courseId}/${episodeChosenId}/${lessonId}`
     const data = await putCreateLesson(url, lessonData)
 
-    console.log(data)
-
     setEpisodes(data.episodes)
     setTitle('')
     setVideoId('')
@@ -99,6 +105,9 @@ const AdminGeneral = ({
   }
 
   const putCreateLesson = async (url, lessonData) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
       return (
         await fetch(url, {
@@ -106,6 +115,7 @@ const AdminGeneral = ({
           body: JSON.stringify(lessonData),
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
         })
       ).json()

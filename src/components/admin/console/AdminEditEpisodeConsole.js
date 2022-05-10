@@ -1,10 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Form, FormControl, FormGroup, FormLabel } from 'react-bootstrap'
 import styles from './AdminEditEpisodeConsole.module.scss'
 import MainButton from '../../../utils/button/MainButton'
 import { LessonContext } from '../../../context/LessonContext'
 import { apiURL } from '../../../context/constants'
 import consoleLog from '../../../utils/console-log/consoleLog'
+import Cookies from 'js-cookie'
 
 const AdminEditEpisodeConsole = ({ setManageMode, courseId, setEpisodes }) => {
   const {
@@ -30,6 +31,9 @@ const AdminEditEpisodeConsole = ({ setManageMode, courseId, setEpisodes }) => {
   }
 
   const patchEditEpisode = async (url) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
       return (
         await fetch(url, {
@@ -37,6 +41,7 @@ const AdminEditEpisodeConsole = ({ setManageMode, courseId, setEpisodes }) => {
           body: JSON.stringify({ title: episodeTitle }),
           headers: {
             'Content-Type': 'application/json',
+            Application: `Bearer ${token}`,
           },
         })
       ).json()

@@ -68,11 +68,8 @@ const EditPost = () => {
   }
 
   const submitEditPost = async () => {
-    const token = Cookies.get('token')
-    if (!token) return
-
     const url = `${apiURL}/blog${location.pathname}`
-    const data = await putEditPost(url, token)
+    const data = await putEditPost(url)
 
     if (data.success) navigate(-1)
 
@@ -90,7 +87,10 @@ const EditPost = () => {
     }
   }
 
-  const putEditPost = async (url, token) => {
+  const putEditPost = async (url) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
       return (
         await fetch(url, {

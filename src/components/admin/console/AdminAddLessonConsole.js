@@ -1,11 +1,6 @@
 import AdminGeneral from './AdminGeneral'
 
-const AdminAddLessonConsole = ({
-  episodes,
-  setEpisodes,
-  courseId,
-  manageMode,
-}) => {
+const AdminAddLessonConsole = ({ episodes, setEpisodes, courseId }) => {
   return (
     <AdminGeneral
       episodes={episodes}

@@ -55,16 +55,16 @@ const AdminAddCourse = ({ showModal, setShowModal, setCourseData }) => {
     setRequireTags((prev) => prev.filter((item) => item !== tag))
 
   const createCourse = async (imageURL) => {
-    const token = Cookies.get('token')
-    if (!token) return
-
     const url = `${apiURL}/courses/create`
-    const data = await postCreateCourse(url, imageURL, token)
+    const data = await postCreateCourse(url, imageURL)
 
     setCourseData((prev) => [data, ...prev])
   }
 
-  const postCreateCourse = async (url, imageURL, token) => {
+  const postCreateCourse = async (url, imageURL) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
       return (
         await fetch(url, {
@@ -124,6 +124,7 @@ const AdminAddCourse = ({ showModal, setShowModal, setCourseData }) => {
       async () => {
         try {
           const url = await getDownloadURL(uploadTask.snapshot.ref)
+
           createCourse(url)
         } catch (error) {
           consoleLog(error.message)

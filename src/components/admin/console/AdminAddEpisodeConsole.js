@@ -4,9 +4,13 @@ import styles from './AdminAddEpisodeConsole.module.scss'
 import MainButton from '../../../utils/button/MainButton'
 import { apiURL } from '../../../context/constants'
 import consoleLog from '../../../utils/console-log/consoleLog'
+import Cookies from 'js-cookie'
+import { useSelector } from 'react-redux'
 
 const AdminAddEpisodeConsole = ({ setManageMode, courseId, setEpisodes }) => {
   const [episodeTitle, setEpisodeTitle] = useState('')
+
+  const user = useSelector((state) => state.user)
 
   const setEpisodeAndClearInput = (episodes) => {
     setEpisodes(episodes)
@@ -20,6 +24,9 @@ const AdminAddEpisodeConsole = ({ setManageMode, courseId, setEpisodes }) => {
   }
 
   const putAddEpisode = async (url) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
       return (
         await fetch(url, {
@@ -27,6 +34,7 @@ const AdminAddEpisodeConsole = ({ setManageMode, courseId, setEpisodes }) => {
           body: JSON.stringify({ title: episodeTitle }),
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
         })
       ).json()

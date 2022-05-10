@@ -90,14 +90,14 @@ const AdminEditCourse = () => {
     setRequireTags((prev) => prev.filter((item) => item !== tag))
 
   const editCourse = async (imageURL) => {
+    const url = `${apiURL}/courses/edit/${courseId}`
+    await putEditCourse(url, imageURL)
+  }
+
+  const putEditCourse = async (url, imageURL) => {
     const token = Cookies.get('token')
     if (!token) return
 
-    const url = `${apiURL}/courses/edit/${courseId}`
-    await putEditCourse(url, imageURL, token)
-  }
-
-  const putEditCourse = async (url, imageURL, token) => {
     try {
       return (
         await fetch(url, {
@@ -157,6 +157,7 @@ const AdminEditCourse = () => {
       async () => {
         try {
           const url = await getDownloadURL(uploadTask.snapshot.ref)
+
           editCourse(url)
         } catch (error) {
           consoleLog(error.message)

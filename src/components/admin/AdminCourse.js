@@ -11,6 +11,7 @@ import {
   formatDateToLocaleString,
 } from '../../utils/format/index'
 import ModalConfirm from '../../utils/modal/ModalConfirm'
+import Cookies from 'js-cookie'
 
 const AdminCourse = ({ courseData, setCourseData }) => {
   const { onShowError, onShowConfirm, onHideConfirm } = useContext(ModalContext)
@@ -57,11 +58,15 @@ const AdminCourse = ({ courseData, setCourseData }) => {
 
     const url = `${apiURL}/admin/course/delete-soft`
     const data = await deleteCourse(url)
+
     setCourseData(data)
     uncheckAll()
   }
 
   const deleteCourse = async (url) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
       return (
         await fetch(url, {
@@ -69,6 +74,7 @@ const AdminCourse = ({ courseData, setCourseData }) => {
           body: JSON.stringify({ courseId: checkboxChosen }),
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
         })
       ).json()
@@ -81,10 +87,14 @@ const AdminCourse = ({ courseData, setCourseData }) => {
   const changePopularState = async (courseId, isPopular) => {
     const url = `${apiURL}/admin/course/add-popular`
     const data = await patchPopular(url, courseId, isPopular)
+
     setCourseData(data)
   }
 
   const patchPopular = async (url, courseId, isPopular) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
       return (
         await fetch(url, {
@@ -92,6 +102,7 @@ const AdminCourse = ({ courseData, setCourseData }) => {
           body: JSON.stringify({ courseId, isPopular }),
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
         })
       ).json()

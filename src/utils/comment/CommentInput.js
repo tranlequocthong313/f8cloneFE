@@ -34,11 +34,8 @@ const CommentInput = ({
   }, [commentInput])
 
   const submitComment = async () => {
-    const token = Cookies.get('token')
-    if (!token) return location('/login')
-
     const url = `${apiURL}/comment`
-    const data = await postComment(url, token)
+    const data = await postComment(url)
 
     setCommentData(data.comment)
 
@@ -58,7 +55,10 @@ const CommentInput = ({
     }
   }
 
-  const postComment = async (url, token) => {
+  const postComment = async (url) => {
+    const token = Cookies.get('token')
+    if (!token) return location('/login')
+
     try {
       return (
         await fetch(url, {

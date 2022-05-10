@@ -11,6 +11,7 @@ import { apiURL } from '../../context/constants'
 import MainButton from '../../utils/button/MainButton'
 import SubLoading from '../../utils/loading/SubLoading'
 import consoleLog from '../../utils/console-log/consoleLog'
+import Cookies from 'js-cookie'
 
 const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
 
@@ -42,8 +43,18 @@ const Admin = () => {
   }, [])
 
   const getDataForAdmin = async (url) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
-      return (await fetch(url)).json()
+      return (
+        await fetch(url, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      ).json()
     } catch (error) {
       consoleLog(error.message)
     }

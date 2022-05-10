@@ -52,16 +52,16 @@ const BlogDetail = ({ blog, blogHighlight }) => {
   }
 
   const bookmark = async (blogId) => {
-    const token = Cookies.get('token')
-    if (!token) return navigate('/login')
-
     const url = `${apiURL}/me/bookmark`
-    const data = await patchBookmark(url, blogId, token)
+    const data = await patchBookmark(url, blogId)
 
     setBookmarkData(data.bookmark)
   }
 
-  const patchBookmark = async (url, blogId, token) => {
+  const patchBookmark = async (url, blogId) => {
+    const token = Cookies.get('token')
+    if (!token) return navigate('/login')
+
     try {
       return (
         await fetch(url, {
@@ -79,13 +79,10 @@ const BlogDetail = ({ blog, blogHighlight }) => {
   }
 
   const handleLike = async () => {
-    const token = Cookies.get('token')
-    if (!token) return navigate('/login')
-
     const url = isLike
       ? `${apiURL}/blog/unlike/${blog._id}`
       : `${apiURL}/blog/like/${blog._id}`
-    const data = await patchLike(url, token)
+    const data = await patchLike(url)
 
     if (data.likes && data.likes.length > 0) {
       setLikeCount(data.likes)
@@ -96,7 +93,10 @@ const BlogDetail = ({ blog, blogHighlight }) => {
     }
   }
 
-  const patchLike = async (url, token) => {
+  const patchLike = async (url) => {
+    const token = Cookies.get('token')
+    if (!token) return navigate('/login')
+
     try {
       return (
         await fetch(url, {
@@ -114,23 +114,29 @@ const BlogDetail = ({ blog, blogHighlight }) => {
 
   const notAllowBlog = async () => {
     const url = `${apiURL}/admin/blog/verify`
-    patchVerifyBlog(url, false)
+    await patchVerifyBlog(url, false)
   }
 
   const allowBlog = async () => {
     const url = `${apiURL}/admin/blog/verify`
-    patchVerifyBlog(url, true)
+    await patchVerifyBlog(url, true)
   }
 
   const patchVerifyBlog = async (url, isVerified) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
-      return await fetch(url, {
-        method: 'PATCH',
-        body: JSON.stringify({ isVerified, blogId: blog._id }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+      return (
+        await fetch(url, {
+          method: 'PATCH',
+          body: JSON.stringify({ isVerified, blogId: blog._id }),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      ).json()
     } catch (error) {
       consoleLog(error.message)
     } finally {

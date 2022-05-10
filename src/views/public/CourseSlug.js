@@ -64,13 +64,10 @@ const CourseSlug = () => {
   }
 
   const enrollCourse = async () => {
-    const token = Cookies.get('token')
-    if (!token) return navigate('/login')
-
     if (isEnrolled(course._id)) return
 
     const url = `${apiURL}/me/enroll-course/${course._id}`
-    const data = await putEnrollCourse(url, token)
+    const data = await putEnrollCourse(url)
 
     if (data.success) {
       dispatch(
@@ -80,7 +77,10 @@ const CourseSlug = () => {
     }
   }
 
-  const putEnrollCourse = async (url, token) => {
+  const putEnrollCourse = async (url) => {
+    const token = Cookies.get('token')
+    if (!token) return navigate('/login')
+
     try {
       return (
         await fetch(url, {

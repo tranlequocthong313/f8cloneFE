@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie'
 import { useContext, useEffect, useState } from 'react'
 import { Form } from 'react-bootstrap'
 import { apiURL } from '../../context/constants'
@@ -59,6 +60,9 @@ const AdminVideo = ({ videoData, setVideoData }) => {
   }
 
   const deleteVideo = async (url) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
       return (
         await fetch(url, {
@@ -66,6 +70,7 @@ const AdminVideo = ({ videoData, setVideoData }) => {
           body: JSON.stringify({ videoId: checkboxChosen }),
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
         })
       ).json()
@@ -83,6 +88,9 @@ const AdminVideo = ({ videoData, setVideoData }) => {
   }
 
   const patchPopular = async (url, videoId, isPopular) => {
+    const token = Cookies.get('token')
+    if (!token) return
+
     try {
       return (
         await fetch(url, {
@@ -90,6 +98,7 @@ const AdminVideo = ({ videoData, setVideoData }) => {
           body: JSON.stringify({ videoId, isPopular }),
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
         })
       ).json()
