@@ -37,7 +37,12 @@ const LessonActionBar = ({
           }
           className={styles.modalWrapper}
         >
-          <div className={styles.container}>
+          <div
+            className={styles.container}
+            style={{
+              'overflow-y': 'scroll',
+            }}
+          >
             <div className={styles.body}>
               <LessonTrackItem episodes={episodes} />
             </div>
