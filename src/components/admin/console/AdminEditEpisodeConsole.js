@@ -10,7 +10,6 @@ import Cookies from 'js-cookie'
 const AdminEditEpisodeConsole = ({ setManageMode, courseId, setEpisodes }) => {
   const {
     episodeChosenData: { title, _id },
-    setEpisodeChosenData,
   } = useContext(LessonContext)
 
   const [episodeTitle, setEpisodeTitle] = useState('')
@@ -19,7 +18,6 @@ const AdminEditEpisodeConsole = ({ setManageMode, courseId, setEpisodes }) => {
 
   const setEpisodeClearInputAndChosen = (episodes) => {
     setEpisodes(episodes)
-    setEpisodeChosenData(null)
     setEpisodeTitle('')
     setManageMode('add-lesson')
   }
@@ -27,6 +25,7 @@ const AdminEditEpisodeConsole = ({ setManageMode, courseId, setEpisodes }) => {
   const editEpisode = async () => {
     const url = `${apiURL}/courses/edit-episode/${courseId}/${_id}`
     const data = await patchEditEpisode(url)
+
     setEpisodeClearInputAndChosen(data.episodes)
   }
 
@@ -41,7 +40,7 @@ const AdminEditEpisodeConsole = ({ setManageMode, courseId, setEpisodes }) => {
           body: JSON.stringify({ title: episodeTitle }),
           headers: {
             'Content-Type': 'application/json',
-            Application: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         })
       ).json()

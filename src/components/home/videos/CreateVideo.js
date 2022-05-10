@@ -65,8 +65,8 @@ const CreateVideo = ({ setVideoData }) => {
   const createVideoByYoutubeAPIData = async (videoData) => {
     const url = `${apiURL}/admin/video/create`
     const data = await postCreateVideo(url, videoData)
-    if (!data.success) return
-    setVideoData((prev) => [data.video, ...prev])
+
+    setVideoData((prev) => [data, ...prev])
   }
 
   const postCreateVideo = async (url, videoData) => {
@@ -128,7 +128,7 @@ const CreateVideo = ({ setVideoData }) => {
               onChange={() => setIsPopular((prev) => !prev)}
               style={{ margin: '0 8px' }}
             />
-            <Form.Label>Youtube Video ID</Form.Label>
+            <Form.Label>Hiện lên trang chủ</Form.Label>
           </Form.Group>
         </Form>
         <Modal.Footer style={{ border: 'none' }}>

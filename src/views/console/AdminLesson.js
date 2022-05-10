@@ -52,11 +52,10 @@ const AdminLesson = () => {
       const url = `${apiURL}/courses/${courseId}/lessons`
       const data = await getCourseById(url)
 
-      console.log(data)
       if (data) {
         setCourse(data)
         setEpisodes(data.episodes)
-        setEpisodeChosenId(data.episodes[0]._id)
+        setEpisodeChosenId(data.episodes.length > 0 ? data.episodes[0]._id : '')
         setLoading(false)
       }
     })()

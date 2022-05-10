@@ -16,7 +16,6 @@ const BlogList = React.lazy(() =>
 const VideoList = React.lazy(() =>
   import('../../components/home/videos/VideoList')
 )
-const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
 
 const Home = () => {
   const user = useSelector((state) => state.user)
@@ -78,28 +77,42 @@ const Home = () => {
           label={'Mới'}
           viewMode={'Xem chi tiết'}
         />
-        <CourseList courses={courseFE} />
+        {courseFE.length > 0 ? (
+          <CourseList courses={courseFE} />
+        ) : (
+          <p>
+            Không có khóa học nào{' '}
+            {user.isAdmin && <Link to="/admin/course">thêm khóa học.</Link>}
+          </p>
+        )}
         <HeadingTitleWrap
           title={'Lộ trình học Back-end'}
           label={'Mới'}
           viewMode={'Xem chi tiết'}
         />
-        <CourseList courses={courseBE} />
-
+        {courseBE.length > 0 ? (
+          <CourseList courses={courseBE} />
+        ) : (
+          <p>
+            Không có khóa học nào{' '}
+            {user.isAdmin && <Link to="/admin/course">thêm khóa học.</Link>}
+          </p>
+        )}
         <Suspense fallback={<div></div>}>
           <HeadingTitleWrap
             title={'Bài viết nổi bật'}
             viewMode={'Xem tất cả'}
           />
-          {blogData && blogData.length !== 0 ? (
+          {blogData.length > 0 ? (
             <BlogList blogs={blogData} />
           ) : (
             <p>
-              Không có bài viết nào <Link to="/new-post">thêm bài viết.</Link>
+              Không có blog nào{' '}
+              {user.isAdmin && <Link to="/admin/blog">thêm blog.</Link>}
             </p>
           )}
           <HeadingTitleWrap title={'Videos nổi bật'} viewMode={'Xem tất cả'} />
-          {videoData && videoData.length !== 0 ? (
+          {videoData.length > 0 ? (
             <VideoList videos={videoData} />
           ) : (
             <p>

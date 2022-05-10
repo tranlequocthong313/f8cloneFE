@@ -23,7 +23,7 @@ const AdminGeneral = ({
   const { episodeChosenId } = useContext(LessonContext)
 
   const [episodeChosen, setEpisodeChosen] = useState(
-    episodeChosenId ? episodeChosenId : ''
+    episodes.length > 0 ? episodes[0]._id : ''
   )
   const [title, setTitle] = useState('')
   const [videoId, setVideoId] = useState('')
@@ -31,8 +31,14 @@ const AdminGeneral = ({
   useEffect(() => {
     setTitle(titleLesson ? titleLesson : '')
     setVideoId(videoIdLesson ? videoIdLesson : '')
-    setEpisodeChosen(episodeChosenId ? episodeChosenId : '')
-  }, [videoIdLesson, titleLesson, episodeChosenId])
+    setEpisodeChosen(
+      episodeChosenId
+        ? episodeChosenId
+        : episodes.length > 0
+        ? episodes[0]._id
+        : ''
+    )
+  }, [videoIdLesson, titleLesson, episodeChosenId, episodes])
 
   const getYoutubeDataByAPI = async () => {
     if (!videoId) return
@@ -42,11 +48,11 @@ const AdminGeneral = ({
     if (data) {
       const youtube = data.items[0]
       const lessonData = {
-        videoId,
-        duration: youtube.contentDetails.duration,
-        title: title ? title : youtube.snippet.localized.title,
-        episodeParent: episodeChosen,
-        postedBy: user.userId,
+        videoId: videoId.trim(),
+        duration: youtube.contentDetails.duration.trim(),
+        title: title ? title.trim() : youtube.snippet.localized.title.trim(),
+        episodeParent: episodeChosen.trim(),
+        postedBy: user.userId.trim(),
       }
 
       manageMode === 'add-lesson'
@@ -137,9 +143,9 @@ const AdminGeneral = ({
           value={episodeChosen}
           onChange={(e) => setEpisodeChosen(e.target.value)}
         >
-          {episodes.map((episode) => (
+          {episodes.map((episode, index) => (
             <option key={episode._id} value={episode._id}>
-              {episode.title}
+              {`${index + 1}. ${episode.title}`}
             </option>
           ))}
         </Form.Select>
