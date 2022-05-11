@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react'
 import { Image } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import { apiURL } from '../../context/constants'
 import { timeSince } from '../../utils/format/index'
 import styles from './BlogHighlights.module.scss'
 import f8Logo from '../../asset/images/f8_icon.png'

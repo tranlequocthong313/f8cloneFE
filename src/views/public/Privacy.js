@@ -1,10 +1,5 @@
-import React, { Suspense, useEffect } from 'react'
-import styles from './Privacy.module.scss'
-import Header from '../../components/layout/nav/Header'
-import SideBar from '../../components/layout/sidebar/SideBar'
+import { useEffect } from 'react'
 import { Row, Col, Container } from 'react-bootstrap'
-
-const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
 
 const Privacy = () => {
   useEffect(() => (document.title = 'Chính sách bảo mật'), [])

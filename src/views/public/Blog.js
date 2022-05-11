@@ -8,8 +8,6 @@ import { Link } from 'react-router-dom'
 import SubLoading from '../../utils/loading/SubLoading'
 import consoleLog from '../../utils/console-log/consoleLog'
 
-const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
-
 const Blog = () => {
   const [blogs, setBlogs] = useState(null)
   const [loading, setLoading] = useState(true)

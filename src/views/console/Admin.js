@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Col, Container, Row } from 'react-bootstrap'
+import { useEffect, useState } from 'react'
+import { Col, Container } from 'react-bootstrap'
 import { Link, useLocation } from 'react-router-dom'
 import styles from './Admin.module.scss'
 import CreateVideo from '../../components/home/videos/CreateVideo'
@@ -12,8 +12,6 @@ import MainButton from '../../utils/button/MainButton'
 import SubLoading from '../../utils/loading/SubLoading'
 import consoleLog from '../../utils/console-log/consoleLog'
 import Cookies from 'js-cookie'
-
-const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
 
 const Admin = () => {
   const location = useLocation()

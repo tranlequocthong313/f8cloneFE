@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import { ref, uploadBytesResumable, getDownloadURL } from '@firebase/storage'
 import { storage } from '../../firebase/config'
-import { createBlog } from '../../actions/blogAction'
 import { removeActions } from '../../utils/format/index'
 import { useSelector } from 'react-redux'
 import { PostContext } from '../../context/PostContext'
@@ -96,13 +95,6 @@ const PostOption = ({ blogContent }) => {
     )
   }
 
-  const dispatchAndNavigate = (data) => {
-    createBlog({ blogData: data.blog })
-    navigate(
-      !data.blog.schedule ? `/blog/${data.blog._id}` : '/my-post/published'
-    )
-  }
-
   const postBlog = async (image) => {
     const blogData = {
       image,
@@ -139,7 +131,9 @@ const PostOption = ({ blogContent }) => {
       })
     }
 
-    dispatchAndNavigate(data)
+    navigate(
+      !data.blog.schedule ? `/blog/${data.blog._id}` : '/my-post/published'
+    )
     setShowModal(false)
   }
 

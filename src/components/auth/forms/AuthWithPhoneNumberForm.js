@@ -98,7 +98,6 @@ const LoginWithPhoneNumberForm = ({
       if (user && isLogin) {
         const url = `${apiURL}/login/provider`
         const data = await postLoginProvider(url)
-        if (!data.success) return
 
         setCookieAndDispatchAfterLogin(data)
       } else if (user && !isLogin) {

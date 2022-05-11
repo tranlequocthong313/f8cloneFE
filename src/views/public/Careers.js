@@ -1,14 +1,10 @@
-import React, { Suspense, useEffect, useState } from 'react'
-import { Col, Row } from 'react-bootstrap'
+import { useEffect, useState } from 'react'
+import { Row } from 'react-bootstrap'
 import styles from './Careers.module.scss'
 import CareerList from '../../components/career/CareerList'
-import Header from '../../components/layout/nav/Header'
-import SideBar from '../../components/layout/sidebar/SideBar'
 import { apiURL } from '../../context/constants'
 import consoleLog from '../../utils/console-log/consoleLog'
 import SubLoading from '../../utils/loading/SubLoading'
-
-const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
 
 const Careers = () => {
   const [jobs, setJobs] = useState([])

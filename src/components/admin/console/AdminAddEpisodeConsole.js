@@ -5,12 +5,9 @@ import MainButton from '../../../utils/button/MainButton'
 import { apiURL } from '../../../context/constants'
 import consoleLog from '../../../utils/console-log/consoleLog'
 import Cookies from 'js-cookie'
-import { useSelector } from 'react-redux'
 
 const AdminAddEpisodeConsole = ({ setManageMode, courseId, setEpisodes }) => {
   const [episodeTitle, setEpisodeTitle] = useState('')
-
-  const user = useSelector((state) => state.user)
 
   const setEpisodeAndClearInput = (episodes) => {
     setEpisodes(episodes)

@@ -1,6 +1,6 @@
-import React, { useContext, memo } from 'react'
+import { useContext, memo } from 'react'
 import NewBlogButton from './components/NewBlogButton'
-import { Navbar, Nav, Col } from 'react-bootstrap'
+import { Navbar, Nav } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import styles from './SideBar.module.scss'
 import { NavContext } from '../../../context/NavContext'

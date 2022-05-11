@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import '../../sass/_withSidebarContent.scss'
 import ctaImage from '../../asset/images/fb-group-cards@2x.png'
 import Suggestion from '../../utils/suggestion/Suggestion'
@@ -6,8 +6,6 @@ import { Row } from 'react-bootstrap'
 import LearningList from '../../components/learning-path/LearningList'
 import styles from './LearningPath.module.scss'
 import SubLoading from '../../utils/loading/SubLoading'
-
-const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
 
 const LearningPath = () => {
   const [loading, setLoading] = useState(true)

@@ -1,7 +1,5 @@
-import React from 'react'
 import styles from './LearningList.module.scss'
 import SecondaryCard from '../../utils/card/SecondaryCard'
-import { Link } from 'react-router-dom'
 import { Image } from 'react-bootstrap'
 import CircularProgressBar from '../../utils/progress-bar/CircularProgressBar'
 import thumb1 from '../../asset/images/61a0439062b82.png'
@@ -13,7 +11,6 @@ import skillImage4 from '../../asset/images/6200b809e5c13.png'
 import skillImage5 from '../../asset/images/6200ad9d8a2d8.png'
 import skillImage6 from '../../asset/images/6200af9262b30.png'
 import skillImage7 from '../../asset/images/6200afb926038.png'
-import MainButton from '../../utils/button/MainButton'
 
 const LearningList = () => {
   return (

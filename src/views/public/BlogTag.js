@@ -1,16 +1,12 @@
-import React, { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import styles from './BlogTag.module.scss'
 import '../../sass/_withSidebarContent.scss'
 import NewBlogs from '../public/NewBlogs'
-import Header from '../../components/layout/nav/Header'
-import SideBar from '../../components/layout/sidebar/SideBar'
 import { apiURL } from '../../context/constants'
 import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import consoleLog from '../../utils/console-log/consoleLog'
-
-const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
 
 const BlogTag = () => {
   const location = useLocation()

@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Image } from 'react-bootstrap'
 import styles from './MyCourse.module.scss'
 import Tippy from '../../../../utils/tippy/Tippy'
 import { apiURL } from '../../../../context/constants'

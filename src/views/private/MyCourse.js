@@ -1,14 +1,9 @@
-import React, { useState, useEffect, Suspense } from 'react'
-import Header from '../../components/layout/nav/Header'
-import SideBar from '../../components/layout/sidebar/SideBar'
-import { Col, Row } from 'react-bootstrap'
+import { useState, useEffect } from 'react'
 import { apiURL } from '../../context/constants'
 import CourseList from '../../components/home/courses/CourseList'
 import Cookies from 'js-cookie'
 import SubLoading from '../../utils/loading/SubLoading'
 import consoleLog from '../../utils/console-log/consoleLog'
-
-const Footer = React.lazy(() => import('../../components/layout/footer/Footer'))
 
 const MyCourse = () => {
   const [myCourse, setMyCourse] = useState([])

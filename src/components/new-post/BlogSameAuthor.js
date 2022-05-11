@@ -11,7 +11,6 @@ const BlogSameAuthor = ({ postedBy, blogId }) => {
     ;(async () => {
       const url = `${apiURL}/blog/${blogId}/${postedBy}`
       const data = await getBlogSameAuthor(url)
-      if (!data.success) return
 
       setBlogSameAuthor(data)
     })()

@@ -9,13 +9,8 @@ import { Link } from 'react-router-dom'
 import CourseList from '../../components/home/courses/CourseList'
 import SubLoading from '../../utils/loading/SubLoading'
 import consoleLog from '../../utils/console-log/consoleLog'
-
-const BlogList = React.lazy(() =>
-  import('../../components/home/blogs/BlogList')
-)
-const VideoList = React.lazy(() =>
-  import('../../components/home/videos/VideoList')
-)
+import BlogList from '../../components/home/blogs/BlogList'
+import VideoList from '../../components/home/videos/VideoList'
 
 const Home = () => {
   const user = useSelector((state) => state.user)

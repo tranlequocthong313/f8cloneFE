@@ -1,15 +1,13 @@
-import React, { useContext, useState, useEffect } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import LessonActionBar from '../../components/lesson/LessonActionBar'
 import LessonContent from '../../components/lesson/LessonContent'
 import LessonHeader from '../../components/lesson/LessonHeader'
 import LessonTrack from '../../components/lesson/LessonTrack'
-import Comment from '../../utils/comment/Comment'
 import consoleLog from '../../utils/console-log/consoleLog'
 import SubLoading from '../../utils/loading/SubLoading'
 import { apiURL } from '../../context/constants'
 import { LessonContext } from '../../context/LessonContext'
-import styles from './Lesson.module.scss'
 import { useSelector } from 'react-redux'
 
 const Lesson = () => {
