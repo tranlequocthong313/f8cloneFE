@@ -127,7 +127,7 @@ const CourseSlug = () => {
               <li>
                 <i className={`${styles.icon} fa-solid fa-film`} />
                 <span>
-                  Tổng số <strong>10</strong> bài học
+                  Tổng số <strong>{totalLesson.length}</strong> bài học
                 </span>
               </li>
               <li>
