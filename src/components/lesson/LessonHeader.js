@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Navbar, Image } from 'react-bootstrap'
 import styles from './LessonHeader.module.scss'
 import { Link, useNavigate } from 'react-router-dom'
@@ -13,19 +13,21 @@ const LessonHeader = ({ episodes }) => {
   const [lessonLearned, setLessonLearned] = useState([])
   const [totalLesson, setTotalLesson] = useState([])
 
-  episodes.forEach((episode) => {
-    episode.lessons.forEach((lesson) => {
-      if (!totalLesson.includes(lesson._id))
-        setTotalLesson((prev) => [...prev, lesson._id])
+  useEffect(() => {
+    episodes.forEach((episode) => {
+      episode.lessons.forEach((lesson) => {
+        if (!totalLesson.includes(lesson._id))
+          setTotalLesson((prev) => [...prev, lesson._id])
 
-      if (
-        !lessonLearned.includes(lesson._id) &&
-        user.lessonLearned.includes(lesson._id)
-      ) {
-        setLessonLearned((prev) => [...prev, lesson._id])
-      }
+        if (
+          !lessonLearned.includes(lesson._id) &&
+          user.lessonLearned.includes(lesson._id)
+        ) {
+          setLessonLearned((prev) => [...prev, lesson._id])
+        }
+      })
     })
-  })
+  }, [episodes, lessonLearned, totalLesson, user.lessonLearned])
 
   return (
     <Navbar className={styles.navHeader}>
