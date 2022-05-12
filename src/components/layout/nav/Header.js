@@ -15,13 +15,7 @@ import Notification from './components/Notification'
 import { PostContext } from '../../../context/PostContext'
 import Login from './components/Login'
 
-const Header = ({
-  className,
-  isProfile,
-  isSearchPage,
-  isAdmin,
-  submitEditPost,
-}) => {
+const Header = ({ className, submitEditPost }) => {
   const user = useSelector((state) => state.user)
   const { isEditPost, isNewPost } = useContext(PostContext)
 
@@ -30,23 +24,17 @@ const Header = ({
       <Container fluid style={{ padding: 0 }}>
         <MobileNav photoURL={user.photoURL} />
         <Logo />
-        {!isEditPost &&
-          !isNewPost &&
-          !isProfile &&
-          !isAdmin &&
-          !isSearchPage && <Search />}
+        {!isEditPost && !isNewPost && <Search />}
         <div className={styles.userAction}>
           {(isNewPost || isEditPost) && (
             <PublishButton submitEditPost={submitEditPost} />
           )}
-          {!isProfile && (
-            <Link to="/search/course" className={styles.searchMobileWrapper}>
-              <div className={styles.searchMobileIcon}></div>
-            </Link>
-          )}
+          <Link to="/search/course" className={styles.searchMobileWrapper}>
+            <div className={styles.searchMobileIcon}></div>
+          </Link>
           {user.isLoggedIn ? (
             <>
-              {!isProfile && !isAdmin && <MyCourse />}
+              <MyCourse />
               <Notification />
               <User
                 photoURL={user.photoURL}
