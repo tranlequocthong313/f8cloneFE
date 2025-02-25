@@ -1,70 +1,124 @@
-# Getting Started with Create React App
+# F8 Clone FE - Frontend (ReactJS)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**F8 Clone FE** là phần frontend của một nền tảng E-learning, được phát triển bằng ReactJS, mô phỏng lại các tính năng chính của [Fullstack.edu.vn](https://fullstack.edu.vn/). Dự án này cung cấp giao diện người dùng trực quan để học lập trình, xem khóa học, và tương tác với các bài học.
 
-## Available Scripts
+## Tính năng chính
 
-In the project directory, you can run:
+- **Trang chủ**: Hiển thị các khóa học nổi bật, danh mục khóa học, và thông tin giới thiệu.
+- **Khóa học**: Xem danh sách khóa học, chi tiết khóa học, và các bài học trong khóa học.
+- **Bài học**: Xem nội dung bài học, bao gồm video, tài liệu, và bài tập.
+- **Tài khoản**: Đăng ký, đăng nhập, và quản lý thông tin cá nhân.
+- **Tìm kiếm**: Tìm kiếm khóa học và bài học theo từ khóa.
+- **Phân quyền**: Phân quyền người dùng (học viên, giảng viên, admin).
 
-### `yarn start`
+## Công nghệ sử dụng
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Frontend**: ReactJS, React Router, Redux (hoặc Context API)
+- **Styling**: CSS, SCSS, hoặc CSS-in-JS (Styled Components, Emotion)
+- **API**: Kết nối với backend thông qua RESTful API hoặc GraphQL
+- **State Management**: Redux Toolkit (nếu sử dụng Redux)
+- **UI Library**: Material-UI, Ant Design, hoặc Bootstrap (tùy chọn)
+- **Build Tool**: Webpack (được cấu hình sẵn bởi Create React App)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Cài đặt và chạy dự án
 
-### `yarn test`
+### Yêu cầu hệ thống
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js (phiên bản 14.x trở lên)
+- npm hoặc yarn
 
-### `yarn build`
+### Các bước cài đặt
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. **Clone dự án**:
+   ```bash
+   git clone https://github.com/tranlequocthong313/f8cloneFE.git
+   cd f8cloneFE
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. **Cài đặt các dependencies**:
+   ```bash
+   npm install
+   # hoặc
+   yarn install
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. **Chạy dự án**:
+   ```bash
+   npm start
+   # hoặc
+   yarn start
+   ```
 
-### `yarn eject`
+4. **Truy cập ứng dụng**:
+   - Mở trình duyệt và truy cập vào địa chỉ: `http://localhost:3000`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Cấu hình môi trường
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Tạo file `.env` trong thư mục gốc của dự án và thêm các biến môi trường cần thiết (nếu có):
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```env
+REACT_APP_API_URL=http://localhost:8000/api
+REACT_APP_GOOGLE_CLIENT_ID=your-google-client-id
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Cấu trúc thư mục
 
-## Learn More
+```
+f8cloneFE/
+├── public/                  # Thư mục chứa các file tĩnh (index.html, favicon, v.v.)
+├── src/                     # Source code chính
+│   ├── assets/              # Hình ảnh, font, và các file tĩnh khác
+│   ├── components/          # Các component ReactJS
+│   ├── pages/               # Các trang chính của ứng dụng
+│   ├── services/            # Các service để gọi API
+│   ├── store/               # Redux store (nếu sử dụng Redux)
+│   ├── styles/              # File CSS/SCSS hoặc CSS-in-JS
+│   ├── utils/               # Các hàm tiện ích
+│   ├── App.js               # Component chính
+│   ├── index.js             # File entry point
+│   └── routes.js            # Cấu hình React Router
+├── .env                     # File cấu hình môi trường
+├── package.json             # Danh sách dependencies và scripts
+└── README.md                # Tài liệu hướng dẫn
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Các trang chính
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- **Trang chủ**: Hiển thị các khóa học nổi bật, danh mục khóa học, và thông tin giới thiệu.
+- **Trang khóa học**: Hiển thị danh sách khóa học và chi tiết từng khóa học.
+- **Trang bài học**: Hiển thị nội dung bài học, bao gồm video, tài liệu, và bài tập.
+- **Trang tài khoản**: Quản lý thông tin cá nhân, lịch sử học tập, và cài đặt tài khoản.
+- **Trang tìm kiếm**: Tìm kiếm khóa học và bài học theo từ khóa.
 
-### Code Splitting
+## Kết nối với Backend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Frontend kết nối với backend thông qua các API endpoints sau (ví dụ):
 
-### Analyzing the Bundle Size
+- **Khóa học**:
+  - `GET /api/courses` - Lấy danh sách khóa học.
+  - `GET /api/courses/{id}` - Lấy thông tin chi tiết của một khóa học.
+- **Bài học**:
+  - `GET /api/lessons` - Lấy danh sách bài học.
+  - `GET /api/lessons/{id}` - Lấy thông tin chi tiết của một bài học.
+- **Tài khoản**:
+  - `POST /api/auth/register` - Đăng ký tài khoản mới.
+  - `POST /api/auth/login` - Đăng nhập và nhận JWT token.
+  - `GET /api/users/{id}` - Lấy thông tin người dùng.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Đóng góp
 
-### Making a Progressive Web App
+Nếu bạn muốn đóng góp vào dự án, vui lòng làm theo các bước sau:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+1. Fork dự án
+2. Tạo branch mới (`git checkout -b feature/YourFeatureName`)
+3. Commit các thay đổi (`git commit -m 'Add some feature'`)
+4. Push lên branch (`git push origin feature/YourFeatureName`)
+5. Mở một Pull Request
 
-### Advanced Configuration
+## Liên hệ
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Nếu bạn có bất kỳ câu hỏi hoặc góp ý nào, vui lòng liên hệ:
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- **Tên**: Trần Lê Quốc Thông
+- **Email**: tranlequocthong313@gmail.com
+- **GitHub**: [tranlequocthong313](https://github.com/tranlequocthong313)
