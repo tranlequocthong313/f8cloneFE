@@ -255,7 +255,7 @@ const CommentBody = ({
 
   return (
     <>
-      {commentData.map((comment) => (
+      {commentData?.map((comment) => (
         <div key={comment._id}>
           <div className={styles.commentList}>
             <Link to={`/${comment.postedBy.slug}`} className={styles.avatar}>
@@ -466,7 +466,7 @@ const CommentBody = ({
               </div>
 
               {comment._id === replyCommentData.commentId &&
-                replyCommentData.replies.map((reply) => (
+                replyCommentData.replies?.map((reply) => (
                   <div
                     className={`${styles.commentList} ${styles.replyCommentList}`}
                     key={reply._id}

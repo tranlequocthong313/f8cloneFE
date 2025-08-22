@@ -14,7 +14,7 @@ const SelectCountry = memo(({ onChange }) => {
       <option value="84" hidden>
         VN (+84)
       </option>
-      {Object.entries(countryCode).map(([key, value]) => (
+      {Object.entries(countryCode)?.map(([key, value]) => (
         <option key={key} value={`${key} ${value.dialling_code}`}>
           {value.country_name} {value.dialling_code}
         </option>

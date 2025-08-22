@@ -16,7 +16,7 @@ const Learning = () => {
     <>
       <LearningHeader />
       <LearningContent isShowMenuTrack={isShowMenuTrack} />
-      {isShowMenuTrack && <LearningTrack loading={loading} />}
+      {isShowMenuTrack && <LearningTrack loading={loading} episodes={course?.episode} />}
 
       <LearningActionBar
         handleIsShowMenuTrack={handleIsShowMenuTrack}

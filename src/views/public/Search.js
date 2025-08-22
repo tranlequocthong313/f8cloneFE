@@ -142,7 +142,7 @@ const Search = () => {
                           <div className={styles.contentWrapper}>
                             {tabs === '/search/course' &&
                             result.courses.length > 0 ? (
-                              result.courses.map((course) => (
+                              result.courses?.map((course) => (
                                 <div
                                   className={styles.contentContainer}
                                   key={course._id}
@@ -176,7 +176,7 @@ const Search = () => {
                           <div className={styles.contentWrapper}>
                             {tabs === '/search/blog' &&
                             result.blogs.length > 0 ? (
-                              result.blogs.map((blog) => (
+                              result.blogs?.map((blog) => (
                                 <div
                                   className={`${styles.contentContainer} ${styles.blogContent}`}
                                   key={blog._id}
@@ -223,7 +223,7 @@ const Search = () => {
                           <div className={styles.contentWrapper}>
                             {tabs === '/search/video' &&
                             result.videos.length > 0 ? (
-                              result.videos.map((video) => (
+                              result.videos?.map((video) => (
                                 <div
                                   className={styles.contentContainer}
                                   key={video._id}

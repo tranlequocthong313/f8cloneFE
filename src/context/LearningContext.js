@@ -23,6 +23,26 @@ const LearningContextProvider = ({ children }) => {
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    const fetchCourse = async () => {
+      if (location.pathname.startsWith('/learning/')) {
+        try {
+          setLoading(true);
+          const res = await fetch(`${apiURL}${location.pathname}`);
+          if (!res.ok) throw new Error('Failed to fetch course');
+          const data = await res.json();
+          setCourse(data);
+        } catch (error) {
+          console.error('Fetch course error:', error.message);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchCourse();
+  }, [location.pathname]);
+
   const active = async (id) => {
     try {
       setIsShowMenuTrack(id);

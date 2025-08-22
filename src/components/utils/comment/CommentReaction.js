@@ -5,7 +5,7 @@ import styles from './CommentReaction.module.scss'
 const CommentReaction = ({ reactComment, commentId }) => {
   return (
     <div className={styles.wrapper}>
-      {EMOJIES.map((emoji) => (
+      {EMOJIES?.map((emoji) => (
         <div className={styles.container} key={emoji.title}>
           <div className={styles.item}>
             <div className={styles.title}>{emoji.title}</div>

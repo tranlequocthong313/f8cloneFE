@@ -17,7 +17,7 @@ const AdminBlog = ({ blogData }) => {
   const [isCheckboxChosenAll, setIsCheckboxChosenAll] = useState(false);
 
   useEffect(() => {
-    const blogIds = blogData.map((blog) => blog._id);
+    const blogIds = blogData?.map((blog) => blog._id);
     setCheckboxChosenAll(blogIds);
   }, [blogData]);
 
@@ -115,7 +115,7 @@ const AdminBlog = ({ blogData }) => {
           </tr>
         </thead>
         <tbody>
-          {blogData.map((blog, index) => (
+          {blogData?.map((blog, index) => (
             <tr key={blog._id}>
               <td>
                 <Form>

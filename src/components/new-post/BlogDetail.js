@@ -325,7 +325,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
         />
         {blog.tags && (
           <div className={styles.tags}>
-            {blog.tags.map((tag) => (
+            {blog.tags?.map((tag) => (
               <Link to={`/blog/tag/${tag}`} key={tag}>
                 {tag}
               </Link>

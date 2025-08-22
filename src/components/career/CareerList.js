@@ -10,7 +10,7 @@ const CareerList = ({ jobs, xl }) => {
 
   return (
     <Row style={{ margin: 0 }}>
-      {jobs.map((job) => (
+      {jobs?.map((job) => (
         <Col xl={xl} style={{ padding: 0 }} key={job._id}>
           <SecondaryCard>
             <div className={styles.cardWrapper}>
@@ -23,7 +23,7 @@ const CareerList = ({ jobs, xl }) => {
                 </span>
               </div>
               <div className={styles.languages}>
-                {job.languages.map((language) => (
+                {job.languages?.map((language) => (
                   <div className={styles.languageItem} key={language}>
                     {language}
                   </div>

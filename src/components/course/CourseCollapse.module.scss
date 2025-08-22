@@ -9,6 +9,9 @@
   padding: 0 30px 0 48px;
   position: relative;
   cursor: default;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
   .icon {
     color: #f0502466;
@@ -26,5 +29,12 @@
     margin-left: 58px;
     min-width: 69px;
     text-align: right;
+    margin-left: auto;
   }
+}
+
+.episodeName {
+  display: flex;
+  align-items: center;
+  gap: '8px';
 }

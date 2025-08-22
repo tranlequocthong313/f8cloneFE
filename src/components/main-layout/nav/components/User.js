@@ -26,11 +26,11 @@ const User = ({ photoURL, displayName, email, slug }) => {
 
   return (
     <Tippy
-      button={<Image className={styles.userPicture} src={photoURL} />}
+      button={<Image className={styles.userPicture} src={photoURL} referrerPolicy="no-referrer" />}
       className={styles.menuWrapper}
     >
       <div className={styles.user}>
-        <Image src={photoURL} className={styles.avatar} />
+        <Image src={photoURL} className={styles.avatar} referrerPolicy="no-referrer" />
         <div className={styles.info}>
           <div className={styles.name}>{displayName}</div>
           <div className={styles.fullName}>{slug}</div>

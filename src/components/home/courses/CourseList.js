@@ -8,7 +8,7 @@ const CourseList = ({ courses, path }) => {
 
   return (
     <ScrollHorizontal path={'courses'}>
-      {courses.map((course) => (
+      {courses?.map((course) => (
         <CourseItem key={course._id} course={course} path={path} />
       ))}
       {user.isAdmin && !path && (

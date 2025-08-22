@@ -96,7 +96,7 @@ const Search = () => {
                     <h5>KHÓA HỌC</h5>
                     <Link to={`/search/course?q=${searchInput}`}>Xem thêm</Link>
                   </div>
-                  {result.courses.map((course) => (
+                  {result.courses?.map((course) => (
                     <Link
                       className={styles.searchItem}
                       to={`/courses/${course.slug}`}
@@ -114,7 +114,7 @@ const Search = () => {
                     <h5>BÀI VIẾT</h5>
                     <Link to={`/search/blog?q=${searchInput}`}>Xem thêm</Link>
                   </div>
-                  {result.blogs.map((blog) => (
+                  {result.blogs?.map((blog) => (
                     <Link
                       className={styles.searchItem}
                       to={`/blog/${blog.slug}`}
@@ -135,7 +135,7 @@ const Search = () => {
                     <h5>VIDEO</h5>
                     <Link to={`/search/video?q=${searchInput}`}>Xem thêm</Link>
                   </div>
-                  {result.videos.map((video) => (
+                  {result.videos?.map((video) => (
                     <a
                       className={styles.searchItem}
                       rel="noopener noreferrer"

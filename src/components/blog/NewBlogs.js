@@ -67,7 +67,7 @@ const NewBlogs = ({ blogs }) => {
 
   return (
     <>
-      {blogs.map((blog) => (
+      {blogs?.map((blog) => (
         <SecondaryCard key={blog._id}>
           <div className={styles.header}>
             <div className={styles.author}>

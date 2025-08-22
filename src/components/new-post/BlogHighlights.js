@@ -17,7 +17,7 @@ const BlogHighlights = ({ blogHighlight }) => {
       )}
       {blogHighlight &&
         blogHighlight.length > 0 &&
-        blogHighlight.map((blog) => (
+        blogHighlight?.map((blog) => (
           <div className={styles.post} key={blog._id}>
             <div className={styles.author}>
               Đăng bởi{' '}

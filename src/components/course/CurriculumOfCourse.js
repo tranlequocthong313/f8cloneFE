@@ -10,8 +10,8 @@ const CurriculumOfCourse = ({ episodeList }) => {
     useState(false)
 
   useEffect(() => {
-    episodeList.map((episode) =>
-      setCollapsedCurriculumAll((prev) => [...prev, episode.id]),
+    episodeList?.map((episode) =>
+      setCollapsedCurriculumAll((prev) => [...prev, episode.episodeId]),
     )
   }, [episodeList])
 
@@ -67,15 +67,15 @@ const CurriculumOfCourse = ({ episodeList }) => {
       </div>
       <div className={styles.curriculumPanel}>
         <div className={styles.panelGroup}>
-          {episodeList.map((episode) => (
-            <div className={styles.panel} key={episode.id}>
+          {episodeList?.map((episode, index) => (
+            <div className={styles.panel} key={episode.episodeId}>
               <div
                 className={styles.panelHeading}
-                onClick={() => collapseCurriculumSingle(episode.id)}
+                onClick={() => collapseCurriculumSingle(episode.episodeId)}
               >
                 <h5 className={styles.panelTitle}>
                   <div className={styles.headLine}>
-                    {collapsedCurriculum.includes(episode.id) ? (
+                    {collapsedCurriculum.includes(episode.episodeId) ? (
                       <i className="fa-solid fa-dash"></i>
                     ) : (
                       <i className="fa-solid fa-plus"></i>
@@ -90,8 +90,8 @@ const CurriculumOfCourse = ({ episodeList }) => {
                 </h5>
               </div>
               <CourseCollapse
-                collapseCurriculum={collapsedCurriculum}
-                episodeId={episode.id}
+                open={collapsedCurriculum}
+                episodeId={episode.episodeId}
                 lessons={episode.lessons}
               />
             </div>

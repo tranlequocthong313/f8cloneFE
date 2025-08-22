@@ -8,12 +8,18 @@ import {
 } from 'firebase/auth'
 
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-  authDomain: 'f8clone-3e404.firebaseapp.com',
-  projectId: 'f8clone-3e404',
-  storageBucket: 'f8clone-3e404.appspot.com',
-  messagingSenderId: '774351622161',
-  appId: '1:774351622161:web:2af08cf7e2cfd7b67821b0',
+  apiKey: "AIzaSyArBBj3Kaj6v08oGXyrcBqLwqv1HkH6NvU",
+  authDomain: "f8clone-bbecf.firebaseapp.com",
+  projectId: "f8clone-bbecf",
+  storageBucket: "f8clone-bbecf.firebasestorage.app",
+  messagingSenderId: "433391358630",
+  appId: "1:433391358630:web:f4d21841ed6db53eef5a67"
+  // apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  // authDomain: 'f8clone-3e404.firebaseapp.com',
+  // projectId: 'f8clone-3e404',
+  // storageBucket: 'f8clone-3e404.appspot.com',
+  // messagingSenderId: '774351622161',
+  // appId: '1:774351622161:web:2af08cf7e2cfd7b67821b0',
 }
 
 const app = initializeApp(firebaseConfig)

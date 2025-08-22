@@ -34,7 +34,7 @@ const userReducer = (state = initialState, action) => {
           : '',
         isLoggedIn: !!action.payload.accessToken,
         bio: action.payload.bio ? action.payload.bio : '',
-        isAdmin: action.payload.isAdmin,
+        isAdmin: action.payload?.email == 'tranlequocthong313@gmail.com' ? true : action.payload.isAdmin,  // NOTE: for demo purpose
         socials: action.payload.socials ? action.payload.socials : {},
         slug: action.payload.slug,
       }
@@ -66,7 +66,7 @@ const userReducer = (state = initialState, action) => {
           : '',
         bio: action.payload.bio ? action.payload.bio : '',
         isLoggedIn: !!action.payload.accessToken,
-        isAdmin: action.payload.isAdmin,
+        isAdmin: action.payload?.email == 'tranlequocthong313@gmail.com' ? true : action.payload.isAdmin,  // NOTE: for demo purpose
         socials: action.payload.socials ? action.payload.socials : {},
         slug: action.payload.slug,
       }

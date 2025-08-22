@@ -84,7 +84,7 @@ const BookmarkPost = () => {
                 </div>
               )}
               {bookmarkData &&
-                bookmarkData.map((bookmark) => (
+                bookmarkData?.map((bookmark) => (
                   <ul key={bookmark._id} className={styles.bookmarkList}>
                     <li>
                       <h3>

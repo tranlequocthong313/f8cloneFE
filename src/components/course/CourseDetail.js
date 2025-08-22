@@ -6,7 +6,7 @@ const CourseDetail = ({ topicList, title }) => {
     <div className={styles.topicList}>
       <h3>{title}</h3>
       <ul className={title === 'Yêu cầu' ? styles.column : null}>
-        {topicList.map(topic => (
+        {topicList?.map(topic => (
           <li key={topic}>
             <i className="fa-solid fa-check"></i>
             <span>{topic}</span>

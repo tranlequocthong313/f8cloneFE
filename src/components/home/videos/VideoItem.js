@@ -31,7 +31,8 @@ const VideoItem = ({ video }) => {
               <i className="fa-solid fa-play"></i>
             </div>
             <div className={styles.duration}>
-              {formatYoutubeDuration(video.duration)}
+              {/* Comment Demo purpose {formatYoutubeDuration(video.duration)} */}
+              {video.duration}
             </div>
             <div></div>
           </div>

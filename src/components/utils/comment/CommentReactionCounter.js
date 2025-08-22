@@ -35,7 +35,7 @@ const CommentReactionCounter = ({ showModal, reactData }) => {
     <div className={styles.wrapper} onClick={showModal}>
       <div className={styles.container}>
         {reactData &&
-          reactData.map((item) => (
+          reactData?.map((item) => (
             <div
               key={item._id}
               className={styles.icon}

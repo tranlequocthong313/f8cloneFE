@@ -117,7 +117,7 @@ const MyBlog = () => {
                     )}
                     {tabs === '/my-post/drafts' &&
                       myDraftBlog &&
-                      myDraftBlog.map((blog) => (
+                      myDraftBlog?.map((blog) => (
                         <ul key={blog._id} className={styles.blogList}>
                           <li>
                             <h3>
@@ -149,7 +149,7 @@ const MyBlog = () => {
                     )}
                     {tabs === '/my-post/published' &&
                       myBlog &&
-                      myBlog.map((blog) => (
+                      myBlog?.map((blog) => (
                         <ul key={blog._id} className={styles.blogList}>
                           <li>
                             <h3>

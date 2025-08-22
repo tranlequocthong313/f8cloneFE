@@ -33,7 +33,7 @@ const BlogSameAuthor = ({ postedBy, blogId }) => {
           </p>
         )}
         {blogSameAuthor.length > 0 &&
-          blogSameAuthor.map((blog) => (
+          blogSameAuthor?.map((blog) => (
             <li key={blog._id}>
               <Link to={`/blog/${blog.slug}`}>{blog.titleDisplay}</Link>
             </li>

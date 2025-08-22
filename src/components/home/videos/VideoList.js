@@ -9,7 +9,7 @@ const VideoList = (props) => {
 
   return (
     <ScrollHorizontal path={'videos'}>
-      {props.videos.map((video) => (
+      {props.videos?.map((video) => (
         <VideoItem key={video.videoId} video={video} />
       ))}
       {user.isAdmin && (

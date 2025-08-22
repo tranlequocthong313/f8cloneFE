@@ -17,7 +17,7 @@ const AdminVideo = ({ videoData }) => {
   const [isCheckboxChosenAll, setIsCheckboxChosenAll] = useState(false);
 
   useEffect(() => {
-    const videoId = videoData.map((video) => video._id);
+    const videoId = videoData?.map((video) => video._id);
     setCheckboxChosenAll(videoId);
   }, [videoData]);
 
@@ -116,7 +116,7 @@ const AdminVideo = ({ videoData }) => {
           </tr>
         </thead>
         <tbody>
-          {videoData.map((video, index) => (
+          {videoData?.map((video, index) => (
             <tr key={video._id}>
               <td>
                 <Form>
@@ -130,7 +130,8 @@ const AdminVideo = ({ videoData }) => {
               <td className={styles.tableItem}>{index + 1}</td>
               <td className={styles.breakWord}>{video.title}</td>
               <td className={styles.tableItem}>
-                {formatYoutubeDuration(video.duration)}
+                {/* Comment Demo purpose {formatYoutubeDuration(video.duration)} */}
+                {video.duration}
               </td>
               <td className={styles.tableItem}>
                 {video.isPopular ? 'Hiện' : 'Ẩn'}

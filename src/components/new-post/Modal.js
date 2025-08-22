@@ -14,6 +14,7 @@ import removeActions from '../utils/remove-accents/removeActions';
 import { useSelector } from 'react-redux';
 import { BlogContext } from '../../context/BlogContext';
 import io from 'socket.io-client';
+import MainToast from '../utils/toast/MainToast'
 
 const socket = io.connect(apiURL);
 
@@ -43,6 +44,10 @@ const Modal = ({ blogContent }) => {
   const [tags, setTags] = useState(null);
   const [tag, setTag] = useState('');
   const [invalidTag, setInvalidTag] = useState(null);
+  const [uploadWithImgStatus, setUploadWithImgStatus] = useState({
+    isSuccess: false,
+    show: false,
+  });
 
   const LIMIT_TITLE_DISPLAY_LENGTH = '100';
   const LIMIT_DESCRIPTION_LENGTH = '160';
@@ -83,25 +88,31 @@ const Modal = ({ blogContent }) => {
   const uploadImageToStorage = () => {
     setLoading(true);
     if (image) {
-      const storageRef = ref(storage, `uploads/${image.name}`);
-      const uploadTask = uploadBytesResumable(storageRef, image);
+      // NOTE: firebase storage requires billing now, may change to new storage service in the future
+      setUploadWithImgStatus({
+        isSuccess: false,
+        show: true
+      })
+      postBlog()
+      // const storageRef = ref(storage, `uploads/${image.name}`);
+      // const uploadTask = uploadBytesResumable(storageRef, image);
 
-      return uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-        },
-        (err) => console.log(err),
-        async () => {
-          try {
-            const url = await getDownloadURL(uploadTask.snapshot.ref);
-            postBlog(url);
-          } catch (error) {
-            console.log(error.message);
-            setLoading(false);
-          }
-        }
-      );
+      // return uploadTask.on(
+      //   'state_changed',
+      //   (snapshot) => {
+      //     Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+      //   },
+      //   (err) => console.log(err),
+      //   async () => {
+      //     try {
+      //       const url = await getDownloadURL(uploadTask.snapshot.ref);
+      //       postBlog(url);
+      //     } catch (error) {
+      //       console.log(error.message);
+      //       setLoading(false);
+      //     }
+      //   }
+      // );
     } else {
       postBlog();
     }
@@ -274,7 +285,7 @@ const Modal = ({ blogContent }) => {
             }
           >
             {tags &&
-              tags.map((tag) => (
+              tags?.map((tag) => (
                 <div
                   key={tag}
                   id={`tag_${tag}`}
@@ -365,6 +376,18 @@ const Modal = ({ blogContent }) => {
           />
         </Col>
       </Row>
+      <MainToast
+        status={uploadWithImgStatus}
+        setStatus={() =>
+          setUploadWithImgStatus((prev) => {
+            return {
+              ...prev,
+              show: false,
+            };
+          })
+        }
+        failText={'Firebase storage requires billing now, may change to new storage service in the future'}
+      />
     </div>
   );
 };

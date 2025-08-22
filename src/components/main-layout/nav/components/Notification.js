@@ -107,7 +107,7 @@ const Notification = () => {
         <ul className={styles.list}>
           {notifications &&
             notifications.length !== 0 &&
-            notifications.map((notification) => (
+            notifications?.map((notification) => (
               <li
                 className={
                   notification.isSeen

@@ -27,7 +27,7 @@ const AdminCourse = ({ courseData }) => {
         </tr>
       </thead>
       <tbody>
-        {courseData.map((course, index) => (
+        {courseData?.map((course, index) => (
           <tr key={course._id}>
             <td>
               <Form>

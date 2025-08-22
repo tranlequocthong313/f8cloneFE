@@ -90,6 +90,7 @@ const Settings = () => {
   };
 
   const changeAvatar = () => {
+    return // NOTE: firebase storage requires billing now, may change to new storage service in the future
     try {
       const token = Cookies.get('token');
       if (!token) return;
