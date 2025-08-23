@@ -11,6 +11,7 @@ import { apiURL } from '../../context/constants'
 import { useSelector } from 'react-redux'
 import MainCardAdd from '../../components/utils/card/MainCardAdd'
 import { Link } from 'react-router-dom'
+import MainToast from '../../components/utils/toast/MainToast'
 
 const BlogList = React.lazy(() =>
   import('../../components/home/blogs/BlogList'),
@@ -29,6 +30,9 @@ const Home = () => {
   const [courseBE, setCourseBE] = useState([])
   const [blogData, setBlogData] = useState([])
   const [videoData, setVideoData] = useState([])
+  const [fetchStatus, setFetchStatus] = useState({
+    show: true,
+  })
 
   useEffect(() => {
     document.title =
@@ -49,6 +53,9 @@ const Home = () => {
         setCourseBE(data.courseBE)
         setBlogData(data.blogs)
         setVideoData(data.videos)
+        setFetchStatus({
+          show: false
+        })
       } catch (error) {
         console.log(error.message)
       }
@@ -112,6 +119,7 @@ const Home = () => {
       <Suspense fallback={<div>Loading...</div>}>
         <Footer />
       </Suspense>
+      <MainToast status={fetchStatus} failText={`This app is running on a free backend server. It may take up to 50 seconds or more to wake up if idle. If the server is still waking up, please wait and then reload the website after ~50s. Thanks for your patience!`} />
     </>
   )
 }
