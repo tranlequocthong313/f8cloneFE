@@ -25,6 +25,7 @@ const userReducer = (state = initialState, action) => {
         case 'LOGIN':
             return {
                 ...state,
+                ...action.payload,
                 userId: action.payload._id,
                 photoURL: action.payload.photoURL,
                 displayName: action.payload.fullName,
@@ -60,6 +61,7 @@ const userReducer = (state = initialState, action) => {
         case 'SET_AUTH':
             return {
                 ...state,
+                ...action.payload,
                 userId: action.payload._id,
                 displayName: action.payload.fullName,
                 email: action.payload.email,
@@ -109,6 +111,12 @@ const userReducer = (state = initialState, action) => {
                     ? action.payload.photoURL
                     : '',
             };
+
+        case 'ENROLL_COURSE': 
+            return {
+                ...state,
+                coursesEnrolled: [...state.coursesEnrolled, action.payload]
+            }
 
         default:
             return state;
