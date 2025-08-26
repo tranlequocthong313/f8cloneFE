@@ -91,15 +91,15 @@ const CourseSlug = () => {
                   </ul>
                 </div>
                 <CourseDetail
-                  topicList={course ? course.topicList : []}
+                  topicList={course?.topics || []}
                   title={'Bạn sẽ học được gì?'}
                 />
                 <CurriculumOfCourse
-                  episodeList={course ? course.episode : []}
+                  episodeList={course?.episode || []}
                 />
                 {hasRequire && (
                   <CourseDetail
-                    topicList={course ? course.require : []}
+                    topicList={course?.requirement || []}
                     title={'Yêu cầu'}
                   />
                 )}
