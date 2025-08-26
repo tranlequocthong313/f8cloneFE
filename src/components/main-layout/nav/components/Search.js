@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Search.module.scss';
 import { Link } from 'react-router-dom';
 import { apiURL } from '../../../../context/constants';
+import { useSelector } from 'react-redux'
 
 const Search = () => {
   const [searchInput, setSearchInput] = useState('');
@@ -12,6 +13,12 @@ const Search = () => {
     blogs: [],
     videos: [],
   });
+
+  const user = useSelector(state => state.user)
+
+  const enrolledCourse = (course) => {
+    return user?.coursesEnrolled?.includes(course?._id)
+  }
 
   const search = async (e) => {
     try {
@@ -99,7 +106,7 @@ const Search = () => {
                   {result.courses?.map((course) => (
                     <Link
                       className={styles.searchItem}
-                      to={`/courses/${course.slug}`}
+                      to={enrolledCourse(course) ? `/learning/${course.slug}` : `/courses/${course.slug}`}
                       key={course._id}
                     >
                       <img alt="" src={course.image} />

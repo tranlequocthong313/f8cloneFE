@@ -9,6 +9,7 @@ import { Link, useLocation } from 'react-router-dom';
 import Tabs from '../../components/utils/tabs/Tabs';
 import f8Icon from '../../asset/images/f8_icon.png';
 import CoursesEnrolled from '../../components/profile/ProfileCourses';
+import { useSelector } from 'react-redux'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer')
@@ -26,6 +27,12 @@ const Search = () => {
     blogs: [],
     videos: [],
   });
+
+  const user = useSelector(state => state.user)
+
+  const enrolledCourse = (course) => {
+    return user?.coursesEnrolled?.includes(course?._id)
+  }
 
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -147,7 +154,7 @@ const Search = () => {
                                   className={styles.contentContainer}
                                   key={course._id}
                                 >
-                                  <Link to={`/courses/${course.slug}`}>
+                                  <Link to={enrolledCourse(course) ? `/learning/${course.slug}` : `/courses/${course.slug}`}>
                                     <div
                                       className={styles.image}
                                       style={{
