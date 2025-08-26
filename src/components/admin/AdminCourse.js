@@ -38,9 +38,7 @@ const AdminCourse = ({ courseData }) => {
             <td>{course.title}</td>
             <td className={styles.tableItem}>{course.level}</td>
             <td className={styles.tableItem}>
-              {course.role.FE && course.role.BE
-                ? 'Fullstack'
-                : course.role.FE || course.role.BE}
+              {course.role}
             </td>
             <td className={styles.tableItem}>
               {course.requirement ? 'Yes' : 'No'}

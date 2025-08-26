@@ -12,6 +12,7 @@ import AdminBlog from '../../components/admin/AdminBlog'
 import AdminVideo from '../../components/admin/AdminVideo'
 import { apiURL } from '../../context/constants'
 import MainButton from '../../components/utils/button/MainButton'
+import CreateCourse from '../../components/admin/courses/CreateCourse'
 
 const Footer = React.lazy(() =>
   import('../../components/main-layout/footer/Footer'),
@@ -50,7 +51,7 @@ const Admin = () => {
     })()
 
     return () => controller?.abort()
-  }, [user.videoCreated, user.blogCreated])
+  }, [user.videoCreated, user.blogCreated, user.courseCreated])
 
   return (
     <>
@@ -87,9 +88,7 @@ const Admin = () => {
             </div>
             {tabs === '/admin/course' && (
               <>
-                <MainButton outline={true}>
-                  <i className="fa-solid fa-plus"></i> Thêm khóa học
-                </MainButton>
+                <CreateCourse />
                 <AdminCourse courseData={courseData} />
               </>
             )}

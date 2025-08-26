@@ -134,7 +134,7 @@ const CreateVideo = () => {
               onChange={() => setIsPopular((prev) => !prev)}
               style={{ margin: '0 8px' }}
             />
-            <Form.Label>Youtube Video ID</Form.Label>
+            <Form.Label>Make it popular</Form.Label>
           </Form.Group>
         </Form>
         <Modal.Footer style={{ border: 'none' }}>

@@ -48,6 +48,7 @@ const Home = () => {
           signal: controller.signal,
         })
         const data = await res.json()
+        console.log("🚀 ~ Home ~ data:", data)
 
         setCourseFE(data.courseFE)
         setCourseBE(data.courseBE)

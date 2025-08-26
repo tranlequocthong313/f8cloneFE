@@ -26,6 +26,13 @@ const setAuth = (payload) => {
   }
 }
 
+const createCourse = (payload) => {
+  return {
+    type: 'CREATE_COURSE',
+    payload,
+  }
+}
+
 const createVideo = (payload) => {
   return {
     type: 'CREATE_VIDEO',
@@ -47,4 +54,4 @@ const settings = (payload) => {
   }
 }
 
-export { login, logout, setLoading, setAuth, createVideo, createBlog, settings }
+export { login, logout, setLoading, setAuth, createVideo, createBlog, createCourse, settings }

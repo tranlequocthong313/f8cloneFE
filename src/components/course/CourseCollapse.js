@@ -2,6 +2,7 @@ import React from 'react'
 import { Collapse } from 'react-bootstrap'
 import styles from './CourseCollapse.module.scss'
 import '../../sass/_float.scss'
+import parseDuration from 'youtube-duration-format'
 
 const CourseCollapse = ({ open, openAll, lessons, episodeId }) => {
   return (
@@ -13,7 +14,7 @@ const CourseCollapse = ({ open, openAll, lessons, episodeId }) => {
               <i className={`${styles.icon} fa-regular fa-circle-play`}></i>
               <div className={styles.lessonName}>{lesson.title}</div>
             </div>
-            <span className={`${styles.time} floatRight`}>{lesson.time}</span>
+            <span className={`${styles.time} floatRight`}>{lesson?.time ? parseDuration(lesson?.time) : 'N/A'}</span>
           </div>
         ))}
       </div>

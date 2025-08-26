@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react'
 import styles from './LearningTrackItem.module.scss'
 import { Collapse } from 'react-bootstrap'
 import { LearningContext } from '../../context/LearningContext'
+import parseDuration from 'youtube-duration-format'
 
 const LearningTrackItem = ({ episodes }) => {
   console.log("🚀 ~ LearningTrackItem ~ episodes:", episodes)
@@ -56,7 +57,7 @@ const LearningTrackItem = ({ episodes }) => {
                         : `fa-regular fa-compact-disc ${styles.playingIcon}`
                     }
                   ></i>{' '}
-                  {lesson.time}
+                  {lesson?.time ? parseDuration(lesson?.time) : 'N/A'}
                 </p>
               </div>
               <div

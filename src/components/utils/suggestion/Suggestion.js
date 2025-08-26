@@ -11,7 +11,7 @@ const Suggestion = ({ title, description, button, image }) => {
         <h2>{title}</h2>
         <p>{description}</p>
         <MainButton outline={true} className={styles.button}>
-          <Link to="/">{button}</Link>
+          <a target='_blank' href="https://www.facebook.com/groups/f8official/">{button}</a>
         </MainButton>
       </div>
       <div className={styles.image}>
