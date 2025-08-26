@@ -26,7 +26,7 @@ const CourseItem = ({ course, path }) => {
         </section>
       </Link>
       <h4 className={styles.title}>
-        <Link to={`/courses/${course.slug}`}>{course.title}</Link>
+        <Link to={enrolledCourse() ? `/learning/${course.slug}` : `/courses/${course.slug}`}>{course.title}</Link>
       </h4>
       {!path && (
         <div className={styles.studentCount}>
