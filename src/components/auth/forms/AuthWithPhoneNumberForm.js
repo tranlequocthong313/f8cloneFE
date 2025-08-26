@@ -108,8 +108,7 @@ const LoginWithPhoneNumberForm = ({
           accessToken: data.accessToken,
         });
       } else if (user && !isLogin) {
-        const userDefaultAvatar =
-          'https://firebasestorage.googleapis.com/v0/b/f8clone-3e404.appspot.com/o/uploads%2Fnobody_m.256x256.jpg?alt=media&token=8e617e21-795f-45ce-8340-955a5290e66f';
+        const userDefaultAvatar = `https://ui-avatars.com/api/?name=${fullName}&size=128&background=fd7e14&color=ffffff`
 
         const res = await fetch(`${apiURL}/register`, {
           method: 'POST',
