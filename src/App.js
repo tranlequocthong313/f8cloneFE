@@ -180,7 +180,7 @@ function App() {
                     user.isLoggedIn && user.isAdmin ? <Admin /> : <NotFound />
                 }
             />
-            <Route path='/courses' element={<Courses />} />
+            {/* <Route path='/courses' element={<Courses />} /> */}
             <Route path='/courses/:slug' element={<CourseSlug />} />
             <Route path='/blog/:slug' element={<BlogSlug />} />
             <Route path='/learning-path' element={<LearningPath />} />

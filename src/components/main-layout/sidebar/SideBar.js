@@ -39,7 +39,7 @@ const SideBar = ({ isHide }) => {
               <span>Lộ trình</span>
             </Link>
           </li>
-          <li className={styles.item}>
+          {/* <li className={styles.item}>
             <Link
               to={'/courses' || '/courses/course-slug'}
               className={activeTab === 'courses' ? styles.active : ''}
@@ -48,7 +48,7 @@ const SideBar = ({ isHide }) => {
               <i className="fa-solid fa-lightbulb"></i>
               <span>Học</span>
             </Link>
-          </li>
+          </li> */}
           <li className={styles.item}>
             <Link
               to="/blog"
