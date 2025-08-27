@@ -12,10 +12,10 @@ import { apiURL } from '../../context/constants';
 import Cookies from 'js-cookie';
 import { useSelector } from 'react-redux';
 import Reaction from './Reaction';
-import Tippy from '../utils/tippy/Tippy';
 import MainButton from '../utils/button/MainButton';
 import io from 'socket.io-client';
 import remarkGfm from 'remark-gfm';
+import BlogTippy from './BlogTippy'
 
 const socket = io.connect(apiURL);
 
@@ -247,66 +247,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
                 }
               ></i>
             </div>
-            <Tippy
-              button={
-                <i className={`fa-solid fa-ellipsis ${styles.option}`}></i>
-              }
-              className={styles.menuWrapper}
-            >
-              {user.userId === blog.postedBy._id && (
-                <Link
-                  to={`/edit-blog/${blog.slug}`}
-                  className={styles.menuItem}
-                >
-                  <i className="fa-solid fa-pen"></i>
-                  <span>Sửa bài viết</span>
-                </Link>
-              )}
-              <div data-href={window.location.href} className="fb-share-button">
-                <a
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Ff8clone.tk%2F&amp;src=sdkpreparse"
-                  className={styles.menuItem}
-                >
-                  <i className="fa-brands fa-facebook"></i>
-                  <span>Chia sẻ lên Facebook</span>
-                </a>
-              </div>
-              <a
-                rel="noopener noreferrer"
-                target="_blank"
-                href={`https://twitter.com/share?ref_src=twsrc%5Etfw&url=${window.location.href}`}
-                className={styles.menuItem}
-                data-show-count="false"
-              >
-                <i className="fa-brands fa-twitter"></i>
-                <span>Chia sẻ lên Twitter</span>
-              </a>
-
-              <a
-                href={`mailto:mail@mail.com;body=${window.location.href}`}
-                className={styles.menuItem}
-              >
-                <i className="fa-solid fa-envelope"></i>
-                <span>Chia sẻ tới Email</span>
-              </a>
-              <div
-                className={styles.menuItem}
-                onClick={() =>
-                  navigator.clipboard.writeText(window.location.href)
-                }
-              >
-                <i className="fa-solid fa-link"></i>
-                <span>Sao chép liên kết</span>
-              </div>
-              {user.userId !== blog.postedBy._id && (
-                <div className={styles.menuItem}>
-                  <i className="fa-solid fa-flag"></i>
-                  <span>Báo cáo bài viết</span>
-                </div>
-              )}
-            </Tippy>
+            <BlogTippy blog={blog} />
           </div>
         </div>
         <ReactMarkdown

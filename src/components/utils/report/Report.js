@@ -23,4 +23,26 @@ const reportComment = async (commentId) => {
   }
 };
 
-export { reportComment };
+const reportBlog = async (blogId) => {
+  try {
+    const token = Cookies.get('token');
+    if (!token) return;
+
+    const res = await fetch(`${apiURL}/report/blog`, {
+      method: 'PUT',
+      body: JSON.stringify({ commentId: blogId }),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await res.json();
+    return data.success;
+  } catch (error) {
+    console.log(error.message);
+    return false;
+  }
+};
+
+export { reportComment, reportBlog };

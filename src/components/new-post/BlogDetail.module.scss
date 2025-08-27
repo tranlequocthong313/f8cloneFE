@@ -190,38 +190,6 @@
   }
 }
 
-.menuWrapper {
-  position: absolute;
-  right: 0;
-  top: 40px;
-  width: 230px;
-
-  .menuItem {
-    color: #444;
-    cursor: pointer;
-    display: block;
-    font-size: 14px;
-    padding: 12px 20px;
-    transition: 0.3s;
-    border: none;
-    outline: none;
-    background: #fff;
-
-    &:hover {
-      background-color: #f0f0f0 !important;
-      color: #292929 !important;
-    }
-
-    i {
-      font-size: 16px;
-    }
-
-    span {
-      margin-left: 16px;
-    }
-  }
-}
-
 @media (max-width: 1200px) {
   .colLeft {
     display: none;
