@@ -21,7 +21,7 @@ const Search = () => {
   const searchInputRef = useRef();
 
   const [searchInput, setSearchInput] = useState('');
-  const [tabs, setTabs] = useState(location.pathname);
+  const [tabs, setTabs] = useState('/search/course');
   const [result, setResult] = useState({
     courses: [],
     blogs: [],
