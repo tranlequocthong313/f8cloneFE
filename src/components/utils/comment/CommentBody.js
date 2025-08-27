@@ -39,6 +39,7 @@ const CommentBody = ({
     replies: [],
     commentId: '',
   });
+  const [hoverCommentReaction, setHoverCommentReaction] = useState(null)
 
   const user = useSelector((state) => state.user);
 
@@ -253,6 +254,8 @@ const CommentBody = ({
     return `${styles.commentContent} ${styles.extend}`;
   };
 
+  let hideTimeout
+
   return (
     <>
       {commentData?.map((comment) => (
@@ -317,21 +320,32 @@ const CommentBody = ({
                 <div className={styles.action}>
                   {user.isLoggedIn && (
                     <>
-                      <span
+                      <div
                         className={styles.reactionButton}
                         onClick={() => {
                           console.log('Onclick');
                           reactCommentHandler('Thích', comment._id);
                         }}
+                        onMouseOver={() => {
+                          clearTimeout(hideTimeout)
+                          setHoverCommentReaction(comment)
+                        }}
+                        onMouseOut={() => {
+                          hideTimeout = setTimeout(() => {
+                            setHoverCommentReaction(null)
+                          }, 1500)
+                        }}
                       >
-                        <div className={styles.reaction}>
-                          <CommentReaction
-                            reactCommentHandler={reactCommentHandler}
-                            commentId={comment._id}
-                          />
-                        </div>
+                        {hoverCommentReaction?._id === comment._id &&
+                          <div className={styles.reaction}>
+                            <CommentReaction
+                              reactComment={reactCommentHandler}
+                              commentId={comment._id}
+                            />
+                          </div>
+                        }
                         Thích
-                      </span>
+                      </div>
                       <span className={styles.dot}>.</span>
                     </>
                   )}
@@ -537,13 +551,12 @@ const CommentBody = ({
                           <span
                             className={styles.reactionButton}
                             onClick={() => {
-                              console.log('Onclick');
                               reactCommentHandler('Thích', reply._id);
                             }}
                           >
                             <div className={styles.reaction}>
                               <CommentReaction
-                                reactCommentHandler={reactCommentHandler}
+                                reactComment={reactCommentHandler}
                                 commentId={reply._id}
                               />
                             </div>

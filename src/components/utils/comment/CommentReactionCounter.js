@@ -1,51 +1,42 @@
-import styles from './CommentReactionCounter.module.scss'
-import likeEmoji from '../../../asset/images/likeemoji.png'
-import loveEmoji from '../../../asset/images/loveemoji.png'
-import Haha from '../../../asset/images/hahaemoji.png'
-import wowEmoji from '../../../asset/images/wowemoji.png'
-import cryEmoji from '../../../asset/images/cryemoji.png'
-import angryEmoji from '../../../asset/images/angryemoji.png'
+import styles from './CommentReactionCounter.module.scss';
+import { useMemo } from 'react';
+import { EMOJI_MAP } from '../../../context/constants';
 
 const CommentReactionCounter = ({ showModal, reactData }) => {
-  const checkEmoji = (emoji) => {
-    switch (emoji) {
-      case 'Thích':
-        return { backgroundImage: `url(${likeEmoji})` }
+    const emojies = useMemo(() => {
+        const order = {};
+        const emojies = reactData?.map((r) => r.emoji);
 
-      case 'Yêu Thích':
-        return { backgroundImage: `url(${loveEmoji})` }
+        emojies.forEach((e) => {
+            if (e in order) {
+                order[e]++;
+            } else {
+              order[e] = 1;
+            }
+        });
 
-      case 'Haha':
-        return { backgroundImage: `url(${Haha})` }
+        const entries = Object.entries(order);
+        entries.sort(([, a], [, b]) => -(a - b));
 
-      case 'WoW':
-        return { backgroundImage: `url(${wowEmoji})` }
+        return entries.slice(0, 3).map((entry) => entry[0]);
+    }, [reactData]);
 
-      case 'Buồn':
-        return { backgroundImage: `url(${cryEmoji})` }
+    return (
+        <div className={styles.wrapper} onClick={showModal}>
+            <div className={styles.container}>
+                {emojies?.map((emoji) => (
+                    <div
+                        key={emoji}
+                        className={styles.icon}
+                        style={{ backgroundImage: `url(${EMOJI_MAP[emoji]})` }}
+                    ></div>
+                ))}
+                <div className={styles.count}>
+                    {reactData ? reactData.length : ''}
+                </div>
+            </div>
+        </div>
+    );
+};
 
-      case 'Phẫn':
-        return { backgroundImage: `url(${angryEmoji})` }
-      default:
-        return
-    }
-  }
-
-  return (
-    <div className={styles.wrapper} onClick={showModal}>
-      <div className={styles.container}>
-        {reactData &&
-          reactData?.map((item) => (
-            <div
-              key={item._id}
-              className={styles.icon}
-              style={checkEmoji(item.emoji)}
-            ></div>
-          ))}
-        <div className={styles.count}>{reactData ? reactData.length : ''}</div>
-      </div>
-    </div>
-  )
-}
-
-export default CommentReactionCounter
+export default CommentReactionCounter;
