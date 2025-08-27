@@ -13,16 +13,6 @@ const Support = () => {
               Liên hệ
             </Link>
           </li>
-          <li className={styles.item}>
-            <Link className={styles.link} to="/privacy">
-              Bảo mật
-            </Link>
-          </li>
-          <li className={styles.item}>
-            <Link className={styles.link} to="/terms">
-              Điều khoản
-            </Link>
-          </li>
         </ul>
       </div>
     </div>

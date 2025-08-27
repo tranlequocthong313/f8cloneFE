@@ -22,6 +22,7 @@ const Learning = () => {
         handleIsShowMenuTrack={handleIsShowMenuTrack}
         isShowMenuTrack={isShowMenuTrack}
         loading={loading}
+        episodes={course?.episode} 
       />
     </>
   )
