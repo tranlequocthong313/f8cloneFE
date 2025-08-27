@@ -45,7 +45,7 @@ const About = () => {
       <Container style={{ maxWidth: '100vw', padding: 0 }}>
         <div className={`${styles.wrapper} ${styles.textContent}`}>
           <Container style={{ padding: 0, margin: '0 auto' }}>
-            <Row className={styles.root} style={{ marginTop: 66 }}>
+            <Row className={styles.root} style={{ marginTop: 66, gap: '20px 0' }}>
               <Col md={12} xl={6} style={{ padding: 0 }}>
                 <img
                   alt="Giới thiệu về F8"
