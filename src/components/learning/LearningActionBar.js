@@ -10,7 +10,7 @@ const LearningActionBar = ({
     isShowMenuTrack,
     loading,
 }) => {
-    const { goNextLesson, goPrevLesson, learningLessonId } =
+    const { goNextLesson, goPrevLesson, learningLessonId, learningLesson } =
         useContext(LearningContext);
 
     return (
@@ -34,7 +34,7 @@ const LearningActionBar = ({
                 className={styles.toggleTrackMenu}
                 onClick={handleIsShowMenuTrack}
             >
-                <h4 className={styles.title}>1. Khái niệm kỹ thuật cần biết</h4>
+                <h4 className={styles.title}>{learningLesson?.title}</h4>
                 <button className={styles.toggleButton}>
                     {!isShowMenuTrack && <i className='fa-solid fa-bars'></i>}
                     {isShowMenuTrack && (
@@ -48,7 +48,7 @@ const LearningActionBar = ({
                     button={
                         <div className={styles.toggleTrackMenu}>
                             <h4 className={styles.title}>
-                                1. Khái niệm kỹ thuật cần biết
+                                {learningLesson?.title}
                             </h4>
                             <button className={styles.toggleButton}>
                                 <i className='fa-solid fa-bars'></i>

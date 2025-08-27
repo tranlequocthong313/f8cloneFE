@@ -64,8 +64,6 @@ const MyBlog = () => {
         const myDraftBlogData = await res[0].json();
         const myBlogData = await res[1].json();
 
-        console.log(myDraftBlogData);
-
         setMyDraftBlog(myDraftBlogData);
         setMyBlog(myBlogData);
       } catch (error) {
@@ -116,7 +114,6 @@ const MyBlog = () => {
                       </div>
                     )}
                     {tabs === '/my-post/drafts' &&
-                      myDraftBlog &&
                       myDraftBlog?.map((blog) => (
                         <ul key={blog._id} className={styles.blogList}>
                           <li>
@@ -148,7 +145,6 @@ const MyBlog = () => {
                       </div>
                     )}
                     {tabs === '/my-post/published' &&
-                      myBlog &&
                       myBlog?.map((blog) => (
                         <ul key={blog._id} className={styles.blogList}>
                           <li>
