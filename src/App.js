@@ -130,10 +130,10 @@ function App() {
                 path='/learning/:slug'
                 element={user.isLoggedIn ? <Learning /> : <Auth />}
             />
-            <Route
+            {/* <Route
                 path='/my-course'
                 element={user.isLoggedIn ? <MyCourse /> : <Auth />}
-            />
+            /> */}
             <Route
                 path='/new-post'
                 element={user.isLoggedIn ? <NewPost /> : <Auth />}
