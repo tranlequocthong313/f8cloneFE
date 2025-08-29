@@ -25,6 +25,15 @@ const LearningContextProvider = ({ children }) => {
     const [learningEpisode, setLearningEpisode] = useState(null);
     const [learningLesson, setLearningLesson] = useState(null);
 
+    const getTotalLessonAtCurrentEpisode = (
+        episodes = [],
+        episodeIndex = 0
+    ) => {
+        return episodes
+            ?.slice(0, episodeIndex)
+            ?.reduce((acc, cur) => acc + cur?.lessons?.length, 0);
+    };
+
     useEffect(() => {
         const fetchCourse = async () => {
             if (location.pathname.startsWith('/learning/')) {
@@ -33,7 +42,24 @@ const LearningContextProvider = ({ children }) => {
                     const res = await fetch(`${apiURL}${location.pathname}`);
                     if (!res.ok) throw new Error('Failed to fetch course');
                     const data = await res.json();
-                    setCourse(data);
+                    setCourse({
+                        ...data,
+                        episode: data.episode.map((ep, index) => ({
+                            ...ep,
+                            title: `${index + 1}. ${ep.title}`,
+                            lessons: ep.lessons.map((ls, lsIndex) => ({
+                                ...ls,
+                                title: `${
+                                    getTotalLessonAtCurrentEpisode(
+                                        data.episode,
+                                        index
+                                    ) +
+                                    lsIndex +
+                                    1
+                                }. ${ls.title}`,
+                            })),
+                        })),
+                    });
                 } catch (error) {
                     console.error('Fetch course error:', error.message);
                 } finally {

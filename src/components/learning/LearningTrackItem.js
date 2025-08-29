@@ -45,7 +45,7 @@ const LearningTrackItem = ({ episodes }) => {
 
     if (!episodes) return null;
 
-    return episodes?.map((episode) => (
+    return episodes?.map((episode, index) => (
         <div key={episode.episodeId}>
             <div
                 className={styles.wrapper}
@@ -60,7 +60,7 @@ const LearningTrackItem = ({ episodes }) => {
             </div>
             <Collapse in={open.includes(episode.episodeId)}>
                 <div className={styles.panelBody}>
-                    {episode.lessons?.map((lesson) => (
+                    {episode.lessons?.map((lesson, lessonIndex) => (
                         <div
                             className={style(lesson.learned, lesson._id)}
                             key={lesson._id}

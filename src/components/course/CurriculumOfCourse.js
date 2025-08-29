@@ -42,6 +42,12 @@ const CurriculumOfCourse = ({ episodeList, totalDuration, totalLesson }) => {
         setIsCollapsedCurriculumAll(false);
     };
 
+    const getTotalLessonAtCurrentEpisode = (episodeIndex) => {
+        return episodeList
+            ?.slice(0, episodeIndex)
+            ?.reduce((acc, cur) => acc + cur?.lessons?.length, 0);
+    };
+
     return (
         <div className={styles.curriculumOfCourse}>
             <div className={styles.headerSticky}>
@@ -94,7 +100,10 @@ const CurriculumOfCourse = ({ episodeList, totalDuration, totalLesson }) => {
                                         <div
                                             className={`${styles.floatLeft} ${styles.groupName}`}
                                         >
-                                            <strong>{episode.title}</strong>
+                                            <strong>
+                                                {index + 1}. {'  '}{' '}
+                                                {episode.title}
+                                            </strong>
                                         </div>
                                         <span
                                             className={`floatRight ${styles.timeOfSection}`}
@@ -108,6 +117,9 @@ const CurriculumOfCourse = ({ episodeList, totalDuration, totalLesson }) => {
                                 open={collapsedCurriculum}
                                 episodeId={episode.episodeId}
                                 lessons={episode.lessons}
+                                startIndex={getTotalLessonAtCurrentEpisode(
+                                    index
+                                )}
                             />
                         </div>
                     ))}
