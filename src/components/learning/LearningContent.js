@@ -5,6 +5,13 @@ import LearningVideo from './LearningVideo';
 const LearningContent = ({ isShowMenuTrack, learningLesson }) => {
     const [showComment, setShowComment] = useState(false);
 
+    const getUpdatedAt = () => {
+        if (!learningLesson) return;
+
+        const d = new Date(learningLesson.updatedAt);
+        return `Cập nhật tháng ${d.getMonth() + 1} năm ${d.getFullYear()}`;
+    };
+
     return (
         <div
             className={
@@ -18,7 +25,7 @@ const LearningContent = ({ isShowMenuTrack, learningLesson }) => {
                 <div className={styles.contentTop}>
                     <div className={styles.heading}>
                         <h3>{learningLesson?.title}</h3>
-                        <p>Cập nhật tháng 2 năm 2022</p>
+                        <p>{getUpdatedAt()}</p>
                     </div>
                     <button className={styles.addNoteButton}>
                         <i className='fa-solid fa-plus'></i>

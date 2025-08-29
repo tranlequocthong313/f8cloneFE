@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { useEffect, useState, Suspense, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
 import Header from '../main-layout/nav/Header';
@@ -13,15 +13,24 @@ import MainButton from '../utils/button/MainButton';
 import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { enrollCourse } from '../../actions/userAction';
+import {
+    convertSecondsToHoursMinutes,
+    getTotalSecondsFromYoutubeDuration,
+} from '../../helpers/time';
 
 const Footer = React.lazy(() => import('../main-layout/footer/Footer'));
+
+export const COURSE_LEVEL = {
+    begineer: 'cơ bản',
+    intermediate: 'trung cấp',
+    advance: 'nâng cao',
+};
 
 const CourseSlug = () => {
     const location = useLocation();
     const dispatch = useDispatch();
 
     const [course, setCourse] = useState();
-    const [hasRequire, setHasRequire] = useState(false);
     const [isShowVideoPreviewCourse, setIsShowVideoPreviewCourse] =
         useState(false);
 
@@ -39,8 +48,6 @@ const CourseSlug = () => {
                     signal: controller.signal,
                 });
                 const data = await res.json();
-                const hasRequireKnowledgeForThisCourse = data.require;
-                hasRequireKnowledgeForThisCourse && setHasRequire(true);
                 setCourse(data);
                 document.title = `${data.title} | by F8`;
             } catch (error) {
@@ -68,6 +75,42 @@ const CourseSlug = () => {
         } catch (error) {
             console.log('🚀 ~ handleEnrollCourse ~ error:', error);
         }
+    };
+
+    const totalLesson = useMemo(() => {
+        return course?.episode?.reduce((acc, cur) => {
+            return cur?.lessons?.length + acc;
+        }, 0);
+    }, [course]);
+
+    const totalLearnSeconds = useMemo(() => {
+        return course?.episode?.reduce((totalSeconds, episode) => {
+            return (
+                totalSeconds +
+                episode?.lessons?.reduce((totalSecondsOfEpisodes, lesson) => {
+                    return (
+                        totalSecondsOfEpisodes +
+                        getTotalSecondsFromYoutubeDuration(lesson?.time)
+                    );
+                }, 0)
+            );
+        }, 0);
+    }, [course]);
+
+    const getTotalDuration = () => {
+        const { hours, minutes } =
+            convertSecondsToHoursMinutes(totalLearnSeconds);
+        let result = '';
+
+        if (hours > 0) {
+            result += `${hours} giờ`;
+        }
+
+        if (minutes > 0) {
+            result += ` ${minutes} phút`;
+        }
+
+        return result;
     };
 
     return (
@@ -107,7 +150,11 @@ const CourseSlug = () => {
                                             ></i>
                                             <span>
                                                 Trình độ{' '}
-                                                {course ? course.level : ''}
+                                                {
+                                                    COURSE_LEVEL[
+                                                        course?.level?.toLowerCase()
+                                                    ]
+                                                }
                                             </span>
                                         </li>
                                         <li>
@@ -115,8 +162,9 @@ const CourseSlug = () => {
                                                 className={`${styles.icon} fa-solid fa-film`}
                                             />
                                             <span>
-                                                Tổng số <strong>10</strong> bài
-                                                học
+                                                Tổng số{' '}
+                                                <strong>{totalLesson}</strong>{' '}
+                                                bài học
                                             </span>
                                         </li>
                                         <li>
@@ -125,7 +173,9 @@ const CourseSlug = () => {
                                             ></i>
                                             <span>
                                                 Thời lượng{' '}
-                                                <strong>03 giờ 25 phút</strong>
+                                                <strong>
+                                                    {getTotalDuration()}
+                                                </strong>
                                             </span>
                                         </li>
                                         <li>
@@ -142,20 +192,21 @@ const CourseSlug = () => {
                                 />
                                 <CurriculumOfCourse
                                     episodeList={course?.episode || []}
+                                    totalDuration={getTotalDuration()}
+                                    totalLesson={totalLesson}
                                 />
-                                {hasRequire && (
-                                    <CourseDetail
-                                        topicList={course?.requirement || []}
-                                        title={'Yêu cầu'}
-                                    />
-                                )}
+                                <CourseDetail
+                                    topicList={course?.requirement || []}
+                                    title={'Yêu cầu'}
+                                />
                             </Col>
                             <Col lg={12} xl={4}>
                                 <CourseEnroll
                                     handleEnrollCourse={handleEnrollCourse}
-                                    image={course ? course.image : ''}
                                     showVideo={showVideoPreviewCourse}
-                                    slug={course ? course.slug : ''}
+                                    course={course}
+                                    totalLesson={totalLesson}
+                                    totalDuration={getTotalDuration()}
                                 />
                             </Col>
                         </Row>
