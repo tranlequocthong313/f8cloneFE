@@ -1,4 +1,10 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, {
+    createContext,
+    useState,
+    useEffect,
+    useContext,
+    useMemo,
+} from 'react';
 import {
     useLocation,
     useNavigate,
@@ -66,7 +72,7 @@ const LearningContextProvider = ({ children }) => {
                 episode: lastEpisode,
             });
 
-            return
+            return;
         }
 
         const lesson = episode.lessons.find(
@@ -257,6 +263,21 @@ const LearningContextProvider = ({ children }) => {
         if (result) playVideo(result);
     };
 
+    const totalLessons = useMemo(() => {
+        return course?.episode?.flatMap((ep) => ep.lessons).length;
+    }, [course]);
+
+    const totalCompletedLessons = useMemo(() => {
+        return course?.episode
+            ?.flatMap((ep) => ep.lessons)
+            ?.reduce((acc, cur) => {
+                if (getLessonStatus(cur._id) === 'completed') {
+                    return acc + 1;
+                }
+                return acc;
+            }, 0);
+    }, [course, learningProgress]);
+
     const value = {
         course,
         isShowMenuTrack,
@@ -276,6 +297,8 @@ const LearningContextProvider = ({ children }) => {
         learningLesson,
         learningProgress,
         getLessonStatus,
+        totalLessons,
+        totalCompletedLessons,
     };
 
     return (

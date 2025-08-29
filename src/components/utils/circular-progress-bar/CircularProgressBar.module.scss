@@ -2,32 +2,41 @@
 @import '../../../sass/flexCenter';
 
 .wrapper {
+  position: relative;
   width: 40px;
   height: 40px;
-  border-radius: 50%;
-  @include flexCenter(row);
-  border: 2px solid #d4d4d4;
   margin-left: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  &:hover {
-    background-color: #d4d4d4;
+  .svgCircle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: rotate(-90deg); 
   }
 
   .courseStep {
     text-decoration: none;
+    z-index: 2;
 
     img {
       width: 22px;
       height: 22px;
       object-fit: cover;
+      border-radius: 50%;
     }
   }
 
   .percent {
-    font-weight: 500;
-    line-height: 30px;
+    font-weight: 600;
+    line-height: 32px;
     text-align: center;
     color: #fff;
-    font-size: 12px;
+    font-size: 11px;
+    position: absolute;
+    z-index: 2;
   }
+
 }
