@@ -85,10 +85,7 @@
 
       .playingIcon {
         color: #f05123cc;
-
-        &::before {
-          animation: rotate 5s linear infinite;
-        }
+        animation: rotate 5s linear infinite;
 
         @keyframes rotate {
           from {

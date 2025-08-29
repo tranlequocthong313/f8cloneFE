@@ -6,15 +6,9 @@ import parseDuration from 'youtube-duration-format';
 
 const LearningTrackItem = ({ episodes }) => {
     const [open, setOpen] = useState([]);
-    const [active, setActive] = useState(true);
 
-    const {
-        isShowMenuTrack,
-        handleIsShowMenuTrack,
-        learningLessonId,
-        playVideo,
-        learningEpisode,
-    } = useContext(LearningContext);
+    const { getLessonStatus, learningLessonId, playVideo, learningEpisode } =
+        useContext(LearningContext);
 
     useEffect(() => {
         if (!learningEpisode) return;
@@ -31,15 +25,13 @@ const LearningTrackItem = ({ episodes }) => {
         });
 
     // Style lesson item
-    const style = (learned, id) => {
+    const style = (id) => {
         if (learningLessonId === id) {
             return `${styles.lessonItem} ${styles.active}`;
         }
-        // if (!learned && active !== id) {
-        //     return `${styles.lessonItem} ${styles.locked}`;
-        // } else if (active === id) {
-        //     return `${styles.lessonItem} ${styles.active}`;
-        // }
+        if (getLessonStatus(id) === 'locked') {
+            return `${styles.lessonItem} ${styles.locked}`;
+        }
         return styles.lessonItem;
     };
 
@@ -62,7 +54,7 @@ const LearningTrackItem = ({ episodes }) => {
                 <div className={styles.panelBody}>
                     {episode.lessons?.map((lesson, lessonIndex) => (
                         <div
-                            className={style(lesson.learned, lesson._id)}
+                            className={style(lesson._id)}
                             key={lesson._id}
                             onClick={() =>
                                 playVideo({
@@ -76,9 +68,9 @@ const LearningTrackItem = ({ episodes }) => {
                                 <p>
                                     <i
                                         className={
-                                            active !== lesson._id
+                                            learningLessonId !== lesson._id
                                                 ? 'fa-regular fa-circle-play'
-                                                : `fa-regular fa-compact-disc ${styles.playingIcon}`
+                                                : `fa-solid fa-compact-disc ${styles.playingIcon}`
                                         }
                                     ></i>{' '}
                                     {lesson?.time
@@ -88,16 +80,17 @@ const LearningTrackItem = ({ episodes }) => {
                             </div>
                             <div
                                 className={
-                                    lesson.learned
+                                    getLessonStatus(lesson._id) === 'completed'
                                         ? styles.statusIcon
                                         : `${styles.statusIcon} ${styles.locked}`
                                 }
                             >
-                                {lesson.learned && (
+                                {getLessonStatus(lesson._id) ===
+                                    'completed' && (
                                     <i className='fa-solid fa-circle-check'></i>
                                 )}
-                                {!lesson.learned && active !== lesson._id && (
-                                    <i className='fa-solid fa-clock-five'></i>
+                                {getLessonStatus(lesson._id) === 'locked' && (
+                                    <i className='fa-solid fa-lock'></i>
                                 )}
                             </div>
                         </div>
