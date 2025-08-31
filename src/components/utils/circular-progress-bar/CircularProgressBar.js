@@ -53,7 +53,7 @@ const CircularProgressBar = ({ logo, numberPercent, tooltip, className }) => {
                     </Link>
                 </OverlayTrigger>
             )}
-            <div className={styles.percent}>{numberPercent * 100}%</div>
+            <div className={styles.percent}>{Math.round(numberPercent * 100)}%</div>
         </div>
     );
 };
