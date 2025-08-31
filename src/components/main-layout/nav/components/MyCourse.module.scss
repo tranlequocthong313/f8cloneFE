@@ -76,6 +76,11 @@
     }
   }
 
+  .emptyMessage {
+    font-size: 12;
+    padding: 0 20px;
+  }
+
   .body {
     display: flex;
     padding: 0 20px;
@@ -91,6 +96,7 @@
     .thumb {
       display: flex;
       align-items: center;
+
       img {
         width: 120px;
         min-height: 67px;

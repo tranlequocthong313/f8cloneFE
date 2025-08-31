@@ -78,6 +78,12 @@ const MyCourse = () => {
                         </Link> */}
                     </header>
 
+                    {!courses ||
+                        (!courses.length && (
+                            <p className={styles.emptyMessage}>
+                                Bạn chưa đăng ký khóa học nào
+                            </p>
+                        ))}
                     {courses?.map((course) => (
                         <CourseItem key={course._id} course={course} />
                     ))}

@@ -86,9 +86,18 @@ const LearningContextProvider = ({ children }) => {
     }, [learningProgress, course]);
 
     useEffect(() => {
-        if (!course || !user.isLoggedIn) return;
+        if (!course) return;
         getLearningProgress(course._id);
-    }, [course, user]);
+    }, [course]);
+
+    useEffect(() => {
+        if (!user.isLoggedIn) {
+            setLearningProgress([]);
+            setLearningEpisode(null)
+            setLearningLesson(null)
+            setQuery(null)
+        }
+    }, [user]);
 
     const getLearningProgress = async (courseId) => {
         const token = Cookies.get('token');
