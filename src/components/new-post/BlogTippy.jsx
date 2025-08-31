@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import Tippy from '../utils/tippy/Tippy';
 import styles from './BlogTippy.module.scss';
-import { reportBlog } from '../utils/report/Report';
+import { reportBlog } from '../utils/report/report';
 import { copyToClipboard } from '../../helpers/text';
 import { Link } from 'react-router-dom';
 

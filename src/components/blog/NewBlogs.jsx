@@ -9,7 +9,7 @@ import timeSince from '../utils/timeSince/timeSince';
 import Cookies from 'js-cookie';
 import { useSelector } from 'react-redux';
 import Tippy from '../utils/tippy/Tippy';
-import { reportBlog } from '../utils/report/Report'
+import { reportBlog } from '../utils/report/report'
 import { copyToClipboard } from '../../helpers/text'
 import BlogTippy from '../new-post/BlogTippy'
 
