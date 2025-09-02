@@ -47,7 +47,7 @@ const MobileNav = ({ photoURL }) => {
             </li>
           </ul>
         )}
-        <ul className={styles.list}>
+        {/* <ul className={styles.list}>
           <li
             onClick={() => {
               setActiveTab('/my-course')
@@ -61,7 +61,7 @@ const MobileNav = ({ photoURL }) => {
               <span>Khóa học của tôi</span>
             </Link>
           </li>
-        </ul>
+        </ul> */}
         <ul className={styles.list}>
           <li
             onClick={() => {
@@ -87,7 +87,7 @@ const MobileNav = ({ photoURL }) => {
               <span>Lộ trình</span>
             </Link>
           </li>
-          <li
+          {/* <li
             onClick={() => {
               setActiveTab('courses')
             }}
@@ -99,7 +99,7 @@ const MobileNav = ({ photoURL }) => {
               <i className="fa-solid fa-lightbulb"></i>
               <span>Khóa học</span>
             </Link>
-          </li>
+          </li> */}
           <li
             onClick={() => {
               setActiveTab('blog')

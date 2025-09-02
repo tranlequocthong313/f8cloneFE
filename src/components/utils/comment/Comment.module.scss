@@ -8,7 +8,7 @@
   will-change: transform;
 
   .content {
-    height: 100vh;
+    height: calc(100dvh - 40px);
     overflow-y: auto;
     padding: 0 40px 60px;
     position: relative;
