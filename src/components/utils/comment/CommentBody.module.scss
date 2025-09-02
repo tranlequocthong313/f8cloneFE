@@ -22,6 +22,7 @@
         height: 32px;
         text-align: center;
         width: 100%;
+        object-fit: cover;
       }
     }
   }
@@ -35,6 +36,7 @@
       height: 36px;
       text-align: center;
       width: 100%;
+      object-fit: cover;
     }
   }
 
@@ -166,6 +168,10 @@
           font-size: 13px;
           margin: 0 4px;
 
+          &.active {
+            font-weight: bold;
+          }
+
           .reaction {
             position: absolute;
             top: 16px;
@@ -174,6 +180,7 @@
             transition: 0s;
             transition-delay: 0.5s;
             animation: fadeIn ease 0.3s;
+            z-index: 1;
           }
 
           &:hover {
@@ -197,6 +204,7 @@
         .dot {
           margin: 0 4px 0 4px;
         }
+
         .optionIcon {
           color: #888;
           font-size: 16px;

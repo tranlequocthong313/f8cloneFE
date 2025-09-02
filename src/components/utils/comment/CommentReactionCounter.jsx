@@ -28,7 +28,7 @@ const CommentReactionCounter = ({ showModal, reactData }) => {
                     <div
                         key={emoji}
                         className={styles.icon}
-                        style={{ backgroundImage: `url(${EMOJI_MAP[emoji]})` }}
+                        style={{ backgroundImage: `url(${EMOJI_MAP[emoji]?.icon})` }}
                     ></div>
                 ))}
                 <div className={styles.count}>

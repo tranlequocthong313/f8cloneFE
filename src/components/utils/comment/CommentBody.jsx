@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CommentReaction from './CommentReaction';
-import { apiURL } from '../../../context/constants';
+import { apiURL, EMOJI_MAP } from '../../../context/constants';
 import Cookies from 'js-cookie';
 import { useSelector } from 'react-redux';
 import { reportComment } from '../report/report';
@@ -10,17 +10,21 @@ import CommentReactionCounter from './CommentReactionCounter';
 import noPhotoURL from '../../../asset/images/nobody_m.256x256.jpg';
 import styles from './CommentBody.module.scss';
 import io from 'socket.io-client';
-import Tippy from '../tippy/Tippy';
+import Tippy, { TippyItem } from '../tippy/Tippy';
 import { Link } from 'react-router-dom';
+import { copyToClipboard } from '../../../helpers/text';
+
+const STRING_LENGTH_EXTEND = 350; // Content length > 350 => show extend
 
 const socket = io.connect(apiURL);
 
 const CommentBody = ({
-    commentData,
-    showModalHandler,
-    setCommentData,
+    comments,
+    setComments,
     reportStatusHandler,
-    blogId,
+    showModal,
+    entity,
+    style,
 }) => {
     const [showOption, setShowOption] = useState(null);
     const [showEditInputById, setShowEditInputById] = useState([]);
@@ -34,23 +38,97 @@ const CommentBody = ({
         showExtendButtonOnLongCommentWithId,
         setShowExtendButtonOnLongCommentWithId,
     ] = useState([]);
-    const [showReplyContentById, setShowReplyContentById] = useState([]);
-    const [replyCommentData, setReplyCommentData] = useState({
-        replies: [],
-        commentId: '',
-    });
+    const [showReplyCommentsById, setShowReplyCommentsById] = useState([]);
+    const [repliedComments, setRepliedComments] = useState(null);
+    console.log('🚀 ~ CommentBody ~ repliedComments:', repliedComments);
     const [hoverCommentReaction, setHoverCommentReaction] = useState(null);
 
     const user = useSelector((state) => state.user);
+
+    useEffect(() => {
+        socket.on('edit-comment', (comment) => {
+            console.log('🚀 ~ CommentBody ~ comment:', comment);
+            if (!!comment.parentComment) {
+                const parentCommentId = comment.parentComment;
+                setRepliedComments((prev) => ({
+                    ...prev,
+                    [parentCommentId]: prev[parentCommentId].map((c) => {
+                        if (c._id === comment._id) {
+                            return comment;
+                        }
+                        return c;
+                    }),
+                }));
+            } else {
+                setComments((prev) => {
+                    return prev.map((c) => {
+                        if (c._id === comment._id) {
+                            return comment;
+                        }
+                        return c;
+                    });
+                });
+            }
+        });
+
+        socket.on('post-comment', (comment) => {
+            console.log('🚀 ~ CommentBody ~ comment:', comment);
+            if (!!comment.parentComment) {
+                const parentCommentId = comment.parentComment;
+                setRepliedComments((prev) => ({
+                    ...prev,
+                    [parentCommentId]: [
+                        ...(prev?.[parentCommentId] || []),
+                        comment,
+                    ],
+                }));
+                setComments((prev) => {
+                    return prev.map((c) => {
+                        if (c._id === parentCommentId) {
+                            return {
+                                ...c,
+                                totalReplies: c.totalReplies
+                                    ? c.totalReplies + 1
+                                    : 1,
+                            };
+                        }
+                        return c;
+                    });
+                });
+            } else {
+                setComments((prev) => {
+                    return [comment, ...prev];
+                });
+            }
+        });
+
+        socket.on('delete-comment', (commentId) => {
+            setComments((prev) => {
+                return prev.filter((c) => c._id !== commentId);
+            });
+        });
+    }, []);
+
+    const updateComment = (comment) => {
+        if (!comment) return comment;
+        setComments((prev) => {
+            return prev.map((c) => {
+                if (c._id === comment._id) {
+                    return comment;
+                }
+                return c;
+            });
+        });
+    };
 
     const reactCommentHandler = async (emoji, commentId) => {
         try {
             const token = Cookies.get('token');
             if (!token) return;
 
-            const res = await fetch(`${apiURL}/blog/comment/react`, {
+            const res = await fetch(`${apiURL}/comments/${commentId}/react`, {
                 method: 'PUT',
-                body: JSON.stringify({ emoji, commentId, blogId }),
+                body: JSON.stringify({ emoji }),
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
@@ -58,27 +136,24 @@ const CommentBody = ({
             });
 
             const data = await res.json();
-            console.log(data);
-            setCommentData(data.comments);
-
-            socket.emit('react', data.comments[0]);
+            updateComment(data.comment);
         } catch (error) {
             console.log(error.message);
         }
     };
 
-    const replyCommentHandler = async (commentId) => {
+    const replyCommentHandler = async (parentCommentId) => {
         try {
             const token = Cookies.get('token');
             if (!token) return;
 
-            const res = await fetch(`${apiURL}/blog/comment/reply`, {
-                method: 'PUT',
+            const res = await fetch(`${apiURL}/comments`, {
+                method: 'POST',
                 body: JSON.stringify({
-                    commentId,
+                    ...entity,
+                    parentComment: parentCommentId,
                     content: replyCommentText,
-                    isCode: showCodeReplyInputById.includes(commentId),
-                    blogId,
+                    isCode: showCodeReplyInputById.includes(parentCommentId),
                 }),
                 headers: {
                     'Content-Type': 'application/json',
@@ -86,8 +161,8 @@ const CommentBody = ({
                 },
             });
 
-            const data = await res.json();
-            console.log(data);
+            await res.json();
+            getReplyComment(parentCommentId);
         } catch (error) {
             console.log(error.message);
         }
@@ -98,17 +173,14 @@ const CommentBody = ({
             const token = Cookies.get('token');
             if (!token) return;
 
-            const res = await fetch(`${apiURL}/blog/comment/get-reply`, {
-                method: 'POST',
-                body: JSON.stringify({ commentId, blogId }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const res = await fetch(`${apiURL}/comments/${commentId}`);
 
             const data = await res.json();
-            console.log(data.comments);
+            setRepliedComments((prev) => ({
+                ...prev,
+                [commentId]: data.comments,
+            }));
+            setShowReplyCommentsById((prev) => [...prev, commentId]);
         } catch (error) {
             console.log(error.message);
         }
@@ -119,18 +191,14 @@ const CommentBody = ({
             const token = Cookies.get('token');
             if (!token) return;
 
-            const res = await fetch(`${apiURL}/blog/comment/delete`, {
-                method: 'PUT',
-                body: JSON.stringify({ commentId }),
+            await fetch(`${apiURL}/comments/${commentId}`, {
+                method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
                 },
             });
-
-            const data = await res.json();
-            console.log(data);
-            setCommentData(data.comments);
+            setComments((prev) => prev.filter((c) => c._id !== commentId));
         } catch (error) {
             console.log(error.message);
         }
@@ -141,10 +209,9 @@ const CommentBody = ({
             const token = Cookies.get('token');
             if (!token) return;
 
-            const res = await fetch(`${apiURL}/blog/comment/edit`, {
+            const res = await fetch(`${apiURL}/comments/${commentId}`, {
                 method: 'PUT',
                 body: JSON.stringify({
-                    commentId: commentId,
                     content: editCommentText,
                     isCode: showCodeEditInputById.includes(commentId),
                 }),
@@ -155,8 +222,7 @@ const CommentBody = ({
             });
 
             const data = await res.json();
-            console.log(data);
-            setCommentData(data.comments);
+            updateComment(data.comment);
         } catch (error) {
             console.log(error.message);
         }
@@ -228,7 +294,7 @@ const CommentBody = ({
     };
 
     const copyHandler = (commentId, commentContent) => {
-        navigator.clipboard.writeText(commentContent);
+        copyToClipboard(commentContent);
         setCopyCommentHasCodeById((prev) => {
             return [...prev, commentId];
         });
@@ -237,8 +303,6 @@ const CommentBody = ({
             clearTimeout(timer);
         }, 5000);
     };
-
-    const STRING_LENGTH_EXTEND = 350; // Content length > 350 => show extend
 
     const extendHandler = (commentId) =>
         showExtendButtonOnLongCommentWithId.includes(commentId)
@@ -267,12 +331,22 @@ const CommentBody = ({
         return `${styles.commentContent} ${styles.extend}`;
     };
 
+    const getCurrentUserReactForComment = (comment) => {
+        const react = comment?.reacts?.find(
+            (r) => r.reactedBy === user._id
+        )?.emoji;
+        if (!react) {
+            return null;
+        }
+        return EMOJI_MAP[react];
+    };
+
     let hideTimeout;
 
     return (
         <>
-            {commentData?.map((comment) => (
-                <div key={comment._id}>
+            {comments?.map((comment) => (
+                <div key={comment._id} style={style}>
                     <div className={styles.commentList}>
                         <Link
                             to={`/${comment.postedBy.slug}`}
@@ -354,14 +428,47 @@ const CommentBody = ({
                                     {user.isLoggedIn && (
                                         <>
                                             <div
-                                                className={
-                                                    styles.reactionButton
-                                                }
+                                                className={`
+                                                        ${
+                                                            styles.reactionButton
+                                                        } 
+                                                        ${
+                                                            getCurrentUserReactForComment(
+                                                                comment
+                                                            )
+                                                                ? styles.active
+                                                                : null
+                                                        }
+                                                    `}
+                                                style={{
+                                                    color:
+                                                        getCurrentUserReactForComment(
+                                                            comment
+                                                        )?.color || '#e87a5a',
+                                                }}
                                                 onClick={() => {
-                                                    console.log('Onclick');
-                                                    reactCommentHandler(
-                                                        'Thích',
-                                                        comment._id
+                                                    if (
+                                                        getCurrentUserReactForComment(
+                                                            comment
+                                                        )
+                                                    ) {
+                                                        reactCommentHandler(
+                                                            comment?.reacts?.find(
+                                                                (r) =>
+                                                                    r.reactedBy ===
+                                                                    user._id
+                                                            ).emoji,
+                                                            comment._id
+                                                        );
+                                                    } else {
+                                                        reactCommentHandler(
+                                                            'like',
+                                                            comment._id
+                                                        );
+                                                    }
+                                                    clearTimeout(hideTimeout);
+                                                    setHoverCommentReaction(
+                                                        null
                                                     );
                                                 }}
                                                 onMouseOver={() => {
@@ -389,16 +496,34 @@ const CommentBody = ({
                                                         }
                                                     >
                                                         <CommentReaction
-                                                            reactComment={
-                                                                reactCommentHandler
-                                                            }
+                                                            reactComment={(
+                                                                emoji,
+                                                                commentId
+                                                            ) => {
+                                                                reactCommentHandler(
+                                                                    emoji,
+                                                                    commentId
+                                                                );
+                                                                clearTimeout(
+                                                                    hideTimeout
+                                                                );
+                                                                setHoverCommentReaction(
+                                                                    null
+                                                                );
+                                                            }}
                                                             commentId={
                                                                 comment._id
                                                             }
                                                         />
                                                     </div>
                                                 )}
-                                                Thích
+                                                {getCurrentUserReactForComment(
+                                                    comment
+                                                )
+                                                    ? getCurrentUserReactForComment(
+                                                          comment
+                                                      ).title
+                                                    : 'Thích'}
                                             </div>
                                             <span className={styles.dot}>
                                                 .
@@ -407,7 +532,7 @@ const CommentBody = ({
                                     )}
                                     {comment && comment.reacts.length > 0 && (
                                         <CommentReactionCounter
-                                            showModalHandler={showModalHandler}
+                                            showModal={showModal}
                                             reactData={comment.reacts}
                                         />
                                     )}
@@ -451,7 +576,7 @@ const CommentBody = ({
                                                 {comment.postedBy._id ===
                                                     user.userId && (
                                                     <>
-                                                        <div
+                                                        <TippyItem
                                                             className={
                                                                 styles.optionItem
                                                             }
@@ -466,8 +591,8 @@ const CommentBody = ({
                                                             <span>
                                                                 Sửa bình luận
                                                             </span>
-                                                        </div>
-                                                        <div
+                                                        </TippyItem>
+                                                        <TippyItem
                                                             className={
                                                                 styles.optionItem
                                                             }
@@ -481,12 +606,12 @@ const CommentBody = ({
                                                             <span>
                                                                 Xóa bình luận
                                                             </span>
-                                                        </div>
+                                                        </TippyItem>
                                                     </>
                                                 )}
                                                 {comment.postedBy._id !==
                                                     user.userId && (
-                                                    <div
+                                                    <TippyItem
                                                         className={
                                                             styles.optionItem
                                                         }
@@ -502,7 +627,7 @@ const CommentBody = ({
                                                         <span>
                                                             Báo cáo bình luận
                                                         </span>
-                                                    </div>
+                                                    </TippyItem>
                                                 )}
                                             </Tippy>
                                         </>
@@ -513,7 +638,6 @@ const CommentBody = ({
                             {showReplyInputById.includes(comment._id) &&
                                 !showEditInputById.includes(comment._id) && (
                                     <CommentInputSecondary
-                                        userPhotoURL={user.photoURL}
                                         showCode={showCodeReplyInputById.includes(
                                             comment._id
                                         )}
@@ -523,17 +647,28 @@ const CommentBody = ({
                                                 'reply'
                                             )
                                         }
-                                        replyCommentHandler={() =>
-                                            replyCommentHandler(comment._id)
-                                        }
-                                        showInputHandler={() =>
+                                        replyComment={() => {
+                                            replyCommentHandler(
+                                                comment.parentComment ||
+                                                    comment._id
+                                            );
+                                            setShowReplyInputById((prev) =>
+                                                prev.filter(
+                                                    (item) =>
+                                                        item !== comment._id
+                                                )
+                                            );
+                                        }}
+                                        showInput={() =>
                                             showInputHandler(
                                                 comment._id,
                                                 'reply'
                                             )
                                         }
                                         buttonText={'Trả lời'}
-                                        firstString={comment.postedBy.fullName}
+                                        prefixContent={
+                                            comment.postedBy.fullName
+                                        }
                                         onInput={(e) =>
                                             setReplyCommentText(
                                                 e.target.innerText
@@ -546,7 +681,6 @@ const CommentBody = ({
                             {showEditInputById.includes(comment._id) &&
                                 !showReplyInputById.includes(comment._id) && (
                                     <CommentInputSecondary
-                                        userPhotoURL={user.photoURL}
                                         showCode={showCodeEditInputById.includes(
                                             comment._id
                                         )}
@@ -556,15 +690,15 @@ const CommentBody = ({
                                                 'edit'
                                             )
                                         }
-                                        showInputHandler={() =>
+                                        showInput={() =>
                                             showInputHandler(
                                                 comment._id,
                                                 'edit'
                                             )
                                         }
                                         buttonText={'Sửa'}
-                                        firstString={comment.content}
-                                        editCommentHandler={() =>
+                                        prefixContent={comment.content}
+                                        editComment={() =>
                                             editCommentHandler(comment._id)
                                         }
                                         onInput={(e) =>
@@ -577,22 +711,36 @@ const CommentBody = ({
                                 )}
                         </div>
                     </div>
-                    {comment.replies.length > 0 && (
+                    {!!comment?.totalReplies && (
                         <>
                             <div className={styles.viewReplies}>
                                 <span
                                     className={styles.repliesCount}
-                                    onClick={() => getReplyComment(comment._id)}
+                                    onClick={() => {
+                                        const commentId = comment._id;
+                                        if (
+                                            showReplyCommentsById.includes(
+                                                commentId
+                                            )
+                                        ) {
+                                            return setShowReplyCommentsById(
+                                                (prev) =>
+                                                    prev.filter(
+                                                        (c) => c !== commentId
+                                                    )
+                                            );
+                                        }
+                                        getReplyComment(commentId);
+                                    }}
                                 >
-                                    {comment._id !==
-                                        replyCommentData.commentId && (
+                                    {!showReplyCommentsById.includes(
+                                        comment._id
+                                    ) ? (
                                         <>
-                                            {`Xem ${comment.replies.length} câu trả lời`}
+                                            {`Xem ${comment.totalReplies} câu trả lời`}
                                             <i className='fa-solid fa-chevron-down'></i>
                                         </>
-                                    )}
-                                    {comment._id ===
-                                        replyCommentData.commentId && (
+                                    ) : (
                                         <>
                                             {`Ẩn câu trả lời`}
                                             <i className='fa-solid fa-chevron-up'></i>
@@ -601,362 +749,16 @@ const CommentBody = ({
                                 </span>
                             </div>
 
-                            {comment._id === replyCommentData.commentId &&
-                                replyCommentData.replies?.map((reply) => (
-                                    <div
-                                        className={`${styles.commentList} ${styles.replyCommentList}`}
-                                        key={reply._id}
-                                    >
-                                        <Link
-                                            to={`/${reply.postedBy.slug}`}
-                                            className={styles.avatar}
-                                        >
-                                            <img
-                                                src={reply.postedBy.photoURL}
-                                                alt=''
-                                            />
-                                        </Link>
-                                        <div className={styles.commentBody}>
-                                            <div
-                                                className={styleCommentContent(
-                                                    reply._id,
-                                                    reply.content
-                                                )}
-                                            >
-                                                <div>
-                                                    <Link
-                                                        to={`/${reply.postedBy.slug}`}
-                                                    >
-                                                        <h5>
-                                                            {
-                                                                reply.postedBy
-                                                                    .fullName
-                                                            }
-                                                        </h5>
-                                                    </Link>
-                                                    {!reply.isCode && (
-                                                        <span>
-                                                            {reply.content}
-                                                        </span>
-                                                    )}
-                                                    {reply.isCode && (
-                                                        <pre tabIndex='0'>
-                                                            <div
-                                                                className={
-                                                                    styles.copyWrapper
-                                                                }
-                                                                onClick={() =>
-                                                                    copyHandler(
-                                                                        reply._id,
-                                                                        reply.content
-                                                                    )
-                                                                }
-                                                            >
-                                                                <button
-                                                                    className={
-                                                                        styles.copyButton
-                                                                    }
-                                                                >
-                                                                    {!copyCommentHasCodeById.includes(
-                                                                        reply._id
-                                                                    )
-                                                                        ? 'Copy'
-                                                                        : 'Copied!'}
-                                                                </button>
-                                                            </div>
-                                                            {reply.content}
-                                                        </pre>
-                                                    )}
-                                                    {reply.content.length >
-                                                        STRING_LENGTH_EXTEND && (
-                                                        <div
-                                                            className={
-                                                                styles.extendButton
-                                                            }
-                                                            onClick={() =>
-                                                                extendHandler(
-                                                                    reply._id
-                                                                )
-                                                            }
-                                                        >
-                                                            <strong>
-                                                                {!showExtendButtonOnLongCommentWithId.includes(
-                                                                    reply._id
-                                                                )
-                                                                    ? 'Mở rộng'
-                                                                    : 'Thu nhỏ'}
-                                                            </strong>
-                                                            <i
-                                                                className={
-                                                                    !showExtendButtonOnLongCommentWithId.includes(
-                                                                        reply._id
-                                                                    )
-                                                                        ? 'fa-regular fa-chevron-down'
-                                                                        : 'fa-regular fa-chevron-up'
-                                                                }
-                                                            ></i>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            <div
-                                                className={styles.commentAction}
-                                            >
-                                                <div className={styles.action}>
-                                                    <span
-                                                        className={
-                                                            styles.reactionButton
-                                                        }
-                                                        onClick={() => {
-                                                            reactCommentHandler(
-                                                                'Thích',
-                                                                reply._id
-                                                            );
-                                                        }}
-                                                    >
-                                                        <div
-                                                            className={
-                                                                styles.reaction
-                                                            }
-                                                        >
-                                                            <CommentReaction
-                                                                reactComment={
-                                                                    reactCommentHandler
-                                                                }
-                                                                commentId={
-                                                                    reply._id
-                                                                }
-                                                            />
-                                                        </div>
-                                                        Thích
-                                                    </span>
-                                                    {reply.reacts.length >
-                                                        0 && (
-                                                        <CommentReactionCounter
-                                                            showModalHandler={
-                                                                showModalHandler
-                                                            }
-                                                            reactData={
-                                                                reply.reacts
-                                                            }
-                                                        />
-                                                    )}
-                                                    <span
-                                                        className={styles.dot}
-                                                    >
-                                                        .
-                                                    </span>
-                                                    <span
-                                                        className={
-                                                            styles.reactionButton
-                                                        }
-                                                        onClick={() =>
-                                                            showInputHandler(
-                                                                reply._id,
-                                                                'reply'
-                                                            )
-                                                        }
-                                                    >
-                                                        Trả lời
-                                                    </span>
-                                                    <span
-                                                        className={styles.dot}
-                                                    >
-                                                        .
-                                                    </span>
-                                                    <span
-                                                        className={
-                                                            styles.createdAt
-                                                        }
-                                                    >
-                                                        {timeSince(
-                                                            reply.createdAt
-                                                        )}
-                                                    </span>
-                                                    <span
-                                                        className={
-                                                            styles.optionButton
-                                                        }
-                                                        onClick={() =>
-                                                            showOptionHandler(
-                                                                reply._id
-                                                            )
-                                                        }
-                                                    >
-                                                        <span
-                                                            className={
-                                                                styles.dot
-                                                            }
-                                                        >
-                                                            .
-                                                        </span>
-                                                        <span
-                                                            className={
-                                                                styles.optionIcon
-                                                            }
-                                                        >
-                                                            <i className='fa-solid fa-ellipsis'></i>
-                                                        </span>
-                                                        {showOption ===
-                                                            reply._id && (
-                                                            <div
-                                                                className={
-                                                                    styles.optionWrapper
-                                                                }
-                                                            >
-                                                                <ul
-                                                                    className={
-                                                                        styles.list
-                                                                    }
-                                                                >
-                                                                    {reply
-                                                                        .postedBy
-                                                                        ._id ===
-                                                                        user.userId && (
-                                                                        <>
-                                                                            <li
-                                                                                onClick={() => {
-                                                                                    showInputHandler(
-                                                                                        reply._id,
-                                                                                        'edit'
-                                                                                    );
-                                                                                }}
-                                                                            >
-                                                                                <i className='fa-solid fa-pen'></i>
-                                                                                <span>
-                                                                                    Sửa
-                                                                                    bình
-                                                                                    luận
-                                                                                </span>
-                                                                            </li>
-                                                                            <li
-                                                                                onClick={() =>
-                                                                                    deleteComment(
-                                                                                        reply._id
-                                                                                    )
-                                                                                }
-                                                                            >
-                                                                                <i className='fa-solid fa-trash'></i>
-                                                                                x
-                                                                                <span>
-                                                                                    Xóa
-                                                                                    bình
-                                                                                    luận
-                                                                                </span>
-                                                                            </li>
-                                                                        </>
-                                                                    )}
-                                                                    {reply
-                                                                        .postedBy
-                                                                        ._id !==
-                                                                        user.userId && (
-                                                                        <li
-                                                                            onClick={() =>
-                                                                                reportStatusHandler(
-                                                                                    reportComment(
-                                                                                        reply._id
-                                                                                    )
-                                                                                )
-                                                                            }
-                                                                        >
-                                                                            <i className='fa-solid fa-flag'></i>
-                                                                            <span>
-                                                                                Báo
-                                                                                cáo
-                                                                                bình
-                                                                                luận
-                                                                            </span>
-                                                                        </li>
-                                                                    )}
-                                                                </ul>
-                                                            </div>
-                                                        )}
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            {showReplyInputById.includes(
-                                                reply._id
-                                            ) &&
-                                                !showEditInputById.includes(
-                                                    reply._id
-                                                ) && (
-                                                    <CommentInputSecondary
-                                                        userPhotoURL={
-                                                            user.photoURL
-                                                        }
-                                                        showCode={showCodeReplyInputById.includes(
-                                                            reply._id
-                                                        )}
-                                                        setShowCodeEditReply={() =>
-                                                            showCodeEditReplyHandler(
-                                                                reply._id,
-                                                                'reply'
-                                                            )
-                                                        }
-                                                        showInputHandler={() =>
-                                                            showInputHandler(
-                                                                reply._id,
-                                                                'reply'
-                                                            )
-                                                        }
-                                                        buttonText={'Trả lời'}
-                                                        firstString={
-                                                            reply.postedBy
-                                                                .fullName
-                                                        }
-                                                    />
-                                                )}
-
-                                            {showEditInputById.includes(
-                                                reply._id
-                                            ) &&
-                                                !showReplyInputById.includes(
-                                                    reply._id
-                                                ) && (
-                                                    <CommentInputSecondary
-                                                        userPhotoURL={
-                                                            user.photoURL
-                                                        }
-                                                        showCode={showCodeEditInputById.includes(
-                                                            reply._id
-                                                        )}
-                                                        setShowCodeEditReply={() =>
-                                                            showCodeEditReplyHandler(
-                                                                reply._id,
-                                                                'edit'
-                                                            )
-                                                        }
-                                                        showInputHandler={() =>
-                                                            showInputHandler(
-                                                                reply._id,
-                                                                'edit'
-                                                            )
-                                                        }
-                                                        buttonText={'Sửa'}
-                                                        firstString={
-                                                            reply.content
-                                                        }
-                                                        editCommentHandler={() =>
-                                                            editCommentHandler(
-                                                                reply._id
-                                                            )
-                                                        }
-                                                        onInput={(e) =>
-                                                            setEditCommentText(
-                                                                e.target
-                                                                    .innerText
-                                                            )
-                                                        }
-                                                        editComment={
-                                                            editCommentText
-                                                        }
-                                                    />
-                                                )}
-                                        </div>
-                                    </div>
-                                ))}
+                            {showReplyCommentsById.includes(comment._id) && (
+                                <CommentBody
+                                    comments={repliedComments[comment._id]}
+                                    setComments={() => {}}
+                                    reportStatusHandler={reportStatusHandler}
+                                    showModal={showModal}
+                                    entity={entity}
+                                    style={{ margin: '0 0 5px 49px' }}
+                                />
+                            )}
                         </>
                     )}
                 </div>

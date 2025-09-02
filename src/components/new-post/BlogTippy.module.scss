@@ -10,17 +10,12 @@
   .menuItem {
     color: #444;
     cursor: pointer;
-    display: block;
     font-size: 14px;
     padding: 12px 20px;
-    transition: 0.3s;
-    border: none;
-    outline: none;
-    background: #fff;
 
-    &:hover {
-      background-color: #f0f0f0 !important;
-      color: #292929 !important;
+    &:active {
+      background: #d2d5d8;
+      color: #444;
     }
 
     i {

@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import Tippy from '../utils/tippy/Tippy';
+import Tippy, { TippyItem } from '../utils/tippy/Tippy';
 import styles from './BlogTippy.module.scss';
 import { reportBlog } from '../utils/report/report';
 import { copyToClipboard } from '../../helpers/text';
@@ -10,19 +10,25 @@ const BlogTippy = ({ blog }) => {
 
     return (
         <Tippy
-            button={<i className={`fa-solid fa-ellipsis ${styles.option}`}></i>}
+            button={
+                <i
+                    style={{ cursor: 'pointer' }}
+                    className={`fa-solid fa-ellipsis ${styles.option}`}
+                ></i>
+            }
             className={styles.menuWrapper}
         >
             {user.userId === blog.postedBy._id && (
-                <Link
+                <TippyItem
+                    as={Link}
                     to={`/edit-blog/${blog.slug}`}
                     className={styles.menuItem}
                 >
                     <i className='fa-solid fa-pen'></i>
                     <span>Sửa bài viết</span>
-                </Link>
+                </TippyItem>
             )}
-            <a
+            <TippyItem
                 rel='noopener noreferrer'
                 target='_blank'
                 href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
@@ -32,8 +38,8 @@ const BlogTippy = ({ blog }) => {
             >
                 <i className='fa-brands fa-facebook'></i>
                 <span>Chia sẻ lên Facebook</span>
-            </a>
-            <a
+            </TippyItem>
+            <TippyItem
                 rel='noopener noreferrer'
                 target='_blank'
                 href={`https://twitter.com/share?ref_src=twsrc%5Etfw&url=${window.location.origin}/blog/${blog.slug}`}
@@ -42,9 +48,9 @@ const BlogTippy = ({ blog }) => {
             >
                 <i className='fa-brands fa-twitter'></i>
                 <span>Chia sẻ lên Twitter</span>
-            </a>
+            </TippyItem>
 
-            <a
+            <TippyItem
                 href={`mailto:mail@mail.com?subject=${encodeURIComponent(
                     'Check out this blog'
                 )}&body=${encodeURIComponent(
@@ -54,8 +60,8 @@ const BlogTippy = ({ blog }) => {
             >
                 <i className='fa-solid fa-envelope'></i>
                 <span>Chia sẻ tới Email</span>
-            </a>
-            <div
+            </TippyItem>
+            <TippyItem
                 className={styles.menuItem}
                 onClick={() =>
                     copyToClipboard(
@@ -65,15 +71,15 @@ const BlogTippy = ({ blog }) => {
             >
                 <i className='fa-solid fa-link'></i>
                 <span>Sao chép liên kết</span>
-            </div>
+            </TippyItem>
             {user.userId !== blog.postedBy._id && (
-                <div
+                <TippyItem
                     className={styles.menuItem}
                     onClick={() => reportBlog(blog._id)}
                 >
                     <i className='fa-solid fa-flag'></i>
                     <span>Báo cáo bài viết</span>
-                </div>
+                </TippyItem>
             )}
         </Tippy>
     );

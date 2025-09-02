@@ -7,7 +7,7 @@ import wowEmoji from '../asset/images/wowemoji.png';
 
 const apiURL =
     process.env.NODE_ENV !== 'production'
-        ? 'http://localhost:5000'
+        ? 'http://192.168.1.176:5000'
         : 'https://f8clonebe.onrender.com';
 
 const COUNTRY_CODE = {
@@ -944,32 +944,48 @@ const COUNTRY_CODE = {
 const EMOJIES = [
     {
         title: 'Thích',
+        value: 'like',
         icon: likeEmoji,
+        color: '#0866ff',
     },
     {
         title: 'Yêu Thích',
+        value: 'love',
         icon: loveEmoji,
+        color: '#f33e58',
     },
     {
         title: 'Haha',
+        value: 'haha',
         icon: hahaEmoji,
+        color: '#f7b125',
     },
     {
         title: 'WoW',
+        value: 'wow',
         icon: wowEmoji,
+        color: '#f7b125',
     },
     {
         title: 'Buồn',
+        value: 'sad',
         icon: cryEmoji,
+        color: '#f7b125',
     },
     {
         title: 'Phẫn Nộ',
+        value: 'angry',
         icon: angryEmoji,
+        color: '#e9710f',
     },
 ];
 
 const EMOJI_MAP = EMOJIES.reduce((acc, cur) => {
-    acc[cur.title] = cur.icon;
+    acc[cur.value] = {
+        icon: cur.icon,
+        title: cur.title,
+        color: cur.color,
+    };
     return acc;
 }, {});
 

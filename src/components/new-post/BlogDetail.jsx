@@ -13,11 +13,8 @@ import Cookies from 'js-cookie';
 import { useSelector } from 'react-redux';
 import Reaction from './Reaction';
 import MainButton from '../utils/button/MainButton';
-import io from 'socket.io-client';
 import remarkGfm from 'remark-gfm';
 import BlogTippy from './BlogTippy';
-
-const socket = io.connect(apiURL);
 
 const BlogDetail = ({ blog, blogHighlight }) => {
     const user = useSelector((state) => state.user);
@@ -26,30 +23,9 @@ const BlogDetail = ({ blog, blogHighlight }) => {
     const [likeCount, setLikeCount] = useState(blog.likes);
     const [isLike, setIsLike] = useState(blog.likes.includes(user.userId));
     const [isShowComment, setIsShowComment] = useState(false);
-    const [commentData, setCommentData] = useState(blog.comments);
     const [bookmarkData, setBookmarkData] = useState(null);
     const [isShowVerifyBar, setIsShowVerifyBar] = useState(false);
     const [tags, setTags] = useState(null);
-
-    useEffect(() => {
-        socket.on('react', (comment) => {
-            console.log("🚀 ~ BlogDetail ~ comment:", comment)
-            setCommentData((prev) => {
-                return prev.map((c) => {
-                    if (c._id === comment._id) {
-                        return comment;
-                    }
-                    return c;
-                });
-            });
-        });
-
-        socket.on('comment', (comment) => {
-            setCommentData((prev) => {
-                return [comment, ...prev];
-            });
-        });
-    }, []);
 
     useEffect(() => {
         document.body.style.overflow = isShowComment ? 'hidden' : 'overlay';
@@ -226,13 +202,11 @@ const BlogDetail = ({ blog, blogHighlight }) => {
                     <p className={styles.userTitle}>{blog.postedBy.bio}</p>
                     <hr />
                     <Reaction
-                        commentData={commentData}
                         isLike={isLike}
                         likeCount={likeCount.length}
                         like={like}
                         setShowComment={() => setIsShowComment(true)}
                         blogId={blog._id}
-                        setCommentData={setCommentData}
                     />
                 </div>
             </Col>
@@ -282,13 +256,11 @@ const BlogDetail = ({ blog, blogHighlight }) => {
                     remarkPlugins={[remarkGfm]}
                 />
                 <Reaction
-                    commentData={commentData}
                     isLike={isLike}
                     likeCount={likeCount.length}
                     like={like}
                     setShowComment={() => setIsShowComment(true)}
                     blogId={blog._id}
-                    setCommentData={setCommentData}
                 />
                 {blog.tags && (
                     <div className={styles.tags}>
