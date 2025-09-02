@@ -110,6 +110,19 @@ const CommentBody = ({
                         (c) => c._id !== commentId
                     ),
                 }));
+                setComments((prev) => {
+                    return prev.map((c) => {
+                        if (c._id === parentCommentId) {
+                            return {
+                                ...c,
+                                totalReplies: c.totalReplies
+                                    ? c.totalReplies - 1
+                                    : c.totalReplies,
+                            };
+                        }
+                        return c;
+                    });
+                });
             } else {
                 setComments((prev) => {
                     return prev.filter((c) => c._id !== commentId);
