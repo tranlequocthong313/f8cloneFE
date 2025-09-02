@@ -102,10 +102,19 @@ const CommentBody = ({
             }
         });
 
-        socket.on('delete-comment', (commentId) => {
-            setComments((prev) => {
-                return prev.filter((c) => c._id !== commentId);
-            });
+        socket.on('delete-comment', ({ commentId, parentCommentId }) => {
+            if (parentCommentId) {
+                setRepliedComments((prev) => ({
+                    ...prev,
+                    [parentCommentId]: prev[parentCommentId].filter(
+                        (c) => c._id !== commentId
+                    ),
+                }));
+            } else {
+                setComments((prev) => {
+                    return prev.filter((c) => c._id !== commentId);
+                });
+            }
         });
     }, []);
 
@@ -198,7 +207,6 @@ const CommentBody = ({
                     Authorization: `Bearer ${token}`,
                 },
             });
-            setComments((prev) => prev.filter((c) => c._id !== commentId));
         } catch (error) {
             console.log(error.message);
         }
@@ -342,6 +350,8 @@ const CommentBody = ({
     };
 
     let hideTimeout;
+
+    console.log('comments', comments);
 
     return (
         <>

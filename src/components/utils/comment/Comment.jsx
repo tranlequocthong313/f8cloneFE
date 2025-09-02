@@ -91,15 +91,13 @@ const Comment = ({ entity }) => {
                 >
                     <CommentHeader comments={comments} />
                     {user.isLoggedIn && <CommentInput entity={entity} />}
-                    {comments.length > 0 && (
-                        <CommentBody
-                            comments={comments}
-                            showModal={setShowModal}
-                            setComments={setComments}
-                            reportStatusHandler={handleReportStatus}
-                            entity={entity}
-                        />
-                    )}
+                    <CommentBody
+                        comments={comments}
+                        showModal={setShowModal}
+                        setComments={setComments}
+                        reportStatusHandler={handleReportStatus}
+                        entity={entity}
+                    />
                 </div>
                 {visible && (
                     <ScrollToTop
