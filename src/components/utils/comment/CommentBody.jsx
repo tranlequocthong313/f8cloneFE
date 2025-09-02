@@ -40,14 +40,14 @@ const CommentBody = ({
     ] = useState([]);
     const [showReplyCommentsById, setShowReplyCommentsById] = useState([]);
     const [repliedComments, setRepliedComments] = useState(null);
-    console.log('🚀 ~ CommentBody ~ repliedComments:', repliedComments);
     const [hoverCommentReaction, setHoverCommentReaction] = useState(null);
 
     const user = useSelector((state) => state.user);
 
+    console.log('comments', comments, repliedComments)
+
     useEffect(() => {
         socket.on('edit-comment', (comment) => {
-            console.log('🚀 ~ CommentBody ~ comment:', comment);
             if (!!comment.parentComment) {
                 const parentCommentId = comment.parentComment;
                 setRepliedComments((prev) => ({
@@ -63,7 +63,10 @@ const CommentBody = ({
                 setComments((prev) => {
                     return prev.map((c) => {
                         if (c._id === comment._id) {
-                            return comment;
+                            return {
+                                ...c,
+                                ...comment,
+                            };
                         }
                         return c;
                     });
@@ -72,7 +75,6 @@ const CommentBody = ({
         });
 
         socket.on('post-comment', (comment) => {
-            console.log('🚀 ~ CommentBody ~ comment:', comment);
             if (!!comment.parentComment) {
                 const parentCommentId = comment.parentComment;
                 setRepliedComments((prev) => ({
@@ -148,7 +150,7 @@ const CommentBody = ({
             const token = Cookies.get('token');
             if (!token) return;
 
-            const res = await fetch(`${apiURL}/comments/${commentId}/react`, {
+            await fetch(`${apiURL}/comments/${commentId}/react`, {
                 method: 'PUT',
                 body: JSON.stringify({ emoji }),
                 headers: {
@@ -156,9 +158,6 @@ const CommentBody = ({
                     Authorization: `Bearer ${token}`,
                 },
             });
-
-            const data = await res.json();
-            updateComment(data.comment);
         } catch (error) {
             console.log(error.message);
         }
@@ -335,11 +334,6 @@ const CommentBody = ({
                   commentId,
               ]);
 
-    const showOptionHandler = (commentId) =>
-        showOption === commentId
-            ? setShowOption(null)
-            : setShowOption(commentId);
-
     const styleCommentContent = (commentId, commentContent) => {
         if (commentContent.length < STRING_LENGTH_EXTEND) {
             return styles.commentContent;
@@ -363,8 +357,6 @@ const CommentBody = ({
     };
 
     let hideTimeout;
-
-    console.log('comments', comments);
 
     return (
         <>

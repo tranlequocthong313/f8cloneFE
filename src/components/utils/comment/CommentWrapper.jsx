@@ -1,6 +1,7 @@
 import styles from './CommentWrapper.module.scss';
 import Comment from './Comment';
 import VerticalModal from '../vertical-modal/VerticalModal';
+import { memo } from 'react'
 
 const CommentWrapper = ({ button, entity }) => {
     return (
@@ -15,4 +16,4 @@ const CommentWrapper = ({ button, entity }) => {
     );
 };
 
-export default CommentWrapper;
+export default memo(CommentWrapper);
