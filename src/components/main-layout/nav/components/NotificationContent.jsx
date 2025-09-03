@@ -33,7 +33,7 @@ const ContentMapping = {
         />
     ),
     react_comment_blog: ({ n }) => {
-        const reacts = n?.entity && n?.entity?.reacts;
+        const reacts = n?.subject && n?.subject?.reacts;
         const reaction = reacts?.find((r) => r.reactedBy === n?.sender?._id);
         const isLike = reaction.emoji === 'like';
         return (
@@ -51,12 +51,13 @@ const ContentMapping = {
 };
 
 const SlugMapping = {
-    like_blog: (n) => `/blog/${n?.entity?.slug}`,
-    comment_blog: (n) => `/blog/${n?.entity?.slug}?commentId=${n?.entity?._id}`,
+    like_blog: (n) => `/blog/${n?.subject?.slug}`,
+    comment_blog: (n) =>
+        `/blog/${n?.subject?.slug}?commentId=${n?.subject?._id}`,
     reply_comment_blog: (n) =>
-        `/blog/${n?.entity?.slug}?commentId=${n?.entity?._id}&parentCommentId=${n?.entity?.parentComment}`,
+        `/blog/${n?.subject?.entity?.slug}?commentId=${n?.subject?._id}&parentCommentId=${n?.subject?.parentComment}`,
     react_comment_blog: (n) =>
-        `/blog/${n?.entity?.slug}?commentId=${n?.entity?._id}&parentCommentId=${n?.entity?.parentComment}`,
+        `/blog/${n?.subject?.entity?.slug}?commentId=${n?.subject?._id}&parentCommentId=${n?.subject?.parentComment}`,
     system: '#',
 };
 
