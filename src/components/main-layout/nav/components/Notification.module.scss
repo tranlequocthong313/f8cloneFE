@@ -114,6 +114,11 @@
 
 .body {
   display: flex;
+
+  .emptyMessage {
+    font-size: 12;
+    padding: 0 20px;
+  }
 }
 
 .avatar {

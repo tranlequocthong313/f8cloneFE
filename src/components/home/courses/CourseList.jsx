@@ -7,7 +7,7 @@ const CourseList = ({ courses, path }) => {
   const user = useSelector((state) => state.user)
 
   return (
-    <ScrollHorizontal path={'courses'}>
+    <ScrollHorizontal>
       {courses?.map((course) => (
         <CourseItem key={course._id} course={course} path={path} />
       ))}

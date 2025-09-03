@@ -150,25 +150,13 @@ const Notification = () => {
                             seen={seen}
                         />
                     ))}
-                    <TippyItem className={`${styles.item} ${styles.noSeen}`}>
-                        <div className={styles.avatar}>
-                            <img alt='' src={f8logo} />
-                        </div>
-                        <div className={styles.content}>
-                            <div>
-                                Chào mừng{' '}
-                                <span className={styles.name}>
-                                    Thống Trần Lê Quốc{' '}
-                                </span>
-                                đã gia nhập F8. Hãy luôn đam mê, kiên trì và
-                                theo đuổi mục tiêu tới cùng bạn nhé ❤️
-                            </div>
-                            <div className={styles.createdTime}>
-                                vài giây trước
-                            </div>
-                        </div>
-                    </TippyItem>
                 </ul>
+                {!notifications ||
+                    (!notifications.length && (
+                        <p className={styles.emptyMessage}>
+                            Bạn chưa đăng ký khóa học nào
+                        </p>
+                    ))}
             </div>
         </Tippy>
     );

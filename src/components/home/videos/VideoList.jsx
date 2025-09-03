@@ -8,7 +8,7 @@ const VideoList = (props) => {
   const user = useSelector((state) => state.user)
 
   return (
-    <ScrollHorizontal path={'videos'}>
+    <ScrollHorizontal>
       {props.videos?.map((video) => (
         <VideoItem key={video.videoId} video={video} />
       ))}
