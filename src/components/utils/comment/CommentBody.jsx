@@ -94,6 +94,14 @@ const CommentBody = ({
         } catch (error) {
             console.log(error.message);
         }
+
+        setReplyCommentText('');
+        setShowReplyInputById((prev) =>
+            prev.filter((item) => item !== commentId)
+        );
+        setShowCodeReplyInputById((prev) =>
+            prev.filter((item) => item !== commentId)
+        );
     };
 
     const getReplyComment = async (commentId) => {
@@ -575,12 +583,6 @@ const CommentBody = ({
                                                 comment.parentComment ||
                                                     comment._id,
                                                 comment._id
-                                            );
-                                            setShowReplyInputById((prev) =>
-                                                prev.filter(
-                                                    (item) =>
-                                                        item !== comment._id
-                                                )
                                             );
                                         }}
                                         showInput={() =>
