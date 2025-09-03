@@ -28,10 +28,9 @@
   box-shadow: 0 -4px 32px rgba($color: #000000, $alpha: 0.2);
   color: #1d2129;
   margin: 0;
-  overflow: hidden;
   width: 400px;
   z-index: 9999;
-  overflow-y: scroll;
+  overflow-y: auto;
   position: absolute;
   max-height: 68vh;
   top: 40px;
@@ -43,6 +42,7 @@
     opacity: 0;
     top: 0;
   }
+
   to {
     opacity: 1;
     top: 100%;
@@ -70,9 +70,16 @@
     }
   }
 
+  &:active {
+    .markAllItem {
+      background-color: #e9ecef;
+      color: #1e2125;
+    }
+  }
+
   &:hover {
     .markAllItem {
-      background-color: #f3f3f4;
+      background-color: #e9ecef;
     }
   }
 
@@ -81,6 +88,7 @@
       opacity: 0;
       right: -100%;
     }
+
     to {
       opacity: 1;
       right: 0;
@@ -126,21 +134,22 @@
   list-style-type: none;
   padding: 0;
   margin: 0;
+  max-width: 100%;
 
   a {
     text-decoration: none;
   }
 
   .item {
-    padding: 8px 36px 8px 12px;
+    padding: 8px 12px;
     cursor: default;
     background-color: #fff;
     transition: background-color 0.3s;
-    margin: 0 8px;
     border-radius: 10px;
     display: flex;
     flex-direction: row;
     align-items: center;
+    max-width: 100%;
 
     &:hover {
       background-color: #1618230d;
@@ -181,8 +190,12 @@
   color: $text-color;
   flex: 1 1;
 
-  .name {
+  .title {
     font-weight: 600;
+  }
+
+  .description {
+    text-wrap: wrap;
   }
 }
 

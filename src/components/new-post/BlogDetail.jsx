@@ -53,28 +53,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
             data.likes.length === 0
                 ? setLikeCount([])
                 : setLikeCount(data.likes);
-            addNotification(data);
             console.log(data);
-        } catch (error) {
-            console.log(error.message);
-        }
-    };
-
-    const addNotification = async (data) => {
-        try {
-            await fetch(`${apiURL}/notification/new-notification`, {
-                method: 'POST',
-                body: JSON.stringify({
-                    description: 'đã yêu thích bài viết của bạn.',
-                    slug: data.slug,
-                    notifiedBy: user.userId,
-                    sendFor:
-                        user.userId === data.postedBy ? null : data.postedBy,
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
         } catch (error) {
             console.log(error.message);
         }

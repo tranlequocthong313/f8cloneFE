@@ -127,35 +127,12 @@ const Modal = ({ blogContent }) => {
 
             const data = await res.json();
 
-            user.userId !== process.env.REACT_APP_ADMIN_ID &&
-                addNotification(data);
             dispatchAndNavigate(data);
             setShowModal(false);
         } catch (error) {
             console.log(error.message);
         } finally {
             setLoading(false);
-        }
-    };
-
-    const addNotification = async (data) => {
-        try {
-            await fetch(`${apiURL}/notification/new-notification`, {
-                method: 'POST',
-                body: JSON.stringify({
-                    description: 'đang chờ được xét duyệt',
-                    slug: data.blog.slug,
-                    title: data.blog.title,
-                    image: data.blog.image,
-                    notifiedBy: data.blog.postedBy,
-                    sendFor: process.env.REACT_APP_ADMIN_ID,
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-        } catch (error) {
-            console.log(error.message);
         }
     };
 
