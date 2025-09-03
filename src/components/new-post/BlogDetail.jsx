@@ -20,8 +20,8 @@ const BlogDetail = ({ blog, blogHighlight }) => {
     const user = useSelector((state) => state.user);
     const navigate = useNavigate();
 
-    const [likeCount, setLikeCount] = useState(blog.likes);
-    const [isLike, setIsLike] = useState(blog.likes.includes(user.userId));
+    const [likeCount, setLikeCount] = useState(blog?.likes || []);
+    const [isLike, setIsLike] = useState(blog?.likes?.includes(user.userId));
     const [isShowComment, setIsShowComment] = useState(false);
     const [bookmarkData, setBookmarkData] = useState(null);
     const [isShowVerifyBar, setIsShowVerifyBar] = useState(false);
@@ -168,7 +168,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
 
     return (
         <Row className={styles.wrapper}>
-            {!blog.isVerified && user.isAdmin && !isShowVerifyBar && (
+            {!blog?.isVerified && user.isAdmin && !isShowVerifyBar && (
                 <div className={styles.verifyBar}>
                     <MainButton
                         primary={true}
@@ -186,7 +186,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
                     </MainButton>
                 </div>
             )}
-            {!blog.isVerified && !user.isAdmin && (
+            {!blog?.isVerified && !user.isAdmin && (
                 <div className={styles.verifyBar}>
                     <i>
                         <i className='fa-solid fa-clock'></i>
@@ -197,51 +197,51 @@ const BlogDetail = ({ blog, blogHighlight }) => {
             <Col xl={2} className={styles.colLeft}>
                 <div className={styles.aside}>
                     <h4 className={styles.fullName}>
-                        {blog.postedBy.fullName}
+                        {blog?.postedBy?.fullName}
                     </h4>
-                    <p className={styles.userTitle}>{blog.postedBy.bio}</p>
+                    <p className={styles.userTitle}>{blog?.postedBy?.bio}</p>
                     <hr />
                     <Reaction
                         isLike={isLike}
-                        likeCount={likeCount.length}
+                        likeCount={likeCount?.length}
                         like={like}
                         setShowComment={() => setIsShowComment(true)}
-                        blogId={blog._id}
+                        blog={blog}
                     />
                 </div>
             </Col>
             <Col md={12} lg={12} xl={6} className={styles.colRight}>
-                <h3 className={styles.heading}>{blog.title}</h3>
+                <h3 className={styles.heading}>{blog?.title}</h3>
                 <div className={styles.header}>
                     <div className={styles.user}>
-                        <Link to={`/${blog.postedBy.slug}`}>
+                        <Link to={`/${blog?.postedBy?.slug}`}>
                             <Image
-                                src={blog.postedBy.photoURL}
+                                src={blog?.postedBy?.photoURL}
                                 className={styles.avatar}
                             />
                         </Link>
                         <div className={styles.info}>
-                            <Link to={`/${blog.postedBy.slug}`}>
+                            <Link to={`/${blog?.postedBy?.slug}`}>
                                 <p className={styles.name}>
-                                    {blog.postedBy.fullName}
+                                    {blog?.postedBy?.fullName}
                                 </p>
                             </Link>
                             <p className={styles.time}>
-                                {timeSince(blog.createdAt)}{' '}
+                                {timeSince(blog?.createdAt)}{' '}
                                 <span className={styles.dot}>.</span>
-                                {blog.readingTime} phút đọc
+                                {blog?.readingTime} phút đọc
                             </p>
                         </div>
                     </div>
                     <div className={styles.actions}>
                         <div
                             className={styles.bookmark}
-                            onClick={() => bookmark(blog._id)}
+                            onClick={() => bookmark(blog?._id)}
                         >
                             <i
                                 className={
                                     bookmarkData &&
-                                    bookmarkData.includes(blog._id)
+                                    bookmarkData.includes(blog?._id)
                                         ? `${styles.bookmarkActive} fa-solid fa-bookmark`
                                         : 'fa-regular fa-bookmark'
                                 }
@@ -251,7 +251,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
                     </div>
                 </div>
                 <ReactMarkdown
-                    children={blog.content}
+                    children={blog?.content}
                     className={styles.MarkdownParser}
                     remarkPlugins={[remarkGfm]}
                 />
@@ -260,11 +260,11 @@ const BlogDetail = ({ blog, blogHighlight }) => {
                     likeCount={likeCount.length}
                     like={like}
                     setShowComment={() => setIsShowComment(true)}
-                    blogId={blog._id}
+                    blog={blog}
                 />
-                {blog.tags && (
+                {blog?.tags && (
                     <div className={styles.tags}>
-                        {blog.tags?.map((tag) => (
+                        {blog?.tags?.map((tag) => (
                             <Link to={`/blog/tag/${tag}`} key={tag}>
                                 {tag}
                             </Link>
@@ -273,8 +273,8 @@ const BlogDetail = ({ blog, blogHighlight }) => {
                 )}
 
                 <BlogSameAuthor
-                    postedBy={blog.postedBy._id}
-                    blogId={blog._id}
+                    postedBy={blog?.postedBy?._id}
+                    blogId={blog?._id}
                 />
                 <BlogHighlights blogHighlight={blogHighlight} />
                 {tags && tags.length > 0 && <Topics tags={tags} />}

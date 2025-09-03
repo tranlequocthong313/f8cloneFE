@@ -18,7 +18,7 @@ const BlogTippy = ({ blog }) => {
             }
             className={styles.menuWrapper}
         >
-            {user.userId === blog.postedBy._id && (
+            {user.userId === blog?.postedBy?._id && (
                 <TippyItem
                     as={Link}
                     to={`/edit-blog/${blog.slug}`}
@@ -72,10 +72,10 @@ const BlogTippy = ({ blog }) => {
                 <i className='fa-solid fa-link'></i>
                 <span>Sao chép liên kết</span>
             </TippyItem>
-            {user.userId !== blog.postedBy._id && (
+            {user.userId !== blog?.postedBy?._id && (
                 <TippyItem
                     className={styles.menuItem}
-                    onClick={() => reportBlog(blog._id)}
+                    onClick={() => reportBlog(blog?._id)}
                 >
                     <i className='fa-solid fa-flag'></i>
                     <span>Báo cáo bài viết</span>

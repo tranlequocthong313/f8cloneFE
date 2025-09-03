@@ -1,16 +1,9 @@
 import React from 'react';
-import VerticalModal from '../utils/vertical-modal/VerticalModal';
 
 import styles from './Reaction.module.scss';
 import CommentWrapper from '../utils/comment/CommentWrapper';
 
-const Reaction = ({
-    isLike,
-    like,
-    setShowComment,
-    likeCount,
-    blogId,
-}) => {
+const Reaction = ({ isLike, like, setShowComment, likeCount, blog }) => {
     return (
         <div className={styles.reaction}>
             <div className={styles.reactButton} onClick={like}>
@@ -31,11 +24,11 @@ const Reaction = ({
                         onClick={setShowComment}
                     >
                         <i className='fa-regular fa-comment'></i>
-                        {/* <span>{commentData.length}</span> */}
+                        <span>{blog?.totalComments}</span>
                     </div>
                 }
                 entity={{
-                    entityId: blogId,
+                    entityId: blog?._id,
                     type: 'blog',
                 }}
             />
