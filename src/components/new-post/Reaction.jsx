@@ -29,7 +29,7 @@ const Reaction = ({ isLike, like, setShowComment, likeCount, blog }) => {
                 }
                 entity={{
                     entityId: blog?._id,
-                    type: 'blog',
+                    type: 'blogs',
                 }}
             />
         </div>

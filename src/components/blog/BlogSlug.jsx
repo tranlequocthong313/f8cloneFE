@@ -59,12 +59,12 @@ const BlogSlug = () => {
             }));
         };
 
-        socket.on('blog-post-comment', handlePost);
-        socket.on('blog-delete-comment', handleDelete);
+        socket.on('blogs-post-comment', handlePost);
+        socket.on('blogs-delete-comment', handleDelete);
 
         return () => {
-            socket.off('blog-post-comment', handlePost);
-            socket.off('blog-delete-comment', handleDelete);
+            socket.off('blogs-post-comment', handlePost);
+            socket.off('blogs-delete-comment', handleDelete);
         };
     }, [blog?._id]);
 
