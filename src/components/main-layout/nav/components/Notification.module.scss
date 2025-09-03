@@ -211,18 +211,8 @@
   color: $primary-color;
 }
 
-// @media (max-width: 1023px) {
-//   .wrapper {
-//     width: 520px !important;
-//     max-width: 84vw !important;
-//     // transform: translate3d(-480px, 6px, 0px) !important;
-//   }
-// }
-
-// @media (max-width: 739px) {
-//   .wrapper {
-//     width: 520px !important;
-//     max-width: 94vw !important;
-//     // transform: translate3d(-320px, 6px, 0px) !important;
-//   }
-// }
+@media (max-width: 739px) {
+  .wrapper {
+    max-width: 360px;
+  }
+}

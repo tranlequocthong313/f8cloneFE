@@ -354,12 +354,12 @@ const About = () => {
                 </p>
 
                 <CareerList jobs={jobs} xl={6} />
-
+{/* 
                 <button className={styles.viewMoreJobs}>
                   <div>
                     <span>Tìm hiểu thêm</span>
                   </div>
-                </button>
+                </button> */}
               </div>
             </Col>
           </Row>
