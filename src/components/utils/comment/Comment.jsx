@@ -9,6 +9,9 @@ import MainToast from '../toast/MainToast';
 import ScrollToTop from '../scroll/ScrollToTop';
 import Cookies from 'js-cookie';
 import { apiURL } from '../../../context/constants';
+import io from 'socket.io-client';
+
+const socket = io.connect(apiURL);
 
 const Comment = ({ entity }) => {
     const user = useSelector((state) => state.user);
@@ -21,6 +24,94 @@ const Comment = ({ entity }) => {
     });
     const [visible, setVisible] = useState(false);
     const [comments, setComments] = useState([]);
+    const [repliedComments, setRepliedComments] = useState(null);
+
+    useEffect(() => {
+        socket.on('edit-comment', (comment) => {
+            if (!!comment.parentComment) {
+                const parentCommentId = comment.parentComment;
+                setRepliedComments((prev) => ({
+                    ...prev,
+                    [parentCommentId]: prev[parentCommentId].map((c) => {
+                        if (c._id === comment._id) {
+                            return comment;
+                        }
+                        return c;
+                    }),
+                }));
+            } else {
+                setComments((prev) => {
+                    return prev.map((c) => {
+                        if (c._id === comment._id) {
+                            return {
+                                ...c,
+                                ...comment,
+                            };
+                        }
+                        return c;
+                    });
+                });
+            }
+        });
+
+        socket.on('post-comment', (comment) => {
+            if (!!comment.parentComment) {
+                const parentCommentId = comment.parentComment;
+                setRepliedComments((prev) => ({
+                    ...prev,
+                    [parentCommentId]: [
+                        ...(prev?.[parentCommentId] || []),
+                        comment,
+                    ],
+                }));
+                setComments((prev) => {
+                    return prev.map((c) => {
+                        if (c._id === parentCommentId) {
+                            return {
+                                ...c,
+                                totalReplies: c.totalReplies
+                                    ? c.totalReplies + 1
+                                    : 1,
+                            };
+                        }
+                        return c;
+                    });
+                });
+            } else {
+                setComments((prev) => {
+                    return [comment, ...prev];
+                });
+            }
+        });
+
+        socket.on('delete-comment', ({ commentId, parentCommentId }) => {
+            if (parentCommentId) {
+                setRepliedComments((prev) => ({
+                    ...prev,
+                    [parentCommentId]: prev[parentCommentId].filter(
+                        (c) => c._id !== commentId
+                    ),
+                }));
+                setComments((prev) => {
+                    return prev.map((c) => {
+                        if (c._id === parentCommentId) {
+                            return {
+                                ...c,
+                                totalReplies: c.totalReplies
+                                    ? c.totalReplies - 1
+                                    : c.totalReplies,
+                            };
+                        }
+                        return c;
+                    });
+                });
+            } else {
+                setComments((prev) => {
+                    return prev.filter((c) => c._id !== commentId);
+                });
+            }
+        });
+    }, []);
 
     useEffect(() => {
         if (!entity) return;
@@ -92,11 +183,13 @@ const Comment = ({ entity }) => {
                     <CommentHeader comments={comments} />
                     {user.isLoggedIn && <CommentInput entity={entity} />}
                     <CommentBody
-                        comments={comments}
                         showModal={setShowModal}
-                        setComments={setComments}
                         reportStatusHandler={handleReportStatus}
                         entity={entity}
+                        comments={comments}
+                        setComments={setComments}
+                        setRepliedComments={setRepliedComments}
+                        repliedComments={repliedComments}
                     />
                 </div>
                 {visible && (

@@ -8,7 +8,6 @@ const CommentInputSecondary = ({
     showCode,
     showInput,
     buttonText,
-    prefixContent,
     editComment,
     replyComment,
     onInput,
@@ -34,24 +33,11 @@ const CommentInputSecondary = ({
                     className={styles.commentInput}
                     ref={contentEditableRef}
                     showCode={showCode}
-                >
-                    <>
-                        <span
-                            className={
-                                buttonText !== 'Sửa'
-                                    ? styles.replyUserName
-                                    : styles.editComment
-                            }
-                        >
-                            {prefixContent}
-                        </span>
-                        <span>&nbsp;</span>
-                    </>
-                </ContentEditable>
+                />
                 {!showCode && (
                     <div
                         className={styles.commentCode}
-                        onClick={setShowCodeEditReply}
+                        onClick={() => setShowCodeEditReply(true)}
                     >
                         <i className='fa-solid fa-code'></i>
                         <span>Chèn code</span>
@@ -63,7 +49,7 @@ const CommentInputSecondary = ({
                         className={styles.cancel}
                         onClick={() => {
                             showInput();
-                            setShowCodeEditReply();
+                            setShowCodeEditReply(false);
                         }}
                     >
                         Hủy

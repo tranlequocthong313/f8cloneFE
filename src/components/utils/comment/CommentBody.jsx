@@ -7,26 +7,23 @@ import { reportComment } from '../report/report';
 import CommentInputSecondary from './CommentInputSecondary';
 import timeSince from '../timeSince/timeSince';
 import CommentReactionCounter from './CommentReactionCounter';
-import noPhotoURL from '../../../asset/images/nobody_m.256x256.jpg';
 import styles from './CommentBody.module.scss';
-import io from 'socket.io-client';
 import Tippy, { TippyItem } from '../tippy/Tippy';
 import { Link } from 'react-router-dom';
 import { copyToClipboard } from '../../../helpers/text';
 
 const STRING_LENGTH_EXTEND = 350; // Content length > 350 => show extend
 
-const socket = io.connect(apiURL);
-
 const CommentBody = ({
     comments,
     setComments,
+    repliedComments,
+    setRepliedComments,
     reportStatusHandler,
     showModal,
     entity,
     style,
 }) => {
-    const [showOption, setShowOption] = useState(null);
     const [showEditInputById, setShowEditInputById] = useState([]);
     const [showReplyInputById, setShowReplyInputById] = useState([]);
     const [showCodeEditInputById, setShowCodeEditInputById] = useState([]);
@@ -39,99 +36,9 @@ const CommentBody = ({
         setShowExtendButtonOnLongCommentWithId,
     ] = useState([]);
     const [showReplyCommentsById, setShowReplyCommentsById] = useState([]);
-    const [repliedComments, setRepliedComments] = useState(null);
     const [hoverCommentReaction, setHoverCommentReaction] = useState(null);
 
     const user = useSelector((state) => state.user);
-
-    console.log('comments', comments, repliedComments)
-
-    useEffect(() => {
-        socket.on('edit-comment', (comment) => {
-            if (!!comment.parentComment) {
-                const parentCommentId = comment.parentComment;
-                setRepliedComments((prev) => ({
-                    ...prev,
-                    [parentCommentId]: prev[parentCommentId].map((c) => {
-                        if (c._id === comment._id) {
-                            return comment;
-                        }
-                        return c;
-                    }),
-                }));
-            } else {
-                setComments((prev) => {
-                    return prev.map((c) => {
-                        if (c._id === comment._id) {
-                            return {
-                                ...c,
-                                ...comment,
-                            };
-                        }
-                        return c;
-                    });
-                });
-            }
-        });
-
-        socket.on('post-comment', (comment) => {
-            if (!!comment.parentComment) {
-                const parentCommentId = comment.parentComment;
-                setRepliedComments((prev) => ({
-                    ...prev,
-                    [parentCommentId]: [
-                        ...(prev?.[parentCommentId] || []),
-                        comment,
-                    ],
-                }));
-                setComments((prev) => {
-                    return prev.map((c) => {
-                        if (c._id === parentCommentId) {
-                            return {
-                                ...c,
-                                totalReplies: c.totalReplies
-                                    ? c.totalReplies + 1
-                                    : 1,
-                            };
-                        }
-                        return c;
-                    });
-                });
-            } else {
-                setComments((prev) => {
-                    return [comment, ...prev];
-                });
-            }
-        });
-
-        socket.on('delete-comment', ({ commentId, parentCommentId }) => {
-            if (parentCommentId) {
-                setRepliedComments((prev) => ({
-                    ...prev,
-                    [parentCommentId]: prev[parentCommentId].filter(
-                        (c) => c._id !== commentId
-                    ),
-                }));
-                setComments((prev) => {
-                    return prev.map((c) => {
-                        if (c._id === parentCommentId) {
-                            return {
-                                ...c,
-                                totalReplies: c.totalReplies
-                                    ? c.totalReplies - 1
-                                    : c.totalReplies,
-                            };
-                        }
-                        return c;
-                    });
-                });
-            } else {
-                setComments((prev) => {
-                    return prev.filter((c) => c._id !== commentId);
-                });
-            }
-        });
-    }, []);
 
     const updateComment = (comment) => {
         if (!comment) return comment;
@@ -163,7 +70,7 @@ const CommentBody = ({
         }
     };
 
-    const replyCommentHandler = async (parentCommentId) => {
+    const replyCommentHandler = async (parentCommentId, commentId) => {
         try {
             const token = Cookies.get('token');
             if (!token) return;
@@ -174,7 +81,7 @@ const CommentBody = ({
                     ...entity,
                     parentComment: parentCommentId,
                     content: replyCommentText,
-                    isCode: showCodeReplyInputById.includes(parentCommentId),
+                    isCode: showCodeReplyInputById.includes(commentId),
                 }),
                 headers: {
                     'Content-Type': 'application/json',
@@ -284,11 +191,11 @@ const CommentBody = ({
         );
     };
 
-    const showCodeEditReplyHandler = (commentId, option) => {
+    const showCodeEditReplyHandler = (commentId, option, showCode) => {
         const isReply = showCodeReplyInputById.includes(commentId);
         const isEdit = showCodeEditInputById.includes(commentId);
 
-        if (option === 'reply' && !isReply && !isEdit) {
+        if (option === 'reply' && !isReply && !isEdit && showCode) {
             setShowCodeReplyInputById((prev) => [...prev, commentId]);
         } else if (option === 'reply' && !isReply && isEdit) {
             setShowCodeReplyInputById((prev) => [...prev, commentId]);
@@ -656,16 +563,18 @@ const CommentBody = ({
                                         showCode={showCodeReplyInputById.includes(
                                             comment._id
                                         )}
-                                        setShowCodeEditReply={() =>
+                                        setShowCodeEditReply={(showCode) =>
                                             showCodeEditReplyHandler(
                                                 comment._id,
-                                                'reply'
+                                                'reply',
+                                                showCode
                                             )
                                         }
                                         replyComment={() => {
                                             replyCommentHandler(
                                                 comment.parentComment ||
-                                                    comment._id
+                                                    comment._id,
+                                                comment._id
                                             );
                                             setShowReplyInputById((prev) =>
                                                 prev.filter(
@@ -681,9 +590,6 @@ const CommentBody = ({
                                             )
                                         }
                                         buttonText={'Trả lời'}
-                                        prefixContent={
-                                            comment.postedBy.fullName
-                                        }
                                         onInput={(e) =>
                                             setReplyCommentText(
                                                 e.target.innerText
@@ -699,10 +605,11 @@ const CommentBody = ({
                                         showCode={showCodeEditInputById.includes(
                                             comment._id
                                         )}
-                                        setShowCodeEditReply={() =>
+                                        setShowCodeEditReply={(showCode) =>
                                             showCodeEditReplyHandler(
                                                 comment._id,
-                                                'edit'
+                                                'edit',
+                                                showCode
                                             )
                                         }
                                         showInput={() =>
@@ -712,7 +619,6 @@ const CommentBody = ({
                                             )
                                         }
                                         buttonText={'Sửa'}
-                                        prefixContent={comment.content}
                                         editComment={() =>
                                             editCommentHandler(comment._id)
                                         }
@@ -768,6 +674,8 @@ const CommentBody = ({
                                 <CommentBody
                                     comments={repliedComments[comment._id]}
                                     setComments={() => {}}
+                                    setRepliedComments={setRepliedComments}
+                                    repliedComments={repliedComments}
                                     reportStatusHandler={reportStatusHandler}
                                     showModal={showModal}
                                     entity={entity}
