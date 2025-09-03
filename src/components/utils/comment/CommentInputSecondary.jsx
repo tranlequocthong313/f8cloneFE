@@ -17,6 +17,8 @@ const CommentInputSecondary = ({
     const user = useSelector((state) => state.user);
     const contentEditableRef = useRef();
 
+    const isEditing = buttonText === 'Sửa';
+
     useEffect(() => {
         const isEmptyCommentInput = commentInput.length === 0;
         if (isEmptyCommentInput) contentEditableRef.current.innerText = '';
@@ -27,6 +29,7 @@ const CommentInputSecondary = ({
             <div className={styles.comment}>
                 <img src={user.photoURL} alt='' />
                 <ContentEditable
+                    onSubmit={isEditing ? editComment : replyComment}
                     text={'Bình luận công khai...'}
                     onInput={onInput}
                     maxLength={'3000'}
@@ -60,9 +63,7 @@ const CommentInputSecondary = ({
                                 ? `${styles.submit} ${styles.active}`
                                 : styles.submit
                         }
-                        onClick={
-                            buttonText === 'Sửa' ? editComment : replyComment
-                        }
+                        onClick={isEditing ? editComment : replyComment}
                     >
                         {buttonText}
                     </button>

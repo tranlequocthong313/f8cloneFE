@@ -16,7 +16,7 @@ const CommentInput = ({ entity }) => {
 
     const user = useSelector((state) => state.user);
 
-    const [showSubmit, setShowSubmit] = useState(false);
+    const [showSubmit, setShowSubmit] = useState(true);
     const [showCode, setShowCode] = useState(false);
     const [commentInput, setCommentInput] = useState('');
 
@@ -56,6 +56,7 @@ const CommentInput = ({ entity }) => {
             <img src={user?.photoURL} alt='' />
             <div onClick={() => setShowSubmit(true)}>
                 <ContentEditable
+                    onSubmit={submitComment}
                     text={'Viết bình luận của bạn...'}
                     onInput={(e) => setCommentInput(e.target.innerText)}
                     maxLength={'3000'}
