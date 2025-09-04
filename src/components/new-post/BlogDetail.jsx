@@ -15,6 +15,9 @@ import Reaction from './Reaction';
 import MainButton from '../utils/button/MainButton';
 import remarkGfm from 'remark-gfm';
 import BlogTippy from './BlogTippy';
+import io from 'socket.io-client';
+
+const socket = io.connect(apiURL);
 
 const BlogDetail = ({ blog, blogHighlight }) => {
     const user = useSelector((state) => state.user);
@@ -26,6 +29,17 @@ const BlogDetail = ({ blog, blogHighlight }) => {
     const [bookmarkData, setBookmarkData] = useState(null);
     const [isShowVerifyBar, setIsShowVerifyBar] = useState(false);
     const [tags, setTags] = useState(null);
+
+    useEffect(() => {
+        const handleLikeSocket = (b) => {
+            if (b._id !== blog._id) return;
+            setLikeCount(b.likes);
+        };
+
+        socket.on('like_blog', handleLikeSocket);
+
+        return () => socket.off('like_blog', handleLikeSocket);
+    }, [blog]);
 
     useEffect(() => {
         document.body.style.overflow = isShowComment ? 'hidden' : 'overlay';
@@ -40,7 +54,7 @@ const BlogDetail = ({ blog, blogHighlight }) => {
             const token = Cookies.get('token');
             if (!token) return navigate('/login');
 
-            const res = await fetch(`${apiURL}/blog/like`, {
+            await fetch(`${apiURL}/blog/like`, {
                 method: 'PUT',
                 body: JSON.stringify({ blogId: blog._id }),
                 headers: {
@@ -48,12 +62,6 @@ const BlogDetail = ({ blog, blogHighlight }) => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-
-            const data = await res.json();
-            data.likes.length === 0
-                ? setLikeCount([])
-                : setLikeCount(data.likes);
-            console.log(data);
         } catch (error) {
             console.log(error.message);
         }
