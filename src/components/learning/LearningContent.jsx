@@ -72,7 +72,7 @@ const LearningContent = ({ isShowMenuTrack, learningLesson }) => {
                     }
                     entity={{
                         entityId: learningLesson?._id,
-                        type: 'courses',
+                        type: 'lessons',
                     }}
                 />
             </div>

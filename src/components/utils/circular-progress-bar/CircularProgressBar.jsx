@@ -3,7 +3,12 @@ import { Link } from 'react-router-dom';
 import { Image, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import styles from './CircularProgressBar.module.scss';
 
-const CircularProgressBar = ({ logo, numberPercent, tooltip, className }) => {
+const CircularProgressBar = ({
+    logo,
+    numberPercent = 0,
+    tooltip,
+    className,
+}) => {
     const radius = 18;
     const stroke = 2;
     const normalizedRadius = radius - stroke * 0.5;
@@ -53,7 +58,9 @@ const CircularProgressBar = ({ logo, numberPercent, tooltip, className }) => {
                     </Link>
                 </OverlayTrigger>
             )}
-            <div className={styles.percent}>{Math.round(numberPercent * 100)}%</div>
+            <div className={styles.percent}>
+                {Math.round(numberPercent * 100)}%
+            </div>
         </div>
     );
 };

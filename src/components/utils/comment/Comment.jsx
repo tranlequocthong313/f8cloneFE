@@ -56,7 +56,7 @@ const Comment = ({ entity }) => {
 
         socket.on('post-comment', (comment) => {
             if (!!comment.parentComment) {
-                const parentCommentId = comment.parentComment;
+                const parentCommentId = comment.parentComment._id;
                 setRepliedComments((prev) => ({
                     ...prev,
                     [parentCommentId]: [

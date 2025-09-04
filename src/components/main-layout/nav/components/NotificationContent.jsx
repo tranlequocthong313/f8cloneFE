@@ -20,19 +20,25 @@ const ContentMapping = {
             description={'đã thích bài viết của bạn.'}
         />
     ),
-    comment_blog: ({ n }) => (
-        <CommonContent
-            title={n?.sender?.fullName}
-            description={'đã bình luận bài viết của bạn.'}
-        />
-    ),
-    reply_comment_blog: ({ n }) => (
+    comment: ({ n }) => {
+        const isBlog = n.subjectModel === 'blogs' ? true : false;
+        const description = isBlog
+            ? 'đã bình luận bài viết của bạn.'
+            : 'đã bình luận trong khóa học.';
+        return (
+            <CommonContent
+                title={n?.sender?.fullName}
+                description={description}
+            />
+        );
+    },
+    reply_comment: ({ n }) => (
         <CommonContent
             title={n?.sender?.fullName}
             description={'đã phản hồi bình luận của bạn.'}
         />
     ),
-    react_comment_blog: ({ n }) => {
+    react_comment: ({ n }) => {
         const reacts = n?.subject && n?.subject?.reacts;
         const reaction = reacts?.find((r) => r.reactedBy === n?.sender?._id);
         const isLike = reaction.emoji === 'like';
@@ -52,12 +58,24 @@ const ContentMapping = {
 
 const SlugMapping = {
     like_blog: (n) => `/blog/${n?.subject?.slug}`,
-    comment_blog: (n) =>
-        `/blog/${n?.subject?.slug}?commentId=${n?.subject?._id}`,
-    reply_comment_blog: (n) =>
-        `/blog/${n?.subject?.entity?.slug}?commentId=${n?.subject?._id}&parentCommentId=${n?.subject?.parentComment}`,
-    react_comment_blog: (n) =>
-        `/blog/${n?.subject?.entity?.slug}?commentId=${n?.subject?._id}&parentCommentId=${n?.subject?.parentComment}`,
+    comment: (n) => {
+        const isBlog = n.subjectModel === 'blogs' ? true : false;
+        return isBlog
+            ? `/blog/${n?.subject?.slug}?commentId=${n?.subject?._id}`
+            : `/learning/${n?.subject?.courseSlug}?id=${n?.subject?._id}`;
+    },
+    reply_comment: (n) => {
+        const isBlog = n?.subject?.entityModel === 'blogs' ? true : false;
+        return isBlog
+            ? `/blog/${n?.subject?.entity?.slug}?commentId=${n?.subject?._id}&parentCommentId=${n?.subject?.parentComment}`
+            : `/learning/${n?.subject?.entity?.courseSlug}?id=${n?.subject?.entity?._id}&commentId=${n?.subject?._id}&parentCommentId=${n?.subject?.parentComment}`;
+    },
+    react_comment: (n) => {
+        const isBlog = n?.subject?.entityModel === 'blogs' ? true : false;
+        return isBlog
+            ? `/blog/${n?.subject?.entity?.slug}?commentId=${n?.subject?._id}&parentCommentId=${n?.subject?.parentComment}`
+            : `/learning/${n?.subject?.entity?.courseSlug}?id=${n?.subject?.entity?._id}&commentId=${n?.subject?._id}&parentCommentId=${n?.subject?.parentComment}`;
+    },
     system: '#',
 };
 
