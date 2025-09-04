@@ -9,8 +9,8 @@ import {
     useLocation,
     useNavigate,
     createSearchParams,
-    useSearchParams,
     useParams,
+    useSearchParams,
 } from 'react-router-dom';
 import { apiURL } from './constants';
 import Cookies from 'js-cookie';
@@ -22,12 +22,10 @@ const LearningContextProvider = ({ children }) => {
     const location = useLocation();
     const navigate = useNavigate();
     const user = useSelector((state) => state.user);
+    const { id } = useSearchParams();
 
     const [isShowMenuTrack, setIsShowMenuTrack] = useState(true);
-    const [chosenLesson, setChosenLesson] = useState(null);
-    const [lockedLesson, setLockedLesson] = useState(null);
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [query, setQuery] = useState(searchParams.get('id'));
+    const [query, setQuery] = useState(id);
     const [play, setPlay] = useState(false);
     const [videoId, setVideoId] = useState('');
     const [course, setCourse] = useState(null);
@@ -55,18 +53,18 @@ const LearningContextProvider = ({ children }) => {
     useEffect(() => {
         if (!learningProgress || !course) return;
 
-        const episode = course.episode.find((ep) =>
+        const episode = course.episodes.find((ep) =>
             ep.lessons.some((l) => getLessonStatus(l._id) === 'in-progress')
         );
 
         if (!episode) {
-            const allCompleted = course.episode.find((ep) =>
+            const allCompleted = course.episodes.find((ep) =>
                 ep.lessons.every((l) => getLessonStatus(l._id) === 'completed')
             );
 
             if (!allCompleted) return;
 
-            const lastEpisode = course.episode[course.episode.length - 1];
+            const lastEpisode = course.episodes[course.episodes.length - 1];
             playVideo({
                 lesson: lastEpisode.lessons[lastEpisode.lessons.length - 1],
                 episode: lastEpisode,
@@ -93,9 +91,9 @@ const LearningContextProvider = ({ children }) => {
     useEffect(() => {
         if (!user.isLoggedIn) {
             setLearningProgress([]);
-            setLearningEpisode(null)
-            setLearningLesson(null)
-            setQuery(null)
+            setLearningEpisode(null);
+            setLearningLesson(null);
+            setQuery(null);
         }
     }, [user]);
 
@@ -127,14 +125,14 @@ const LearningContextProvider = ({ children }) => {
 
                 setCourse({
                     ...data,
-                    episode: data.episode.map((ep, index) => ({
+                    episodes: data.episodes.map((ep, index) => ({
                         ...ep,
                         title: `${index + 1}. ${ep.title}`,
                         lessons: ep.lessons.map((ls, lsIndex) => ({
                             ...ls,
                             title: `${
                                 getTotalLessonAtCurrentEpisode(
-                                    data.episode,
+                                    data.episodes,
                                     index
                                 ) +
                                 lsIndex +
@@ -224,7 +222,7 @@ const LearningContextProvider = ({ children }) => {
             };
         }
 
-        const episodes = course?.episode || [];
+        const episodes = course?.episodes || [];
         const episodeIndex = episodes.findIndex(
             (ep) => ep._id === currentEpisode._id
         );
@@ -273,11 +271,11 @@ const LearningContextProvider = ({ children }) => {
     };
 
     const totalLessons = useMemo(() => {
-        return course?.episode?.flatMap((ep) => ep.lessons).length;
+        return course?.episodes?.flatMap((ep) => ep.lessons).length;
     }, [course]);
 
     const totalCompletedLessons = useMemo(() => {
-        return course?.episode
+        return course?.episodes
             ?.flatMap((ep) => ep.lessons)
             ?.reduce((acc, cur) => {
                 if (getLessonStatus(cur._id) === 'completed') {
@@ -290,8 +288,6 @@ const LearningContextProvider = ({ children }) => {
     const value = {
         course,
         isShowMenuTrack,
-        chosenLesson,
-        lockedLesson,
         playVideo,
         handleIsShowMenuTrack,
         videoId,

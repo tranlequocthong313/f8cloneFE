@@ -10,7 +10,7 @@ const CurriculumOfCourse = ({ episodeList, totalDuration, totalLesson }) => {
 
     useEffect(() => {
         episodeList?.map((episode) =>
-            setCollapsedCurriculumAll((prev) => [...prev, episode.episodeId])
+            setCollapsedCurriculumAll((prev) => [...prev, episode._id])
         );
     }, [episodeList]);
 
@@ -81,17 +81,17 @@ const CurriculumOfCourse = ({ episodeList, totalDuration, totalLesson }) => {
             <div className={styles.curriculumPanel}>
                 <div className={styles.panelGroup}>
                     {episodeList?.map((episode, index) => (
-                        <div className={styles.panel} key={episode.episodeId}>
+                        <div className={styles.panel} key={episode._id}>
                             <div
                                 className={styles.panelHeading}
                                 onClick={() =>
-                                    collapseCurriculumSingle(episode.episodeId)
+                                    collapseCurriculumSingle(episode._id)
                                 }
                             >
                                 <h5 className={styles.panelTitle}>
                                     <div className={styles.headLine}>
                                         {collapsedCurriculum.includes(
-                                            episode.episodeId
+                                            episode._id
                                         ) ? (
                                             <i className='fa-solid fa-dash'></i>
                                         ) : (
@@ -115,7 +115,7 @@ const CurriculumOfCourse = ({ episodeList, totalDuration, totalLesson }) => {
                             </div>
                             <CourseCollapse
                                 open={collapsedCurriculum}
-                                episodeId={episode.episodeId}
+                                episodeId={episode._id}
                                 lessons={episode.lessons}
                                 startIndex={getTotalLessonAtCurrentEpisode(
                                     index

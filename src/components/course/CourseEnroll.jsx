@@ -22,11 +22,13 @@ const CourseEnroll = ({
                 <p>Xem giới thiệu khóa học</p>
             </div>
             <h5>Miễn phí</h5>
-            <Link to={`/learning/${course?.slug}`} onClick={handleEnrollCourse}>
-                <MainButton className={styles.button} primary={true}>
-                    Đăng ký học
-                </MainButton>
-            </Link>
+            <MainButton
+                className={styles.button}
+                primary={true}
+                onClick={handleEnrollCourse}
+            >
+                Đăng ký học
+            </MainButton>
             <ul>
                 <li>
                     <i className={`${styles.icon} fa-solid fa-compass`}></i>

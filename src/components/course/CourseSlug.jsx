@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Suspense, useMemo } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
 import Header from '../main-layout/nav/Header';
 import SideBar from '../main-layout/sidebar/SideBar';
@@ -12,11 +12,11 @@ import { apiURL } from '../../context/constants';
 import MainButton from '../utils/button/MainButton';
 import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
-import { enrollCourse } from '../../actions/userAction';
 import {
     convertSecondsToHoursMinutes,
     getTotalSecondsFromYoutubeDuration,
 } from '../../helpers/time';
+import { enrollCourse } from '../../actions/userAction'
 
 const Footer = React.lazy(() => import('../main-layout/footer/Footer'));
 
@@ -28,7 +28,8 @@ export const COURSE_LEVEL = {
 
 const CourseSlug = () => {
     const location = useLocation();
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
+    const navigate = useNavigate();
 
     const [course, setCourse] = useState();
     const [isShowVideoPreviewCourse, setIsShowVideoPreviewCourse] =
@@ -70,21 +71,21 @@ const CourseSlug = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-
             dispatch(enrollCourse(course._id));
+            navigate(`/learning/${course.slug}`);
         } catch (error) {
             console.log('🚀 ~ handleEnrollCourse ~ error:', error);
         }
     };
 
     const totalLesson = useMemo(() => {
-        return course?.episode?.reduce((acc, cur) => {
+        return course?.episodes?.reduce((acc, cur) => {
             return cur?.lessons?.length + acc;
         }, 0);
     }, [course]);
 
     const totalLearnSeconds = useMemo(() => {
-        return course?.episode?.reduce((totalSeconds, episode) => {
+        return course?.episodes?.reduce((totalSeconds, episode) => {
             return (
                 totalSeconds +
                 episode?.lessons?.reduce((totalSecondsOfEpisodes, lesson) => {
@@ -130,19 +131,13 @@ const CourseSlug = () => {
                                 </div>
                                 <div className={styles.purchaseBadge}>
                                     <h5>Miễn phí</h5>
-                                    <Link
-                                        to={`/learning/${
-                                            course ? course.slug : ''
-                                        }`}
+                                    <MainButton
+                                        className={styles.button}
+                                        primary={true}
                                         onClick={handleEnrollCourse}
                                     >
-                                        <MainButton
-                                            className={styles.button}
-                                            primary={true}
-                                        >
-                                            Đăng ký học
-                                        </MainButton>
-                                    </Link>
+                                        Đăng ký học
+                                    </MainButton>
                                     <ul>
                                         <li>
                                             <i
@@ -191,7 +186,7 @@ const CourseSlug = () => {
                                     title={'Bạn sẽ học được gì?'}
                                 />
                                 <CurriculumOfCourse
-                                    episodeList={course?.episode || []}
+                                    episodeList={course?.episodes || []}
                                     totalDuration={getTotalDuration()}
                                     totalLesson={totalLesson}
                                 />

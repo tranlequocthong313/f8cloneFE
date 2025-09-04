@@ -13,8 +13,8 @@ const LearningTrackItem = ({ episodes }) => {
     useEffect(() => {
         if (!learningEpisode) return;
         setOpen((prev) => [
-            ...prev.filter((id) => id != learningEpisode.episodeId),
-            learningEpisode.episodeId,
+            ...prev.filter((id) => id != learningEpisode._id),
+            learningEpisode._id,
         ]);
     }, [learningEpisode]);
 
@@ -37,11 +37,11 @@ const LearningTrackItem = ({ episodes }) => {
 
     if (!episodes) return null;
 
-    return episodes?.map((episode, index) => (
-        <div key={episode.episodeId}>
+    return episodes?.map((episode) => (
+        <div key={episode._id}>
             <div
                 className={styles.wrapper}
-                onClick={() => handleOpen(episode.episodeId)}
+                onClick={() => handleOpen(episode._id)}
             >
                 <h3 className={styles.title}>{episode.title}</h3>
                 <span className={styles.description}>2/2 | 22:09</span>
@@ -50,9 +50,9 @@ const LearningTrackItem = ({ episodes }) => {
                     <i className='fa-solid fa-chevron-down'></i>
                 </span>
             </div>
-            <Collapse in={open.includes(episode.episodeId)}>
+            <Collapse in={open.includes(episode._id)}>
                 <div className={styles.panelBody}>
-                    {episode.lessons?.map((lesson, lessonIndex) => (
+                    {episode.lessons?.map((lesson) => (
                         <div
                             className={style(lesson._id)}
                             key={lesson._id}

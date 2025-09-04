@@ -44,7 +44,6 @@ const CreateCourse = () => {
             ...episodes,
             {
                 title: '',
-                episodeId: Date.now().toString(),
                 lessons: [
                     {
                         title: '',

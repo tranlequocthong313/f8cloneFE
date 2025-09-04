@@ -25,14 +25,14 @@ const Learning = () => {
                 learningLesson={learningLesson}
             />
             {isShowMenuTrack && (
-                <LearningTrack loading={loading} episodes={course?.episode} />
+                <LearningTrack loading={loading} episodes={course?.episodes} />
             )}
 
             <LearningActionBar
                 handleIsShowMenuTrack={handleIsShowMenuTrack}
                 isShowMenuTrack={isShowMenuTrack}
                 loading={loading}
-                episodes={course?.episode}
+                episodes={course?.episodes}
             />
         </>
     );
