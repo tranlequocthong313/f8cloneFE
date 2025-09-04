@@ -142,21 +142,21 @@ const Notification = () => {
                 </Tippy>
             </header>
             <div className={styles.body}>
-                <ul className={styles.list}>
-                    {notifications?.map((notification) => (
-                        <NotificationContent
-                            key={notification._id}
-                            notification={notification}
-                            seen={seen}
-                        />
-                    ))}
-                </ul>
-                {!notifications ||
-                    (!notifications.length && (
-                        <p className={styles.emptyMessage}>
-                            Bạn chưa đăng ký khóa học nào
-                        </p>
-                    ))}
+                {notifications && notifications.length ? (
+                    <ul className={styles.list}>
+                        {notifications?.map((notification) => (
+                            <NotificationContent
+                                key={notification._id}
+                                notification={notification}
+                                seen={seen}
+                            />
+                        ))}
+                    </ul>
+                ) : (
+                    <p className={styles.emptyMessage}>
+                        Bạn chưa đăng ký khóa học nào
+                    </p>
+                )}
             </div>
         </Tippy>
     );
