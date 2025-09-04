@@ -80,13 +80,11 @@ const Home = () => {
                             <HeadingTitleWrap
                                 title={'Lộ trình học Front-end'}
                                 label={'Mới'}
-                                viewMode={'Xem chi tiết'}
                             />
                             <CourseList courses={courseFE} />
                             <HeadingTitleWrap
                                 title={'Lộ trình học Back-end'}
                                 label={'Mới'}
-                                viewMode={'Xem chi tiết'}
                             />
                             <CourseList courses={courseBE} />
 
@@ -94,6 +92,7 @@ const Home = () => {
                                 <HeadingTitleWrap
                                     title={'Bài viết nổi bật'}
                                     viewMode={'Xem tất cả'}
+                                    viewModeTo={'/blog'}
                                 />
                                 {blogData && blogData.length !== 0 ? (
                                     <BlogList blogs={blogData} />
@@ -105,10 +104,7 @@ const Home = () => {
                                         </Link>
                                     </p>
                                 )}
-                                <HeadingTitleWrap
-                                    title={'Videos nổi bật'}
-                                    viewMode={'Xem tất cả'}
-                                />
+                                <HeadingTitleWrap title={'Videos nổi bật'} />
                                 {videoData && videoData.length !== 0 ? (
                                     <VideoList videos={videoData} />
                                 ) : (
