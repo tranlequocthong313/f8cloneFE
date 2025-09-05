@@ -1,9 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './LearningContent.module.scss';
 import LearningVideo from './LearningVideo';
 import CommentWrapper from '../utils/comment/CommentWrapper';
+import { useSearchParams } from 'react-router-dom';
 
 const LearningContent = ({ isShowMenuTrack, learningLesson }) => {
+    const [searchParams] = useSearchParams();
+
+    const [isShowComment, setIsShowComment] = useState(false);
+
+    useEffect(() => {
+        if (!!searchParams.get('commentId')) {
+            setIsShowComment(searchParams.get('commentId'));
+        }
+    }, [searchParams.get('commentId')]);
+
     const getUpdatedAt = () => {
         if (!learningLesson) return;
 
@@ -61,15 +72,18 @@ const LearningContent = ({ isShowMenuTrack, learningLesson }) => {
                         để nhận thông báo khi có các bài học mới nhé ❤️
                     </p>
                 </div>
+                <div
+                    className={styles.commentButton}
+                    onClick={() => setIsShowComment(true)}
+                >
+                    <button className={styles.button}>
+                        <i className='fa-solid fa-comments'></i>
+                        <span className={styles.title}>Hỏi đáp</span>
+                    </button>
+                </div>
                 <CommentWrapper
-                    button={
-                        <div className={styles.commentButton}>
-                            <button className={styles.button}>
-                                <i className='fa-solid fa-comments'></i>
-                                <span className={styles.title}>Hỏi đáp</span>
-                            </button>
-                        </div>
-                    }
+                    open={isShowComment}
+                    onClose={() => setIsShowComment(false)}
                     entity={{
                         entityId: learningLesson?._id,
                         type: 'lessons',

@@ -58,7 +58,6 @@ const Auth = () => {
         });
       }
 
-      console.log('CREATE NEW ACCOUNT WITH PROVIDER!');
       const newRes = await fetch(`${apiURL}/login/provider`, {
         method: 'POST',
         body: JSON.stringify({
@@ -75,7 +74,6 @@ const Auth = () => {
 
       const newData = await newRes.json();
       Cookies.set('token', newData.accessToken, { expires: 365 });
-      console.log(newData);
       dispatchAndNavigate({
         ...newData.user,
         accessToken: newData.accessToken,

@@ -172,7 +172,6 @@ const Settings = () => {
 
             const data = await res.json();
 
-            console.log(data);
             setSocial((prev) => {
                 return {
                     ...prev,

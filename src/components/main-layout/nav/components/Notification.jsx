@@ -23,11 +23,6 @@ const Notification = () => {
         if (!user || !user.isLoggedIn) return;
 
         const handleNotificationSocket = (notification) => {
-            console.log(
-                '🚀 ~ handleNotificationSocket ~ notification:',
-                notification,
-                user
-            );
             if (notification.receiver !== user._id) return;
 
             setNotifications((prev) => {

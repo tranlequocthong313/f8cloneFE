@@ -24,8 +24,6 @@ const BlogTag = () => {
       'Danh sách bài viết về lĩnh vực IT / CNTT / Phần mềm / lập trình tại F8'
   }, [])
 
-  console.log(location.pathname)
-
   useEffect(() => {
     const controller = new AbortController()
 

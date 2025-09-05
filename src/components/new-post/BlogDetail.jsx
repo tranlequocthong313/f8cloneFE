@@ -3,7 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import { Row, Col, Image } from 'react-bootstrap';
 import styles from './BlogDetail.module.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import BlogSameAuthor from './BlogSameAuthor';
 import BlogHighlights from './BlogHighlights';
 import Topics from '../blog/Topics';
@@ -16,6 +16,7 @@ import MainButton from '../utils/button/MainButton';
 import remarkGfm from 'remark-gfm';
 import BlogTippy from './BlogTippy';
 import io from 'socket.io-client';
+import CommentWrapper from '../utils/comment/CommentWrapper';
 
 const socket = io.connect(apiURL);
 
@@ -23,12 +24,20 @@ const BlogDetail = ({ blog, blogHighlight }) => {
     const user = useSelector((state) => state.user);
     const navigate = useNavigate();
 
+    const [searchParams] = useSearchParams();
+
     const [likeCount, setLikeCount] = useState(blog?.likes || []);
     const [isLike, setIsLike] = useState(blog?.likes?.includes(user.userId));
     const [isShowComment, setIsShowComment] = useState(false);
     const [bookmarkData, setBookmarkData] = useState(null);
     const [isShowVerifyBar, setIsShowVerifyBar] = useState(false);
     const [tags, setTags] = useState(null);
+
+    useEffect(() => {
+        if (!!searchParams.get('commentId')) {
+            setIsShowComment(searchParams.get('commentId'));
+        }
+    }, [searchParams.get('commentId')]);
 
     useEffect(() => {
         const handleLikeSocket = (b) => {
@@ -266,6 +275,15 @@ const BlogDetail = ({ blog, blogHighlight }) => {
                 <BlogHighlights blogHighlight={blogHighlight} />
                 {tags && tags.length > 0 && <Topics tags={tags} />}
             </Col>
+
+            <CommentWrapper
+                open={isShowComment}
+                onClose={() => setIsShowComment(false)}
+                entity={{
+                    entityId: blog?._id,
+                    type: 'blogs',
+                }}
+            />
         </Row>
     );
 };

@@ -16,7 +16,6 @@ const Footer = React.lazy(() =>
 const Profile = () => {
   const location = useLocation()
 
-  console.log(location.pathname)
   const [user, setUser] = useState(null)
 
   useEffect(() => {
@@ -36,8 +35,6 @@ const Profile = () => {
 
     return () => controller?.abort()
   }, [])
-
-  console.log(user)
 
   return (
     <>

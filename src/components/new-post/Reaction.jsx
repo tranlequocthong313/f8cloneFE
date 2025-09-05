@@ -1,7 +1,6 @@
 import React from 'react';
 
 import styles from './Reaction.module.scss';
-import CommentWrapper from '../utils/comment/CommentWrapper';
 
 const Reaction = ({ isLike, like, setShowComment, likeCount, blog }) => {
     return (
@@ -17,21 +16,10 @@ const Reaction = ({ isLike, like, setShowComment, likeCount, blog }) => {
                 <span>{likeCount}</span>
             </div>
 
-            <CommentWrapper
-                button={
-                    <div
-                        className={styles.reactButton}
-                        onClick={setShowComment}
-                    >
-                        <i className='fa-regular fa-comment'></i>
-                        <span>{blog?.totalComments}</span>
-                    </div>
-                }
-                entity={{
-                    entityId: blog?._id,
-                    type: 'blogs',
-                }}
-            />
+            <div className={styles.reactButton} onClick={setShowComment}>
+                <i className='fa-regular fa-comment'></i>
+                <span>{blog?.totalComments}</span>
+            </div>
         </div>
     );
 };

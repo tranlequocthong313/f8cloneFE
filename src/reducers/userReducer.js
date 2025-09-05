@@ -82,7 +82,6 @@ const userReducer = (state = initialState, action) => {
             };
 
         case 'CREATE_VIDEO':
-            console.log(action.payload.videoData);
             return {
                 ...state,
                 videoCreated: action.payload.videoData,

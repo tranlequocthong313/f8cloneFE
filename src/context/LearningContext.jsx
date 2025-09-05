@@ -22,10 +22,10 @@ const LearningContextProvider = ({ children }) => {
     const location = useLocation();
     const navigate = useNavigate();
     const user = useSelector((state) => state.user);
-    const { id } = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     const [isShowMenuTrack, setIsShowMenuTrack] = useState(true);
-    const [query, setQuery] = useState(id);
+    const [query, setQuery] = useState(searchParams.get('id'));
     const [play, setPlay] = useState(false);
     const [videoId, setVideoId] = useState('');
     const [course, setCourse] = useState(null);
@@ -51,7 +51,21 @@ const LearningContextProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        if (!learningProgress || !course) return;
+        if (!learningProgress || !course || learningLesson) return;
+
+        const lessonId = searchParams.get('id');
+        if (
+            lessonId &&
+            ['in-progress', 'completed'].includes(getLessonStatus(lessonId))
+        ) {
+            const ep = course.episodes.find(
+                (ep) => !!ep.lessons.find((l) => l._id === lessonId)
+            );
+            return playVideo({
+                lesson: ep.lessons.find((l) => l._id === lessonId),
+                episode: ep,
+            });
+        }
 
         const episode = course.episodes.find((ep) =>
             ep.lessons.some((l) => getLessonStatus(l._id) === 'in-progress')
@@ -81,19 +95,23 @@ const LearningContextProvider = ({ children }) => {
             lesson,
             episode,
         });
-    }, [learningProgress, course]);
+    }, [learningProgress, course, searchParams, learningLesson]);
 
     useEffect(() => {
         if (!course) return;
         getLearningProgress(course._id);
     }, [course]);
 
+    const resetStates = () => {
+        setLearningProgress([]);
+        setLearningEpisode(null);
+        setLearningLesson(null);
+        setQuery(null);
+    };
+
     useEffect(() => {
         if (!user.isLoggedIn) {
-            setLearningProgress([]);
-            setLearningEpisode(null);
-            setLearningLesson(null);
-            setQuery(null);
+            resetStates();
         }
     }, [user]);
 
@@ -161,12 +179,8 @@ const LearningContextProvider = ({ children }) => {
     };
 
     const createParams = (id) => {
-        navigate({
-            pathname: location.pathname,
-            search: createSearchParams({
-                id,
-            }).toString(),
-        });
+        searchParams.set('id', id);
+        setSearchParams(searchParams);
         setQuery(id);
     };
 
@@ -256,7 +270,6 @@ const LearningContextProvider = ({ children }) => {
             learningEpisode,
             course
         );
-        console.log('🚀 ~ goNextLesson ~ result:', result);
         if (result) playVideo(result);
     };
 
@@ -303,6 +316,7 @@ const LearningContextProvider = ({ children }) => {
         learningProgress,
         getLessonStatus,
         totalLessons,
+        resetStates,
         totalCompletedLessons,
     };
 

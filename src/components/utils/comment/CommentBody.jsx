@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CommentReaction from './CommentReaction';
 import { apiURL, EMOJI_MAP } from '../../../context/constants';
 import Cookies from 'js-cookie';
@@ -9,7 +9,7 @@ import timeSince from '../timeSince/timeSince';
 import CommentReactionCounter from './CommentReactionCounter';
 import styles from './CommentBody.module.scss';
 import Tippy, { TippyItem } from '../tippy/Tippy';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { copyToClipboard } from '../../../helpers/text';
 
 const STRING_LENGTH_EXTEND = 350; // Content length > 350 => show extend
@@ -23,6 +23,8 @@ const CommentBody = ({
     showModal,
     entity,
     style,
+    commentId,
+    parentCommentId,
 }) => {
     const [showEditInputById, setShowEditInputById] = useState([]);
     const [showReplyInputById, setShowReplyInputById] = useState([]);
@@ -38,7 +40,11 @@ const CommentBody = ({
     const [showReplyCommentsById, setShowReplyCommentsById] = useState([]);
     const [hoverCommentReaction, setHoverCommentReaction] = useState(null);
 
+    const [searchParams, setSearchParams] = useSearchParams();
+
     const user = useSelector((state) => state.user);
+
+    const refs = useRef({});
 
     const updateComment = (comment) => {
         if (!comment) return comment;
@@ -80,6 +86,7 @@ const CommentBody = ({
                 body: JSON.stringify({
                     ...entity,
                     parentComment: parentCommentId,
+                    repliedCommentId: commentId,
                     content: replyCommentText,
                     isCode: showCodeReplyInputById.includes(commentId),
                 }),
@@ -271,12 +278,55 @@ const CommentBody = ({
         return EMOJI_MAP[react];
     };
 
+    const scrollToComment = (commentId, parentCommentId) => {
+        if (parentCommentId) {
+            handleClickViewReplies(parentCommentId);
+        }
+
+        const el = refs.current[commentId];
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            el.firstElementChild.classList.add(styles.highlight);
+            setTimeout(
+                () => el.firstElementChild.classList.remove(styles.highlight),
+                2000
+            );
+            searchParams.delete('commentId');
+            searchParams.delete('parentCommentId');
+            setSearchParams(searchParams);
+        }
+    };
+
+    useEffect(() => {
+        const commentId = searchParams.get('commentId');
+        const parentCommentId = searchParams.get('parentCommentId');
+
+        if (commentId) {
+            setTimeout(() => {
+                scrollToComment(commentId, parentCommentId);
+            }, 300);
+        }
+    }, [comments]);
+
+    const handleClickViewReplies = (commentId) => {
+        if (showReplyCommentsById.includes(commentId)) {
+            return setShowReplyCommentsById((prev) =>
+                prev.filter((c) => c !== commentId)
+            );
+        }
+        getReplyComment(commentId);
+    };
+
     let hideTimeout;
 
     return (
         <>
             {comments?.map((comment) => (
-                <div key={comment._id} style={style}>
+                <div
+                    key={comment._id}
+                    style={{ ...style, position: 'relative' }}
+                    ref={(el) => (refs.current[comment._id] = el)}
+                >
                     <div className={styles.commentList}>
                         <Link
                             to={`/${comment.postedBy.slug}`}
@@ -414,7 +464,7 @@ const CommentBody = ({
                                                                 null
                                                             );
                                                         },
-                                                        1500
+                                                        500
                                                     );
                                                 }}
                                             >
@@ -639,22 +689,9 @@ const CommentBody = ({
                             <div className={styles.viewReplies}>
                                 <span
                                     className={styles.repliesCount}
-                                    onClick={() => {
-                                        const commentId = comment._id;
-                                        if (
-                                            showReplyCommentsById.includes(
-                                                commentId
-                                            )
-                                        ) {
-                                            return setShowReplyCommentsById(
-                                                (prev) =>
-                                                    prev.filter(
-                                                        (c) => c !== commentId
-                                                    )
-                                            );
-                                        }
-                                        getReplyComment(commentId);
-                                    }}
+                                    onClick={() =>
+                                        handleClickViewReplies(comment._id)
+                                    }
                                 >
                                     {!showReplyCommentsById.includes(
                                         comment._id

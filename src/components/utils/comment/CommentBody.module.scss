@@ -3,7 +3,30 @@
 .commentList {
   display: flex;
   margin-top: 16px;
+  height: fit-content;
   position: relative;
+
+  &.highlight {
+    border-radius: 8px;
+    animation: bg 2s ease;
+    animation-iteration-count: 1;
+    outline: 5px solid transparent;
+
+    @keyframes bg {
+
+      0%,
+      10% {
+        background-color: #1dbfaf80;
+        outline-color: #1dbfaf80;
+      }
+
+      100% {
+        background-color: #1dbfaf00;
+        outline-color: #1dbfaf00;
+      }
+    }
+  }
+
 
   &.replyCommentList {
     margin-top: 8px;

@@ -94,7 +94,6 @@ const LoginWithEmailAndPasswordForm = ({
   };
 
   const loginWithEmailAndPassword = async () => {
-    console.log('loading true');
     setLoading(true);
     try {
       if (isLogin) {
@@ -110,8 +109,6 @@ const LoginWithEmailAndPasswordForm = ({
         });
 
         const data = await res.json();
-
-        console.log(data);
 
         if (data.success) {
           Cookies.set('token', data.accessToken, { expires: 365 });
@@ -157,7 +154,6 @@ const LoginWithEmailAndPasswordForm = ({
     } catch (error) {
       console.log(error);
     } finally {
-      console.log('loading false');
       setLoading(false);
     }
   };

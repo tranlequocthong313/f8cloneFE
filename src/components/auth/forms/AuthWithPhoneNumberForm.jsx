@@ -100,7 +100,6 @@ const LoginWithPhoneNumberForm = ({
         });
 
         const data = await res.json();
-        console.log(data);
         Cookies.set('token', data.accessToken, { expires: 365 });
 
         dispatchAndNavigate({
@@ -196,7 +195,6 @@ const LoginWithPhoneNumberForm = ({
       }
       return userPhoneNumber.length !== 10 || validatePhoneNumber !== null;
     };
-    console.log(isDisable());
     setDisabled(isDisable());
   }, [
     fullName,

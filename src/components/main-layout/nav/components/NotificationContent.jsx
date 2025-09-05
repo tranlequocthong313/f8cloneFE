@@ -21,7 +21,7 @@ const ContentMapping = {
         />
     ),
     comment: ({ n }) => {
-        const isBlog = n.subjectModel === 'blogs' ? true : false;
+        const isBlog = n?.subject?.entityModel === 'blogs' ? true : false;
         const description = isBlog
             ? 'đã bình luận bài viết của bạn.'
             : 'đã bình luận trong khóa học.';
@@ -59,22 +59,22 @@ const ContentMapping = {
 const SlugMapping = {
     like_blog: (n) => `/blog/${n?.subject?.slug}`,
     comment: (n) => {
-        const isBlog = n.subjectModel === 'blogs' ? true : false;
+        const isBlog = n.subject?.entityModel === 'blogs' ? true : false;
         return isBlog
             ? `/blog/${n?.subject?.slug}?commentId=${n?.subject?._id}`
-            : `/learning/${n?.subject?.courseSlug}?id=${n?.subject?._id}`;
+            : `/learning/${n?.subject?.slug}?id=${n?.subject?.entity}&commentId=${n?.subject?._id}`;
     },
     reply_comment: (n) => {
         const isBlog = n?.subject?.entityModel === 'blogs' ? true : false;
         return isBlog
-            ? `/blog/${n?.subject?.entity?.slug}?commentId=${n?.subject?._id}&parentCommentId=${n?.subject?.parentComment}`
-            : `/learning/${n?.subject?.entity?.courseSlug}?id=${n?.subject?.entity?._id}&commentId=${n?.subject?._id}&parentCommentId=${n?.subject?.parentComment}`;
+            ? `/blog/${n?.subject?.slug}?commentId=${n?.subject?._id}&parentCommentId=${n?.subject?.parentComment}`
+            : `/learning/${n?.subject?.slug}?id=${n?.subject?.entity}&commentId=${n?.subject?._id}&parentCommentId=${n?.subject?.parentComment}`;
     },
     react_comment: (n) => {
         const isBlog = n?.subject?.entityModel === 'blogs' ? true : false;
         return isBlog
-            ? `/blog/${n?.subject?.entity?.slug}?commentId=${n?.subject?._id}&parentCommentId=${n?.subject?.parentComment}`
-            : `/learning/${n?.subject?.entity?.courseSlug}?id=${n?.subject?.entity?._id}&commentId=${n?.subject?._id}&parentCommentId=${n?.subject?.parentComment}`;
+            ? `/blog/${n?.subject?.slug}?commentId=${n?.subject?._id}&parentCommentId=${n?.subject?.parentComment}`
+            : `/learning/${n?.subject?.slug}?id=${n?.subject?.entity}&commentId=${n?.subject?._id}&parentCommentId=${n?.subject?.parentComment}`;
     },
     system: '#',
 };

@@ -49,7 +49,6 @@ const NewPost = () => {
                 title: titleRef.current.innerText.trim(),
                 content: mdEditor.current.getMdValue().trim(),
             };
-            console.log('blogData');
 
             titleRef.current.innerText = data.title;
 
@@ -64,8 +63,6 @@ const NewPost = () => {
 
         const wordCount = content.split(' ').length;
         const minute = Math.floor(wordCount / WORDS_PER_MINUTE);
-
-        console.log('readingTime');
 
         return minute <= SMALLEST_READING_TIME ? SMALLEST_READING_TIME : minute;
     };

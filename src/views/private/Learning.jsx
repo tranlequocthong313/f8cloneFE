@@ -15,7 +15,12 @@ const Learning = () => {
         course,
         loading,
         learningLesson,
+        resetStates,
     } = useContext(LearningContext);
+
+    useEffect(() => {
+        return () => resetStates();
+    }, []);
 
     return (
         <>

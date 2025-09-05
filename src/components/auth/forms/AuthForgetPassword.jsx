@@ -44,7 +44,6 @@ const AuthForgetPassword = ({
       });
       const data = await res.json();
       setForgotPassword(false);
-      console.log(data.message);
     } catch (error) {
       console.log(error);
     } finally {

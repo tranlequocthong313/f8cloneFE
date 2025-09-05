@@ -4,7 +4,7 @@ import Header from '../main-layout/nav/Header';
 import BlogDetail from '../new-post/BlogDetail';
 import styles from './BlogSlug.module.scss';
 import SideBar from '../main-layout/sidebar/SideBar';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import Footer from '../main-layout/footer/Footer';
 import io from 'socket.io-client';
 
