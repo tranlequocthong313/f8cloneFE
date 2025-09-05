@@ -13,7 +13,7 @@ import MainButton from '../utils/button/MainButton';
 import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import {
-    convertSecondsToHoursMinutes,
+    convertSecondsToHMS,
     getTotalSecondsFromYoutubeDuration,
 } from '../../helpers/time';
 import { enrollCourse } from '../../actions/userAction';
@@ -101,7 +101,7 @@ const CourseSlug = () => {
 
     const getTotalDuration = () => {
         const { hours, minutes } =
-            convertSecondsToHoursMinutes(totalLearnSeconds);
+            convertSecondsToHMS(totalLearnSeconds);
         let result = '';
 
         if (hours > 0) {

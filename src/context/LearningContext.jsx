@@ -20,7 +20,6 @@ export const LearningContext = createContext();
 
 const LearningContextProvider = ({ children }) => {
     const location = useLocation();
-    const navigate = useNavigate();
     const user = useSelector((state) => state.user);
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -33,6 +32,7 @@ const LearningContextProvider = ({ children }) => {
     const [learningEpisode, setLearningEpisode] = useState(null);
     const [learningLesson, setLearningLesson] = useState(null);
     const [learningProgress, setLearningProgress] = useState([]);
+    const [currentTime, setCurrentTime] = useState(0);
 
     const getTotalLessonAtCurrentEpisode = (
         episodes = [],
@@ -43,10 +43,11 @@ const LearningContextProvider = ({ children }) => {
             ?.reduce((acc, cur) => acc + cur?.lessons?.length, 0);
     };
 
-    const getLessonStatus = (lessonId) => {
+    const getLessonStatus = (lessonId, progress) => {
         return (
-            learningProgress?.find((ls) => ls.lessonId === lessonId)?.status ||
-            'locked'
+            (progress || learningProgress)?.find(
+                (ls) => ls.lessonId === lessonId
+            )?.status || 'locked'
         );
     };
 
@@ -169,8 +170,8 @@ const LearningContextProvider = ({ children }) => {
         fetchCourse();
     }, [location.pathname]);
 
-    const playVideo = ({ lesson, episode }) => {
-        if (getLessonStatus(lesson._id) === 'locked') return;
+    const playVideo = ({ lesson, episode }, progress) => {
+        if (getLessonStatus(lesson._id, progress) === 'locked') return;
         setPlay(true);
         setVideoId(lesson.videoId);
         setLearningEpisode(episode);
@@ -203,9 +204,22 @@ const LearningContextProvider = ({ children }) => {
                 }
             );
             const data = await res.json();
-            setLearningProgress(data?.progress?.lessons || []);
 
-            setTimeout(goNextLesson, 0);
+            const progress = data?.progress?.lessons;
+
+            setLearningProgress(progress);
+
+            const result = getLessonAndEpisode(
+                'next',
+                query,
+                learningEpisode,
+                course
+            );
+            if (result) {
+                if (getLessonStatus(result.lesson._id, progress) !== 'locked') {
+                    playVideo(result, progress);
+                }
+            }
         } catch (error) {
             console.log(error.message);
         }
@@ -318,6 +332,8 @@ const LearningContextProvider = ({ children }) => {
         totalLessons,
         resetStates,
         totalCompletedLessons,
+        currentTime,
+        setCurrentTime,
     };
 
     return (

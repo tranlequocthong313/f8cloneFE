@@ -18,13 +18,14 @@ export function getTotalSecondsFromYoutubeDuration(duration) {
     return totalSeconds;
 }
 
-export function convertSecondsToHoursMinutes(totalSeconds) {
+export function convertSecondsToHMS(totalSeconds) {
     const hours = Math.floor(totalSeconds / 3600);
-    const remainingSeconds = totalSeconds % 3600;
-    const minutes = Math.floor(remainingSeconds / 60);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
 
     return {
-        hours,
-        minutes,
+        hours: isNaN(hours) ? 0 : hours,
+        minutes: isNaN(minutes) ? 0 : minutes,
+        seconds: isNaN(seconds) ? 0 : seconds,
     };
 }

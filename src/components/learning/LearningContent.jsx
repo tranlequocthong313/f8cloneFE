@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styles from './LearningContent.module.scss';
 import LearningVideo from './LearningVideo';
 import CommentWrapper from '../utils/comment/CommentWrapper';
 import { useSearchParams } from 'react-router-dom';
+import { LearningContext } from '../../context/LearningContext';
+import { convertSecondsToHMS } from '../../helpers/time';
 
 const LearningContent = ({ isShowMenuTrack, learningLesson }) => {
     const [searchParams] = useSearchParams();
+
+    const { currentTime } = useContext(LearningContext);
 
     const [isShowComment, setIsShowComment] = useState(false);
 
@@ -20,6 +24,23 @@ const LearningContent = ({ isShowMenuTrack, learningLesson }) => {
 
         const d = new Date(learningLesson.updatedAt);
         return `Cập nhật tháng ${d.getMonth() + 1} năm ${d.getFullYear()}`;
+    };
+
+    const getCurrenTime = () => {
+        const {
+            hours = 0,
+            minutes = 0,
+            seconds = 0,
+        } = convertSecondsToHMS(currentTime);
+
+        const min = minutes < 10 ? '0' + minutes : minutes;
+        const sec = seconds < 10 ? '0' + seconds : seconds;
+
+        if (hours > 0) {
+            return `${hours < 10 ? '0' + hours : hours}:${min}:${sec}`;
+        }
+
+        return `${min}:${sec}`;
     };
 
     return (
@@ -41,7 +62,9 @@ const LearningContent = ({ isShowMenuTrack, learningLesson }) => {
                         <i className='fa-solid fa-plus'></i>
                         <span className={styles.label}>
                             Thêm ghi chú tại{' '}
-                            <span className={styles.duration}>00:00</span>
+                            <span className={styles.duration}>
+                                {getCurrenTime()}
+                            </span>
                         </span>
                     </button>
                 </div>

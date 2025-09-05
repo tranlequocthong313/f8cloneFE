@@ -4,7 +4,8 @@ import VideoPlayer from '../course/VideoPlayer';
 import styles from './LearningVideo.module.scss';
 
 const LearningVideo = () => {
-    const { onEnd, show, videoId, setPlay, play } = useContext(LearningContext);
+    const { onEnd, show, videoId, setPlay, play, setCurrentTime } =
+        useContext(LearningContext);
 
     return (
         <div
@@ -17,6 +18,7 @@ const LearningVideo = () => {
                 onClick={() => setPlay(true)}
                 videoId={videoId ? videoId : ''}
                 play={play}
+                setCurrentTime={setCurrentTime}
             />
         </div>
     );
