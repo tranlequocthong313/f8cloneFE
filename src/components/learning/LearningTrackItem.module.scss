@@ -38,6 +38,11 @@
     right: 23px;
     top: 12px;
     color: $text-color;
+    transition: transform 0.3s ease;
+
+    &.open {
+      transform: rotate(180deg);
+    }
   }
 }
 
@@ -91,6 +96,7 @@
           from {
             transform: rotate(0deg);
           }
+
           to {
             transform: rotate(360deg);
           }

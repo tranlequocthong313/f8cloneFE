@@ -3,6 +3,10 @@ import styles from './LearningTrackItem.module.scss';
 import { Collapse } from 'react-bootstrap';
 import { LearningContext } from '../../context/LearningContext';
 import parseDuration from 'youtube-duration-format';
+import {
+    convertSecondsToHMS,
+    getTotalSecondsFromYoutubeDuration,
+} from '../../helpers/time';
 
 const LearningTrackItem = ({ episodes }) => {
     const [open, setOpen] = useState([]);
@@ -35,6 +39,45 @@ const LearningTrackItem = ({ episodes }) => {
         return styles.lessonItem;
     };
 
+    const totalLearnSeconds = (episode) => {
+        return episode?.lessons?.reduce((totalSecondsOfEpisodes, lesson) => {
+            return (
+                totalSecondsOfEpisodes +
+                getTotalSecondsFromYoutubeDuration(lesson?.time)
+            );
+        }, 0);
+    };
+
+    const formatTotalTime = (totalTime) => {
+        const {
+            hours = 0,
+            minutes = 0,
+            seconds = 0,
+        } = convertSecondsToHMS(totalTime);
+
+        const min = minutes < 10 ? '0' + minutes : minutes;
+        const sec = seconds < 10 ? '0' + seconds : seconds;
+
+        if (hours > 0) {
+            return `${hours < 10 ? '0' + hours : hours}:${min}:${sec}`;
+        }
+
+        return `${min}:${sec}`;
+    };
+
+    const completedLessons = (episode) => {
+        return episode?.lessons?.reduce(
+            (acc, cur) =>
+                acc + (getLessonStatus(cur?._id) === 'completed' ? 1 : 0),
+            0
+        );
+    };
+
+    const getEpisodeInfo = (episode) => {
+        return `${completedLessons(episode)}/${episode?.lessons?.length} |
+                    ${formatTotalTime(totalLearnSeconds(episode))}`;
+    };
+
     if (!episodes) return null;
 
     return episodes?.map((episode) => (
@@ -44,10 +87,15 @@ const LearningTrackItem = ({ episodes }) => {
                 onClick={() => handleOpen(episode._id)}
             >
                 <h3 className={styles.title}>{episode.title}</h3>
-                <span className={styles.description}>2/2 | 22:09</span>
-                <span className={styles.icon}>
-                    {/* <i className="fa-solid fa-chevron-up"></i> */}
-                    <i className='fa-solid fa-chevron-down'></i>
+                <span className={styles.description}>
+                    {getEpisodeInfo(episode)}
+                </span>
+                <span
+                    className={`${styles.icon} ${
+                        open.includes(episode._id) ? styles.open : ''
+                    }`}
+                >
+                    <i className='fa-solid fa-chevron-up'></i>
                 </span>
             </div>
             <Collapse in={open.includes(episode._id)}>
