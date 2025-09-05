@@ -5,7 +5,7 @@ import styles from './CourseEnroll.module.scss';
 import { COURSE_LEVEL } from './CourseSlug';
 
 const CourseEnroll = ({
-    show,
+    showVideo,
     course,
     handleEnrollCourse,
     totalLesson,
@@ -13,7 +13,7 @@ const CourseEnroll = ({
 }) => {
     return (
         <div className={styles.purchaseBadge}>
-            <div className={styles.imgPreview} onClick={show}>
+            <div className={styles.imgPreview} onClick={showVideo}>
                 <div
                     className={styles.backgroundImg}
                     style={{ backgroundImage: `url(${course?.image})` }}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Suspense, useMemo } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Modal } from 'react-bootstrap';
 import Header from '../main-layout/nav/Header';
 import SideBar from '../main-layout/sidebar/SideBar';
 import CourseDetail from './CourseDetail';
@@ -16,7 +16,8 @@ import {
     convertSecondsToHoursMinutes,
     getTotalSecondsFromYoutubeDuration,
 } from '../../helpers/time';
-import { enrollCourse } from '../../actions/userAction'
+import { enrollCourse } from '../../actions/userAction';
+import VideoPlayer from './VideoPlayer';
 
 const Footer = React.lazy(() => import('../main-layout/footer/Footer'));
 
@@ -28,7 +29,7 @@ export const COURSE_LEVEL = {
 
 const CourseSlug = () => {
     const location = useLocation();
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const [course, setCourse] = useState();
@@ -126,8 +127,8 @@ const CourseSlug = () => {
                         <Row className={styles.wrapper}>
                             <Col lg={12} xl={8}>
                                 <div className={styles.topHeading}>
-                                    <h3>{course ? course.title : ''}</h3>
-                                    <p>{course ? course.description : ''}</p>
+                                    <h3>{course?.title}</h3>
+                                    <p>{course?.description}</p>
                                 </div>
                                 <div className={styles.purchaseBadge}>
                                     <h5>Miễn phí</h5>
@@ -221,10 +222,11 @@ const CourseSlug = () => {
             </Suspense>
             {isShowVideoPreviewCourse && (
                 <PreviewCourse
-                    previewVideo={course.previewVideo}
+                    previewVideo={course?.videoId}
                     showVideo={showVideoPreviewCourse}
                 />
             )}
+
         </>
     );
 };
