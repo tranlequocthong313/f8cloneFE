@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import Youtube from 'react-youtube';
 import styles from './VideoPlayer.module.scss';
 
@@ -11,7 +11,6 @@ const VideoPlayer = ({
     autoPlay = true,
     setCurrentTime,
 }) => {
-    const ref = useRef(null);
 
     const youtubeVideoOptions = {
         playerVars: {
@@ -21,17 +20,10 @@ const VideoPlayer = ({
 
     const handleReady = (event) => {
         const player = event.target;
-        ref.current = player;
-    };
-
-    useEffect(() => {
-        if (!ref.current) return;
-        const intervalId = setInterval(() => {
-            setCurrentTime?.(Math.round(ref.current.getCurrentTime()));
+        setInterval(() => {
+            setCurrentTime?.(Math.round(player.getCurrentTime()));
         }, 1000);
-
-        return () => clearInterval(intervalId);
-    }, [ref.current]);
+    };
 
     return (
         <div className={styles.wrapper}>
