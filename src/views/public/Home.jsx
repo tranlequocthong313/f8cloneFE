@@ -49,8 +49,16 @@ const Home = () => {
                 });
                 const data = await res.json();
 
-                setCourseFE(data.courseFE);
-                setCourseBE(data.courseBE);
+                setCourseFE(
+                    data.courses.filter((course) =>
+                        ['FE', 'Fullstack'].includes(course.role)
+                    )
+                );
+                setCourseBE(
+                    data.courses.filter((course) =>
+                        ['BE', 'Fullstack'].includes(course.role)
+                    )
+                );
                 setBlogData(data.blogs);
                 setVideoData(data.videos);
                 setFetchStatus({
