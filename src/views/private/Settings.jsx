@@ -8,7 +8,6 @@ import Cookies from 'js-cookie';
 import { apiURL } from '../../context/constants';
 import { useDispatch } from 'react-redux';
 import { settings } from '../../actions/userAction';
-import { ref, uploadBytesResumable, getDownloadURL } from '@firebase/storage';
 import removeActions from '../../components/utils/remove-accents/removeActions';
 import { uploadMedia } from '../../helpers/upload';
 
@@ -21,18 +20,18 @@ const Settings = () => {
     const user = useSelector((state) => state.user);
 
     const [isEditMode, setIsEditMode] = useState([]);
-    const [fullName, setFullName] = useState(user.displayName);
-    const [bio, setBio] = useState(user.bio ? user.bio : '');
+    const [fullName, setFullName] = useState(user?.displayName);
+    const [bio, setBio] = useState(user?.bio);
     const [image, setImage] = useState({
         preview: null,
         avatar: null,
     });
     const [social, setSocial] = useState({
-        fb: user.socials.fb ? user.socials.fb : '',
-        youtube: user.socials.youtube ? user.socials.youtube : '',
-        linkedin: user.socials.linkedin ? user.socials.linkedin : '',
-        instagram: user.socials.instagram ? user.socials.instagram : '',
-        twitter: user.socials.twitter ? user.socials.twitter : '',
+        fb: user?.socials?.fb,
+        youtube: user?.socials?.youtube,
+        linkedin: user?.socials?.linkedin,
+        instagram: user?.socials?.instagram,
+        twitter: user?.socials?.twitter,
     });
 
     useEffect(() => {
@@ -82,7 +81,7 @@ const Settings = () => {
             const data = await res.json();
             setFullName(data.fullName);
             dispatch(
-                settings({ fullName: data.fullName, photoURL: user.photoURL })
+                settings({ fullName: data.fullName, photoURL: user?.photoURL })
             );
         } catch (error) {
             console.log(error.message);
@@ -113,7 +112,7 @@ const Settings = () => {
             setImage(data.photoURL);
             dispatch(
                 settings({
-                    fullName: user.displayName,
+                    fullName: user?.displayName,
                     photoURL: data.photoURL,
                 })
             );
@@ -143,8 +142,8 @@ const Settings = () => {
             setBio(data.bio);
             dispatch(
                 settings({
-                    fullName: user.displayName,
-                    photoURL: user.photoURL,
+                    fullName: user?.displayName,
+                    photoURL: user?.photoURL,
                     bio: data.bio,
                 })
             );
@@ -240,7 +239,7 @@ const Settings = () => {
                                     description={
                                         'Nên là ảnh vuông, chấp nhận các tệp: JPG, PNG hoặc GIF.'
                                     }
-                                    photoURL={user.photoURL}
+                                    photoURL={user?.photoURL}
                                     preview={image.preview}
                                     isImage={true}
                                     onFileChange={getNewAvatar}
@@ -250,7 +249,7 @@ const Settings = () => {
                                 />
                                 <FieldInput
                                     title={'Email'}
-                                    value={user.email ? user.email : ''}
+                                    value={user?.email}
                                     placeholder={'Eg. hoclaptrinh@f8.edu.vn'}
                                     isEdit={false}
                                     disabled={true}
@@ -258,22 +257,22 @@ const Settings = () => {
                                 <FieldInput
                                     title={'User Name'}
                                     value={`${removeActions(
-                                        user.displayName
-                                            .toLowerCase()
-                                            .replace(/\s/g, '')
+                                        user?.displayName
+                                            ?.toLowerCase()
+                                            ?.replace(/\s/g, '')
                                     )}`}
                                     placeholder={'Thêm user name'}
                                     isEdit={false}
                                     disabled={true}
                                     description={`URL: https://fullstack.edu.vn/@${removeActions(
-                                        user.displayName
-                                            .toLowerCase()
-                                            .replace(/\s/g, '')
+                                        user?.displayName
+                                            ?.toLowerCase()
+                                            ?.replace(/\s/g, '')
                                     )}`}
                                 />
                                 <FieldInput
                                     title={'Số điện thoại'}
-                                    value={user.phoneNumber}
+                                    value={user?.phoneNumber}
                                     placeholder={'Thêm số điện thoại'}
                                     isEdit={false}
                                     disabled={true}

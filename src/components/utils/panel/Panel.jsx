@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Offcanvas } from 'react-bootstrap';
-import styles from './VerticalModal.module.scss';
 import '../../../sass/_offCanvas.scss';
 
-const VerticalModal = ({
+const Panel = ({
     button,
     buttonStyle,
     className,
@@ -14,6 +13,10 @@ const VerticalModal = ({
     children,
     open = false,
     onClose,
+    hideButtonOnShow = false,
+    headerClassName,
+    onShow,
+    ...props
 }) => {
     const [show, setShow] = useState(open);
 
@@ -23,7 +26,9 @@ const VerticalModal = ({
 
     const toggleShow = () => {
         if (show) {
-            onClose();
+            onClose?.();
+        } else {
+            onShow?.();
         }
         setShow((prev) => !prev);
     };
@@ -38,9 +43,15 @@ const VerticalModal = ({
         return () => window.removeEventListener('resize', resize);
     }, [hideOnComputer]);
 
+    const shouldShowButton = () => {
+        if (hideButtonOnShow && show) return false;
+        if (!button) return false;
+        return true;
+    };
+
     return (
         <>
-            {button && (
+            {shouldShowButton() && (
                 <div onClick={toggleShow} className={buttonStyle}>
                     {button}
                 </div>
@@ -49,11 +60,15 @@ const VerticalModal = ({
             <Offcanvas
                 show={show}
                 onHide={toggleShow}
-                className={`${styles.wrapper} ${className}`}
+                className={className}
                 placement={placement}
                 name={placement}
+                {...props}
             >
-                <Offcanvas.Header closeButton={closeButton}>
+                <Offcanvas.Header
+                    closeButton={closeButton}
+                    className={headerClassName}
+                >
                     <Offcanvas.Title>{header}</Offcanvas.Title>
                 </Offcanvas.Header>
                 {children}
@@ -62,4 +77,4 @@ const VerticalModal = ({
     );
 };
 
-export default VerticalModal;
+export default Panel;

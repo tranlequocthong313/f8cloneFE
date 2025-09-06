@@ -1,0 +1,29 @@
+.wrapper {
+    animation: slideIn 0.5s ease;
+    cursor: pointer;
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    left: unset;
+    will-change: opacity;
+    width: 800px;
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(80%);
+        }
+
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+}
+
+@media (min-width: 0px) and (max-width: 739px) {
+    .wrapper {
+        padding: 10px 10px calc(20% - 10px);
+    }
+}

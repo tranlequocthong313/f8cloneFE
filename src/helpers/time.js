@@ -29,3 +29,20 @@ export function convertSecondsToHMS(totalSeconds) {
         seconds: isNaN(seconds) ? 0 : seconds,
     };
 }
+
+export const formatHHMMSS = (currentTime) => {
+    const {
+        hours = 0,
+        minutes = 0,
+        seconds = 0,
+    } = convertSecondsToHMS(currentTime);
+
+    const min = minutes < 10 ? '0' + minutes : minutes;
+    const sec = seconds < 10 ? '0' + seconds : seconds;
+
+    if (hours > 0) {
+        return `${hours < 10 ? '0' + hours : hours}:${min}:${sec}`;
+    }
+
+    return `${min}:${sec}`;
+};

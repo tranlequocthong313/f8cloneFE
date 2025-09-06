@@ -5,6 +5,7 @@ import { LearningContext } from '../../context/LearningContext';
 import parseDuration from 'youtube-duration-format';
 import {
     convertSecondsToHMS,
+    formatHHMMSS,
     getTotalSecondsFromYoutubeDuration,
 } from '../../helpers/time';
 
@@ -48,23 +49,6 @@ const LearningTrackItem = ({ episodes }) => {
         }, 0);
     };
 
-    const formatTotalTime = (totalTime) => {
-        const {
-            hours = 0,
-            minutes = 0,
-            seconds = 0,
-        } = convertSecondsToHMS(totalTime);
-
-        const min = minutes < 10 ? '0' + minutes : minutes;
-        const sec = seconds < 10 ? '0' + seconds : seconds;
-
-        if (hours > 0) {
-            return `${hours < 10 ? '0' + hours : hours}:${min}:${sec}`;
-        }
-
-        return `${min}:${sec}`;
-    };
-
     const completedLessons = (episode) => {
         return episode?.lessons?.reduce(
             (acc, cur) =>
@@ -75,7 +59,7 @@ const LearningTrackItem = ({ episodes }) => {
 
     const getEpisodeInfo = (episode) => {
         return `${completedLessons(episode)}/${episode?.lessons?.length} |
-                    ${formatTotalTime(totalLearnSeconds(episode))}`;
+                    ${formatHHMMSS(totalLearnSeconds(episode))}`;
     };
 
     if (!episodes) return null;

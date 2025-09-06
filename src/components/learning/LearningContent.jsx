@@ -4,7 +4,8 @@ import LearningVideo from './LearningVideo';
 import CommentWrapper from '../utils/comment/CommentWrapper';
 import { useSearchParams } from 'react-router-dom';
 import { LearningContext } from '../../context/LearningContext';
-import { convertSecondsToHMS } from '../../helpers/time';
+import { convertSecondsToHMS, formatHHMMSS } from '../../helpers/time';
+import LearningNote from './LearningNote';
 
 const LearningContent = ({ isShowMenuTrack, learningLesson }) => {
     const [searchParams] = useSearchParams();
@@ -26,23 +27,6 @@ const LearningContent = ({ isShowMenuTrack, learningLesson }) => {
         return `Cập nhật tháng ${d.getMonth() + 1} năm ${d.getFullYear()}`;
     };
 
-    const getCurrenTime = () => {
-        const {
-            hours = 0,
-            minutes = 0,
-            seconds = 0,
-        } = convertSecondsToHMS(currentTime);
-
-        const min = minutes < 10 ? '0' + minutes : minutes;
-        const sec = seconds < 10 ? '0' + seconds : seconds;
-
-        if (hours > 0) {
-            return `${hours < 10 ? '0' + hours : hours}:${min}:${sec}`;
-        }
-
-        return `${min}:${sec}`;
-    };
-
     return (
         <div
             className={
@@ -58,15 +42,20 @@ const LearningContent = ({ isShowMenuTrack, learningLesson }) => {
                         <h3>{learningLesson?.title}</h3>
                         <p>{getUpdatedAt()}</p>
                     </div>
-                    <button className={styles.addNoteButton}>
-                        <i className='fa-solid fa-plus'></i>
-                        <span className={styles.label}>
-                            Thêm ghi chú tại{' '}
-                            <span className={styles.duration}>
-                                {getCurrenTime()}
-                            </span>
-                        </span>
-                    </button>
+
+                    <LearningNote
+                        button={
+                            <button className={styles.addNoteButton}>
+                                <i className='fa-solid fa-plus'></i>
+                                <span className={styles.label}>
+                                    Thêm ghi chú tại{' '}
+                                    <span className={styles.duration}>
+                                        {formatHHMMSS(currentTime)}
+                                    </span>
+                                </span>
+                            </button>
+                        }
+                    />
                 </div>
                 <div className={styles.aboutMessage}>
                     <p>

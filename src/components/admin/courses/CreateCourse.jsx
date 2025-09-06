@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Modal, Button, Form, Spinner, Row, Col } from 'react-bootstrap';
 import { apiURL } from '../../../context/constants';
 import { useDispatch } from 'react-redux';
@@ -7,14 +7,14 @@ import MainToast from '../../utils/toast/MainToast';
 import removeActions from '../../utils/remove-accents/removeActions';
 import MainButton from '../../utils/button/MainButton';
 import youtubeDurationFormat from 'youtube-duration-format';
-import { createCourse } from '../../../actions/userAction'
+import { createCourse } from '../../../actions/userAction';
 
 const INITIAL_DATA = {
     title: '',
     description: '',
     videoId: '',
     image: '',
-    level: '',
+    level: 'beginner',
     topics: [],
     requirements: [],
     role: 'FE',
@@ -102,7 +102,10 @@ const CreateCourse = () => {
             const data = await res.json();
             if (data.items && data.items.length > 0) {
                 const video = data.items[0];
-                const title = video.snippet.localized.title;
+                const title = video.snippet.localized.title?.replace(
+                    /^[0-9]+\.\s*/,
+                    ''
+                );
                 const duration = video.contentDetails.duration;
 
                 const updated = [...episodes];
@@ -122,7 +125,8 @@ const CreateCourse = () => {
                 method: 'POST',
                 body: JSON.stringify({
                     ...data,
-                    episode: episodes,
+                    level: data.level.toLowerCase(),
+                    episodes,
                 }),
                 headers: {
                     'Content-Type': 'application/json',
@@ -219,14 +223,16 @@ const CreateCourse = () => {
                         />
                     </Form.Group>
                     <Form.Group className='mb-3' controlId='formBasicEmail'>
-                        <Form.Control
-                            type='text'
-                            placeholder='Nhập level'
+                        <Form.Select
+                            aria-label='Level'
                             onChange={(e) =>
                                 handleDataChange('level', e.target.value)
                             }
-                            className={styles.createVideoInput}
-                        />
+                        >
+                            <option value='beginner'>Beginner</option>
+                            <option value='intermediate'>Intermediate</option>
+                            <option value='advance'>Advance</option>
+                        </Form.Select>
                     </Form.Group>
                     <Form.Group className='mb-3' controlId='formBasicEmail'>
                         <Form.Control

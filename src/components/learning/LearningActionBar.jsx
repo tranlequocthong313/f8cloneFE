@@ -1,5 +1,5 @@
 import styles from './LearningActionBar.module.scss';
-import VerticalModal from '../utils/vertical-modal/VerticalModal';
+import Panel from '../utils/panel/Panel';
 import LearningTrackItem from './LearningTrackItem';
 import { useContext } from 'react';
 import { LearningContext } from '../../context/LearningContext';
@@ -44,7 +44,7 @@ const LearningActionBar = ({
             </div>
 
             <div className={styles.mobileAndTabletTrack}>
-                <VerticalModal
+                <Panel
                     button={
                         <div className={styles.toggleTrackMenu}>
                             <h4 className={styles.title}>
@@ -69,7 +69,7 @@ const LearningActionBar = ({
                             <LearningTrackItem episodes={episodes} />
                         </div>
                     </div>
-                </VerticalModal>
+                </Panel>
             </div>
         </div>
     );
