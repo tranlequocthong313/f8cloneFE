@@ -10,7 +10,7 @@ import LearningNote from './LearningNote';
 const LearningContent = ({ isShowMenuTrack, learningLesson }) => {
     const [searchParams] = useSearchParams();
 
-    const { currentTime } = useContext(LearningContext);
+    const { currentTime, pauseVideo } = useContext(LearningContext);
 
     const [isShowComment, setIsShowComment] = useState(false);
 
@@ -45,7 +45,10 @@ const LearningContent = ({ isShowMenuTrack, learningLesson }) => {
 
                     <LearningNote
                         button={
-                            <button className={styles.addNoteButton}>
+                            <button
+                                className={styles.addNoteButton}
+                                onClick={pauseVideo}
+                            >
                                 <i className='fa-solid fa-plus'></i>
                                 <span className={styles.label}>
                                     Thêm ghi chú tại{' '}

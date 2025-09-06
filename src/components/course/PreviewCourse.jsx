@@ -14,7 +14,6 @@ const PreviewCourse = ({ previewVideo, showVideo }) => {
                 </div>
                 <VideoPlayer
                     videoId={previewVideo}
-                    play={true}
                     autoPlay={false}
                 />
             </div>

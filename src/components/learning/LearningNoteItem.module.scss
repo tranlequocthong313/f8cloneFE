@@ -1,0 +1,81 @@
+@import '../../sass/color';
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+
+    .header {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+
+        .time {
+            color: #fff;
+            font-weight: 600;
+            background-color: $primary-color;
+            border-radius: 24px;
+            width: 58px;
+            text-align: center;
+            line-height: 24px;
+            font-size: 14px;
+            transition: opacity ease .3s;
+            margin-right: 16px;
+
+            &:hover {
+                cursor: pointer;
+                opacity: 0.8;
+            }
+        }
+
+        .lesson {
+            font-size: 16px;
+            font-weight: 600;
+            color: $primary-color;
+            transition: opacity ease .3s;
+            overflow: hidden;
+            word-wrap: break-word;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+            max-width: 50%;
+
+            &:hover {
+                cursor: pointer;
+                opacity: 0.8;
+            }
+        }
+
+        .episode {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            transition: opacity ease .3s;
+            margin-left: 8px;
+            overflow: hidden;
+            word-wrap: break-word;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+        }
+
+        .actions {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+
+            i {
+                color: #bfbfbf;
+            }
+        }
+    }
+
+    .content {
+        border-radius: 6px;
+        background-color: #f7f8fa;
+        padding: 16px;
+        margin-top: 12px;
+        color: #333;
+        font-size: 14px;
+        line-height: 1.4;
+    }
+}

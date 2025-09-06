@@ -10,7 +10,7 @@ const LearningActionBar = ({
     isShowMenuTrack,
     loading,
 }) => {
-    const { goNextLesson, goPrevLesson, learningLessonId, learningLesson, learningEpisode } =
+    const { goNextLesson, goPrevLesson, learningLessonId, learningEpisode } =
         useContext(LearningContext);
 
     return (

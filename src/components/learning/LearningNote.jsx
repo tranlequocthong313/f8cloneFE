@@ -10,21 +10,34 @@ import { LearningContext } from '../../context/LearningContext';
 import { Button } from 'react-bootstrap';
 import Cookies from 'js-cookie';
 import { apiURL } from '../../context/constants';
+import MainToast from '../utils/toast/MainToast';
 
 const LearningNote = ({ button }) => {
     const mdEditor = useRef(null);
 
-    const { currentTime, course, learningEpisode, learningLesson } =
-        useContext(LearningContext);
+    const {
+        currentTime,
+        course,
+        learningEpisode,
+        learningLesson,
+        unPauseVideo,
+    } = useContext(LearningContext);
 
     const [note, setNote] = useState('');
     const [open, setOpen] = useState(false);
+    const [createNoteStatus, setCreateNoteStatus] = useState({
+        isSuccess: false,
+        show: false,
+    });
 
     const editorChange = ({ text }) => {
         setNote(text);
     };
 
-    const onClose = () => setOpen(false);
+    const onClose = () => {
+        setOpen(false);
+        unPauseVideo();
+    };
 
     const createNote = async () => {
         if (!note) return;
@@ -48,58 +61,83 @@ const LearningNote = ({ button }) => {
                 },
             });
 
-            setOpen(false);
             setNote('');
+            onClose();
+            setCreateNoteStatus({
+                isSuccess: true,
+                show: true,
+            });
         } catch (error) {
             console.log('🚀 ~ createNote ~ error:', error);
+            setCreateNoteStatus({
+                isSuccess: false,
+                show: true,
+            });
         }
     };
 
     return (
-        <Panel
-            placement={'bottom'}
-            button={button}
-            closeButton={false}
-            scroll={true}
-            backdrop={false}
-            className={styles.wrapper}
-            headerClassName={styles.panelHeader}
-            header={
-                <div className={styles.header}>
-                    <h2>Thêm ghi chú tại</h2>
-                    <span>{formatHHMMSS(currentTime)}</span>
-                </div>
-            }
-            open={open}
-            onClose={onClose}
-            onShow={() => setOpen(true)}
-        >
-            <Editor
-                style={{
-                    border: '1px solid #ebebeb',
-                    borderRadius: 6,
-                    marginBottom: 16,
-                }}
-                ref={mdEditor}
-                value={note}
-                onChange={editorChange}
-                renderHTML={(text) => <ReactMarkdown children={text} />}
-            />
+        <>
+            <Panel
+                placement={'bottom'}
+                button={button}
+                closeButton={false}
+                scroll={true}
+                backdrop={false}
+                className={styles.wrapper}
+                headerClassName={styles.panelHeader}
+                hideButtonOnShow={true}
+                header={
+                    <div className={styles.header}>
+                        <h2>Thêm ghi chú tại</h2>
+                        <span>{formatHHMMSS(currentTime)}</span>
+                    </div>
+                }
+                open={open}
+                onShow={() => setOpen(true)}
+            >
+                <Editor
+                    style={{
+                        border: '1px solid #ebebeb',
+                        borderRadius: 6,
+                        marginBottom: 16,
+                    }}
+                    ref={mdEditor}
+                    value={note}
+                    onChange={editorChange}
+                    renderHTML={(text) => <ReactMarkdown children={text} />}
+                />
 
-            <div className={styles.actions}>
-                <Button size='sm' variant='outline-secondary' onClick={onClose}>
-                    Hủy bỏ
-                </Button>
-                <Button
-                    size='sm'
-                    variant='primary'
-                    disabled={!note}
-                    onClick={createNote}
-                >
-                    Tạo ghi chú
-                </Button>
-            </div>
-        </Panel>
+                <div className={styles.actions}>
+                    <Button
+                        size='sm'
+                        variant='outline-secondary'
+                        onClick={onClose}
+                    >
+                        Hủy bỏ
+                    </Button>
+                    <Button
+                        size='sm'
+                        variant='primary'
+                        disabled={!note}
+                        onClick={createNote}
+                    >
+                        Tạo ghi chú
+                    </Button>
+                </div>
+            </Panel>
+
+            <MainToast
+                successText={'Tạo ghi chú thành công'}
+                failText={'Tạo ghi chú thất bại'}
+                position='top-end'
+                status={createNoteStatus}
+                setStatus={() =>
+                    setCreateNoteStatus((prev) => ({ ...prev, show: false }))
+                }
+                variant={createNoteStatus.isSuccess ? 'success' : 'danger'}
+            />
+        </>
     );
 };
 

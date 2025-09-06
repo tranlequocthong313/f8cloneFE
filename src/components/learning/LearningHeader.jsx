@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import logo from '../../asset/images/f8_icon.png';
 import CircularProgressBar from '../utils/circular-progress-bar/CircularProgressBar';
 import { LearningContext } from '../../context/LearningContext';
+import Panel from '../utils/panel/Panel';
+import LearningNoteList from './LearningNoteList';
 
 const LearningHeader = () => {
     const { totalCompletedLessons, totalLessons } = useContext(LearningContext);
@@ -33,9 +35,14 @@ const LearningHeader = () => {
                         bài học
                     </p>
                 </div>
-                <button className={styles.actionButton}>
-                    <i className='fa-solid fa-file'></i> <span>Ghi chú</span>
-                </button>
+                <LearningNoteList
+                    button={
+                        <button className={styles.actionButton}>
+                            <i className='fa-solid fa-file'></i>{' '}
+                            <span>Ghi chú</span>
+                        </button>
+                    }
+                />
                 <button className={styles.actionButton}>
                     <i className='fa-solid fa-circle-question'></i>{' '}
                     <span>Hướng dẫn</span>

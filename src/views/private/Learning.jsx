@@ -3,10 +3,7 @@ import LearningActionBar from '../../components/learning/LearningActionBar';
 import LearningContent from '../../components/learning/LearningContent';
 import LearningHeader from '../../components/learning/LearningHeader';
 import LearningTrack from '../../components/learning/LearningTrack';
-import Comment from '../../components/utils/comment/Comment';
-import { apiURL } from '../../context/constants';
 import { LearningContext } from '../../context/LearningContext';
-import styles from './Learning.module.scss';
 
 const Learning = () => {
     const {

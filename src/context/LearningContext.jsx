@@ -1,17 +1,5 @@
-import React, {
-    createContext,
-    useState,
-    useEffect,
-    useContext,
-    useMemo,
-} from 'react';
-import {
-    useLocation,
-    useNavigate,
-    createSearchParams,
-    useParams,
-    useSearchParams,
-} from 'react-router-dom';
+import React, { createContext, useState, useEffect, useMemo } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { apiURL } from './constants';
 import Cookies from 'js-cookie';
 import { useSelector } from 'react-redux';
@@ -25,7 +13,6 @@ const LearningContextProvider = ({ children }) => {
 
     const [isShowMenuTrack, setIsShowMenuTrack] = useState(true);
     const [query, setQuery] = useState(searchParams.get('id'));
-    const [play, setPlay] = useState(false);
     const [videoId, setVideoId] = useState('');
     const [course, setCourse] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -33,6 +20,8 @@ const LearningContextProvider = ({ children }) => {
     const [learningLesson, setLearningLesson] = useState(null);
     const [learningProgress, setLearningProgress] = useState([]);
     const [currentTime, setCurrentTime] = useState(0);
+    const [isPause, setIsPause] = useState(false);
+    const [playAt, setPlayAt] = useState(0);
 
     const getTotalLessonAtCurrentEpisode = (
         episodes = [],
@@ -172,7 +161,7 @@ const LearningContextProvider = ({ children }) => {
 
     const playVideo = ({ lesson, episode }, progress) => {
         if (getLessonStatus(lesson._id, progress) === 'locked') return;
-        setPlay(true);
+        setPlayAt(0)
         setVideoId(lesson.videoId);
         setLearningEpisode(episode);
         setLearningLesson(lesson);
@@ -312,14 +301,28 @@ const LearningContextProvider = ({ children }) => {
             }, 0);
     }, [course, learningProgress]);
 
+    const pauseVideo = () => setIsPause(true);
+    const unPauseVideo = () => setIsPause(false);
+
+    const playVideoAt = (lessonId, time) => {
+        if (getLessonStatus(lessonId) === 'locked') return;
+        const episode = course.episodes.find((ep) =>
+            ep.lessons.find((l) => l._id === lessonId)
+        );
+        const lesson = episode.lessons.find((l) => l._id === lessonId);
+        setPlayAt(time);
+        setVideoId(lesson.videoId);
+        setLearningEpisode(episode);
+        setLearningLesson(lesson);
+        createParams(lessonId);
+    };
+
     const value = {
         course,
         isShowMenuTrack,
         playVideo,
         handleIsShowMenuTrack,
         videoId,
-        play,
-        setPlay,
         onEnd,
         loading,
         goNextLesson,
@@ -334,6 +337,11 @@ const LearningContextProvider = ({ children }) => {
         totalCompletedLessons,
         currentTime,
         setCurrentTime,
+        isPause,
+        pauseVideo,
+        unPauseVideo,
+        playVideoAt,
+        playAt,
     };
 
     return (

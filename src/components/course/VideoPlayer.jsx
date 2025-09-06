@@ -3,19 +3,20 @@ import Youtube from 'react-youtube';
 import styles from './VideoPlayer.module.scss';
 
 const VideoPlayer = ({
-    videoId,
-    onClick,
-    page,
-    onEnd,
-    play,
+    videoId = null,
+    onClick = () => {},
+    onEnd = () => {},
+    isPause = false,
     autoPlay = true,
     setCurrentTime,
+    playAt = 0,
 }) => {
     const ref = useRef(null);
 
     const youtubeVideoOptions = {
         playerVars: {
             autoplay: autoPlay ? 1 : 0,
+            start: playAt,
         },
     };
 
@@ -25,15 +26,32 @@ const VideoPlayer = ({
 
     useEffect(() => {
         const intervalId = setInterval(() => {
-            setCurrentTime?.(Math.round(ref.current?.getCurrentTime()));
+            if (ref.current) {
+                setCurrentTime?.(Math.round(ref.current.getCurrentTime()));
+            }
         }, 1000);
 
         return () => clearInterval(intervalId);
-    }, [ref.current]);
+    }, [setCurrentTime]);
+
+    useEffect(() => {
+        if (!ref.current) return;
+        if (!videoId) return;
+
+        try {
+            if (isPause) {
+                ref.current.pauseVideo();
+            } else {
+                ref.current.playVideo();
+            }
+        } catch (error) {
+            console.log('🚀 ~ VideoPlayer ~ error:', error);
+        }
+    }, [isPause, videoId]);
 
     return (
         <div className={styles.wrapper}>
-            {play && (
+            {videoId && (
                 <Youtube
                     videoId={videoId}
                     opts={youtubeVideoOptions}
@@ -41,7 +59,7 @@ const VideoPlayer = ({
                     onReady={handleReady}
                 />
             )}
-            {!play && (
+            {!videoId && (
                 <div className={styles.player} onClick={onClick}>
                     <div className={styles.noVideo}>
                         <div className={styles.playButton}>
