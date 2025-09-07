@@ -12,7 +12,7 @@ import Cookies from 'js-cookie';
 import { apiURL } from '../../context/constants';
 import MainToast from '../utils/toast/MainToast';
 
-const LearningNote = ({ button }) => {
+const LearningNote = ({ isShowMenuTrack, button }) => {
     const mdEditor = useRef(null);
 
     const {
@@ -85,6 +85,7 @@ const LearningNote = ({ button }) => {
                 scroll={true}
                 backdrop={false}
                 className={styles.wrapper}
+                style={{ width: isShowMenuTrack ? '77%' : '100%' }}
                 headerClassName={styles.panelHeader}
                 hideButtonOnShow={true}
                 header={
