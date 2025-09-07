@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Image } from 'react-bootstrap';
+import { Image, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import styles from './MyCourse.module.scss';
 import Tippy from '../../../utils/tippy/Tippy';
 import { useSelector } from 'react-redux';
 import { apiURL } from '../../../../context/constants';
 import Cookies from 'js-cookie';
+import timeSince from '../../../utils/timeSince/timeSince';
 
 const CourseItem = ({ course }) => {
     const user = useSelector((state) => state.user);
@@ -25,12 +26,29 @@ const CourseItem = ({ course }) => {
             </Link>
             <div className={styles.info}>
                 <h3>
-                    <Link to='/my-course'>{course?.title}</Link>
+                    <Link to={to}>{course?.title}</Link>
                 </h3>
-                {/* <p>Bạn chưa học khóa này</p> */}
-                <Link to={to} className={styles.startButton}>
-                    Bắt đầu học
-                </Link>
+                {!course?.progress ? (
+                    <>
+                        <p>Bạn chưa học khóa này</p>
+                        <Link to={to} className={styles.startButton}>
+                            Bắt đầu học
+                        </Link>
+                    </>
+                ) : (
+                    <>
+                        <p>Học cách đây {timeSince(course?.lastLearnedAt)}</p>
+                        <OverlayTrigger
+                            placement='bottom'
+                            overlay={<Tooltip>{course?.progress}%</Tooltip>}
+                        >
+                            <div
+                                className={styles.progress}
+                                style={{ '--progress': `${course?.progress}%` }}
+                            ></div>
+                        </OverlayTrigger>
+                    </>
+                )}
             </div>
         </div>
     );
