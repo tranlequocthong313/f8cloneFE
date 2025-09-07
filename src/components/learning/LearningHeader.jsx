@@ -9,7 +9,8 @@ import Panel from '../utils/panel/Panel';
 import LearningNoteList from './LearningNoteList';
 
 const LearningHeader = () => {
-    const { totalCompletedLessons, totalLessons } = useContext(LearningContext);
+    const { totalCompletedLessons, totalLessons, learningEpisode } =
+        useContext(LearningContext);
 
     return (
         <Navbar className={styles.navHeader}>
@@ -20,7 +21,7 @@ const LearningHeader = () => {
                 <Link to='/'>
                     <Image src={logo} className={styles.logoNavbar} />
                 </Link>
-                <h4 className={styles.logoHeading}>Học Lập Trình Để Đi Làm</h4>
+                <h4 className={styles.logoHeading}>{learningEpisode?.title}</h4>
             </Navbar.Brand>
             <div className={styles.userAction}>
                 <div className={styles.progressBar}>
@@ -43,7 +44,7 @@ const LearningHeader = () => {
                         </button>
                     }
                 />
-                <button className={styles.actionButton}>
+                <button className={`${styles.actionButton} ${styles.actionHelpButton}`}>
                     <i className='fa-solid fa-circle-question'></i>{' '}
                     <span>Hướng dẫn</span>
                 </button>

@@ -64,13 +64,15 @@ const LearningTrackItem = ({ episodes }) => {
 
     if (!episodes) return null;
 
-    return episodes?.map((episode) => (
+    return episodes?.map((episode, index) => (
         <div key={episode._id}>
             <div
                 className={styles.wrapper}
                 onClick={() => handleOpen(episode._id)}
             >
-                <h3 className={styles.title}>{episode.title}</h3>
+                <h3 className={styles.title}>
+                    {index + 1}. {episode.title}
+                </h3>
                 <span className={styles.description}>
                     {getEpisodeInfo(episode)}
                 </span>

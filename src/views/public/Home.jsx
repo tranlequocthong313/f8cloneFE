@@ -31,7 +31,7 @@ const Home = () => {
     const [blogData, setBlogData] = useState([]);
     const [videoData, setVideoData] = useState([]);
     const [fetchStatus, setFetchStatus] = useState({
-        show: false,
+        show: true,
     });
 
     useEffect(() => {

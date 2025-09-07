@@ -39,7 +39,7 @@ const LearningContent = ({ isShowMenuTrack, learningLesson }) => {
             <div className={styles.content}>
                 <div className={styles.contentTop}>
                     <div className={styles.heading}>
-                        <h3>{learningLesson?.title}</h3>
+                        <h3>{learningLesson?.title?.replace(/^[0-9]+\.\s*/, '')}</h3>
                         <p>{getUpdatedAt()}</p>
                     </div>
 

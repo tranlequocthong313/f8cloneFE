@@ -35,6 +35,7 @@
     @include flexCenter(row);
     flex: 1 1;
     justify-content: flex-start !important;
+
     .logoNavbar {
       width: 38px;
       height: 30px;
@@ -114,10 +115,17 @@
         display: none;
       }
 
-      & .actionButton:last-child,
       .actionButton span {
         display: none;
       }
+
+      .actionHelpButton {
+        display: none;
+      }
+    }
+
+    .logoNavbar {
+      display: none;
     }
   }
 }

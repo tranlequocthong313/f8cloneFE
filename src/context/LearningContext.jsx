@@ -135,7 +135,6 @@ const LearningContextProvider = ({ children }) => {
                     ...data,
                     episodes: data.episodes.map((ep, index) => ({
                         ...ep,
-                        title: `${index + 1}. ${ep.title}`,
                         lessons: ep.lessons.map((ls, lsIndex) => ({
                             ...ls,
                             title: `${

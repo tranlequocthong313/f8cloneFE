@@ -20,7 +20,7 @@ const LearningNoteList = ({ button }) => {
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
-        if (!course) return;
+        if (!course || !open) return;
 
         const getNotes = async () => {
             try {
@@ -53,7 +53,7 @@ const LearningNoteList = ({ button }) => {
         };
 
         getNotes();
-    }, [course, learningEpisode, filter]);
+    }, [course, learningEpisode, filter, open]);
 
     const onDelete = (id) =>
         setNotes((prev) => prev.filter((n) => n._id !== id));

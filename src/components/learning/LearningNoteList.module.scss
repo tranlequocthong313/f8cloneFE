@@ -2,6 +2,7 @@
     padding: 20px 30px;
     padding-top: 0;
     overflow: auto;
+    height: 100%;
 }
 
 .header {
@@ -9,6 +10,8 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 48px;
+    gap: 10px;
+    flex-wrap: wrap;
 
     h2 {
         font-weight: 600;

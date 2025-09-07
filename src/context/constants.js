@@ -7,7 +7,7 @@ import wowEmoji from '../asset/images/wowemoji.png';
 
 const apiURL =
     process.env.NODE_ENV !== 'production'
-        ? 'http://192.168.1.176:5000'
+        ? 'http://localhost:5000'
         : 'https://f8clonebe.onrender.com';
 
 const COUNTRY_CODE = {

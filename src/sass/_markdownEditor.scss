@@ -1,6 +1,6 @@
 .rc-md-editor {
   margin-bottom: 31px;
-  height: calc(100vh - 100px) !important;
+  height: calc(100vh - 100px);
   border: none;
   box-sizing: border-box;
   display: flex;
@@ -16,8 +16,8 @@
   }
 
   .rc-md-navigation {
-    background-color: #fff !important;
-    border-bottom: none !important;
+    background-color: #fff;
+    border-bottom: none;
     position: sticky;
     top: 66px;
     z-index: 1;
