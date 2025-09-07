@@ -5,10 +5,11 @@ import styles from './LearningNoteItem.module.scss';
 import { memo, useContext, useEffect, useRef, useState } from 'react';
 import Cookies from 'js-cookie';
 import { apiURL } from '../../context/constants';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Modal } from 'react-bootstrap';
 import { formatHHMMSS } from '../../helpers/time';
 import Editor from 'react-markdown-editor-lite';
 import ReactMarkdown from 'react-markdown';
+import MainButton from '../utils/button/MainButton'
 
 const LearningNoteItem = ({ note, onDelete, onEdit, onClosePanel }) => {
     const { playVideoAt } = useContext(LearningContext);
@@ -17,6 +18,9 @@ const LearningNoteItem = ({ note, onDelete, onEdit, onClosePanel }) => {
 
     const [text, setText] = useState(note?.content);
     const [isEdit, setIsEdit] = useState(false);
+    const [isShowDeleteModal, setIsShowDeleteModal] = useState(false);
+
+    const showDeleteModal = () => setIsShowDeleteModal((prev) => !prev);
 
     useEffect(() => {
         setText(note?.content);
@@ -93,7 +97,7 @@ const LearningNoteItem = ({ note, onDelete, onEdit, onClosePanel }) => {
                     <Button variant='link' onClick={() => setIsEdit(true)}>
                         <i className='fa-solid fa-pen'></i>
                     </Button>
-                    <Button variant='link' onClick={deleteNote}>
+                    <Button variant='link' onClick={showDeleteModal}>
                         <i className='fa-solid fa-trash'></i>
                     </Button>
                 </div>
@@ -133,6 +137,20 @@ const LearningNoteItem = ({ note, onDelete, onEdit, onClosePanel }) => {
                     </div>
                 </div>
             )}
+
+            <Modal show={isShowDeleteModal} onHide={showDeleteModal} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Xóa ghi chú</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>Đồng ý xóa ghi chú?</p>
+                </Modal.Body>
+
+                <Modal.Footer>
+                    <MainButton onClick={deleteNote}>Đồng ý</MainButton>
+                    <MainButton onClick={showDeleteModal}>Hủy</MainButton>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 };
