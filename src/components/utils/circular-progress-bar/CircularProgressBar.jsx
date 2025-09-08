@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Image, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import styles from './CircularProgressBar.module.scss';
@@ -8,6 +7,8 @@ const CircularProgressBar = ({
     numberPercent = 0,
     tooltip,
     className,
+    filledColor = '#f05123',
+    strokedColor = '#4d4f50',
 }) => {
     const radius = 18;
     const stroke = 2;
@@ -29,7 +30,7 @@ const CircularProgressBar = ({
                 className={styles.svgCircle}
             >
                 <circle
-                    stroke='#4d4f50'
+                    stroke={strokedColor}
                     fill='transparent'
                     strokeWidth={stroke}
                     r={normalizedRadius}
@@ -37,7 +38,7 @@ const CircularProgressBar = ({
                     cy={radius}
                 />
                 <circle
-                    stroke='#f05123'
+                    stroke={filledColor}
                     fill='transparent'
                     strokeWidth={stroke}
                     strokeDasharray={circumference + ' ' + circumference}
@@ -58,9 +59,11 @@ const CircularProgressBar = ({
                     </Link>
                 </OverlayTrigger>
             )}
-            <div className={styles.percent}>
-                {Math.round(numberPercent * 100)}%
-            </div>
+            {!logo && (
+                <div className={styles.percent}>
+                    {Math.round(numberPercent * 100)}%
+                </div>
+            )}
         </div>
     );
 };

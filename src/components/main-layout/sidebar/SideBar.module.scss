@@ -35,6 +35,10 @@
     border-radius: 16px;
     margin-top: 4px;
     text-decoration: none;
+
+    &:hover {
+      background-color: #f1f5f7;
+    }
   }
 
   a.active {

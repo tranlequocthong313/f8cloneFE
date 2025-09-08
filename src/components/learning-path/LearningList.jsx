@@ -1,129 +1,135 @@
-import React from 'react'
-import styles from './LearningList.module.scss'
-import SecondaryCard from '../utils/card/SecondaryCard'
-import { Link } from 'react-router-dom'
-import { Image } from 'react-bootstrap'
-import CircularProgressBar from '../utils/circular-progress-bar/CircularProgressBar'
-import thumb1 from '../../asset/images/61a0439062b82.png'
-import thumb2 from '../../asset/images/61a0439cc779b.png'
-import skillImage1 from '../../asset/images/6200b81f52d83.png'
-import skillImage2 from '../../asset/images/6200aecea81de.png'
-import skillImage3 from '../../asset/images/6200afe1240bb.png'
-import skillImage4 from '../../asset/images/6200b809e5c13.png'
-import skillImage5 from '../../asset/images/6200ad9d8a2d8.png'
-import skillImage6 from '../../asset/images/6200af9262b30.png'
-import skillImage7 from '../../asset/images/6200afb926038.png'
-import MainButton from '../utils/button/MainButton'
+import React, { useEffect, useState } from 'react';
+import styles from './LearningList.module.scss';
+import SecondaryCard from '../utils/card/SecondaryCard';
+import { Link } from 'react-router-dom';
+import { Image } from 'react-bootstrap';
+import CircularProgressBar from '../utils/circular-progress-bar/CircularProgressBar';
+import thumb1 from '../../asset/images/61a0439062b82.png';
+import thumb2 from '../../asset/images/61a0439cc779b.png';
+import MainButton from '../utils/button/MainButton';
+import Cookies from 'js-cookie';
+import { apiURL } from '../../context/constants';
 
 const LearningList = () => {
-  return (
-    <div className={styles.content}>
-      <div className={styles.wrapper}>
-        <SecondaryCard forPage={'learningPath'}>
-          <div className={styles.body}>
-            <div className={styles.info}>
-              <h2 className={styles.title}>
-                <Link to="/">Front-end</Link>
-              </h2>
-              <p>
-                Lập trình viên Front-end là người xây dựng ra giao diện
-                websites. Trong phần này F8 sẽ chia sẻ cho bạn lộ trình để trở
-                thành lập trình viên Front-end nhé.
-              </p>
-            </div>
-            <div className={styles.thumbWrap}>
-              <div className={styles.thumbRound}>
-                <Link to="/" className={styles.thumb}>
-                  <Image src={thumb1} />
-                </Link>
-              </div>
-            </div>
-          </div>
-          <div className={styles.cta}>
-            <CircularProgressBar
-              logo={skillImage1}
-              tooltip={'Kiến Thức Nhập Môn IT'}
-            />
-            <CircularProgressBar
-              logo={skillImage2}
-              tooltip={'HTML, CSS từ Zero tới Hero'}
-            />
-            <CircularProgressBar
-              logo={skillImage3}
-              tooltip={'Responsive Với Grid System'}
-            />
-            <CircularProgressBar
-              logo={skillImage4}
-              tooltip={'HTML, CSS Tools & Tricks'}
-            />
-            <CircularProgressBar
-              logo={skillImage5}
-              tooltip={'Javascript Cơ Bản'}
-            />
-            <CircularProgressBar
-              logo={skillImage5}
-              tooltip={'Javascript Nâng Cao'}
-            />
-            <CircularProgressBar
-              logo={skillImage6}
-              tooltip={'Xây Dựng Website với ReactJS'}
-            />
-          </div>
-          <MainButton primary={true} className={styles.btn}>
-            <Link to="/">Xem chi tiết</Link>
-          </MainButton>
-        </SecondaryCard>
-      </div>
-      <div className={styles.wrapper}>
-        <SecondaryCard forPage={'learningPath'}>
-          <div className={styles.body}>
-            <div className={styles.info}>
-              <h2 className={styles.title}>
-                <Link to="/">Back-end</Link>
-              </h2>
-              <p>
-                Trái với Front-end thì lập trình viên Back-end là người làm việc
-                với dữ liệu, công việc thường nặng tính logic hơn. Chúng ta sẽ
-                cùng tìm hiểu thêm về lộ trình học Back-end nhé.
-              </p>
-            </div>
-            <div className={styles.thumbWrap}>
-              <div className={styles.thumbRound}>
-                <Link to="/" className={styles.thumb}>
-                  <Image src={thumb2} />
-                </Link>
-              </div>
-            </div>
-          </div>
-          <div className={styles.cta}>
-            <CircularProgressBar
-              logo={skillImage1}
-              tooltip={'Kiến Thức Nhập Môn IT'}
-            />
-            <CircularProgressBar
-              logo={skillImage2}
-              tooltip={'HTML, CSS từ Zero tới Hero'}
-            />
-            <CircularProgressBar
-              logo={skillImage5}
-              tooltip={'Javascript Cơ Bản'}
-            />
-            <CircularProgressBar
-              logo={skillImage5}
-              tooltip={'Javascript Nâng Cao'}
-            />
-            <CircularProgressBar
-              logo={skillImage7}
-              tooltip={'Node & ExpressJS'}
-            />
-          </div>
-          <MainButton primary={true} className={styles.btn}>
-            <Link to="/">Xem chi tiết</Link>
-          </MainButton>
-        </SecondaryCard>
-      </div>
-    </div>
-  )
-}
+    const [fetCourses, setFeCourses] = useState([]);
+    const [beCourses, setBeCourses] = useState([]);
 
-export default LearningList
+    useEffect(() => {
+        const getCourses = async () => {
+            const token = Cookies.get('token');
+            if (!token) return;
+
+            try {
+                const res = await fetch(`${apiURL}/me/enrolled-courses`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                const data = await res.json();
+
+                setFeCourses(
+                    data?.courses.filter((course) =>
+                        ['FE', 'Fullstack'].includes(course.role)
+                    )
+                );
+                setBeCourses(
+                    data?.courses.filter((course) =>
+                        ['BE', 'Fullstack'].includes(course.role)
+                    )
+                );
+            } catch (error) {
+                console.log('🚀 ~ getCourses ~ error:', error);
+            }
+        };
+
+        getCourses();
+    }, []);
+
+    return (
+        <div className={styles.content}>
+            <div className={styles.wrapper}>
+                <SecondaryCard forPage={'learningPath'}>
+                    <div className={styles.body}>
+                        <div className={styles.info}>
+                            <h2 className={styles.title}>
+                                <Link to='#'>Lộ trình học ront-end</Link>
+                            </h2>
+                            <p>
+                                Lập trình viên Front-end là người xây dựng ra
+                                giao diện websites. Trong phần này F8 sẽ chia sẻ
+                                cho bạn lộ trình để trở thành lập trình viên
+                                Front-end nhé.
+                            </p>
+                        </div>
+                        <div className={styles.thumbWrap}>
+                            <div className={styles.thumbRound}>
+                                <Link to='#' className={styles.thumb}>
+                                    <Image src={thumb1} />
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                    <div className={styles.cta}>
+                        {fetCourses?.map((course) => {
+                            if (!course?.icon) return;
+                            return (
+                                <CircularProgressBar
+                                    logo={course?.icon}
+                                    numberPercent={course?.progress / 100}
+                                    tooltip={course?.title}
+                                    strokedColor={'#d4d4d4'}
+                                />
+                            );
+                        })}
+                    </div>
+                    <MainButton primary={true} className={styles.btn}>
+                        <Link to='#'>Xem chi tiết</Link>
+                    </MainButton>
+                </SecondaryCard>
+            </div>
+            <div className={styles.wrapper}>
+                <SecondaryCard forPage={'learningPath'}>
+                    <div className={styles.body}>
+                        <div className={styles.info}>
+                            <h2 className={styles.title}>
+                                <Link to='#'>Lộ trình học Back-end</Link>
+                            </h2>
+                            <p>
+                                Trái với Front-end thì lập trình viên Back-end
+                                là người làm việc với dữ liệu, công việc thường
+                                nặng tính logic hơn. Chúng ta sẽ cùng tìm hiểu
+                                thêm về lộ trình học Back-end nhé.
+                            </p>
+                        </div>
+                        <div className={styles.thumbWrap}>
+                            <div className={styles.thumbRound}>
+                                <Link to='#' className={styles.thumb}>
+                                    <Image src={thumb2} />
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                    <div className={styles.cta}>
+                        {beCourses?.map((course) => {
+                            if (!course?.icon) return;
+                            return (
+                                <CircularProgressBar
+                                    logo={course?.icon}
+                                    numberPercent={course?.progress / 100}
+                                    tooltip={course?.title}
+                                    strokedColor={'#d4d4d4'}
+                                />
+                            );
+                        })}
+                    </div>
+                    <MainButton primary={true} className={styles.btn}>
+                        <Link to='#'>Xem chi tiết</Link>
+                    </MainButton>
+                </SecondaryCard>
+            </div>
+        </div>
+    );
+};
+
+export default LearningList;
