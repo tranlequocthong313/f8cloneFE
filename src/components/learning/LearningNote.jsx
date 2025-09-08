@@ -102,6 +102,7 @@ const LearningNote = ({ isShowMenuTrack, button }) => {
                         border: '1px solid #ebebeb',
                         borderRadius: 6,
                         marginBottom: 16,
+                        flex: 1,
                     }}
                     ref={mdEditor}
                     value={note}

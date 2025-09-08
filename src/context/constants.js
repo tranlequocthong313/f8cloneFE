@@ -15,7 +15,7 @@ import learningAudio7 from '../asset/audio/learning7.mp3';
 
 const apiURL =
     process.env.NODE_ENV !== 'production'
-        ? 'http://localhost:5000'
+        ? 'http://192.168.1.176:5000'
         : 'https://f8clonebe.onrender.com';
 
 const COUNTRY_CODE = {

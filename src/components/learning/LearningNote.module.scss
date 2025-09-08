@@ -1,9 +1,8 @@
 @import '../../sass/color';
 
 .wrapper {
-    padding: 0 2%;
-    padding-top: 24px;
-    padding-bottom: 42px;
+    padding: 24px 2%;
+    padding-bottom: calc(24px + env(safe-area-inset-bottom));
 
     .panelHeader {
         padding: 0;
@@ -50,6 +49,13 @@
 
 @media (max-width: 1023px) {
     .wrapper {
-        width: 100%;
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 739px) {
+    .wrapper {
+        width: 100% !important;
+        height: 100dvh;
     }
 }
