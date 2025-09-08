@@ -53,7 +53,7 @@ const LearningList = () => {
                     <div className={styles.body}>
                         <div className={styles.info}>
                             <h2 className={styles.title}>
-                                <Link to='#'>Lộ trình học ront-end</Link>
+                                Lộ trình học Front-end
                             </h2>
                             <p>
                                 Lập trình viên Front-end là người xây dựng ra
@@ -64,9 +64,7 @@ const LearningList = () => {
                         </div>
                         <div className={styles.thumbWrap}>
                             <div className={styles.thumbRound}>
-                                <Link to='#' className={styles.thumb}>
-                                    <Image src={thumb1} />
-                                </Link>
+                                <Image src={thumb1} className={styles.thumb} />
                             </div>
                         </div>
                     </div>
@@ -74,18 +72,17 @@ const LearningList = () => {
                         {fetCourses?.map((course) => {
                             if (!course?.icon) return;
                             return (
-                                <CircularProgressBar
-                                    logo={course?.icon}
-                                    numberPercent={course?.progress / 100}
-                                    tooltip={course?.title}
-                                    strokedColor={'#d4d4d4'}
-                                />
+                                <Link to={`/learning/${course?.slug}`}>
+                                    <CircularProgressBar
+                                        logo={course?.icon}
+                                        numberPercent={course?.progress / 100}
+                                        tooltip={course?.title}
+                                        strokedColor={'#d4d4d4'}
+                                    />
+                                </Link>
                             );
                         })}
                     </div>
-                    <MainButton primary={true} className={styles.btn}>
-                        <Link to='#'>Xem chi tiết</Link>
-                    </MainButton>
                 </SecondaryCard>
             </div>
             <div className={styles.wrapper}>
@@ -93,7 +90,7 @@ const LearningList = () => {
                     <div className={styles.body}>
                         <div className={styles.info}>
                             <h2 className={styles.title}>
-                                <Link to='#'>Lộ trình học Back-end</Link>
+                                Lộ trình học Back-end
                             </h2>
                             <p>
                                 Trái với Front-end thì lập trình viên Back-end
@@ -104,9 +101,7 @@ const LearningList = () => {
                         </div>
                         <div className={styles.thumbWrap}>
                             <div className={styles.thumbRound}>
-                                <Link to='#' className={styles.thumb}>
-                                    <Image src={thumb2} />
-                                </Link>
+                                <Image src={thumb2} className={styles.thumb} />
                             </div>
                         </div>
                     </div>
@@ -114,18 +109,17 @@ const LearningList = () => {
                         {beCourses?.map((course) => {
                             if (!course?.icon) return;
                             return (
-                                <CircularProgressBar
-                                    logo={course?.icon}
-                                    numberPercent={course?.progress / 100}
-                                    tooltip={course?.title}
-                                    strokedColor={'#d4d4d4'}
-                                />
+                                <Link to={`/learning/${course?.slug}`}>
+                                    <CircularProgressBar
+                                        logo={course?.icon}
+                                        numberPercent={course?.progress / 100}
+                                        tooltip={course?.title}
+                                        strokedColor={'#d4d4d4'}
+                                    />
+                                </Link>
                             );
                         })}
                     </div>
-                    <MainButton primary={true} className={styles.btn}>
-                        <Link to='#'>Xem chi tiết</Link>
-                    </MainButton>
                 </SecondaryCard>
             </div>
         </div>

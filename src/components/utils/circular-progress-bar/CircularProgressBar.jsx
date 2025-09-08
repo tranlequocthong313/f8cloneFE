@@ -54,9 +54,7 @@ const CircularProgressBar = ({
                     delay={{ show: 50, hide: 100 }}
                     overlay={renderTooltip}
                 >
-                    <Link to='/' className={styles.courseStep}>
-                        <Image src={logo} />
-                    </Link>
+                    <Image src={logo} className={styles.courseStep} />
                 </OverlayTrigger>
             )}
             {!logo && (

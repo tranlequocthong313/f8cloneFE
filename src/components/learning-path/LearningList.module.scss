@@ -15,6 +15,10 @@
       margin-bottom: 20px;
 
       .info {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
         .title {
           margin: 0;
 
@@ -50,13 +54,11 @@
           overflow: hidden;
 
           .thumb {
-            img {
-              width: 98px;
-              height: 98px;
-              border-radius: 50%;
-              object-fit: cover;
-              border-style: none;
-            }
+            width: 98px;
+            height: 98px;
+            border-radius: 50%;
+            object-fit: cover;
+            border-style: none;
           }
         }
       }
@@ -80,6 +82,7 @@
 @media (max-width: 1023px) {
   .content {
     flex-direction: column;
+
     & .wrapper:last-child {
       margin-left: 0;
     }
