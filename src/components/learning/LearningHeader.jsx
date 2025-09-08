@@ -32,6 +32,7 @@ const LearningHeader = () => {
     useEffect(() => {
         if (!user || !user.isLoggedIn) return;
         if (!user.completedTutorial) {
+            pauseVideo()
             setIsOpen(true);
             setSteps(LEARNING_TUTORIAL_STEPS({ user }));
         }
