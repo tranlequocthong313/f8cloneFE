@@ -131,6 +131,8 @@ const LearningContextProvider = ({ children }) => {
                 if (!res.ok) throw new Error('Failed to fetch course');
                 const data = await res.json();
 
+                if (!data || !data.episodes) return;
+
                 setCourse({
                     ...data,
                     episodes: data.episodes.map((ep, index) => ({
@@ -160,7 +162,7 @@ const LearningContextProvider = ({ children }) => {
 
     const playVideo = ({ lesson, episode }, progress) => {
         if (getLessonStatus(lesson._id, progress) === 'locked') return;
-        setPlayAt(0)
+        setPlayAt(0);
         setVideoId(lesson.videoId);
         setLearningEpisode(episode);
         setLearningLesson(lesson);
@@ -213,7 +215,9 @@ const LearningContextProvider = ({ children }) => {
         }
     };
 
-    const handleIsShowMenuTrack = () => setIsShowMenuTrack((prev) => !prev);
+    const toggleShowMenuTrack = () => setIsShowMenuTrack((prev) => !prev);
+    const showMenuTrack = () => setIsShowMenuTrack(true);
+    const closeMenuTrack = () => setIsShowMenuTrack(false);
 
     const getLessonAndEpisode = (
         direction,
@@ -320,7 +324,9 @@ const LearningContextProvider = ({ children }) => {
         course,
         isShowMenuTrack,
         playVideo,
-        handleIsShowMenuTrack,
+        toggleShowMenuTrack,
+        showMenuTrack,
+        closeMenuTrack,
         videoId,
         onEnd,
         loading,

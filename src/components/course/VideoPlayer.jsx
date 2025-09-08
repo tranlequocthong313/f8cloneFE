@@ -57,6 +57,7 @@ const VideoPlayer = ({
                     opts={youtubeVideoOptions}
                     onEnd={onEnd}
                     onReady={handleReady}
+                    id='video-player'
                 />
             )}
             {!videoId && (

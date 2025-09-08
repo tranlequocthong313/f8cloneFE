@@ -5,6 +5,14 @@ import cryEmoji from '../asset/images/cryemoji.png';
 import angryEmoji from '../asset/images/angryemoji.png';
 import wowEmoji from '../asset/images/wowemoji.png';
 
+import learningAudio1 from '../asset/audio/learning1.mp3';
+import learningAudio2 from '../asset/audio/learning2.mp3';
+import learningAudio3 from '../asset/audio/learning3.mp3';
+import learningAudio4 from '../asset/audio/learning4.mp3';
+import learningAudio5 from '../asset/audio/learning5.mp3';
+import learningAudio6 from '../asset/audio/learning6.mp3';
+import learningAudio7 from '../asset/audio/learning7.mp3';
+
 const apiURL =
     process.env.NODE_ENV !== 'production'
         ? 'http://localhost:5000'
@@ -989,4 +997,54 @@ const EMOJI_MAP = EMOJIES.reduce((acc, cur) => {
     return acc;
 }, {});
 
-export { apiURL, COUNTRY_CODE, EMOJIES, EMOJI_MAP };
+const LEARNING_TUTORIAL_STEPS = ({ user }) => [
+    {
+        content:
+            'Chào cậu! Mình là Miu - hướng dẫn viên tại F8, mình sẽ đưa cậu đi thăm quan và giới thiệu cho cậu hiểu rõ hơn về F8 nhé. Đi thôi!',
+        position: 'center',
+        audio: learningAudio1,
+    },
+    {
+        selector: '#video-player',
+        content: `Đây là khu vực trung tâm của màn hình này, toàn bộ nội dung các bài học như là video, hình ảnh, văn bản sẽ được hiển thị ở đây ${user?.displayName} nhé ^^`,
+        position: 'right',
+        audio: learningAudio2,
+    },
+    {
+        selector: '#learning-track',
+        content:
+            'Tiếp theo là khu vực quan trọng không kém, đây là danh sách các bài học tại khóa này. Cậu sẽ rất thường xuyên tương tác tại đây để chuyển bài học và làm bài tập đấy >_<',
+        position: 'left',
+        audio: learningAudio3,
+    },
+    {
+        selector: '#lesson-first',
+        content:
+            'Đây là bài học đầu tiên dành cho cậu, khi học xong bài học này Miu sẽ đánh "Tích xanh" bên cạnh để đánh dấu cậu đã hoàn thành bài học nhé!',
+        position: 'left',
+        audio: learningAudio4,
+    },
+    {
+        selector: '#lesson-second',
+        content:
+            'Đây là bài học số 2, theo mặc định các bài học tại F8 đều bị khóa. Khi cậu hoàn thành bài học phía trước thì bài sau sẽ tự động được mở. Mà lúc học cậu đừng có tua video, vì sẽ không được tính là hoàn thành bài học đâu đấy nhé ^^',
+        position: 'left',
+        audio: learningAudio5,
+    },
+    {
+        selector: '#learning-note',
+        content:
+            'Tại F8 có một chức năng rất đặc biệt, đó là chức năng "Tạo ghi chú". Khi học sẽ có nhiều lúc cậu muốn ghi chép lại đó, tại F8 cậu sẽ không cần tốn giấy mực để làm việc này đâu. Thả tim nào <3',
+        position: 'left',
+        audio: learningAudio6,
+    },
+    {
+        selector: '#learning-comment',
+        content:
+            'Và đây là khu vực dành cho việc hỏi đáp, trao đổi trong mỗi bài học. Nếu có bài học nào hay thì cậu bình luận một lời động viên vào đây cũng được nhé. Miu sẽ rất vui và cảm thấy biết ơn đấy <3',
+        position: 'left',
+        audio: learningAudio7,
+    },
+];
+
+export { apiURL, COUNTRY_CODE, EMOJIES, EMOJI_MAP, LEARNING_TUTORIAL_STEPS };

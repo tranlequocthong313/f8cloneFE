@@ -8,7 +8,7 @@ import { LearningContext } from '../../context/LearningContext';
 const Learning = () => {
     const {
         isShowMenuTrack,
-        handleIsShowMenuTrack,
+        toggleShowMenuTrack,
         course,
         loading,
         learningLesson,
@@ -31,7 +31,7 @@ const Learning = () => {
             )}
 
             <LearningActionBar
-                handleIsShowMenuTrack={handleIsShowMenuTrack}
+                toggleShowMenuTrack={toggleShowMenuTrack}
                 isShowMenuTrack={isShowMenuTrack}
                 loading={loading}
                 episodes={course?.episodes}

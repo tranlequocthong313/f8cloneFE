@@ -11,6 +11,7 @@ const initialState = {
     videoCreated: null,
     blogCreated: null,
     bio: null,
+    completedTutorial: false,
     socials: {
         fb: null,
         youtube: null,
@@ -41,6 +42,7 @@ const userReducer = (state = initialState, action) => {
                         : action.payload.isAdmin, // NOTE: for demo purpose
                 socials: action.payload.socials ? action.payload.socials : {},
                 slug: action.payload.slug,
+                completedTutorial: action.payload.completedTutorial,
             };
 
         case 'SIGN_OUT':
@@ -79,6 +81,7 @@ const userReducer = (state = initialState, action) => {
                         : action.payload.isAdmin, // NOTE: for demo purpose
                 socials: action.payload.socials ? action.payload.socials : {},
                 slug: action.payload.slug,
+                completedTutorial: action.payload.completedTutorial,
             };
 
         case 'CREATE_VIDEO':
@@ -111,11 +114,17 @@ const userReducer = (state = initialState, action) => {
                     : '',
             };
 
-        case 'ENROLL_COURSE': 
+        case 'ENROLL_COURSE':
             return {
                 ...state,
-                coursesEnrolled: [...state.coursesEnrolled, action.payload]
-            }
+                coursesEnrolled: [...state.coursesEnrolled, action.payload],
+            };
+
+        case 'COMPLETED_TUTORIAL':
+            return {
+                ...state,
+                completedTutorial: true,
+            };
 
         default:
             return state;

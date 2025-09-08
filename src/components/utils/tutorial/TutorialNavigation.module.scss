@@ -1,0 +1,25 @@
+@import '../../../sass/color';
+
+.nextBtn {
+    background: $primary-color;
+    border-radius: 3px;
+    font-size: 15px;
+    color: #fff;
+    margin-left: 24px;
+}
+
+.prevBtn {
+    font-size: 14px;
+    margin-right: 12px;
+    background-color: transparent;
+}
+
+.tourBtn {
+    padding: 6px 10px;
+    transition: opacity .2s ease;
+    border: none;
+
+    &:hover {
+        opacity: 0.8;
+    }
+}

@@ -51,6 +51,7 @@ const LearningContent = ({ isShowMenuTrack, learningLesson }) => {
                             <button
                                 className={styles.addNoteButton}
                                 onClick={pauseVideo}
+                                id='learning-note'
                             >
                                 <i className='fa-solid fa-plus'></i>
                                 <span className={styles.label}>
@@ -93,6 +94,7 @@ const LearningContent = ({ isShowMenuTrack, learningLesson }) => {
                 <div
                     className={styles.commentButton}
                     onClick={() => setIsShowComment(true)}
+                    id='learning-comment'
                 >
                     <button className={styles.button}>
                         <i className='fa-solid fa-comments'></i>

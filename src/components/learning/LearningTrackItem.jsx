@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useMemo } from 'react';
 import styles from './LearningTrackItem.module.scss';
 import { Collapse } from 'react-bootstrap';
 import { LearningContext } from '../../context/LearningContext';
@@ -8,8 +8,11 @@ import {
     formatHHMMSS,
     getTotalSecondsFromYoutubeDuration,
 } from '../../helpers/time';
+import { useTour } from '@reactour/tour';
 
 const LearningTrackItem = ({ episodes }) => {
+    const { isOpen } = useTour();
+
     const [open, setOpen] = useState([]);
 
     const { getLessonStatus, learningLessonId, playVideo, learningEpisode } =
@@ -62,6 +65,27 @@ const LearningTrackItem = ({ episodes }) => {
                     ${formatHHMMSS(totalLearnSeconds(episode))}`;
     };
 
+    const lessons = useMemo(() => {
+        return episodes?.flatMap((ep) => ep.lessons);
+    }, [episodes]);
+
+    const getIdForDriverJS = (lessonId) => {
+        const index = lessons.findIndex((l) => l._id === lessonId);
+
+        if (index === 0) return 'lesson-first';
+        if (index === 1) return 'lesson-second';
+        return null;
+    };
+
+    useEffect(() => {
+        if (!isOpen || !lessons) return;
+        setOpen((prev) => [
+            ...prev,
+            lessons?.[0]?.episodeId,
+            lessons?.[1]?.episodeId,
+        ]);
+    }, [isOpen, lessons]);
+
     if (!episodes) return null;
 
     return episodes?.map((episode, index) => (
@@ -96,6 +120,7 @@ const LearningTrackItem = ({ episodes }) => {
                                     episode,
                                 })
                             }
+                            id={getIdForDriverJS(lesson._id)}
                         >
                             <div className={styles.lessonInfo}>
                                 <h3>{lesson.title}</h3>

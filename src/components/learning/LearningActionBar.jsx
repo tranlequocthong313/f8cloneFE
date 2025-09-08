@@ -6,7 +6,7 @@ import { LearningContext } from '../../context/LearningContext';
 
 const LearningActionBar = ({
     episodes,
-    handleIsShowMenuTrack,
+    toggleShowMenuTrack,
     isShowMenuTrack,
     loading,
 }) => {
@@ -32,7 +32,7 @@ const LearningActionBar = ({
             )}
             <div
                 className={styles.toggleTrackMenu}
-                onClick={handleIsShowMenuTrack}
+                onClick={toggleShowMenuTrack}
             >
                 <h4 className={styles.title}>{learningEpisode?.title}</h4>
                 <button className={styles.toggleButton}>

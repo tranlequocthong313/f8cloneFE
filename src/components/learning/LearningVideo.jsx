@@ -20,6 +20,7 @@ const LearningVideo = () => {
                 onClick={() => setPlay(true)}
                 videoId={videoId ? videoId : ''}
                 setCurrentTime={setCurrentTime}
+                autoPlay={true}
             />
         </div>
     );

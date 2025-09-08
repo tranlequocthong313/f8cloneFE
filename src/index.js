@@ -1,4 +1,3 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
@@ -8,6 +7,8 @@ import { Provider } from 'react-redux';
 import store from './reducers/index';
 import LearningContextProvider from './context/LearningContext';
 import BlogContextProvider from './context/BlogContext';
+import './sass/_tour.scss';
+import TutorialProvider from './context/TutorialContext';
 
 if (process.env.NODE_ENV === 'production') {
     console.log = () => {};
@@ -18,13 +19,15 @@ if (process.env.NODE_ENV === 'production') {
 ReactDOM.render(
     <BrowserRouter>
         <Provider store={store}>
-            <NavContextProvider>
-                <LearningContextProvider>
-                    <BlogContextProvider>
-                        <App />
-                    </BlogContextProvider>
-                </LearningContextProvider>
-            </NavContextProvider>
+            <TutorialProvider>
+                <NavContextProvider>
+                    <LearningContextProvider>
+                        <BlogContextProvider>
+                            <App />
+                        </BlogContextProvider>
+                    </LearningContextProvider>
+                </NavContextProvider>
+            </TutorialProvider>
         </Provider>
     </BrowserRouter>,
     document.getElementById('root')

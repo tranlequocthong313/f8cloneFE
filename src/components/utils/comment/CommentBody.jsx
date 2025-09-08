@@ -23,8 +23,6 @@ const CommentBody = ({
     showModal,
     entity,
     style,
-    commentId,
-    parentCommentId,
 }) => {
     const [showEditInputById, setShowEditInputById] = useState([]);
     const [showReplyInputById, setShowReplyInputById] = useState([]);

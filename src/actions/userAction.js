@@ -59,6 +59,10 @@ const enrollCourse = (payload) => ({
     payload,
 });
 
+const completeTutorial = () => ({
+    type: 'COMPLETED_TUTORIAL',
+});
+
 export {
     login,
     logout,
@@ -69,4 +73,5 @@ export {
     createCourse,
     settings,
     enrollCourse,
+    completeTutorial,
 };
