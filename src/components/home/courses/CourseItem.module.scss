@@ -1,38 +1,61 @@
-.title {
-  margin: 12px 0;
-}
+.card {
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px 20px;
+    background-color: #f7f7f7;
 
-.studentCount {
-  span {
-    color: #666;
-    font-size: 14px;
-    margin-left: 8px;
+    .title {
+      flex: 1;
+
+      a {
+        -webkit-line-clamp: unset;
+      }
+    }
   }
 
-  i {
-    color: #666;
+  .info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    p {
+      margin: 0;
+    }
+
+    span {
+      color: #666;
+      font-size: 14px;
+      margin-left: 8px;
+    }
+
+    i {
+      color: #666;
+    }
+  }
+
+  .progress {
+    p {
+      color: #666;
+      font-size: 13px;
+      margin: 0 0 16px;
+    }
+  }
+
+  .button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 138px;
+    height: 36px;
+    border-radius: 20px;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    visibility: hidden;
   }
 }
 
-.progress {
-  p {
-    color: #666;
-    font-size: 13px;
-    margin: 0 0 16px;
-  }
-}
-
-.button {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 138px;
-  height: 36px;
-  border-radius: 20px;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  visibility: hidden;
-}
 
 @media (max-width: 1023px) {
   .button {

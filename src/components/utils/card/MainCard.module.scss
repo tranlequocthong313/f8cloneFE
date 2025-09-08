@@ -5,12 +5,19 @@
   overflow: hidden;
   border: none;
   margin-bottom: 32px;
+  border-radius: 16px;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 8px #0000001a;
+    transition: transform .2s, box-shadow .2s;
+  }
 
   section {
     width: 100%;
     padding-top: 56.25%;
     object-fit: cover;
-    border-radius: 16px;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: 50%;
@@ -51,7 +58,7 @@
     word-wrap: break-word;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
+    -webkit-line-clamp: 2;
   }
 }
 

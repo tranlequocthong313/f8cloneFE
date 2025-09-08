@@ -1,7 +1,15 @@
 @import '../../../sass/flexCenter';
 
-.title {
-  margin: 12px 0;
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 20px;
+  background-color: #f7f7f7;
+
+  .title {
+    flex: 1;
+  }
 }
 
 .videoInfo {
@@ -42,6 +50,7 @@
   list-style-type: none;
   padding: 0;
   margin: 0;
+  justify-content: space-between;
 
   li:first-child {
     margin-left: 0;
@@ -70,10 +79,9 @@
 
 @media (max-width: 1023px) {
   .stats {
-    display: none;
-  }
+    .like {
+      display: none;
 
-  .button {
-    display: none;
+    }
   }
 }
