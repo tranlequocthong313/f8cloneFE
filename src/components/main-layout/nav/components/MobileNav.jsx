@@ -58,7 +58,7 @@ const MobileNav = ({ photoURL }) => {
               setActiveTab('/my-course')
             }}
             className={
-              activeTab === '/my-course' ? styles.setActiveTab : styles.item
+              activeTab === '/my-course' ? styles.active : styles.item
             }
           >
             <Link to="/my-course">
@@ -67,6 +67,23 @@ const MobileNav = ({ photoURL }) => {
             </Link>
           </li>
         </ul> */}
+                {user.isAdmin && (
+                    <ul className={styles.list}>
+                        <li
+                            onClick={() => setActiveTab('admin')}
+                            className={
+                                activeTab === 'admin'
+                                    ? styles.active
+                                    : styles.item
+                            }
+                        >
+                            <Link to='/admin/course'>
+                                <i className='fa-solid fa-table-columns'></i>
+                                <span>Quản lý F8</span>
+                            </Link>
+                        </li>
+                    </ul>
+                )}
                 <ul className={styles.list}>
                     <li
                         onClick={() => {
@@ -74,7 +91,7 @@ const MobileNav = ({ photoURL }) => {
                         }}
                         className={
                             activeTab === 'home'
-                                ? styles.setActiveTab
+                                ? styles.active
                                 : styles.item
                         }
                     >
@@ -89,7 +106,7 @@ const MobileNav = ({ photoURL }) => {
                         }}
                         className={
                             activeTab === 'learning-path'
-                                ? styles.setActiveTab
+                                ? styles.active
                                 : styles.item
                         }
                     >
@@ -103,7 +120,7 @@ const MobileNav = ({ photoURL }) => {
               setActiveTab('courses')
             }}
             className={
-              activeTab === 'courses' ? styles.setActiveTab : styles.item
+              activeTab === 'courses' ? styles.active : styles.item
             }
           >
             <Link to={'/courses' || '/course-slug'}>
@@ -117,7 +134,7 @@ const MobileNav = ({ photoURL }) => {
                         }}
                         className={
                             activeTab === 'blog'
-                                ? styles.setActiveTab
+                                ? styles.active
                                 : styles.item
                         }
                     >
@@ -134,7 +151,7 @@ const MobileNav = ({ photoURL }) => {
                         }}
                         className={
                             activeTab === 'bookmark-post'
-                                ? styles.setActiveTab
+                                ? styles.active
                                 : styles.item
                         }
                     >
@@ -151,7 +168,7 @@ const MobileNav = ({ photoURL }) => {
                         }}
                         className={
                             activeTab === 'about-us'
-                                ? styles.setActiveTab
+                                ? styles.active
                                 : styles.item
                         }
                     >
@@ -166,7 +183,7 @@ const MobileNav = ({ photoURL }) => {
                         }}
                         className={
                             activeTab === 'careers'
-                                ? styles.setActiveTab
+                                ? styles.active
                                 : styles.item
                         }
                     >

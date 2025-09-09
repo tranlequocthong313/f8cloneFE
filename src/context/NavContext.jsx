@@ -28,6 +28,11 @@ const NavContextProvider = ({ children }) => {
             case '/bookmark-post':
                 setActiveTab('bookmark-post');
                 break;
+            case '/admin/course':
+            case '/admin/blog':
+            case '/admin/video':
+                setActiveTab('admin');
+                break;
             case '/':
                 setActiveTab('home');
                 break;

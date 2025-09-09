@@ -13,11 +13,11 @@ const About = () => {
               Giới thiệu
             </Link>
           </li>
-          <li className={styles.item}>
+          {/* <li className={styles.item}>
             <Link className={styles.link} to="/careers">
               Cơ hội việc làm
             </Link>
-          </li>
+          </li> */}
         </ul>
       </div>
     </div>

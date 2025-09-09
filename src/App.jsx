@@ -192,7 +192,7 @@ function App() {
             <Route path='/contact-us' element={<Contact />} />
             <Route path='/privacy' element={<Privacy />} />
             <Route path='/terms' element={<Terms />} />
-            <Route path='/careers' element={<Careers />} />
+            {/* <Route path='/careers' element={<Careers />} /> */}
             <Route path='/about-us' element={<About />} />
             <Route path='/:userSlug' element={<Profile />} />
             <Route path='*' element={<NotFound />} />
