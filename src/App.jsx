@@ -27,7 +27,6 @@ import BookmarkPost from './views/private/BookmarkPost';
 import MyBlog from './views/private/MyBlog';
 import Admin from './views/admin/Admin';
 import EditPost from './views/private/EditPost';
-import BlogTag from './views/public/BlogTag';
 import Profile from './views/public/Profile';
 
 function App() {
@@ -185,7 +184,7 @@ function App() {
             <Route path='/blog/:slug' element={<BlogSlug />} />
             <Route path='/learning-path' element={<LearningPath />} />
             <Route path='/blog' element={<Blog />} />
-            <Route path='/blog/tag/:tag' element={<BlogTag />} />
+            <Route path='/blog/topic/:topic' element={<Blog />} />
             <Route path='/search' element={<Search />} />
             <Route path='/search/course' element={<Search />} />
             <Route path='/search/blog' element={<Search />} />

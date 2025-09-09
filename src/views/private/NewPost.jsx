@@ -13,7 +13,7 @@ import '../../sass/_myIcon.scss';
 import Header from '../../components/main-layout/nav/Header';
 import '../../sass/_markdownEditor.scss';
 import ContentEditable from '../../components/utils/content-editable/ContentEditable';
-import Modal from '../../components/new-post/Modal';
+import NewBlogModal from '../../components/new-post/NewBlogModal';
 import { useLocation } from 'react-router-dom';
 import { apiURL } from '../../context/constants';
 import { BlogContext } from '../../context/BlogContext';
@@ -93,7 +93,7 @@ const NewPost = () => {
                     </div>
                 </>
             )}
-            {showModal && <Modal blogContent={{ title, content }} />}
+            {showModal && <NewBlogModal blogContent={{ title, content }} />}
             <Suspense fallback={<div>Loading...</div>}>
                 <Footer />
             </Suspense>

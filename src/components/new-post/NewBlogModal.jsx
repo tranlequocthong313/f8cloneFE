@@ -4,7 +4,7 @@ import { useDropzone } from 'react-dropzone';
 import ContentEditable from '../utils/content-editable/ContentEditable';
 import moment from 'moment';
 import { apiURL } from '../../context/constants';
-import styles from './Modal.module.scss';
+import styles from './NewBlogModal.module.scss';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { createBlog } from '../../actions/userAction';
@@ -17,7 +17,7 @@ import { uploadMedia } from '../../helpers/upload';
 
 const socket = io.connect(apiURL);
 
-const Modal = ({ blogContent }) => {
+const NewBlogModal = ({ blogContent }) => {
     const navigate = useNavigate();
     const user = useSelector((state) => state.user);
 
@@ -40,7 +40,7 @@ const Modal = ({ blogContent }) => {
     const [description, setDescription] = useState('');
     const [image, setImage] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [tags, setTags] = useState(null);
+    const [tags, setTags] = useState([]);
     const [tag, setTag] = useState('');
     const [invalidTag, setInvalidTag] = useState(null);
 
@@ -81,7 +81,6 @@ const Modal = ({ blogContent }) => {
     };
 
     const uploadImageToStorage = async () => {
-        setLoading(true);
         if (image) {
             const url = await uploadMedia(image);
             postBlog(url);
@@ -94,6 +93,8 @@ const Modal = ({ blogContent }) => {
         try {
             const token = Cookies.get('token');
             if (!token) return;
+
+            setLoading(true);
 
             const blogData = {
                 image,
@@ -147,7 +148,7 @@ const Modal = ({ blogContent }) => {
 
     const addTag = (e) => {
         const isFullTagsSize = tags && tags.length === 5;
-        if (isFullTagsSize) return;
+        if (isFullTagsSize) return setInvalidTag('Bạn đã thêm tối đa 5 thẻ');
 
         const isEnterPressed = e.keyCode === 13;
         if (isEnterPressed) {
@@ -237,7 +238,7 @@ const Modal = ({ blogContent }) => {
                         Thêm tối đa 5 thẻ để độc giả biết bài viết của bạn nói
                         về điều gì.
                     </span>
-                    Bạn đã thêm thẻ này
+                    {/* Bạn đã thêm thẻ này */}
                     <div
                         className={
                             invalidTag !== null
@@ -265,7 +266,7 @@ const Modal = ({ blogContent }) => {
                                 placeholder={
                                     tags && tags.length === 5
                                         ? ''
-                                        : 'Ví dụ: Front-end, ReactJS, UI, UX'
+                                        : 'Ví dụ: Front-end, ReactJS, UI, UX, ...'
                                 }
                                 className={styles.tagsInput}
                                 disabled={tags && tags.length === 5}
@@ -345,4 +346,4 @@ const Modal = ({ blogContent }) => {
     );
 };
 
-export default Modal;
+export default NewBlogModal;

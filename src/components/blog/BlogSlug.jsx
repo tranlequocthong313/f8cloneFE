@@ -27,7 +27,7 @@ const BlogSlug = () => {
                 setBlog(data.blogSlug);
                 setBlogHighlight(data.blogHighlight);
 
-                document.title = `${data.blogSlug.titleDisplay} | by F8`;
+                document.title = `${data?.blogSlug?.titleDisplay} | by F8`;
             } catch (error) {
                 console.log(error.message);
             }

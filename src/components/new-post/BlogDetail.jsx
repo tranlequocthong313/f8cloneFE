@@ -3,7 +3,12 @@ import ReactMarkdown from 'react-markdown';
 import { Row, Col, Image } from 'react-bootstrap';
 import styles from './BlogDetail.module.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import {
+    Link,
+    useLocation,
+    useNavigate,
+    useSearchParams,
+} from 'react-router-dom';
 import BlogSameAuthor from './BlogSameAuthor';
 import BlogHighlights from './BlogHighlights';
 import Topics from '../blog/Topics';
@@ -23,6 +28,7 @@ const socket = io.connect(apiURL);
 const BlogDetail = ({ blog, blogHighlight }) => {
     const user = useSelector((state) => state.user);
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [searchParams] = useSearchParams();
 
@@ -261,7 +267,10 @@ const BlogDetail = ({ blog, blogHighlight }) => {
                 {blog?.tags && (
                     <div className={styles.tags}>
                         {blog?.tags?.map((tag) => (
-                            <Link to={`/blog/tag/${tag}`} key={tag}>
+                            <Link
+                                to={`/blog?tag=${tag}`}
+                                key={tag}
+                            >
                                 {tag}
                             </Link>
                         ))}

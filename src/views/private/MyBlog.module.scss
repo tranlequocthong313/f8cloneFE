@@ -67,6 +67,12 @@
   padding: 16px 24px 22px;
   position: relative;
   list-style-type: none;
+  
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
   h3 {
     margin-top: 0;

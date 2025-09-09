@@ -1047,4 +1047,30 @@ const LEARNING_TUTORIAL_STEPS = ({ user }) => [
     },
 ];
 
-export { apiURL, COUNTRY_CODE, EMOJIES, EMOJI_MAP, LEARNING_TUTORIAL_STEPS };
+const TOPICS = {
+    'front-end-mobile-apps': {
+        title: 'Front-end / Mobile apps',
+        description: 'Xây dựng giao diện trang web, mobile apps',
+    },
+    'back-end-devops': {
+        title: 'Back-end / Devops',
+        description: 'Thiết kế cơ sở dữ liệu, xử lý các bài toán logic',
+    },
+    'ui-ux-design': {
+        title: 'UI / UX / Design',
+        description: 'Thiết kế giao diện và trải nghiệm người dùng',
+    },
+    others: {
+        title: 'Others',
+        description: 'Các chủ đề khác',
+    },
+};
+
+export {
+    apiURL,
+    COUNTRY_CODE,
+    EMOJIES,
+    EMOJI_MAP,
+    LEARNING_TUTORIAL_STEPS,
+    TOPICS,
+};

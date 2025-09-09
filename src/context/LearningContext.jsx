@@ -1,5 +1,5 @@
-import React, { createContext, useState, useEffect, useMemo } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { createContext, useState, useEffect, useMemo } from 'react';
+import { useMatch, useParams, useSearchParams } from 'react-router-dom';
 import { apiURL } from './constants';
 import Cookies from 'js-cookie';
 import { useSelector } from 'react-redux';
@@ -7,7 +7,9 @@ import { useSelector } from 'react-redux';
 export const LearningContext = createContext();
 
 const LearningContextProvider = ({ children }) => {
-    const location = useLocation();
+    const { slug } = useParams();
+    const match = useMatch("/courses/:slug");
+
     const user = useSelector((state) => state.user);
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -127,7 +129,7 @@ const LearningContextProvider = ({ children }) => {
         const fetchCourse = async () => {
             try {
                 setLoading(true);
-                const res = await fetch(`${apiURL}${location.pathname}`);
+                const res = await fetch(`${apiURL}/${slug}`);
                 if (!res.ok) throw new Error('Failed to fetch course');
                 const data = await res.json();
 
@@ -157,8 +159,10 @@ const LearningContextProvider = ({ children }) => {
             }
         };
 
+        if (!slug || !match) return
+
         fetchCourse();
-    }, [location.pathname]);
+    }, [slug, match]);
 
     const playVideo = ({ lesson, episode }, progress) => {
         if (getLessonStatus(lesson._id, progress) === 'locked') return;

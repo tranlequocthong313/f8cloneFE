@@ -13,12 +13,13 @@ import '../../sass/_myIcon.scss';
 import Header from '../../components/main-layout/nav/Header';
 import '../../sass/_markdownEditor.scss';
 import ContentEditable from '../../components/utils/content-editable/ContentEditable';
-import Modal from '../../components/new-post/Modal';
+import NewBlogModal from '../../components/new-post/NewBlogModal';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { apiURL } from '../../context/constants';
 import { BlogContext } from '../../context/BlogContext';
 import Cookies from 'js-cookie';
 import MainToast from '../../components/utils/toast/MainToast';
+import removeActions from '../../components/utils/remove-accents/removeActions'
 
 const Footer = React.lazy(() =>
     import('../../components/main-layout/footer/Footer')
