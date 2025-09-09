@@ -20,6 +20,14 @@
   margin: 0 0 0 16px;
   color: #000;
 
+  &:hover {
+    i {
+      cursor: pointer;
+      transform: translateX(-4px);
+      transition: transform 0.2s;
+    }
+  }
+
   span {
     text-decoration: none;
     cursor: pointer;
