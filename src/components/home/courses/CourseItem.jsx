@@ -41,7 +41,10 @@ const CourseItem = ({ course, path }) => {
 
     const getTotalLearnTime = () => {
         const { hours, minutes } = convertSecondsToHMS(totalLearnSeconds);
-        return `${hours}h${minutes}p`;
+        if (hours > 0) {
+            return `${hours}h${minutes}p`;
+        }
+        return `${minutes}p`;
     };
 
     return (
