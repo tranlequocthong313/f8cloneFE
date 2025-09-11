@@ -17,9 +17,7 @@ import {
     getTotalSecondsFromYoutubeDuration,
 } from '../../helpers/time';
 import { enrollCourse } from '../../actions/userAction';
-import VideoPlayer from './VideoPlayer';
-
-const Footer = React.lazy(() => import('../main-layout/footer/Footer'));
+import Footer from '../main-layout/footer/Footer';
 
 export const COURSE_LEVEL = {
     begineer: 'cơ bản',
@@ -100,8 +98,7 @@ const CourseSlug = () => {
     }, [course]);
 
     const getTotalDuration = () => {
-        const { hours, minutes } =
-            convertSecondsToHMS(totalLearnSeconds);
+        const { hours, minutes } = convertSecondsToHMS(totalLearnSeconds);
         let result = '';
 
         if (hours > 0) {
@@ -217,16 +214,13 @@ const CourseSlug = () => {
                     </MainButton>
                 </Link>
             </div>
-            <Suspense fallback={<div>Loading...</div>}>
-                <Footer />
-            </Suspense>
+            <Footer />
             {isShowVideoPreviewCourse && (
                 <PreviewCourse
                     previewVideo={course?.videoId}
                     showVideo={showVideoPreviewCourse}
                 />
             )}
-
         </>
     );
 };

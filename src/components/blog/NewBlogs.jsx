@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SecondaryCard from '../utils/card/SecondaryCard';
-import { Image } from 'react-bootstrap';
+import { Image, Placeholder } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './NewBlogs.module.scss';
 import { apiURL } from '../../context/constants';
@@ -9,9 +9,9 @@ import timeSince from '../utils/timeSince/timeSince';
 import Cookies from 'js-cookie';
 import { useSelector } from 'react-redux';
 import Tippy from '../utils/tippy/Tippy';
-import { reportBlog } from '../utils/report/report'
-import { copyToClipboard } from '../../helpers/text'
-import BlogTippy from '../new-post/BlogTippy'
+import { reportBlog } from '../utils/report/report';
+import { copyToClipboard } from '../../helpers/text';
+import BlogTippy from '../new-post/BlogTippy';
 
 const NewBlogs = ({ blogs }) => {
     const navigate = useNavigate();
@@ -123,6 +123,62 @@ const NewBlogs = ({ blogs }) => {
             ))}
         </>
     );
+};
+
+export const SkeletonNewBlogs = ({ length = 8 }) => {
+    return Array.from({ length })?.map((_, index) => (
+        <SecondaryCard key={index}>
+            <div className={styles.header} style={{ marginBottom: 8 }}>
+                <div className={styles.author} style={{ width: '100%' }}>
+                    <Placeholder xs={4} as='p' />
+                </div>
+                <div
+                    className={styles.action}
+                    style={{
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        gap: 8,
+                    }}
+                >
+                    <Placeholder xs={1} as='p' />
+                    <Placeholder xs={1} as='p' />
+                </div>
+            </div>
+            <div className={styles.body} style={{ width: '100%' }}>
+                <div
+                    className={styles.content}
+                    style={{
+                        width: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 8,
+                    }}
+                >
+                    <Placeholder xs={8} />
+                    <Placeholder xs={12} />
+                    <Placeholder xs={12} />
+                    <Placeholder xs={11} />
+                    <div
+                        className={styles.info}
+                        style={{ width: '100%', marginTop: 4 }}
+                    >
+                        <Placeholder xs={2} style={{ marginRight: 5 }} />
+                        <Placeholder xs={2} />
+                    </div>
+                </div>
+                <div className={styles.image}>
+                    <Placeholder
+                        style={{
+                            width: '200px',
+                            height: '112px',
+                            borderRadius: '15px',
+                        }}
+                    />
+                </div>
+            </div>
+        </SecondaryCard>
+    ));
 };
 
 export default NewBlogs;

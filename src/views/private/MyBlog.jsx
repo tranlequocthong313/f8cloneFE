@@ -12,10 +12,7 @@ import timeSince from '../../components/utils/timeSince/timeSince';
 import Tabs from '../../components/utils/tabs/Tabs';
 import Tippy, { TippyItem } from '../../components/utils/tippy/Tippy';
 import blogTippyStyles from '../../components/new-post/BlogTippy.module.scss';
-
-const Footer = React.lazy(() =>
-    import('../../components/main-layout/footer/Footer')
-);
+import Footer from '../../components/main-layout/footer/Footer';
 
 const MyBlog = () => {
     const location = useLocation();
@@ -310,7 +307,9 @@ const MyBlog = () => {
                                                                     className={
                                                                         blogTippyStyles.menuItem
                                                                     }
-                                                                >Chỉnh sửa</TippyItem>
+                                                                >
+                                                                    Chỉnh sửa
+                                                                </TippyItem>
                                                                 <TippyItem
                                                                     onClick={() =>
                                                                         deleteBlog(
@@ -320,7 +319,9 @@ const MyBlog = () => {
                                                                     className={
                                                                         blogTippyStyles.menuItem
                                                                     }
-                                                                >Xóa</TippyItem>
+                                                                >
+                                                                    Xóa
+                                                                </TippyItem>
                                                             </Tippy>
                                                         </div>
                                                         <div
@@ -360,9 +361,7 @@ const MyBlog = () => {
                     </div>
                 </Col>
             </Row>
-            <Suspense fallback={<div>Loading...</div>}>
-                <Footer />
-            </Suspense>
+            <Footer />
         </>
     );
 };

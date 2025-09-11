@@ -10,6 +10,7 @@ import {
     getTotalSecondsFromYoutubeDuration,
 } from '../../../helpers/time';
 import { useMemo } from 'react';
+import { Placeholder } from 'react-bootstrap';
 
 const CourseItem = ({ course, path }) => {
     const user = useSelector((state) => state.user);
@@ -98,6 +99,22 @@ const CourseItem = ({ course, path }) => {
                     <VerticalProgressBar tooltip={'50%'} />
                 </div>
             )} */}
+        </MainCard>
+    );
+};
+
+export const SkeletonCourseItem = () => {
+    return (
+        <MainCard className={styles.card}>
+            <Placeholder style={{ paddingTop: '56.25%' }} />
+            <div className={styles.body}>
+                <Placeholder xs={8} style={{ marginBottom: 44 }} />
+                <div className={styles.info}>
+                    <Placeholder xs={3} />
+                    <Placeholder xs={2} />
+                    <Placeholder xs={2} />
+                </div>
+            </div>
         </MainCard>
     );
 };

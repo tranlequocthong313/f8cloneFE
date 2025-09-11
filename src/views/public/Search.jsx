@@ -9,279 +9,436 @@ import { Link, useLocation } from 'react-router-dom';
 import Tabs from '../../components/utils/tabs/Tabs';
 import f8Icon from '../../asset/images/f8_icon.png';
 import CoursesEnrolled from '../../components/profile/ProfileCourses';
-import { useSelector } from 'react-redux'
-
-const Footer = React.lazy(() =>
-  import('../../components/main-layout/footer/Footer')
-);
+import { useSelector } from 'react-redux';
+import Footer from '../../components/main-layout/footer/Footer';
 
 const Search = () => {
-  const location = useLocation();
+    const location = useLocation();
 
-  const searchInputRef = useRef();
+    const searchInputRef = useRef();
 
-  const [searchInput, setSearchInput] = useState('');
-  const [tabs, setTabs] = useState('/search/course');
-  const [result, setResult] = useState({
-    courses: [],
-    blogs: [],
-    videos: [],
-  });
+    const [searchInput, setSearchInput] = useState('');
+    const [tabs, setTabs] = useState('/search/course');
+    const [result, setResult] = useState({
+        courses: [],
+        blogs: [],
+        videos: [],
+    });
 
-  const user = useSelector(state => state.user)
+    const user = useSelector((state) => state.user);
 
-  const enrolledCourse = (course) => {
-    return user?.coursesEnrolled?.includes(course?._id)
-  }
+    const enrolledCourse = (course) => {
+        return user?.coursesEnrolled?.includes(course?._id);
+    };
 
-  useEffect(() => {
-    const url = new URL(window.location.href);
-    const query = url.searchParams.get('q');
-    if (query) {
-      searchInputRef.current.innerText = query;
-      setSearchInput(query);
+    useEffect(() => {
+        const url = new URL(window.location.href);
+        const query = url.searchParams.get('q');
+        if (query) {
+            searchInputRef.current.innerText = query;
+            setSearchInput(query);
 
-      const searchCourseBlogAndVideoByQueryParams = async () => {
-        try {
-          const res = await fetch(`${apiURL}/search/${query}`);
-          const data = await res.json();
+            const searchCourseBlogAndVideoByQueryParams = async () => {
+                try {
+                    const res = await fetch(`${apiURL}/search/${query}`);
+                    const data = await res.json();
 
-          setResult((prev) => {
-            return {
-              ...prev,
-              courses:
-                location.pathname === '/search/course' ? [...data.courses] : [],
-              blogs:
-                location.pathname === '/search/blog' ? [...data.blogs] : [],
-              videos:
-                location.pathname === '/search/video' ? [...data.videos] : [],
+                    setResult((prev) => {
+                        return {
+                            ...prev,
+                            courses:
+                                location.pathname === '/search/course'
+                                    ? [...data.courses]
+                                    : [],
+                            blogs:
+                                location.pathname === '/search/blog'
+                                    ? [...data.blogs]
+                                    : [],
+                            videos:
+                                location.pathname === '/search/video'
+                                    ? [...data.videos]
+                                    : [],
+                        };
+                    });
+                } catch (error) {
+                    console.log(error.message);
+                }
             };
-          });
-        } catch (error) {
-          console.log(error.message);
+
+            searchCourseBlogAndVideoByQueryParams();
         }
-      };
+    }, []);
 
-      searchCourseBlogAndVideoByQueryParams();
-    }
-  }, []);
+    const searchCourseBlogAndVideo = async (e) => {
+        try {
+            const length = e.target.innerText.trim().length;
+            let match = e.target.innerText.match(/^[a-zA-Z ]*/);
+            setSearchInput(e.target.innerText);
 
-  const searchCourseBlogAndVideo = async (e) => {
-    try {
-      const length = e.target.innerText.trim().length;
-      let match = e.target.innerText.match(/^[a-zA-Z ]*/);
-      setSearchInput(e.target.innerText);
+            const isEmptySearchInput = length === 0;
+            isEmptySearchInput &&
+                setResult((prev) => {
+                    return {
+                        ...prev,
+                        courses: [],
+                        blogs: [],
+                        videos: [],
+                    };
+                });
 
-      const isEmptySearchInput = length === 0;
-      isEmptySearchInput &&
-        setResult((prev) => {
-          return {
-            ...prev,
-            courses: [],
-            blogs: [],
-            videos: [],
-          };
-        });
+            const isValidSearchInput =
+                length >= 2 && match[0] === e.target.innerText;
+            if (isValidSearchInput) {
+                const res = await fetch(
+                    `${apiURL}/search/${e.target.innerText}`
+                );
+                const data = await res.json();
 
-      const isValidSearchInput = length >= 2 && match[0] === e.target.innerText;
-      if (isValidSearchInput) {
-        const res = await fetch(`${apiURL}/search/${e.target.innerText}`);
-        const data = await res.json();
+                setResult((prev) => {
+                    return {
+                        ...prev,
+                        courses: [...data.courses],
+                        blogs: [...data.blogs],
+                        videos: [...data.videos],
+                    };
+                });
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
 
-        setResult((prev) => {
-          return {
-            ...prev,
-            courses: [...data.courses],
-            blogs: [...data.blogs],
-            videos: [...data.videos],
-          };
-        });
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  return (
-    <>
-      <Header isSearchPage={true} />
-      <Row>
-        <Col xs={0} sm={0} md={1} lg={1} xl={1}>
-          <SideBar />
-        </Col>
-        <Col xs={12} sm={12} md={12} lg={11} xl={11}>
-          <div className="withSidebarContent">
-            <Container fluid style={{ padding: 0 }}>
-              <Row style={{ marginTop: 0, height: '100vh' }}>
-                <Col xs={12} lg={12} xl={12}>
-                  <ContentEditable
-                    text={'Tìm kiếm...'}
-                    maxLength={'100'}
-                    className={styles.contentEditable}
-                    onInput={searchCourseBlogAndVideo}
-                    ref={searchInputRef}
-                  />
-                  {searchInput.length >= 1 && (
-                    <Row style={{ marginTop: 0 }}>
-                      <Col md={12} lg={8} xl={8}>
-                        <div className={styles.tabs}>
-                          <Tabs
-                            path={'/search/course'}
-                            isActive={tabs === '/search/course'}
-                            onActive={() => setTabs('/search/course')}
-                            tab={'Khóa học'}
-                          />
-                          <Tabs
-                            path={'/search/blog'}
-                            isActive={tabs === '/search/blog'}
-                            onActive={() => setTabs('/search/blog')}
-                            tab={'Bài viết'}
-                          />
-                          <Tabs
-                            path={'/search/video'}
-                            tab={'Video'}
-                            isActive={tabs === '/search/video'}
-                            onActive={() => setTabs('/search/video')}
-                          />
-                        </div>
-
-                        {tabs === '/search/course' && (
-                          <div className={styles.contentWrapper}>
-                            {tabs === '/search/course' &&
-                            result.courses.length > 0 ? (
-                              result.courses?.map((course) => (
-                                <div
-                                  className={styles.contentContainer}
-                                  key={course._id}
-                                >
-                                  <Link to={enrolledCourse(course) ? `/learning/${course.slug}` : `/courses/${course.slug}`}>
-                                    <div
-                                      className={styles.image}
-                                      style={{
-                                        backgroundImage: `url(${course.image})`,
-                                      }}
-                                    ></div>
-                                  </Link>
-                                  <div className={styles.info}>
-                                    <h3>
-                                      <Link to={`courses/${course.slug}`}>
-                                        {course.title}
-                                      </Link>
-                                    </h3>
-                                    <p>{course.description}</p>
-                                  </div>
-                                </div>
-                              ))
-                            ) : (
-                              <div className={styles.blank}>
-                                <span>Chưa có kết quả nào phù hợp.</span>
-                              </div>
-                            )}
-                          </div>
-                        )}
-                        {tabs === '/search/blog' && (
-                          <div className={styles.contentWrapper}>
-                            {tabs === '/search/blog' &&
-                            result.blogs.length > 0 ? (
-                              result.blogs?.map((blog) => (
-                                <div
-                                  className={`${styles.contentContainer} ${styles.blogContent}`}
-                                  key={blog._id}
-                                >
-                                  <Link to={`/blog/${blog.slug}`}>
-                                    <div
-                                      className={styles.image}
-                                      style={{
-                                        backgroundImage: blog.image
-                                          ? `url(${blog.image})`
-                                          : `url(${f8Icon})`,
-                                      }}
-                                    ></div>
-                                  </Link>
-                                  <div className={styles.info}>
-                                    <h3>
-                                      <Link to={`/blog/${blog.slug}`}>
-                                        {blog.titleDisplay}
-                                      </Link>
-                                    </h3>
-                                    <p>Đọc tiếp...</p>
-                                    <div className={styles.reaction}>
-                                      <div className={styles.like}>
-                                        <i className="fa-solid fa-heart"></i>
-                                        <span>{blog.likes.length}</span>
-                                      </div>
-                                      <div className={styles.comment}>
-                                        <span>
-                                          {blog.comments.length} bình luận
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              ))
-                            ) : (
-                              <div className={styles.blank}>
-                                <span>Chưa có kết quả nào phù hợp.</span>
-                              </div>
-                            )}
-                          </div>
-                        )}
-                        {tabs === '/search/video' && (
-                          <div className={styles.contentWrapper}>
-                            {tabs === '/search/video' &&
-                            result.videos.length > 0 ? (
-                              result.videos?.map((video) => (
-                                <div
-                                  className={styles.contentContainer}
-                                  key={video._id}
-                                >
-                                  <a
-                                    rel="noopener noreferrer"
-                                    target="_blank"
-                                    href={`https://www.youtube.com/watch?v=${video.videoId}`}
-                                  >
-                                    <div
-                                      className={styles.image}
-                                      style={{
-                                        backgroundImage: `url(${video.image})`,
-                                      }}
-                                    ></div>
-                                  </a>
-                                  <div className={styles.info}>
-                                    <h3>
-                                      <a
-                                        rel="noopener noreferrer"
-                                        target="_blank"
-                                        href={`https://www.youtube.com/watch?v=${video.videoId}`}
-                                      >
-                                        {video.title}
-                                      </a>
-                                    </h3>
-                                    <p>Xem trên Youtube...</p>
-                                  </div>
-                                </div>
-                              ))
-                            ) : (
-                              <div className={styles.blank}>
-                                <span>Chưa có kết quả nào phù hợp.</span>
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </Col>
-                    </Row>
-                  )}
+    return (
+        <>
+            <Header isSearchPage={true} />
+            <Row>
+                <Col xs={0} sm={0} md={1} lg={1} xl={1}>
+                    <SideBar />
                 </Col>
-              </Row>
-            </Container>
-          </div>
-        </Col>
-      </Row>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Footer />
-      </Suspense>
-    </>
-  );
+                <Col xs={12} sm={12} md={12} lg={11} xl={11}>
+                    <div className='withSidebarContent'>
+                        <Container fluid style={{ padding: 0 }}>
+                            <Row style={{ marginTop: 0, height: '100vh' }}>
+                                <Col xs={12} lg={12} xl={12}>
+                                    <ContentEditable
+                                        text={'Tìm kiếm...'}
+                                        maxLength={'100'}
+                                        className={styles.contentEditable}
+                                        onInput={searchCourseBlogAndVideo}
+                                        ref={searchInputRef}
+                                    />
+                                    {searchInput.length >= 1 && (
+                                        <Row style={{ marginTop: 0 }}>
+                                            <Col md={12} lg={8} xl={8}>
+                                                <div className={styles.tabs}>
+                                                    <Tabs
+                                                        path={'/search/course'}
+                                                        isActive={
+                                                            tabs ===
+                                                            '/search/course'
+                                                        }
+                                                        onActive={() =>
+                                                            setTabs(
+                                                                '/search/course'
+                                                            )
+                                                        }
+                                                        tab={'Khóa học'}
+                                                    />
+                                                    <Tabs
+                                                        path={'/search/blog'}
+                                                        isActive={
+                                                            tabs ===
+                                                            '/search/blog'
+                                                        }
+                                                        onActive={() =>
+                                                            setTabs(
+                                                                '/search/blog'
+                                                            )
+                                                        }
+                                                        tab={'Bài viết'}
+                                                    />
+                                                    <Tabs
+                                                        path={'/search/video'}
+                                                        tab={'Video'}
+                                                        isActive={
+                                                            tabs ===
+                                                            '/search/video'
+                                                        }
+                                                        onActive={() =>
+                                                            setTabs(
+                                                                '/search/video'
+                                                            )
+                                                        }
+                                                    />
+                                                </div>
+
+                                                {tabs === '/search/course' && (
+                                                    <div
+                                                        className={
+                                                            styles.contentWrapper
+                                                        }
+                                                    >
+                                                        {tabs ===
+                                                            '/search/course' &&
+                                                        result.courses.length >
+                                                            0 ? (
+                                                            result.courses?.map(
+                                                                (course) => (
+                                                                    <div
+                                                                        className={
+                                                                            styles.contentContainer
+                                                                        }
+                                                                        key={
+                                                                            course._id
+                                                                        }
+                                                                    >
+                                                                        <Link
+                                                                            to={
+                                                                                enrolledCourse(
+                                                                                    course
+                                                                                )
+                                                                                    ? `/learning/${course.slug}`
+                                                                                    : `/courses/${course.slug}`
+                                                                            }
+                                                                        >
+                                                                            <div
+                                                                                className={
+                                                                                    styles.image
+                                                                                }
+                                                                                style={{
+                                                                                    backgroundImage: `url(${course.image})`,
+                                                                                }}
+                                                                            ></div>
+                                                                        </Link>
+                                                                        <div
+                                                                            className={
+                                                                                styles.info
+                                                                            }
+                                                                        >
+                                                                            <h3>
+                                                                                <Link
+                                                                                    to={`courses/${course.slug}`}
+                                                                                >
+                                                                                    {
+                                                                                        course.title
+                                                                                    }
+                                                                                </Link>
+                                                                            </h3>
+                                                                            <p>
+                                                                                {
+                                                                                    course.description
+                                                                                }
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                )
+                                                            )
+                                                        ) : (
+                                                            <div
+                                                                className={
+                                                                    styles.blank
+                                                                }
+                                                            >
+                                                                <span>
+                                                                    Chưa có kết
+                                                                    quả nào phù
+                                                                    hợp.
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
+                                                {tabs === '/search/blog' && (
+                                                    <div
+                                                        className={
+                                                            styles.contentWrapper
+                                                        }
+                                                    >
+                                                        {tabs ===
+                                                            '/search/blog' &&
+                                                        result.blogs.length >
+                                                            0 ? (
+                                                            result.blogs?.map(
+                                                                (blog) => (
+                                                                    <div
+                                                                        className={`${styles.contentContainer} ${styles.blogContent}`}
+                                                                        key={
+                                                                            blog._id
+                                                                        }
+                                                                    >
+                                                                        <Link
+                                                                            to={`/blog/${blog.slug}`}
+                                                                        >
+                                                                            <div
+                                                                                className={
+                                                                                    styles.image
+                                                                                }
+                                                                                style={{
+                                                                                    backgroundImage:
+                                                                                        blog.image
+                                                                                            ? `url(${blog.image})`
+                                                                                            : `url(${f8Icon})`,
+                                                                                }}
+                                                                            ></div>
+                                                                        </Link>
+                                                                        <div
+                                                                            className={
+                                                                                styles.info
+                                                                            }
+                                                                        >
+                                                                            <h3>
+                                                                                <Link
+                                                                                    to={`/blog/${blog.slug}`}
+                                                                                >
+                                                                                    {
+                                                                                        blog.titleDisplay
+                                                                                    }
+                                                                                </Link>
+                                                                            </h3>
+                                                                            <p>
+                                                                                Đọc
+                                                                                tiếp...
+                                                                            </p>
+                                                                            <div
+                                                                                className={
+                                                                                    styles.reaction
+                                                                                }
+                                                                            >
+                                                                                <div
+                                                                                    className={
+                                                                                        styles.like
+                                                                                    }
+                                                                                >
+                                                                                    <i className='fa-solid fa-heart'></i>
+                                                                                    <span>
+                                                                                        {
+                                                                                            blog
+                                                                                                .likes
+                                                                                                .length
+                                                                                        }
+                                                                                    </span>
+                                                                                </div>
+                                                                                <div
+                                                                                    className={
+                                                                                        styles.comment
+                                                                                    }
+                                                                                >
+                                                                                    <span>
+                                                                                        {
+                                                                                            blog
+                                                                                                .comments
+                                                                                                .length
+                                                                                        }{' '}
+                                                                                        bình
+                                                                                        luận
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                )
+                                                            )
+                                                        ) : (
+                                                            <div
+                                                                className={
+                                                                    styles.blank
+                                                                }
+                                                            >
+                                                                <span>
+                                                                    Chưa có kết
+                                                                    quả nào phù
+                                                                    hợp.
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
+                                                {tabs === '/search/video' && (
+                                                    <div
+                                                        className={
+                                                            styles.contentWrapper
+                                                        }
+                                                    >
+                                                        {tabs ===
+                                                            '/search/video' &&
+                                                        result.videos.length >
+                                                            0 ? (
+                                                            result.videos?.map(
+                                                                (video) => (
+                                                                    <div
+                                                                        className={
+                                                                            styles.contentContainer
+                                                                        }
+                                                                        key={
+                                                                            video._id
+                                                                        }
+                                                                    >
+                                                                        <a
+                                                                            rel='noopener noreferrer'
+                                                                            target='_blank'
+                                                                            href={`https://www.youtube.com/watch?v=${video.videoId}`}
+                                                                        >
+                                                                            <div
+                                                                                className={
+                                                                                    styles.image
+                                                                                }
+                                                                                style={{
+                                                                                    backgroundImage: `url(${video.image})`,
+                                                                                }}
+                                                                            ></div>
+                                                                        </a>
+                                                                        <div
+                                                                            className={
+                                                                                styles.info
+                                                                            }
+                                                                        >
+                                                                            <h3>
+                                                                                <a
+                                                                                    rel='noopener noreferrer'
+                                                                                    target='_blank'
+                                                                                    href={`https://www.youtube.com/watch?v=${video.videoId}`}
+                                                                                >
+                                                                                    {
+                                                                                        video.title
+                                                                                    }
+                                                                                </a>
+                                                                            </h3>
+                                                                            <p>
+                                                                                Xem
+                                                                                trên
+                                                                                Youtube...
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                )
+                                                            )
+                                                        ) : (
+                                                            <div
+                                                                className={
+                                                                    styles.blank
+                                                                }
+                                                            >
+                                                                <span>
+                                                                    Chưa có kết
+                                                                    quả nào phù
+                                                                    hợp.
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </Col>
+                                        </Row>
+                                    )}
+                                </Col>
+                            </Row>
+                        </Container>
+                    </div>
+                </Col>
+            </Row>
+            <Footer />
+        </>
+    );
 };
 
 export default Search;

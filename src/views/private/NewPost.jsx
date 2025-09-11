@@ -14,14 +14,8 @@ import Header from '../../components/main-layout/nav/Header';
 import '../../sass/_markdownEditor.scss';
 import ContentEditable from '../../components/utils/content-editable/ContentEditable';
 import NewBlogModal from '../../components/new-post/NewBlogModal';
-import { useLocation } from 'react-router-dom';
-import { apiURL } from '../../context/constants';
 import { BlogContext } from '../../context/BlogContext';
-import Cookies from 'js-cookie';
-
-const Footer = React.lazy(() =>
-    import('../../components/main-layout/footer/Footer')
-);
+import Footer from '../../components/main-layout/footer/Footer';
 
 const NewPost = () => {
     const mdEditor = useRef(null);
@@ -94,9 +88,7 @@ const NewPost = () => {
                 </>
             )}
             {showModal && <NewBlogModal blogContent={{ title, content }} />}
-            <Suspense fallback={<div>Loading...</div>}>
-                <Footer />
-            </Suspense>
+            <Footer />
         </>
     );
 };

@@ -3,7 +3,9 @@ import { Col, Row } from 'react-bootstrap';
 import styles from './Home.module.scss';
 import Slide from '../../components/home/slide/Slide';
 import HeadingTitleWrap from '../../components/utils/title-heading/HeadingTitleWrap';
-import CourseList from '../../components/home/courses/CourseList';
+import CourseList, {
+    SkeletonCourseList,
+} from '../../components/home/courses/CourseList';
 import '../../sass/_withSidebarContent.scss';
 import Header from '../../components/main-layout/nav/Header';
 import SideBar from '../../components/main-layout/sidebar/SideBar';
@@ -12,16 +14,9 @@ import { useSelector } from 'react-redux';
 import MainCardAdd from '../../components/utils/card/MainCardAdd';
 import { Link } from 'react-router-dom';
 import MainToast from '../../components/utils/toast/MainToast';
-
-const BlogList = React.lazy(() =>
-    import('../../components/home/blogs/BlogList')
-);
-const VideoList = React.lazy(() =>
-    import('../../components/home/videos/VideoList')
-);
-const Footer = React.lazy(() =>
-    import('../../components/main-layout/footer/Footer')
-);
+import BlogList from '../../components/home/blogs/BlogList'
+import VideoList from '../../components/home/videos/VideoList'
+import Footer from '../../components/main-layout/footer/Footer'
 
 const Home = () => {
     const user = useSelector((state) => state.user);
@@ -33,6 +28,7 @@ const Home = () => {
     const [fetchStatus, setFetchStatus] = useState({
         show: true,
     });
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         document.title =
@@ -44,6 +40,7 @@ const Home = () => {
 
         (async () => {
             try {
+                setIsLoading(true);
                 const res = await fetch(`${apiURL}`, {
                     signal: controller.signal,
                 });
@@ -69,6 +66,8 @@ const Home = () => {
                 setFetchStatus({
                     show: true,
                 });
+            } finally {
+                setIsLoading(false);
             }
         })();
 
@@ -88,50 +87,56 @@ const Home = () => {
                                 title={'Lộ trình học Front-end'}
                                 label={'Mới'}
                             />
-                            <CourseList courses={courseFE} />
+                            {isLoading ? (
+                                <SkeletonCourseList />
+                            ) : (
+                                <CourseList courses={courseFE} />
+                            )}
                             <HeadingTitleWrap
                                 title={'Lộ trình học Back-end'}
                                 label={'Mới'}
                             />
-                            <CourseList courses={courseBE} />
+                            {isLoading ? (
+                                <SkeletonCourseList />
+                            ) : (
+                                <CourseList courses={courseBE} />
+                            )}
 
-                            <Suspense fallback={<div></div>}>
-                                <HeadingTitleWrap
-                                    title={'Bài viết nổi bật'}
-                                    viewMode={'Xem tất cả'}
-                                    viewModeTo={'/blog'}
-                                />
-                                {blogData && blogData.length !== 0 ? (
-                                    <BlogList blogs={blogData} />
-                                ) : (
-                                    <p>
-                                        Không có bài viết nào{' '}
-                                        <Link to='/new-post'>
-                                            thêm bài viết.
+                            <HeadingTitleWrap
+                                title={'Bài viết nổi bật'}
+                                viewMode={'Xem tất cả'}
+                                viewModeTo={'/blog'}
+                            />
+                            {isLoading ? (
+                                <SkeletonCourseList />
+                            ) : blogData && blogData.length !== 0 ? (
+                                <BlogList blogs={blogData} />
+                            ) : (
+                                <p>
+                                    Không có bài viết nào{' '}
+                                    <Link to='/new-post'>thêm bài viết.</Link>
+                                </p>
+                            )}
+                            <HeadingTitleWrap title={'Videos nổi bật'} />
+                            {isLoading ? (
+                                <SkeletonCourseList />
+                            ) : videoData && videoData.length !== 0 ? (
+                                <VideoList videos={videoData} />
+                            ) : (
+                                <p>
+                                    Không có video nào{' '}
+                                    {user.isAdmin && (
+                                        <Link to='/admin/video'>
+                                            thêm video.
                                         </Link>
-                                    </p>
-                                )}
-                                <HeadingTitleWrap title={'Videos nổi bật'} />
-                                {videoData && videoData.length !== 0 ? (
-                                    <VideoList videos={videoData} />
-                                ) : (
-                                    <p>
-                                        Không có video nào{' '}
-                                        {user.isAdmin && (
-                                            <Link to='/admin/video'>
-                                                thêm video.
-                                            </Link>
-                                        )}
-                                    </p>
-                                )}
-                            </Suspense>
+                                    )}
+                                </p>
+                            )}
                         </div>
                     </div>
                 </Col>
             </Row>
-            <Suspense fallback={<div>Loading...</div>}>
-                <Footer />
-            </Suspense>
+            <Footer />
             <MainToast
                 status={fetchStatus}
                 failText={`This app is running on a free backend server. It may take up to 50 seconds or more to wake up if idle. If the server is still waking up, please wait and then reload the website after ~50s. Thanks for your patience!`}

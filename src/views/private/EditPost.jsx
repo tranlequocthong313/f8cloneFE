@@ -19,11 +19,8 @@ import { apiURL } from '../../context/constants';
 import { BlogContext } from '../../context/BlogContext';
 import Cookies from 'js-cookie';
 import MainToast from '../../components/utils/toast/MainToast';
-import removeActions from '../../components/utils/remove-accents/removeActions'
-
-const Footer = React.lazy(() =>
-    import('../../components/main-layout/footer/Footer')
-);
+import removeActions from '../../components/utils/remove-accents/removeActions';
+import Footer from '../../components/main-layout/footer/Footer';
 
 const EditPost = () => {
     const mdEditor = useRef(null);
@@ -154,9 +151,7 @@ const EditPost = () => {
                 successText={'Chỉnh sửa bài viết thành công!'}
                 failText={'Chỉnh sửa bài viêt không thành công!'}
             />
-            <Suspense fallback={<div>Loading...</div>}>
-                <Footer />
-            </Suspense>
+            <Footer />
         </>
     );
 };

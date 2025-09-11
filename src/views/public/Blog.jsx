@@ -2,22 +2,20 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import styles from './Blog.module.scss';
 import '../../sass/_withSidebarContent.scss';
-import NewBlogs from '../../components/blog/NewBlogs';
+import NewBlogs, { SkeletonNewBlogs } from '../../components/blog/NewBlogs';
 import Topics from '../../components/blog/Topics';
 import Header from '../../components/main-layout/nav/Header';
 import SideBar from '../../components/main-layout/sidebar/SideBar';
 import { apiURL, TOPICS } from '../../context/constants';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
-
-const Footer = React.lazy(() =>
-    import('../../components/main-layout/footer/Footer')
-);
+import Footer from '../../components/main-layout/footer/Footer';
 
 const Blog = () => {
     const { topic = '' } = useParams();
     const [searchParams] = useSearchParams();
 
     const [blogs, setBlogs] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         document.title =
@@ -29,6 +27,7 @@ const Blog = () => {
 
         (async () => {
             try {
+                setIsLoading(true);
                 const res = await fetch(
                     `${apiURL}/blog?topic=${topic}&tag=${
                         searchParams.get('tag') || ''
@@ -42,6 +41,8 @@ const Blog = () => {
                 setBlogs(data);
             } catch (error) {
                 console.log(error.message);
+            } finally {
+                setIsLoading(false);
             }
         })();
 
@@ -99,16 +100,22 @@ const Blog = () => {
                                 xl={8}
                                 className={styles.leftLayout}
                             >
-                                {blogs && blogs.length !== 0 && (
-                                    <NewBlogs blogs={blogs} />
-                                )}
-                                {(!blogs || blogs.length === 0) && (
-                                    <p>
-                                        Không có bài viết nào{' '}
-                                        <Link to='/new-post'>
-                                            thêm bài viết.
-                                        </Link>
-                                    </p>
+                                {isLoading ? (
+                                    <SkeletonNewBlogs />
+                                ) : (
+                                    <>
+                                        {blogs && blogs.length !== 0 && (
+                                            <NewBlogs blogs={blogs} />
+                                        )}
+                                        {(!blogs || blogs.length === 0) && (
+                                            <p>
+                                                Không có bài viết nào{' '}
+                                                <Link to='/new-post'>
+                                                    thêm bài viết.
+                                                </Link>
+                                            </p>
+                                        )}
+                                    </>
                                 )}
                             </Col>
                             <Col
@@ -123,9 +130,7 @@ const Blog = () => {
                     </div>
                 </Col>
             </Row>
-            <Suspense fallback={<div>Loading...</div>}>
-                <Footer />
-            </Suspense>
+            <Footer />
         </>
     );
 };

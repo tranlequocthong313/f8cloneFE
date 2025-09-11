@@ -59,7 +59,10 @@ const CircularProgressBar = ({
             )}
             {!logo && (
                 <div className={styles.percent}>
-                    {Math.round(numberPercent * 100)}%
+                    {Math.round(
+                        !isNaN(numberPercent) ? numberPercent * 100 : 0
+                    )}
+                    %
                 </div>
             )}
         </div>

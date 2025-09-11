@@ -10,10 +10,7 @@ import { useDispatch } from 'react-redux';
 import { settings } from '../../actions/userAction';
 import removeActions from '../../components/utils/remove-accents/removeActions';
 import { uploadMedia } from '../../helpers/upload';
-
-const Footer = React.lazy(() =>
-    import('../../components/main-layout/footer/Footer')
-);
+import Footer from '../../components/main-layout/footer/Footer';
 
 const Settings = () => {
     const dispatch = useDispatch();
@@ -391,9 +388,7 @@ const Settings = () => {
                     </Col>
                 </Row>
             </Container>
-            <Suspense fallback={<div>Loading...</div>}>
-                <Footer />
-            </Suspense>
+            <Footer />
         </>
     );
 };
