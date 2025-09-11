@@ -39,11 +39,10 @@ const Blog = () => {
                 const data = await res.json();
 
                 setBlogs(data);
+                setIsLoading(false);
             } catch (error) {
                 console.log(error.message);
-            } finally {
-                setIsLoading(false);
-            }
+            } 
         })();
 
         return () => controller?.abort();

@@ -61,14 +61,13 @@ const Home = () => {
                 setFetchStatus({
                     show: false,
                 });
+                setIsLoading(false);
             } catch (error) {
                 console.log(error.message);
                 setFetchStatus({
                     show: true,
                 });
-            } finally {
-                setIsLoading(false);
-            }
+            } 
         })();
 
         return () => controller?.abort();
