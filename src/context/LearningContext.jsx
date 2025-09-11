@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, useMemo } from 'react';
-import { useMatch, useParams, useSearchParams } from 'react-router-dom';
+import { useLocation, useMatch, useParams, useSearchParams } from 'react-router-dom';
 import { apiURL } from './constants';
 import Cookies from 'js-cookie';
 import { useSelector } from 'react-redux';
@@ -7,8 +7,10 @@ import { useSelector } from 'react-redux';
 export const LearningContext = createContext();
 
 const LearningContextProvider = ({ children }) => {
-    const { slug } = useParams();
-    const match = useMatch("/courses/:slug");
+    const location = useLocation();
+    const pathParts = location.pathname.split('/');
+    const slug = pathParts[2];
+    const match = useMatch('/learning/:slug');
 
     const user = useSelector((state) => state.user);
     const [searchParams, setSearchParams] = useSearchParams();
@@ -129,7 +131,7 @@ const LearningContextProvider = ({ children }) => {
         const fetchCourse = async () => {
             try {
                 setLoading(true);
-                const res = await fetch(`${apiURL}/${slug}`);
+                const res = await fetch(`${apiURL}/learning/${slug}`);
                 if (!res.ok) throw new Error('Failed to fetch course');
                 const data = await res.json();
 
@@ -159,7 +161,7 @@ const LearningContextProvider = ({ children }) => {
             }
         };
 
-        if (!slug || !match) return
+        if (!slug || !match) return;
 
         fetchCourse();
     }, [slug, match]);

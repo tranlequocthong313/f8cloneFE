@@ -72,7 +72,7 @@ const LearningList = () => {
                         {fetCourses?.map((course) => {
                             if (!course?.icon) return;
                             return (
-                                <Link to={`/learning/${course?.slug}`}>
+                                <Link to={`/learning/${course?.slug}`} key={course?._id}>
                                     <CircularProgressBar
                                         logo={course?.icon}
                                         numberPercent={course?.progress / 100}
@@ -109,7 +109,7 @@ const LearningList = () => {
                         {beCourses?.map((course) => {
                             if (!course?.icon) return;
                             return (
-                                <Link to={`/learning/${course?.slug}`}>
+                                <Link to={`/learning/${course?.slug}`} key={course?._id}>
                                     <CircularProgressBar
                                         logo={course?.icon}
                                         numberPercent={course?.progress / 100}
